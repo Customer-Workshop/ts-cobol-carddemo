@@ -44,6 +44,7 @@ export class TransactionListComponent implements OnInit {
 
   filterCardNumber = '';
   filterTypeCode = '';
+  private currentSort: Sort | null = null;
 
   displayedColumns = [
     'transactionId', 'typeCode', 'source', 'description',
@@ -68,12 +69,14 @@ export class TransactionListComponent implements OnInit {
         t.typeCode === this.filterTypeCode;
       return matchCard && matchType;
     });
+    this.applySortIfActive();
   }
 
   clearFilters(): void {
     this.filterCardNumber = '';
     this.filterTypeCode = '';
-    this.filteredTransactions = this.allTransactions;
+    this.filteredTransactions = [...this.allTransactions];
+    this.applySortIfActive();
   }
 
   getTypeName(code: string): string {
@@ -81,7 +84,13 @@ export class TransactionListComponent implements OnInit {
   }
 
   sortData(sort: Sort): void {
-    if (!sort.active || sort.direction === '') return;
+    this.currentSort = sort;
+    this.applySortIfActive();
+  }
+
+  private applySortIfActive(): void {
+    if (!this.currentSort?.active || this.currentSort.direction === '') return;
+    const sort = this.currentSort;
     this.filteredTransactions = [...this.filteredTransactions].sort((a, b) => {
       const isAsc = sort.direction === 'asc';
       const key = sort.active as keyof Transaction;
