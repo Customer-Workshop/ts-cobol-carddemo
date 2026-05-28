@@ -7,6 +7,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatCardModule } from '@angular/material/card';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatSortModule, Sort } from '@angular/material/sort';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { Account } from '../../../models/account.model';
 import { AccountService } from '../../../services/account.service';
 
@@ -22,6 +23,7 @@ import { AccountService } from '../../../services/account.service';
     MatCardModule,
     MatChipsModule,
     MatSortModule,
+    MatTooltipModule,
   ],
   templateUrl: './account-list.component.html',
   styleUrl: './account-list.component.scss',

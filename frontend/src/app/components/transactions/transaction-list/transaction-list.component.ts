@@ -10,6 +10,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSortModule, Sort } from '@angular/material/sort';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { Transaction, TransactionType } from '../../../models/transaction.model';
 import { TransactionService } from '../../../services/transaction.service';
 
@@ -29,6 +30,7 @@ import { TransactionService } from '../../../services/transaction.service';
     MatInputModule,
     MatSelectModule,
     MatSortModule,
+    MatTooltipModule,
   ],
   templateUrl: './transaction-list.component.html',
   styleUrl: './transaction-list.component.scss',
