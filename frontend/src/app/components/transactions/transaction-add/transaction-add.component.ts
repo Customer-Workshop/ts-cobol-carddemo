@@ -60,7 +60,7 @@ export class TransactionAddComponent implements OnInit {
 
   onSubmit(): void {
     const now = new Date().toISOString().replace('T', ' ').substring(0, 19);
-    const txnId = String(Math.floor(Math.random() * 9999999999999999)).padStart(16, '0');
+    const txnId = Array.from({ length: 16 }, () => Math.floor(Math.random() * 10)).join('');
 
     const transaction: Transaction = {
       transactionId: txnId,
