@@ -1,0 +1,93 @@
+<div class="detail-header">
+  <a mat-icon-button routerLink="/transactions">
+    <mat-icon>arrow_back</mat-icon>
+  </a>
+  <h2>Add Transaction</h2>
+</div>
+
+<mat-card>
+  <mat-card-content>
+    <form (ngSubmit)="onSubmit()" class="add-form">
+      <div class="form-grid">
+        <mat-form-field appearance="outline">
+          <mat-label>Transaction Type</mat-label>
+          <mat-select [(ngModel)]="newTransaction.typeCode" name="typeCode" required>
+            @for (type of transactionTypes; track type.typeCode) {
+              <mat-option [value]="type.typeCode">{{ type.description }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Category</mat-label>
+          <mat-select [(ngModel)]="newTransaction.categoryCode" name="categoryCode" required>
+            @for (cat of transactionCategories; track cat.categoryCode) {
+              <mat-option [value]="cat.categoryCode">{{ cat.description }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Source</mat-label>
+          <mat-select [(ngModel)]="newTransaction.source" name="source" required>
+            <mat-option value="POS TERM">POS Terminal</mat-option>
+            <mat-option value="E-COMM">E-Commerce</mat-option>
+            <mat-option value="ONLINE">Online</mat-option>
+            <mat-option value="OPERATOR">Operator</mat-option>
+            <mat-option value="ATM">ATM</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Card Number</mat-label>
+          <input matInput [(ngModel)]="newTransaction.cardNumber" name="cardNumber"
+                 maxlength="16" required placeholder="16-digit card number">
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Amount</mat-label>
+          <input matInput type="number" step="0.01" [(ngModel)]="newTransaction.amount"
+                 name="amount" required>
+          <span matTextPrefix>$&nbsp;</span>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-span">
+          <mat-label>Description</mat-label>
+          <input matInput [(ngModel)]="newTransaction.description" name="description"
+                 maxlength="100" required>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Merchant ID</mat-label>
+          <input matInput [(ngModel)]="newTransaction.merchantId" name="merchantId"
+                 maxlength="9">
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Merchant Name</mat-label>
+          <input matInput [(ngModel)]="newTransaction.merchantName" name="merchantName"
+                 maxlength="50">
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Merchant City</mat-label>
+          <input matInput [(ngModel)]="newTransaction.merchantCity" name="merchantCity"
+                 maxlength="50">
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Merchant ZIP</mat-label>
+          <input matInput [(ngModel)]="newTransaction.merchantZip" name="merchantZip"
+                 maxlength="10">
+        </mat-form-field>
+      </div>
+
+      <div class="form-actions">
+        <a mat-button routerLink="/transactions">Cancel</a>
+        <button mat-raised-button color="primary" type="submit">
+          <mat-icon>add</mat-icon> Add Transaction
+        </button>
+      </div>
+    </form>
+  </mat-card-content>
+</mat-card>

@@ -1,0 +1,129 @@
+<div class="detail-header">
+  <a mat-icon-button routerLink="/accounts">
+    <mat-icon>arrow_back</mat-icon>
+  </a>
+  <h2>{{ editMode ? 'Update Account' : 'View Account' }}</h2>
+  <span class="spacer"></span>
+  @if (!editMode) {
+    <button mat-raised-button color="primary" (click)="toggleEdit()">
+      <mat-icon>edit</mat-icon> Edit
+    </button>
+  }
+</div>
+
+@if (account) {
+  <mat-card>
+    <mat-card-content>
+      @if (!editMode) {
+        <div class="detail-grid">
+          <div class="detail-field">
+            <span class="field-label">Account Number</span>
+            <span class="field-value">{{ account.accountId }}</span>
+          </div>
+          <div class="detail-field">
+            <span class="field-label">Status</span>
+            <mat-chip [class.active-chip]="account.activeStatus === 'Y'"
+                      [class.inactive-chip]="account.activeStatus !== 'Y'">
+              {{ account.activeStatus === 'Y' ? 'Active' : 'Inactive' }}
+            </mat-chip>
+          </div>
+          <div class="detail-field">
+            <span class="field-label">Opened</span>
+            <span class="field-value">{{ account.openDate }}</span>
+          </div>
+          <div class="detail-field">
+            <span class="field-label">Credit Limit</span>
+            <span class="field-value">{{ account.creditLimit | currency }}</span>
+          </div>
+          <div class="detail-field">
+            <span class="field-label">Expiry</span>
+            <span class="field-value">{{ account.expirationDate }}</span>
+          </div>
+          <div class="detail-field">
+            <span class="field-label">Cash Credit Limit</span>
+            <span class="field-value">{{ account.cashCreditLimit | currency }}</span>
+          </div>
+          <div class="detail-field">
+            <span class="field-label">Reissue Date</span>
+            <span class="field-value">{{ account.reissueDate }}</span>
+          </div>
+          <div class="detail-field">
+            <span class="field-label">Current Balance</span>
+            <span class="field-value balance">{{ account.currentBalance | currency }}</span>
+          </div>
+
+          <mat-divider class="full-span"></mat-divider>
+
+          <div class="detail-field">
+            <span class="field-label">Current Cycle Credit</span>
+            <span class="field-value">{{ account.currentCycleCredit | currency }}</span>
+          </div>
+          <div class="detail-field">
+            <span class="field-label">Current Cycle Debit</span>
+            <span class="field-value">{{ account.currentCycleDebit | currency }}</span>
+          </div>
+          <div class="detail-field">
+            <span class="field-label">Address ZIP</span>
+            <span class="field-value">{{ account.addressZip }}</span>
+          </div>
+          <div class="detail-field">
+            <span class="field-label">Group ID</span>
+            <span class="field-value">{{ account.groupId }}</span>
+          </div>
+        </div>
+      } @else if (editAccount) {
+        <form (ngSubmit)="saveChanges()" class="edit-form">
+          <div class="form-grid">
+            <mat-form-field appearance="outline">
+              <mat-label>Account Number</mat-label>
+              <input matInput [value]="editAccount.accountId" disabled>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>Active Status</mat-label>
+              <mat-select [(ngModel)]="editAccount.activeStatus" name="activeStatus">
+                <mat-option value="Y">Active (Y)</mat-option>
+                <mat-option value="N">Inactive (N)</mat-option>
+              </mat-select>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>Open Date</mat-label>
+              <input matInput [(ngModel)]="editAccount.openDate" name="openDate">
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>Credit Limit</mat-label>
+              <input matInput type="number" [(ngModel)]="editAccount.creditLimit" name="creditLimit">
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>Expiration Date</mat-label>
+              <input matInput [(ngModel)]="editAccount.expirationDate" name="expirationDate">
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>Cash Credit Limit</mat-label>
+              <input matInput type="number" [(ngModel)]="editAccount.cashCreditLimit" name="cashCreditLimit">
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>Reissue Date</mat-label>
+              <input matInput [(ngModel)]="editAccount.reissueDate" name="reissueDate">
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>Current Balance</mat-label>
+              <input matInput type="number" [(ngModel)]="editAccount.currentBalance" name="currentBalance">
+            </mat-form-field>
+          </div>
+
+          <div class="form-actions">
+            <button mat-button type="button" (click)="toggleEdit()">Cancel</button>
+            <button mat-raised-button color="primary" type="submit">Save Changes</button>
+          </div>
+        </form>
+      }
+    </mat-card-content>
+  </mat-card>
+}

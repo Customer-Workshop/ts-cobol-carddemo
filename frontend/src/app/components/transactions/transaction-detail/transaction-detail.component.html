@@ -1,0 +1,79 @@
+<div class="detail-header">
+  <a mat-icon-button routerLink="/transactions">
+    <mat-icon>arrow_back</mat-icon>
+  </a>
+  <h2>Transaction Detail</h2>
+</div>
+
+@if (transaction) {
+  <mat-card>
+    <mat-card-content>
+      <div class="detail-grid">
+        <div class="detail-field">
+          <span class="field-label">Transaction ID</span>
+          <span class="field-value">{{ transaction.transactionId }}</span>
+        </div>
+        <div class="detail-field">
+          <span class="field-label">Type</span>
+          <span class="field-value">{{ getTypeName(transaction.typeCode) }}</span>
+        </div>
+        <div class="detail-field">
+          <span class="field-label">Category Code</span>
+          <span class="field-value">{{ transaction.categoryCode }}</span>
+        </div>
+        <div class="detail-field">
+          <span class="field-label">Source</span>
+          <span class="field-value">{{ transaction.source }}</span>
+        </div>
+        <div class="detail-field full-span">
+          <span class="field-label">Description</span>
+          <span class="field-value">{{ transaction.description }}</span>
+        </div>
+        <div class="detail-field">
+          <span class="field-label">Amount</span>
+          <span class="field-value amount"
+                [class.negative]="transaction.amount < 0"
+                [class.positive]="transaction.amount >= 0">
+            {{ transaction.amount | currency }}
+          </span>
+        </div>
+        <div class="detail-field">
+          <span class="field-label">Card Number</span>
+          <span class="field-value">****{{ transaction.cardNumber.slice(-4) }}</span>
+        </div>
+
+        <mat-divider class="full-span"></mat-divider>
+
+        <div class="detail-field">
+          <span class="field-label">Merchant ID</span>
+          <span class="field-value">{{ transaction.merchantId }}</span>
+        </div>
+        <div class="detail-field">
+          <span class="field-label">Merchant Name</span>
+          <span class="field-value">{{ transaction.merchantName }}</span>
+        </div>
+        <div class="detail-field">
+          <span class="field-label">Merchant City</span>
+          <span class="field-value">{{ transaction.merchantCity }}</span>
+        </div>
+        <div class="detail-field">
+          <span class="field-label">Merchant ZIP</span>
+          <span class="field-value">{{ transaction.merchantZip }}</span>
+        </div>
+
+        <mat-divider class="full-span"></mat-divider>
+
+        <div class="detail-field">
+          <span class="field-label">Originated</span>
+          <span class="field-value">{{ transaction.originTimestamp | date:'medium' }}</span>
+        </div>
+        <div class="detail-field">
+          <span class="field-label">Processed</span>
+          <span class="field-value">
+            {{ transaction.processedTimestamp ? (transaction.processedTimestamp | date:'medium') : 'Pending' }}
+          </span>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+}

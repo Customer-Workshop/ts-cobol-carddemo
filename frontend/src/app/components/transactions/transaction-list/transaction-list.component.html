@@ -1,0 +1,91 @@
+<div class="page-header">
+  <h2>Transaction List</h2>
+  <a mat-raised-button color="primary" routerLink="/transactions/add">
+    <mat-icon>add</mat-icon> Add Transaction
+  </a>
+</div>
+
+<mat-card class="filter-card">
+  <mat-card-content>
+    <div class="filter-row">
+      <mat-form-field appearance="outline">
+        <mat-label>Filter by Card Number</mat-label>
+        <input matInput [(ngModel)]="filterCardNumber" (ngModelChange)="applyFilter()"
+               placeholder="Enter card number">
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Filter by Type</mat-label>
+        <mat-select [(ngModel)]="filterTypeCode" (ngModelChange)="applyFilter()">
+          <mat-option value="">All Types</mat-option>
+          @for (type of transactionTypes; track type.typeCode) {
+            <mat-option [value]="type.typeCode">{{ type.description }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+
+      <button mat-stroked-button (click)="clearFilters()">
+        <mat-icon>clear</mat-icon> Clear
+      </button>
+    </div>
+  </mat-card-content>
+</mat-card>
+
+<mat-card>
+  <mat-card-content>
+    <table mat-table [dataSource]="filteredTransactions" matSort
+           (matSortChange)="sortData($event)" class="full-width">
+      <ng-container matColumnDef="transactionId">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>ID</th>
+        <td mat-cell *matCellDef="let txn">{{ txn.transactionId }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="typeCode">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Type</th>
+        <td mat-cell *matCellDef="let txn">{{ getTypeName(txn.typeCode) }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="source">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Source</th>
+        <td mat-cell *matCellDef="let txn">{{ txn.source }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="description">
+        <th mat-header-cell *matHeaderCellDef>Description</th>
+        <td mat-cell *matCellDef="let txn">{{ txn.description }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="amount">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Amount</th>
+        <td mat-cell *matCellDef="let txn"
+            [class.negative]="txn.amount < 0"
+            [class.positive]="txn.amount >= 0">
+          {{ txn.amount | currency }}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="cardNumber">
+        <th mat-header-cell *matHeaderCellDef>Card</th>
+        <td mat-cell *matCellDef="let txn">****{{ txn.cardNumber.slice(-4) }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="originTimestamp">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Date</th>
+        <td mat-cell *matCellDef="let txn">{{ txn.originTimestamp | date:'short' }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef>Actions</th>
+        <td mat-cell *matCellDef="let txn">
+          <a mat-icon-button [routerLink]="['/transactions', txn.transactionId]"
+             matTooltip="View Details">
+            <mat-icon>visibility</mat-icon>
+          </a>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+  </mat-card-content>
+</mat-card>

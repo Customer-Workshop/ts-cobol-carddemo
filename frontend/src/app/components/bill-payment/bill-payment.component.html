@@ -1,0 +1,53 @@
+<h2>Bill Payment</h2>
+
+<mat-card class="payment-card">
+  <mat-card-content>
+    <div class="lookup-section">
+      <mat-form-field appearance="outline">
+        <mat-label>Enter Account ID</mat-label>
+        <input matInput [(ngModel)]="accountId" maxlength="11"
+               placeholder="11-digit Account ID" (keyup.enter)="lookupAccount()">
+      </mat-form-field>
+      <button mat-raised-button color="primary" (click)="lookupAccount()">
+        <mat-icon>search</mat-icon> Look Up
+      </button>
+    </div>
+
+    @if (errorMessage) {
+      <p class="error-message">{{ errorMessage }}</p>
+    }
+
+    @if (account) {
+      <mat-divider></mat-divider>
+
+      <div class="balance-section">
+        <p class="balance-label">Your current balance is:</p>
+        <p class="balance-value">{{ account.currentBalance | currency }}</p>
+      </div>
+
+      @if (!paymentSuccess) {
+        <div class="confirm-section">
+          <p class="confirm-prompt">
+            Do you want to pay your balance now. Please confirm:
+          </p>
+          <div class="confirm-input-row">
+            <mat-form-field appearance="outline" class="confirm-field">
+              <mat-label>Confirm</mat-label>
+              <input matInput [(ngModel)]="confirmPayment" maxlength="1"
+                     placeholder="Y/N" (keyup.enter)="submitPayment()">
+            </mat-form-field>
+            <span class="confirm-hint">(Y/N)</span>
+          </div>
+          <button mat-raised-button color="accent" (click)="submitPayment()">
+            Submit Payment
+          </button>
+        </div>
+      } @else {
+        <div class="success-section">
+          <mat-icon class="success-icon">check_circle</mat-icon>
+          <p class="success-message">Payment processed successfully! Your new balance is {{ account.currentBalance | currency }}.</p>
+        </div>
+      }
+    }
+  </mat-card-content>
+</mat-card>

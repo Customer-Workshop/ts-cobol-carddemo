@@ -1,0 +1,89 @@
+h2 {
+  margin: 0 0 20px 0;
+  color: #1a237e;
+}
+
+.payment-card {
+  max-width: 600px;
+}
+
+.lookup-section {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  margin-bottom: 16px;
+
+  mat-form-field {
+    flex: 1;
+  }
+}
+
+.error-message {
+  color: #d32f2f;
+  margin: 8px 0;
+}
+
+.balance-section {
+  padding: 24px 0;
+  text-align: center;
+}
+
+.balance-label {
+  font-size: 16px;
+  color: #00897b;
+  margin: 0 0 8px 0;
+}
+
+.balance-value {
+  font-size: 36px;
+  font-weight: 700;
+  color: #1565c0;
+  margin: 0;
+}
+
+.confirm-section {
+  padding: 16px 0;
+}
+
+.confirm-prompt {
+  color: #00897b;
+  font-size: 16px;
+  margin-bottom: 12px;
+}
+
+.confirm-input-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.confirm-field {
+  width: 80px;
+}
+
+.confirm-hint {
+  color: #666;
+  font-size: 14px;
+}
+
+.success-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 24px 0;
+}
+
+.success-icon {
+  font-size: 48px;
+  height: 48px;
+  width: 48px;
+  color: #2e7d32;
+  margin-bottom: 16px;
+}
+
+.success-message {
+  font-size: 16px;
+  color: #2e7d32;
+  text-align: center;
+}

@@ -1,0 +1,107 @@
+<div class="detail-header">
+  <a mat-icon-button routerLink="/cards">
+    <mat-icon>arrow_back</mat-icon>
+  </a>
+  <h2>{{ editMode ? 'Update Credit Card' : 'Credit Card Detail' }}</h2>
+  <span class="spacer"></span>
+  @if (!editMode) {
+    <button mat-raised-button color="primary" (click)="toggleEdit()">
+      <mat-icon>edit</mat-icon> Edit
+    </button>
+  }
+</div>
+
+@if (card) {
+  <mat-card>
+    <mat-card-content>
+      @if (!editMode) {
+        <div class="card-visual">
+          <div class="credit-card-display">
+            <div class="card-chip"></div>
+            <div class="card-number">{{ maskCardNumber(card.cardNumber) }}</div>
+            <div class="card-details-row">
+              <div>
+                <span class="card-label">CARD HOLDER</span>
+                <span class="card-value">{{ card.embossedName }}</span>
+              </div>
+              <div>
+                <span class="card-label">EXPIRES</span>
+                <span class="card-value">{{ card.expirationDate }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <mat-divider></mat-divider>
+
+        <div class="detail-grid">
+          <div class="detail-field">
+            <span class="field-label">Card Number</span>
+            <span class="field-value">{{ card.cardNumber }}</span>
+          </div>
+          <div class="detail-field">
+            <span class="field-label">Account ID</span>
+            <span class="field-value">{{ card.accountId }}</span>
+          </div>
+          <div class="detail-field">
+            <span class="field-label">CVV Code</span>
+            <span class="field-value">***</span>
+          </div>
+          <div class="detail-field">
+            <span class="field-label">Embossed Name</span>
+            <span class="field-value">{{ card.embossedName }}</span>
+          </div>
+          <div class="detail-field">
+            <span class="field-label">Expiration Date</span>
+            <span class="field-value">{{ card.expirationDate }}</span>
+          </div>
+          <div class="detail-field">
+            <span class="field-label">Status</span>
+            <mat-chip [class.active-chip]="card.activeStatus === 'Y'"
+                      [class.inactive-chip]="card.activeStatus !== 'Y'">
+              {{ card.activeStatus === 'Y' ? 'Active' : 'Inactive' }}
+            </mat-chip>
+          </div>
+        </div>
+      } @else if (editCard) {
+        <form (ngSubmit)="saveChanges()" class="edit-form">
+          <div class="form-grid">
+            <mat-form-field appearance="outline">
+              <mat-label>Card Number</mat-label>
+              <input matInput [value]="editCard.cardNumber" disabled>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>Account ID</mat-label>
+              <input matInput [value]="editCard.accountId" disabled>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>Embossed Name</mat-label>
+              <input matInput [(ngModel)]="editCard.embossedName" name="embossedName"
+                     maxlength="50">
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>Expiration Date</mat-label>
+              <input matInput [(ngModel)]="editCard.expirationDate" name="expirationDate">
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>Active Status</mat-label>
+              <mat-select [(ngModel)]="editCard.activeStatus" name="activeStatus">
+                <mat-option value="Y">Active (Y)</mat-option>
+                <mat-option value="N">Inactive (N)</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+
+          <div class="form-actions">
+            <button mat-button type="button" (click)="toggleEdit()">Cancel</button>
+            <button mat-raised-button color="primary" type="submit">Save Changes</button>
+          </div>
+        </form>
+      }
+    </mat-card-content>
+  </mat-card>
+}
