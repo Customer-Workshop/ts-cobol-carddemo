@@ -46,7 +46,9 @@ export class DashboardComponent implements OnInit {
     });
 
     this.transactionService.getTransactions().subscribe(transactions => {
-      this.recentTransactions = transactions.slice(0, 5);
+      this.recentTransactions = [...transactions]
+        .sort((a, b) => b.originTimestamp.localeCompare(a.originTimestamp))
+        .slice(0, 5);
     });
   }
 }
