@@ -1,4 +1,5 @@
 import { Component, inject, ViewChild } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { RouterOutlet, RouterLink, RouterLinkActive, Router } from '@angular/router';
 import { MatSidenavModule, MatSidenav } from '@angular/material/sidenav';
 import { MatToolbarModule } from '@angular/material/toolbar';
@@ -44,7 +45,7 @@ export class LayoutComponent {
   ];
 
   constructor() {
-    this.breakpointObserver.observe([Breakpoints.Handset]).subscribe(result => {
+    this.breakpointObserver.observe([Breakpoints.Handset]).pipe(takeUntilDestroyed()).subscribe(result => {
       this.isMobile = result.matches;
     });
   }
