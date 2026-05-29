@@ -1,0 +1,89 @@
+<div class="account-list-container">
+  <h2>Account List</h2>
+  <p class="subtitle">
+    Modernized view of the CICS Account Viewer (COACTVW) &mdash; data sourced
+    from <code>acctdata.txt</code> via the <code>CVACT01Y</code> copybook layout.
+  </p>
+
+  <mat-form-field appearance="outline" class="filter-field">
+    <mat-label>Filter accounts</mat-label>
+    <input matInput (keyup)="applyFilter($event)" placeholder="e.g. 2025 or 194">
+  </mat-form-field>
+
+  <div class="mat-elevation-z2 table-wrapper">
+    <table mat-table [dataSource]="dataSource" matSort>
+
+      <!-- Account ID -->
+      <ng-container matColumnDef="acctId">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Account ID</th>
+        <td mat-cell *matCellDef="let row">{{ row.acctId }}</td>
+      </ng-container>
+
+      <!-- Status -->
+      <ng-container matColumnDef="acctActiveStatus">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Status</th>
+        <td mat-cell *matCellDef="let row">
+          <span [class]="row.acctActiveStatus === 'Y' ? 'status-active' : 'status-inactive'">
+            {{ row.acctActiveStatus === 'Y' ? 'Active' : 'Inactive' }}
+          </span>
+        </td>
+      </ng-container>
+
+      <!-- Current Balance -->
+      <ng-container matColumnDef="acctCurrBal">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Current Balance</th>
+        <td mat-cell *matCellDef="let row" class="numeric">
+          {{ row.acctCurrBal | currency }}
+        </td>
+      </ng-container>
+
+      <!-- Credit Limit -->
+      <ng-container matColumnDef="acctCreditLimit">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Credit Limit</th>
+        <td mat-cell *matCellDef="let row" class="numeric">
+          {{ row.acctCreditLimit | currency }}
+        </td>
+      </ng-container>
+
+      <!-- Cash Credit Limit -->
+      <ng-container matColumnDef="acctCashCreditLimit">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Cash Credit Limit</th>
+        <td mat-cell *matCellDef="let row" class="numeric">
+          {{ row.acctCashCreditLimit | currency }}
+        </td>
+      </ng-container>
+
+      <!-- Open Date -->
+      <ng-container matColumnDef="acctOpenDate">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Open Date</th>
+        <td mat-cell *matCellDef="let row">{{ row.acctOpenDate }}</td>
+      </ng-container>
+
+      <!-- Expiration Date -->
+      <ng-container matColumnDef="acctExpirationDate">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Expiration</th>
+        <td mat-cell *matCellDef="let row">{{ row.acctExpirationDate }}</td>
+      </ng-container>
+
+      <!-- ZIP -->
+      <ng-container matColumnDef="acctAddrZip">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>ZIP</th>
+        <td mat-cell *matCellDef="let row">{{ row.acctAddrZip }}</td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+      <tr class="mat-row" *matNoDataRow>
+        <td class="mat-cell no-data" [attr.colspan]="displayedColumns.length">
+          No matching accounts found.
+        </td>
+      </tr>
+    </table>
+
+    <mat-paginator
+      [pageSizeOptions]="[5, 10, 25]"
+      showFirstLastButtons>
+    </mat-paginator>
+  </div>
+</div>
