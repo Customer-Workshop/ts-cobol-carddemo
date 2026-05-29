@@ -1,0 +1,54 @@
+========================================================================
+CVACT01Y.cpy → acctdata.txt  —  Parsed DataFrame
+========================================================================
+root
+ |-- ACCT_ID: long (nullable = true)
+ |-- ACCT_ACTIVE_STATUS: string (nullable = true)
+ |-- ACCT_CURR_BAL: decimal(12,2) (nullable = true)
+ |-- ACCT_CREDIT_LIMIT: decimal(12,2) (nullable = true)
+ |-- ACCT_CASH_CREDIT_LIMIT: decimal(12,2) (nullable = true)
+ |-- ACCT_OPEN_DATE: string (nullable = true)
+ |-- ACCT_EXPIRAION_DATE: string (nullable = true)
+ |-- ACCT_REISSUE_DATE: string (nullable = true)
+ |-- ACCT_CURR_CYC_CREDIT: decimal(12,2) (nullable = true)
+ |-- ACCT_CURR_CYC_DEBIT: decimal(12,2) (nullable = true)
+ |-- ACCT_ADDR_ZIP: string (nullable = true)
+ |-- ACCT_GROUP_ID: string (nullable = true)
+ |-- FILLER: string (nullable = true)
+
++-------+------------------+-------------+-----------------+----------------------+--------------+-------------------+-----------------+--------------------+-------------------+-------------+-------------+------+
+|ACCT_ID|ACCT_ACTIVE_STATUS|ACCT_CURR_BAL|ACCT_CREDIT_LIMIT|ACCT_CASH_CREDIT_LIMIT|ACCT_OPEN_DATE|ACCT_EXPIRAION_DATE|ACCT_REISSUE_DATE|ACCT_CURR_CYC_CREDIT|ACCT_CURR_CYC_DEBIT|ACCT_ADDR_ZIP|ACCT_GROUP_ID|FILLER|
++-------+------------------+-------------+-----------------+----------------------+--------------+-------------------+-----------------+--------------------+-------------------+-------------+-------------+------+
+|      1|                 Y|       194.00|          2020.00|               1020.00|    2014-11-20|         2025-05-20|       2025-05-20|                0.00|               0.00|   A000000000|             |      |
+|      2|                 Y|       158.00|          6130.00|               5448.00|    2013-06-19|         2024-08-11|       2024-08-11|                0.00|               0.00|   A000000000|             |      |
+|      3|                 Y|       147.00|          4909.00|                538.00|    2013-08-23|         2024-01-10|       2024-01-10|                0.00|               0.00|   A000000000|             |      |
+|      4|                 Y|        40.00|          3503.00|               2789.00|    2012-11-17|         2023-12-16|       2023-12-16|                0.00|               0.00|   A000000000|             |      |
+|      5|                 Y|       345.00|          3819.00|               2430.00|    2012-10-03|         2025-03-09|       2025-03-09|                0.00|               0.00|   A000000000|             |      |
+|      6|                 Y|       218.00|          3584.00|               2948.00|    2017-12-23|         2025-10-08|       2025-10-08|                0.00|               0.00|   A000000000|             |      |
+|      7|                 Y|       193.00|          2065.00|                264.00|    2012-10-12|         2024-12-13|       2024-12-13|                0.00|               0.00|   A000000000|             |      |
+|      8|                 Y|       605.00|          6104.00|               1318.00|    2012-01-04|         2024-05-20|       2024-05-20|                0.00|               0.00|   A000000000|             |      |
+|      9|                 Y|       560.00|          8201.00|               2065.00|    2016-08-27|         2024-12-27|       2024-12-27|                0.00|               0.00|   A000000000|             |      |
+|     10|                 Y|       159.00|          5401.00|               4442.00|    2015-09-13|         2023-01-27|       2023-01-27|                0.00|               0.00|   A000000000|             |      |
++-------+------------------+-------------+-----------------+----------------------+--------------+-------------------+-----------------+--------------------+-------------------+-------------+-------------+------+
+only showing top 10 rows
+
+Total rows: 50
+
+── Validation ──
+  Raw line count : 50
+  DataFrame rows : 50
+  Match          : YES
+
+  Sample row (first):
+    ACCT_ID                        = 1
+    ACCT_ACTIVE_STATUS             = 'Y'
+    ACCT_CURR_BAL                  = Decimal('194.00')
+    ACCT_CREDIT_LIMIT              = Decimal('2020.00')
+    ACCT_CASH_CREDIT_LIMIT         = Decimal('1020.00')
+    ACCT_OPEN_DATE                 = '2014-11-20'
+    ACCT_EXPIRAION_DATE            = '2025-05-20'
+    ACCT_REISSUE_DATE              = '2025-05-20'
+    ACCT_CURR_CYC_CREDIT           = Decimal('0.00')
+    ACCT_CURR_CYC_DEBIT            = Decimal('0.00')
+    ACCT_ADDR_ZIP                  = 'A000000000'
+    ACCT_GROUP_ID                  = ''

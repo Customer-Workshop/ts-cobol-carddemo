@@ -1,0 +1,66 @@
+========================================================================
+CUSTREC.cpy → custdata.txt  —  Parsed DataFrame
+========================================================================
+root
+ |-- CUST_ID: integer (nullable = true)
+ |-- CUST_FIRST_NAME: string (nullable = true)
+ |-- CUST_MIDDLE_NAME: string (nullable = true)
+ |-- CUST_LAST_NAME: string (nullable = true)
+ |-- CUST_ADDR_LINE_1: string (nullable = true)
+ |-- CUST_ADDR_LINE_2: string (nullable = true)
+ |-- CUST_ADDR_LINE_3: string (nullable = true)
+ |-- CUST_ADDR_STATE_CD: string (nullable = true)
+ |-- CUST_ADDR_COUNTRY_CD: string (nullable = true)
+ |-- CUST_ADDR_ZIP: string (nullable = true)
+ |-- CUST_PHONE_NUM_1: string (nullable = true)
+ |-- CUST_PHONE_NUM_2: string (nullable = true)
+ |-- CUST_SSN: integer (nullable = true)
+ |-- CUST_GOVT_ISSUED_ID: string (nullable = true)
+ |-- CUST_DOB_YYYYMMDD: string (nullable = true)
+ |-- CUST_EFT_ACCOUNT_ID: string (nullable = true)
+ |-- CUST_PRI_CARD_HOLDER_IND: string (nullable = true)
+ |-- CUST_FICO_CREDIT_SCORE: integer (nullable = true)
+ |-- FILLER: string (nullable = true)
+
++-------+---------------+----------------+--------------+------------------+----------------+----------------+------------------+--------------------+-------------+----------------+----------------+---------+--------------------+-----------------+-------------------+------------------------+----------------------+------+
+|CUST_ID|CUST_FIRST_NAME|CUST_MIDDLE_NAME|CUST_LAST_NAME|  CUST_ADDR_LINE_1|CUST_ADDR_LINE_2|CUST_ADDR_LINE_3|CUST_ADDR_STATE_CD|CUST_ADDR_COUNTRY_CD|CUST_ADDR_ZIP|CUST_PHONE_NUM_1|CUST_PHONE_NUM_2| CUST_SSN| CUST_GOVT_ISSUED_ID|CUST_DOB_YYYYMMDD|CUST_EFT_ACCOUNT_ID|CUST_PRI_CARD_HOLDER_IND|CUST_FICO_CREDIT_SCORE|FILLER|
++-------+---------------+----------------+--------------+------------------+----------------+----------------+------------------+--------------------+-------------+----------------+----------------+---------+--------------------+-----------------+-------------------+------------------------+----------------------+------+
+|      1|       Immanuel|        Madeline|       Kessler| 618 Deshaun Route|        Apt. 802| Altenwerthshire|                NC|                 USA|        12546|   (908)119-8310|   (373)693-8684| 20973888|00000000000049368437|       1961-06-08|         0053581756|                       Y|                   274|      |
+|      2|         Enrico|           April|     Rosenbaum|  4917 Myrna Flats|        Apt. 453|    West Bernita|                IN|                 USA|        22770|   (429)706-9510|   (744)950-5272|587518382|00000000000506210371|       1961-10-08|         0069194009|                       Y|                   268|      |
+|      3|          Larry|            Cody|      Homenick|    362 Esta Parks|        Apt. 390|      New Gladys|                GA|                 USA|   19852-6716|   (950)396-9024|   (685)168-8826|317460867|00000000000052419303|       1987-11-30|         0006465789|                       Y|                   616|      |
+|      4|        Delbert|            Kaia|      Parisian|638 Blanda Gateway|        Apt. 076|   Lake Virginie|                MI|                 USA|   39035-0455|   (801)603-4121|   (156)074-6837|660354258|00000000000068579249|       1985-01-13|         0040802739|                       Y|                   776|      |
+|      5|          Treva|          Manley|    Schowalter| 5653 Legros Plaza|        Apt. 968|      Alvinaport|                MI|                 USA|   02251-1698|   (978)775-4633|   (439)943-7644|611264288|00000000000639799754|       1971-09-29|         0006365573|                       Y|                   529|      |
+|      6|        Ignacio|           Emery|       Douglas|  3963 Yasmin Port|       Suite 756| Port Josephstad|                VI|                 USA|   46713-5148|   (277)743-4266|   (519)010-8739|880329521|00000000000975535496|       1994-11-29|         0067163009|                       Y|                   753|      |
+|      7|         Cooper|          Dennis|        Mayert| 6490 Zakary Locks|        Apt. 765|       Madieport|                AL|                 USA|   34206-2974|   (698)282-4096|   (458)199-0016|835138951|00000000000959013170|       1977-05-06|         0024571415|                       Y|                   499|      |
+|      8|         Kelsie|          Jordyn|         Dicki|0925 Welch Streets|        Apt. 152|North Nanniestad|                SC|                 USA|        27610|   (345)563-7159|   (443)197-1271|295270759|00000000000109746991|       1964-03-25|         0033132723|                       Y|                    51|      |
+|      9|         Melvin|           Regan|      Ondricka|87893 Samson Flats|        Apt. 135|      New Braden|                VI|                 USA|        21113|   (035)456-1404|   (412)440-3130|842035847|00000000000568299451|       1975-11-07|         0039446039|                       Y|                   699|      |
+|     10|        Maybell|          Creola|          Mann|   77933 Adah Dale|       Suite 343|    Andersonfurt|                CT|                 USA|   44803-4279|   (614)594-2619|   (667)057-0235|754755746|00000000000212824755|       1980-06-11|         0093803568|                       Y|                   476|      |
++-------+---------------+----------------+--------------+------------------+----------------+----------------+------------------+--------------------+-------------+----------------+----------------+---------+--------------------+-----------------+-------------------+------------------------+----------------------+------+
+only showing top 10 rows
+
+Total rows: 50
+
+── Validation ──
+  Raw line count : 50
+  DataFrame rows : 50
+  Match          : YES
+
+  Sample row (first):
+    CUST_ID                        = 1
+    CUST_FIRST_NAME                = 'Immanuel'
+    CUST_MIDDLE_NAME               = 'Madeline'
+    CUST_LAST_NAME                 = 'Kessler'
+    CUST_ADDR_LINE_1               = '618 Deshaun Route'
+    CUST_ADDR_LINE_2               = 'Apt. 802'
+    CUST_ADDR_LINE_3               = 'Altenwerthshire'
+    CUST_ADDR_STATE_CD             = 'NC'
+    CUST_ADDR_COUNTRY_CD           = 'USA'
+    CUST_ADDR_ZIP                  = '12546'
+    CUST_PHONE_NUM_1               = '(908)119-8310'
+    CUST_PHONE_NUM_2               = '(373)693-8684'
+    CUST_SSN                       = 20973888
+    CUST_GOVT_ISSUED_ID            = '00000000000049368437'
+    CUST_DOB_YYYYMMDD              = '1961-06-08'
+    CUST_EFT_ACCOUNT_ID            = '0053581756'
+    CUST_PRI_CARD_HOLDER_IND       = 'Y'
+    CUST_FICO_CREDIT_SCORE         = 274
