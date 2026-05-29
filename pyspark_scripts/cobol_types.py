@@ -105,7 +105,7 @@ def pic_to_pyspark_type(pic: str, signed: bool, scale: int, int_digits: int):
         return DecimalType(precision, scale)
     total_digits = int_digits + scale
     if total_digits <= 9:
-        return IntegerType() if not signed else IntegerType()
+        return IntegerType()
     return LongType()
 
 
