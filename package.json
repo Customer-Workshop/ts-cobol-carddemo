@@ -1,0 +1,19 @@
+{
+  "name": "ts-cobol-carddemo",
+  "version": "1.0.0",
+  "description": "![Version](https://img.shields.io/badge/version-1.0.0-blue.svg)\r ![License](https://img.shields.io/badge/license-Apache%202.0-green.svg)",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest --verbose",
+    "test:ci": "jest --ci --coverage"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/jest": "^30.0.0",
+    "jest": "^30.4.2",
+    "ts-jest": "^29.4.11",
+    "typescript": "^6.0.3"
+  }
+}

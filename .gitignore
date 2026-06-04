@@ -1,3 +1,6 @@
+node_modules/
+dist/
+coverage/
 mock-data-generator/node_modules/*
 sample/*
 .vscode/*
