@@ -63,7 +63,25 @@ public class AccountImportJobConfig {
     public ItemWriter<Account> accountImportWriter(AccountRepository accountRepo) {
         return items -> {
             for (Account imported : items) {
-                accountRepo.save(imported);
+                accountRepo.findById(imported.getAcctId()).ifPresentOrElse(
+                        existing -> {
+                            existing.setAcctActiveStatus(imported.getAcctActiveStatus());
+                            existing.setAcctCurrBal(imported.getAcctCurrBal());
+                            existing.setAcctCreditLimit(imported.getAcctCreditLimit());
+                            existing.setAcctCashCreditLimit(imported.getAcctCashCreditLimit());
+                            existing.setAcctOpenDate(imported.getAcctOpenDate());
+                            existing.setAcctExpirationDate(imported.getAcctExpirationDate());
+                            existing.setAcctReissueDate(imported.getAcctReissueDate());
+                            existing.setAcctCurrCycCredit(imported.getAcctCurrCycCredit());
+                            existing.setAcctCurrCycDebit(imported.getAcctCurrCycDebit());
+                            existing.setAcctAddrZip(imported.getAcctAddrZip());
+                            existing.setAcctGroupId(imported.getAcctGroupId());
+                            accountRepo.save(existing);
+                        },
+                        () -> {
+                            imported.setVersion(0L);
+                            accountRepo.save(imported);
+                        });
             }
         };
     }
