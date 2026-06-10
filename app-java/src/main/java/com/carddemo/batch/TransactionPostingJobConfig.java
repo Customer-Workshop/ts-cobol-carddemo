@@ -131,7 +131,7 @@ public class TransactionPostingJobConfig {
                             account.getAcctCurrCycCredit().add(tx.getTranAmt()));
                 } else {
                     account.setAcctCurrCycDebit(
-                            account.getAcctCurrCycDebit().add(tx.getTranAmt()));
+                            account.getAcctCurrCycDebit().add(tx.getTranAmt().negate()));
                 }
                 accountRepo.save(account);
 

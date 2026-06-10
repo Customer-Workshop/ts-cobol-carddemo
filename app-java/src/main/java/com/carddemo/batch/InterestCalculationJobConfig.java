@@ -64,17 +64,14 @@ public class InterestCalculationJobConfig {
             for (Account account : accounts) {
                 List<TransactionCategoryBalance> catBals =
                         tcatRepo.findByAcctIdOrderByTranTypeCdAscTranCatCdAsc(account.getAcctId());
-                if (catBals.isEmpty()) {
-                    continue;
-                }
-
                 BigDecimal totalInt = BigDecimal.ZERO;
 
-                // Look up a card number for this account (for the interest transaction record)
-                List<CardXref> xrefs = xrefRepo.findByXrefAcctId(account.getAcctId());
-                String cardNum = xrefs.isEmpty() ? "" : xrefs.get(0).getXrefCardNum();
+                if (!catBals.isEmpty()) {
+                    // Look up a card number for this account (for the interest transaction record)
+                    List<CardXref> xrefs = xrefRepo.findByXrefAcctId(account.getAcctId());
+                    String cardNum = xrefs.isEmpty() ? "" : xrefs.get(0).getXrefCardNum();
 
-                for (TransactionCategoryBalance tcat : catBals) {
+                    for (TransactionCategoryBalance tcat : catBals) {
                     // 1200-GET-INTEREST-RATE: look up by group + type + cat
                     Optional<DisclosureGroup> disc = disclosureRepo
                             .findByAcctGroupIdAndTranTypeCdAndTranCatCd(
@@ -115,6 +112,7 @@ public class InterestCalculationJobConfig {
                             .tranProcTs(procTs)
                             .build();
                     transactionRepo.save(intTx);
+                    }
                 }
 
                 // 1050-UPDATE-ACCOUNT: add interest and reset cycle fields

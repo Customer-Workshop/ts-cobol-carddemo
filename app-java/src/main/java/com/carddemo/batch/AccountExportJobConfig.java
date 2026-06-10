@@ -40,14 +40,13 @@ public class AccountExportJobConfig {
     @Bean
     public FlatFileItemWriter<Account> accountExportWriter() {
         AtomicLong seq = new AtomicLong(0);
-        String ts = LocalDateTime.now()
-                .format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SS"));
         return new FlatFileItemWriterBuilder<Account>()
                 .name("accountExportWriter")
                 .resource(new FileSystemResource("output/account-export.dat"))
                 .lineAggregator(account -> String.join("|",
                         "A",
-                        ts,
+                        LocalDateTime.now().format(
+                                DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SS")),
                         String.valueOf(seq.incrementAndGet()),
                         "0001",   // branch ID
                         "US-E",   // region code
