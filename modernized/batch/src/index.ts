@@ -1,4 +1,13 @@
-// @carddemo/batch — batch job runner placeholder.
-// Jobs (post-transactions, interest-calc, generate-statements, transaction-report)
-// land in a later phase per docs/ARCHITECTURE.md.
-export const BATCH_PACKAGE = '@carddemo/batch';
+// @carddemo/batch — modernized batch job suite (see src/cli.ts for the CLI).
+export * from './lib/validation';
+export * from './lib/interest';
+export * from './lib/timestamp';
+export * from './lib/statementFormat';
+export * from './lib/reportFormat';
+export { postTransactions } from './jobs/postTransactions';
+export { interestCalc } from './jobs/interestCalc';
+export { generateStatements } from './jobs/generateStatements';
+export { transactionReport } from './jobs/transactionReport';
+export { archiveData } from './jobs/archiveData';
+export { exportMasters } from './jobs/exportMasters';
+export { runPipeline, startScheduler, PIPELINE } from './scheduler';
