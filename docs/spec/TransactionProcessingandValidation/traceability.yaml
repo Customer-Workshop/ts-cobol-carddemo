@@ -1,0 +1,1429 @@
+function: TransactionProcessingandValidation
+generated_at: '2026-06-25T13:30:17Z'
+summary:
+  total_rules: 58
+  captured: 51
+  not_applicable: 7
+  unreachable: 0
+  delegated: 0
+  not_accounted_for: 0
+rules:
+- rule_id: 96e48f35_81ac_458a_8dd6_b768c727d49f
+  program: CBTRN01C
+  disposition: not_applicable
+  reason: '[Pattern-classified] Working storage initialization'
+  program_path: cbl/CBTRN01C.cbl
+  rule_name: Process daily transactions until batch exhausted
+  rule_text: WHILE daily transaction records remain available for processing, THE
+    Transaction Batch Processor SHALL retrieve the next daily transaction record,
+    initialize the cross-reference lookup status, and prepare the card number for
+    validation
+- rule_id: 1a61c3bd_e945_4fbb_a335_99e0a5dde460
+  program: CBTRN01C
+  disposition: not_applicable
+  reason: '[Pattern-classified] Working storage initialization'
+  program_path: cbl/CBTRN01C.cbl
+  rule_name: Verify card number in cross-reference file
+  rule_text: WHEN a transaction card number is submitted for verification, THE Card
+    Cross-Reference Lookup SHALL retrieve the card record from the cross-reference
+    file using the card number as the key; set the read status to zero when the card
+    is found, and set it to 4 when the card is not found.
+- rule_id: 955f5243_9a20_439e_a6e8_fd322a2cf166
+  program: CBTRN01C
+  disposition: not_applicable
+  reason: '[Pattern-classified] Working storage initialization'
+  program_path: cbl/CBTRN01C.cbl
+  rule_name: Read next daily transaction record
+  rule_text: THE Daily Transaction File Reader SHALL read the next record from the
+    daily transaction file; set the application result to zero when the read succeeds,
+    set it to 16 and mark end-of-file when no more records exist, and set it to 12
+    when a read error occurs.
+- rule_id: ed51fd9b_3cc9_4ff2_a109_eec720445ec8
+  program: CBTRN01C
+  disposition: not_applicable
+  reason: '[Pattern-classified] Working storage initialization'
+  program_path: cbl/CBTRN01C.cbl
+  rule_name: Initialize cross-reference lookup for transaction
+  rule_text: THE Cross-Reference Lookup Preparation SHALL initialize the cross-reference
+    read status to zero and copy the transaction card number to the lookup buffer.
+- rule_id: 000e319c_9a9e_491c_ac3c_b1003a638c7c
+  program: CBTRN01C
+  disposition: captured
+  program_path: cbl/CBTRN01C.cbl
+  rule_name: Open daily transaction, cross-reference, and account files
+  rule_text: THE File Management SHALL open the daily transaction file, the cross-reference
+    file, and the account master file in input mode
+  req_id: REQ-F-001
+  traceability_lines:
+  - 155
+  - 157
+  - 159
+  - 161
+  - 252
+  - 254
+  - 289
+  - 291
+  - 325
+  - 327
+- rule_id: 2f52ff9b_0d97_4edc_9592_26328a9e64dc
+  program: CBTRN01C
+  disposition: captured
+  program_path: cbl/CBTRN01C.cbl
+  rule_name: Look up card number in cross-reference file
+  rule_text: WHEN a card number lookup is requested against the cross-reference file,
+    THE Cross-Reference Lookup SHALL retrieve the cross-reference record using the
+    card number as the key; return success when the record is found, and return not-found
+    status when the card number does not exist in the cross-reference file
+  req_id: REQ-F-006
+  traceability_lines:
+  - 227
+  - 228
+  - 229
+  - 230
+  - 231
+  - 233
+  - 239
+- rule_id: 362a727a_f19b_4f31_82ba_4e2394c9a8ff
+  program: CBTRN01C
+  disposition: captured
+  program_path: cbl/CBTRN01C.cbl
+  rule_name: Retrieve next daily transaction record
+  rule_text: WHEN the next daily transaction record is requested, THE Daily Transaction
+    Reader SHALL read the record from the daily transaction file; return success when
+    the record is read successfully, return end-of-file when no more records exist,
+    and return error for any other file status condition
+  req_ids:
+  - REQ-F-003
+  - REQ-F-004
+  - REQ-F-005
+  traceability_lines:
+  - 200
+  - 202
+  - 203
+  - 204
+  - 205
+  - 206
+  - 207
+  - 208
+  - 209
+  - 210
+  - 211
+  - 212
+  - 213
+  - 215
+  - 216
+  - 217
+  - 223
+  - 224
+- rule_id: 36911295_da30_4a52_a68b_e3212d3bb284
+  program: CBTRN01C
+  disposition: captured
+  program_path: cbl/CBTRN01C.cbl
+  rule_name: Read account record by account identifier
+  rule_text: WHEN an account identifier lookup is requested against the account master
+    file, THE Account Record Retrieval SHALL retrieve the account record using the
+    account identifier as the key; return success when the record is found, and return
+    not-found status when the account identifier does not exist in the account master
+    file
+  req_id: REQ-F-009
+  traceability_lines:
+  - 241
+  - 242
+  - 243
+  - 244
+  - 245
+  - 247
+  - 250
+- rule_id: 5e8ecc52_664f_40cd_b9e6_c161a580456f
+  program: CBTRN01C
+  disposition: captured
+  program_path: cbl/CBTRN01C.cbl
+  rule_name: Validate cross-reference lookup succeeded before account lookup
+  rule_text: WHEN the cross-reference lookup completes, THE Cross-Reference Validation
+    Gate SHALL proceed to account lookup when the cross-reference read status is 0
+    (success), and skip account lookup when the cross-reference lookup failed
+  req_ids:
+  - REQ-F-007
+  - REQ-F-008
+  traceability_lines:
+  - 155
+  - 173
+  - 174
+  - 175
+  - 176
+  - 177
+  - 178
+  - 179
+  - 184
+- rule_id: a02c996f_d094_4c98_8793_7b9c57017448
+  program: CBTRN01C
+  disposition: captured
+  program_path: cbl/CBTRN01C.cbl
+  rule_name: Report account not found error
+  rule_text: IF the account record is not found in the account master file, THEN THE
+    Account Validation Error Handler SHALL display an error message indicating the
+    account identifier that was not found
+  req_id: REQ-F-010
+  traceability_lines:
+  - 155
+  - 177
+  - 178
+  - 179
+- rule_id: 53d80611_09aa_4023_bb60_14d0f0c0eb88
+  program: CBTRN01C
+  disposition: captured
+  program_path: cbl/CBTRN01C.cbl
+  rule_name: Open daily transaction file for batch processing
+  rule_text: THE Daily Transaction File Handler SHALL open the daily transaction file
+    in read-only mode
+  req_id: REQ-F-001
+  traceability_lines:
+  - 252
+  - 254
+- rule_id: 5ce9c2f7_153b_4531_b865_3ae23111cf41
+  program: CBTRN01C
+  disposition: captured
+  program_path: cbl/CBTRN01C.cbl
+  rule_name: Read next daily transaction record
+  rule_text: WHEN a read operation is initiated on the daily transaction file, THE
+    Daily Transaction Record Reader SHALL read the next transaction record; if successful,
+    set the application result to success (0); if end-of-file is reached, set the
+    application result to end-of-file (16) and mark daily transaction file processing
+    as complete; if any other error occurs, set the application result to error (12)
+  req_ids:
+  - REQ-F-003
+  - REQ-F-004
+  - REQ-F-005
+  traceability_lines:
+  - 200
+  - 202
+  - 203
+  - 204
+  - 205
+  - 206
+  - 207
+  - 208
+  - 209
+  - 210
+  - 211
+  - 212
+  - 213
+  - 215
+  - 216
+  - 217
+  - 223
+  - 224
+- rule_id: 5f386434_80d7_4f22_8a9b_7a6c720162a2
+  program: CBTRN01C
+  disposition: captured
+  program_path: cbl/CBTRN01C.cbl
+  rule_name: Initialize batch processing loop
+  rule_text: WHILE daily transaction file processing is ongoing (END-OF-DAILY-TRANS-FILE
+    = 'N'), THE Daily Transaction Batch Processor SHALL read the next daily transaction
+    record, move its payment card number to the lookup buffer, and retrieve the corresponding
+    cross-reference record
+  req_id: REQ-F-002
+  traceability_lines:
+  - 155
+  - 157
+  - 159
+  - 164
+  - 165
+  - 166
+  - 171
+  - 172
+  - 185
+  - 186
+- rule_id: cd93179d_cddd_44ca_81da_3604727a3510
+  program: CBTRN01C
+  disposition: captured
+  program_path: cbl/CBTRN01C.cbl
+  rule_name: Look up card cross-reference record
+  rule_text: WHEN a payment card number is submitted for cross-reference lookup, THE
+    Card Cross-Reference Lookup SHALL retrieve the cross-reference record using the
+    payment card number as the indexed key; if found, display the card number, account
+    ID, and customer ID; if not found, complete the lookup without output
+  req_ids:
+  - REQ-F-006
+  - REQ-F-011
+  traceability_lines:
+  - 227
+  - 228
+  - 229
+  - 230
+  - 231
+  - 234
+  - 236
+  - 237
+  - 238
+  - 239
+- rule_id: fb2a6dcf_bbdd_4fce_8301_3aa37899a661
+  program: CBTRN01C
+  disposition: captured
+  program_path: cbl/CBTRN01C.cbl
+  rule_name: Open card cross-reference file for lookup
+  rule_text: THE Card Cross-Reference File Handler SHALL open the card cross-reference
+    file in read-only mode
+  req_id: REQ-F-001
+  traceability_lines:
+  - 289
+  - 291
+- rule_id: 010ca01a_5d8a_4b99_b91d_a4e64b56ed45
+  program: CBTRN01C
+  disposition: captured
+  program_path: cbl/CBTRN01C.cbl
+  rule_name: Open cross-reference file for card lookups
+  rule_text: THE Card Cross-Reference File Handler SHALL open the cross-reference
+    file in input mode.
+  req_id: REQ-F-001
+  traceability_lines:
+  - 155
+  - 159
+  - 289
+  - 291
+- rule_id: 13a4042e_80b2_4d9b_bc10_29199017187a
+  program: CBTRN01C
+  disposition: captured
+  program_path: cbl/CBTRN01C.cbl
+  rule_name: Process daily transactions until batch completion
+  rule_text: WHILE more daily transaction records remain to be processed (END-OF-DAILY-TRANS-FILE
+    = 'N'), THE Daily Transaction Batch Processor SHALL read the next transaction
+    record, verify the card number against the cross-reference file, and display either
+    the transaction details when verification succeeds or an error message when the
+    card cannot be verified; repeat until all transactions are processed or an error
+    occurs.
+  req_ids:
+  - REQ-F-002
+  - REQ-F-012
+  traceability_lines:
+  - 155
+  - 164
+  - 165
+  - 166
+  - 167
+  - 168
+  - 169
+  - 170
+  - 171
+  - 172
+  - 173
+  - 180
+  - 181
+  - 182
+  - 183
+  - 184
+  - 185
+  - 186
+- rule_id: 423621c0_8dd9_44b6_95ab_dc76da4019fa
+  program: CBTRN01C
+  disposition: captured
+  program_path: cbl/CBTRN01C.cbl
+  rule_name: Display card verification failure message
+  rule_text: WHEN a transaction record is successfully read but the card number is
+    not found in the cross-reference file, THE Card Verification Failure Handler SHALL
+    display an error message showing the card number and transaction ID to indicate
+    the transaction is being skipped.
+  req_id: REQ-F-012
+  traceability_lines:
+  - 155
+  - 180
+  - 181
+  - 182
+  - 183
+  - 184
+- rule_id: 9e163303_74a9_4ddc_b335_4f317e555df3
+  program: CBTRN01C
+  disposition: captured
+  program_path: cbl/CBTRN01C.cbl
+  rule_name: Display verified transaction record
+  rule_text: WHEN a transaction record is successfully read and the card number is
+    verified, THE Transaction Display Handler SHALL display the transaction record.
+  req_id: REQ-F-011
+  traceability_lines:
+  - 155
+  - 168
+- rule_id: fd895f30_0a3b_4633_afaf_0bf5b8d05cf2
+  program: CBTRN01C
+  disposition: captured
+  program_path: cbl/CBTRN01C.cbl
+  rule_name: Open daily transaction file for batch processing
+  rule_text: THE Daily Transaction File Handler SHALL open the daily transaction file
+    in input mode.
+  req_id: REQ-F-001
+  traceability_lines:
+  - 155
+  - 157
+  - 252
+  - 254
+- rule_id: 6c0f53be_9930_48fb_8826_812d58c03ac9
+  program: CBTRN02C
+  disposition: not_applicable
+  reason: '[Pattern-classified] Working storage initialization'
+  program_path: cbl/CBTRN02C.cbl
+  rule_name: Read next daily transaction record
+  rule_text: WHEN the program requests the next daily transaction record, THE Transaction
+    Batch Processor SHALL read the next daily transaction record; set application
+    result to success (0) when the read succeeds, set it to end-of-file (16) and the
+    end-of-file flag to 'Y' when no more records exist, and set it to error (12) when
+    the read fails for other reasons.
+- rule_id: fbdaa1bb_765f_4d23_a9c9_8b2d17d0cf96
+  program: CBTRN02C
+  disposition: captured
+  rule_name: Create new transaction category balance record
+  rule_text: WHEN a transaction category balance record does not exist for the account
+    and category, THE Transaction Category Balance Handler SHALL initialize a new
+    transaction category balance record, populate it with the account identifier,
+    transaction type code, and category code from the current transaction, add the
+    transaction amount to the category balance, and write the record to the transaction
+    category balance file
+  req_ids:
+  - REQ-F-025
+  - REQ-F-041
+  traceability_lines:
+  - 503
+  - 504
+  - 505
+  - 506
+  - 507
+  - 508
+  - 510
+- rule_id: 06283db8_eeba_4532_813d_9ad0813ec42b
+  program: CBTRN02C
+  disposition: captured
+  program_path: cbl/CBTRN02C.cbl
+  rule_name: Open card cross-reference lookup file
+  rule_text: THE Transaction Batch Processor SHALL open the card cross-reference lookup
+    file.
+  req_ids:
+  - REQ-F-013
+  - REQ-F-029
+  traceability_lines:
+  - 273
+  - 275
+- rule_id: 16cc25e5_f877_4380_8d60_29f3afeeb65f
+  program: CBTRN02C
+  disposition: captured
+  program_path: cbl/CBTRN02C.cbl
+  rule_name: Validate transaction against card and account rules
+  rule_text: WHEN a daily transaction record is ready for validation, THE Transaction
+    Validator SHALL look up the card number in the cross-reference file; if found,
+    look up the associated account; if found, compute the projected balance and verify
+    it does not exceed the credit limit and verify the account has not expired; set
+    validation fail reason to 100 if card not found, 101 if account not found, 102
+    if credit limit exceeded, 103 if account expired, or leave it at 0 if all validations
+    pass.
+  req_ids:
+  - REQ-F-018
+  - REQ-F-019
+  - REQ-F-033
+  - REQ-F-035
+  - REQ-F-036
+  traceability_lines:
+  - 370
+  - 371
+  - 372
+  - 373
+  - 376
+  - 380
+  - 381
+  - 382
+  - 383
+  - 384
+  - 385
+  - 391
+  - 393
+  - 394
+  - 395
+  - 396
+  - 397
+  - 400
+  - 401
+  - 402
+  - 403
+  - 404
+  - 405
+  - 407
+  - 409
+  - 410
+  - 413
+  - 414
+  - 416
+  - 417
+  - 420
+  - 421
+- rule_id: 1ab522eb_4f56_435f_a242_45d113fd3946
+  program: CBTRN02C
+  disposition: captured
+  program_path: cbl/CBTRN02C.cbl
+  rule_name: Write transaction record to archive file
+  rule_text: WHEN a validated transaction is approved for posting, THE Transaction
+    Archive Writer SHALL write the transaction record to the transaction archive file.
+  req_ids:
+  - REQ-F-022
+  - REQ-F-038
+  traceability_lines:
+  - 562
+  - 564
+- rule_id: 3a3b4f34_d4ac_4ec7_aaa6_8f01b4bd90a1
+  program: CBTRN02C
+  disposition: captured
+  program_path: cbl/CBTRN02C.cbl
+  rule_name: Obtain current system date and time in DB2 format
+  rule_text: THE Timestamp Formatter SHALL obtain the current system date and time,
+    extract each component, and format it into DB2 timestamp format with hyphens separating
+    date components and periods separating time components.
+  req_ids:
+  - REQ-F-021
+  - REQ-F-038
+  - REQ-F-043
+  traceability_lines:
+  - 692
+  - 693
+  - 694
+  - 695
+  - 696
+  - 697
+  - 698
+  - 699
+  - 700
+  - 701
+  - 702
+  - 703
+- rule_id: 4faf4b8d_fe67_4e00_9717_4297522c6bc6
+  program: CBTRN02C
+  disposition: captured
+  program_path: cbl/CBTRN02C.cbl
+  rule_name: Open transaction archive output file
+  rule_text: THE Transaction Batch Processor SHALL open the transaction archive output
+    file.
+  req_ids:
+  - REQ-F-013
+  - REQ-F-030
+  traceability_lines:
+  - 254
+  - 256
+- rule_id: 5bf60db5_4ccb_453e_ae7f_ee8ae01d7453
+  program: CBTRN02C
+  disposition: captured
+  program_path: cbl/CBTRN02C.cbl
+  rule_name: Look up card in cross-reference file
+  rule_text: WHEN the card number from the daily transaction is ready for lookup,
+    THE Card Cross-Reference Lookup SHALL retrieve the account identifier associated
+    with the card number; set validation fail reason to 100 if the card is not found.
+  req_ids:
+  - REQ-F-016
+  - REQ-F-033
+  traceability_lines:
+  - 380
+  - 381
+  - 382
+  - 383
+  - 384
+  - 385
+  - 391
+- rule_id: 5d68d589_5dfe_42cb_88a1_56ccd98ee2ea
+  program: CBTRN02C
+  disposition: captured
+  program_path: cbl/CBTRN02C.cbl
+  rule_name: Update account balances and rewrite account record
+  rule_text: WHEN a validated transaction is approved for posting, THE Account Balance
+    Updater SHALL add the transaction amount to the account's current balance; if
+    the transaction amount is non-negative, add it to the current-cycle credit total;
+    if the transaction amount is negative, add it to the current-cycle debit total;
+    rewrite the updated account record to the account master file.
+  req_ids:
+  - REQ-F-023
+  - REQ-F-039
+  traceability_lines:
+  - 545
+  - 546
+  - 547
+  - 548
+  - 549
+  - 550
+  - 551
+  - 552
+  - 554
+- rule_id: 5f69fd89_6e14_4559_97cf_b241663e751b
+  program: CBTRN02C
+  disposition: captured
+  program_path: cbl/CBTRN02C.cbl
+  rule_name: Open account master file for updates
+  rule_text: THE Transaction Batch Processor SHALL open the account master file for
+    read and update operations.
+  req_ids:
+  - REQ-F-013
+  - REQ-F-029
+  traceability_lines:
+  - 309
+  - 311
+- rule_id: 7b9ec6d9_1111_4c9c_a5bf_b62a82e3b752
+  program: CBTRN02C
+  disposition: captured
+  program_path: cbl/CBTRN02C.cbl
+  rule_name: Look up account in master file
+  rule_text: WHEN the account identifier from the cross-reference lookup is ready
+    for account validation, THE Account Validator SHALL retrieve the account record;
+    if found, compute the projected balance as current-cycle credits minus current-cycle
+    debits plus transaction amount, verify the projected balance does not exceed the
+    credit limit (set fail reason to 102 if exceeded), and verify the account expiration
+    date is not earlier than the transaction date (set fail reason to 103 if expired);
+    if the account is not found, set fail reason to 101.
+  req_ids:
+  - REQ-F-017
+  - REQ-F-018
+  - REQ-F-019
+  - REQ-F-034
+  - REQ-F-035
+  - REQ-F-036
+  traceability_lines:
+  - 393
+  - 394
+  - 395
+  - 396
+  - 397
+  - 400
+  - 401
+  - 402
+  - 403
+  - 404
+  - 405
+  - 407
+  - 409
+  - 410
+  - 413
+  - 414
+  - 416
+  - 417
+  - 420
+  - 421
+- rule_id: a2f49dde_d776_49f7_87b0_0304f956b216
+  program: CBTRN02C
+  disposition: captured
+  program_path: cbl/CBTRN02C.cbl
+  rule_name: Process daily transactions until end of file
+  rule_text: WHILE transaction records remain available in the daily transaction file,
+    THE Transaction Batch Processor SHALL read the next daily transaction, validate
+    it, and post it if validation succeeds; repeat until end of file.
+  req_ids:
+  - REQ-F-014
+  - REQ-F-031
+  traceability_lines:
+  - 193
+  - 195
+  - 196
+  - 197
+  - 199
+  - 202
+  - 203
+  - 204
+  - 205
+  - 210
+  - 211
+  - 212
+  - 216
+  - 217
+  - 218
+  - 219
+  - 424
+  - 441
+  - 442
+- rule_id: e53dde1f_e858_4ea0_aa66_2dee8ae1ea30
+  program: CBTRN02C
+  disposition: captured
+  program_path: cbl/CBTRN02C.cbl
+  rule_name: Assemble transaction record for posting
+  rule_text: WHEN a validated transaction is approved for posting, THE Transaction
+    Record Assembler SHALL copy all transaction details from the daily transaction
+    record to the transaction record, obtain the current system date and time in DB2
+    format, and store it as the processing timestamp.
+  req_ids:
+  - REQ-F-021
+  - REQ-F-038
+  traceability_lines:
+  - 424
+  - 425
+  - 426
+  - 427
+  - 428
+  - 429
+  - 430
+  - 431
+  - 432
+  - 433
+  - 434
+  - 435
+  - 436
+  - 437
+  - 438
+- rule_id: f20edb5e_978c_42d1_aa26_6134e263651a
+  program: CBTRN02C
+  disposition: captured
+  program_path: cbl/CBTRN02C.cbl
+  rule_name: Open daily transaction input file
+  rule_text: THE Transaction Batch Processor SHALL open the daily transaction input
+    file.
+  req_ids:
+  - REQ-F-013
+  - REQ-F-029
+  traceability_lines:
+  - 236
+  - 238
+- rule_id: 10259557_51ee_40c4_95d8_c57337d378c1
+  program: CBTRN02C
+  disposition: captured
+  program_path: cbl/CBTRN02C.cbl
+  rule_name: Read next daily transaction from batch
+  rule_text: WHEN the next transaction record is requested from the daily transaction
+    file, THE Transaction Reader SHALL read the transaction record into the buffer,
+    set the application result to 0 on success, set the application result to 16 and
+    the end-of-file flag to 'Y' when no more records exist, and set the application
+    result to 12 on any other read error
+  req_ids:
+  - REQ-F-015
+  - REQ-F-032
+  traceability_lines:
+  - 345
+  - 346
+  - 347
+  - 348
+  - 349
+  - 350
+  - 351
+  - 352
+  - 353
+  - 354
+  - 355
+  - 356
+  - 357
+  - 359
+  - 360
+  - 361
+  - 367
+  - 368
+- rule_id: 8111cc6c_1645_4602_9845_007e4ab219df
+  program: CBTRN02C
+  disposition: captured
+  program_path: cbl/CBTRN02C.cbl
+  rule_name: Update account balance and cycle totals
+  rule_text: WHEN a transaction has been validated and approved for posting, THE Account
+    Balance Updater SHALL add the transaction amount to the account's current balance,
+    add the transaction amount to the current cycle credit total if the amount is
+    zero or positive, add the transaction amount to the current cycle debit total
+    if the amount is negative, and rewrite the updated account record to the account
+    file
+  req_ids:
+  - REQ-F-023
+  - REQ-F-039
+  traceability_lines:
+  - 545
+  - 546
+  - 547
+  - 548
+  - 549
+  - 550
+  - 551
+  - 552
+  - 554
+- rule_id: 81697142_c228_431f_ba3e_a337093be85b
+  program: CBTRN02C
+  disposition: captured
+  program_path: cbl/CBTRN02C.cbl
+  rule_name: Validate transaction against card and account data
+  rule_text: WHEN a transaction record is ready for validation, THE Transaction Validator
+    SHALL look up the card number in the cross-reference file and set fail reason
+    to 100 if not found; if found, retrieve the account record and set fail reason
+    to 101 if not found; if the account is found, compute the projected balance as
+    current cycle credit minus current cycle debit plus transaction amount, set fail
+    reason to 102 if the projected balance exceeds the credit limit, and set fail
+    reason to 103 if the account expiration date is earlier than the transaction date;
+    leave fail reason at 0 if all validations pass
+  req_ids:
+  - REQ-F-018
+  - REQ-F-019
+  - REQ-F-033
+  - REQ-F-034
+  - REQ-F-035
+  - REQ-F-036
+  traceability_lines:
+  - 370
+  - 371
+  - 372
+  - 373
+  - 376
+  - 380
+  - 381
+  - 382
+  - 383
+  - 384
+  - 385
+  - 391
+  - 393
+  - 394
+  - 395
+  - 396
+  - 397
+  - 400
+  - 401
+  - 402
+  - 403
+  - 404
+  - 405
+  - 407
+  - 409
+  - 410
+  - 413
+  - 414
+  - 416
+  - 417
+  - 420
+  - 421
+  - 424
+  - 440
+  - 441
+- rule_id: c87e4ee3_910a_4e9c_b073_8f28d5cf89a3
+  program: CBTRN02C
+  disposition: captured
+  program_path: cbl/CBTRN02C.cbl
+  rule_name: Prepare transaction category balance lookup key
+  rule_text: WHEN a transaction is ready to be posted to the transaction category
+    balance file, THE Transaction Category Balance Lookup SHALL construct the lookup
+    key from the account identifier, transaction type code, and category code, attempt
+    to read the existing transaction category balance record, set the create flag
+    to 'Y' if the record is not found, and leave the create flag at 'N' if the record
+    is found
+  req_ids:
+  - REQ-F-024
+  - REQ-F-040
+  traceability_lines:
+  - 467
+  - 468
+  - 469
+  - 470
+  - 471
+  - 473
+  - 474
+  - 475
+  - 478
+  - 479
+  - 495
+  - 496
+  - 497
+  - 498
+  - 499
+- rule_id: d6d864a7_b35f_4673_8969_3c7f1de5010d
+  program: CBTRN02C
+  disposition: captured
+  program_path: cbl/CBTRN02C.cbl
+  rule_name: Update existing transaction category balance record
+  rule_text: WHEN a transaction category balance record exists for the account and
+    category, THE Transaction Category Balance Handler SHALL add the transaction amount
+    to the existing category balance and rewrite the updated record to the transaction
+    category balance file
+  req_ids:
+  - REQ-F-026
+  - REQ-F-042
+  traceability_lines:
+  - 526
+  - 527
+  - 528
+- rule_id: f11ff3f0_8af4_4ca9_9dee_510fdf5d97ac
+  program: CBTRN02C
+  disposition: captured
+  program_path: cbl/CBTRN02C.cbl
+  rule_name: Process daily transaction batch until completion
+  rule_text: WHILE transaction records remain available in the daily transaction file,
+    THE Daily Transaction Processor SHALL read the next transaction record, validate
+    it against card and account data, and if validation succeeds, post the transaction
+    by updating the transaction category balance and account balance records
+  req_ids:
+  - REQ-F-014
+  - REQ-F-031
+  traceability_lines:
+  - 193
+  - 202
+  - 203
+  - 204
+  - 205
+  - 210
+  - 211
+  - 212
+  - 216
+  - 217
+  - 218
+  - 219
+- rule_id: f6a3b3bc_5f85_4351_97e2_73519c47d091
+  program: CBTRN02C
+  disposition: captured
+  program_path: cbl/CBTRN02C.cbl
+  rule_name: Open transaction data files for processing
+  rule_text: THE Transaction Processing System SHALL open the daily transaction file
+    for sequential input, the card cross-reference file for random input, the account
+    file for input-output access, and the transaction category balance file for input-output
+    access
+  req_ids:
+  - REQ-F-013
+  - REQ-F-029
+  traceability_lines:
+  - 193
+  - 195
+  - 197
+  - 199
+  - 200
+  - 236
+  - 238
+  - 273
+  - 275
+  - 309
+  - 311
+  - 327
+  - 329
+- rule_id: 17b8201f_9e93_483e_b6f6_bccff8c8e0f6
+  program: CBTRN02C
+  disposition: captured
+  program_path: cbl/CBTRN02C.cbl
+  rule_name: Read next daily transaction record
+  rule_text: WHEN a transaction record is requested from the daily transaction file,
+    THE Transaction Record Reader SHALL read the next transaction record; return success
+    when the record is read successfully, return end-of-file when no more records
+    exist, and return error when the read operation fails.
+  req_ids:
+  - REQ-F-015
+  - REQ-F-032
+  traceability_lines:
+  - 345
+  - 346
+  - 347
+  - 348
+  - 349
+  - 350
+  - 351
+  - 352
+  - 353
+  - 354
+  - 355
+  - 356
+  - 357
+  - 359
+  - 360
+  - 361
+  - 367
+  - 368
+- rule_id: 538cd736_bd27_4755_92ac_5b2057aed66e
+  program: CBTRN02C
+  disposition: captured
+  program_path: cbl/CBTRN02C.cbl
+  rule_name: Look up card number in cross-reference file
+  rule_text: WHEN a card number from the transaction requires cross-reference lookup,
+    THE Card Cross-Reference Lookup SHALL retrieve the cross-reference record for
+    the card number; if the card is not found, set validation failure reason to 100
+    and description to 'INVALID CARD NUMBER FOUND'.
+  req_ids:
+  - REQ-F-016
+  - REQ-F-033
+  traceability_lines:
+  - 380
+  - 381
+  - 382
+  - 383
+  - 384
+  - 385
+  - 386
+  - 387
+  - 391
+- rule_id: 8698404a_83e1_400b_b731_45e7eedb1860
+  program: CBTRN02C
+  disposition: captured
+  program_path: cbl/CBTRN02C.cbl
+  rule_name: Look up account record and validate transaction constraints
+  rule_text: WHEN an account identifier from the cross-reference record requires account
+    validation, THE Account Validator SHALL retrieve the account record; if not found,
+    set validation failure reason to 101; if found, compute the projected balance
+    (current cycle credit minus current cycle debit plus transaction amount), validate
+    that the credit limit is not exceeded (set failure reason 102 if exceeded), and
+    validate that the account has not expired (set failure reason 103 if expired).
+  req_ids:
+  - REQ-F-017
+  - REQ-F-018
+  - REQ-F-019
+  - REQ-F-034
+  - REQ-F-035
+  - REQ-F-036
+  traceability_lines:
+  - 393
+  - 394
+  - 395
+  - 396
+  - 397
+  - 398
+  - 399
+  - 400
+  - 401
+  - 402
+  - 403
+  - 404
+  - 405
+  - 407
+  - 409
+  - 410
+  - 411
+  - 412
+  - 413
+  - 414
+  - 416
+  - 417
+  - 418
+  - 419
+  - 420
+  - 421
+- rule_id: 8b11d41f_3daf_4a83_88cc_518127421459
+  program: CBTRN02C
+  disposition: captured
+  program_path: cbl/CBTRN02C.cbl
+  rule_name: Open card cross-reference lookup file
+  rule_text: THE Card Cross-Reference Handler SHALL open the card cross-reference
+    file for random input access.
+  req_ids:
+  - REQ-F-013
+  - REQ-F-029
+  traceability_lines:
+  - 273
+  - 275
+- rule_id: 9611da2d_ce5b_4298_ac5d_1b8e34894b09
+  program: CBTRN02C
+  disposition: captured
+  program_path: cbl/CBTRN02C.cbl
+  rule_name: Post validated transaction to account
+  rule_text: WHEN a transaction passes all validation checks, THE Transaction Posting
+    SHALL update the account record to reflect the posted transaction.
+  req_ids:
+  - REQ-F-023
+  - REQ-F-039
+  traceability_lines:
+  - 424
+  - 441
+- rule_id: adfb0714_ad25_4827_88e9_96a0e68c4705
+  program: CBTRN02C
+  disposition: captured
+  program_path: cbl/CBTRN02C.cbl
+  rule_name: Write rejected transaction to rejections file
+  rule_text: WHEN a transaction fails validation, THE Rejection Record Writer SHALL
+    assemble the reject record with the transaction data and validation trailer, then
+    write the reject record to the rejections file.
+  req_ids:
+  - REQ-F-020
+  - REQ-F-037
+  traceability_lines:
+  - 446
+  - 447
+  - 448
+  - 451
+- rule_id: afbee6fd_956f_43cd_828b_6f936666cbc3
+  program: CBTRN02C
+  disposition: captured
+  program_path: cbl/CBTRN02C.cbl
+  rule_name: Process daily transactions until end of file
+  rule_text: WHILE more transaction records remain to be processed, THE Transaction
+    Processing Loop SHALL read the next transaction, validate it, and either post
+    it to the account or write it to the rejections file based on validation outcome.
+  req_ids:
+  - REQ-F-014
+  - REQ-F-031
+  - REQ-F-037
+  traceability_lines:
+  - 193
+  - 195
+  - 197
+  - 198
+  - 199
+  - 202
+  - 203
+  - 204
+  - 205
+  - 210
+  - 211
+  - 212
+  - 213
+  - 215
+  - 216
+  - 217
+  - 218
+  - 219
+- rule_id: b16220f4_c90c_4580_9a71_2d0304d3f675
+  program: CBTRN02C
+  disposition: captured
+  program_path: cbl/CBTRN02C.cbl
+  rule_name: Validate transaction against cross-reference and account data
+  rule_text: WHEN a transaction record is ready for validation, THE Transaction Validator
+    SHALL look up the card in the cross-reference file; if found, retrieve the account
+    record and validate the transaction amount against the credit limit and the transaction
+    date against the account expiration date; set the validation failure reason code
+    and description for each validation failure encountered.
+  req_ids:
+  - REQ-F-018
+  - REQ-F-019
+  - REQ-F-033
+  traceability_lines:
+  - 370
+  - 371
+  - 372
+  - 373
+  - 376
+- rule_id: b48c63f9_d230_4f89_8da0_d743db83793b
+  program: CBTRN02C
+  disposition: captured
+  program_path: cbl/CBTRN02C.cbl
+  rule_name: Update account balances for posted transaction
+  rule_text: WHEN a validated transaction is ready to be posted to the account, THE
+    Account Balance Updater SHALL add the transaction amount to the current balance;
+    if the amount is non-negative, add it to the current cycle credit; if the amount
+    is negative, add it to the current cycle debit; rewrite the updated account record
+    to the account file.
+  req_ids:
+  - REQ-F-023
+  - REQ-F-039
+  traceability_lines:
+  - 545
+  - 546
+  - 547
+  - 548
+  - 549
+  - 550
+  - 551
+  - 552
+  - 554
+- rule_id: b852a446_b5ec_4727_b4a8_0eb8ea9d863c
+  program: CBTRN02C
+  disposition: captured
+  program_path: cbl/CBTRN02C.cbl
+  rule_name: Open account master file
+  rule_text: THE Account File Handler SHALL open the account master file for random
+    input-output access.
+  req_ids:
+  - REQ-F-013
+  - REQ-F-029
+  traceability_lines:
+  - 309
+  - 311
+- rule_id: bd2060f7_b309_4d06_be04_92f1aea5b792
+  program: CBTRN02C
+  disposition: captured
+  program_path: cbl/CBTRN02C.cbl
+  rule_name: Open daily rejections output file
+  rule_text: THE Rejections File Handler SHALL open the daily rejections file for
+    sequential output.
+  req_ids:
+  - REQ-F-013
+  - REQ-F-029
+  traceability_lines:
+  - 291
+  - 293
+- rule_id: c8a6d8ed_bb1c_4bc8_a916_d13f8f09dc55
+  program: CBTRN02C
+  disposition: captured
+  program_path: cbl/CBTRN02C.cbl
+  rule_name: Open daily transaction input file
+  rule_text: THE Transaction File Handler SHALL open the daily transaction file for
+    sequential input.
+  req_ids:
+  - REQ-F-013
+  - REQ-F-029
+  traceability_lines:
+  - 236
+  - 238
+- rule_id: 5b239847_1ff8_49bd_b3a1_ababc926400c
+  program: COMBTRAN
+  disposition: not_applicable
+  program_path: jcl/COMBTRAN.jcl
+  rule_name: Document job purpose and licensing
+  rule_text: THE Job Documentation SHALL record copyright, licensing, and operational
+    purpose information.
+  reason: '[LLM-classified] Job header comment documenting copyright and licensing
+    — static documentation artifact with no runtime business behavior'
+- rule_id: 90bcf115_6ec1_4d39_b8a6_7397cddad7a9
+  program: COMBTRAN
+  disposition: captured
+  program_path: jcl/COMBTRAN.jcl
+  rule_name: Load consolidated transactions to master file
+  rule_text: THE Transaction Master File Loader SHALL copy all consolidated transaction
+    records from the sorted combined dataset to the transaction master file.
+  req_id: REQ-F-028
+  traceability_lines:
+  - 38
+  - 39
+  - 40
+  - 41
+  - 42
+  - 43
+  - 44
+  - 45
+  - 46
+  - 47
+  - 48
+- rule_id: a6398d51_1dfc_45a8_accc_b58f91566888
+  program: COMBTRAN
+  disposition: captured
+  program_path: jcl/COMBTRAN.jcl
+  rule_name: Sort consolidated transactions by identifier
+  rule_text: THE Transaction Consolidation SHALL consolidate transaction records from
+    backup and system-generated sources, sort by transaction identifier in ascending
+    sequence, and write the sorted result to the combined transaction dataset.
+  req_id: REQ-F-027
+  traceability_lines:
+  - 19
+  - 20
+  - 21
+  - 22
+  - 23
+  - 24
+  - 25
+  - 26
+  - 27
+  - 28
+  - 29
+  - 30
+  - 31
+  - 32
+  - 33
+  - 34
+  - 35
+  - 36
+  - 37
+- rule_id: ad899029_e657_400b_a479_98a739baa65f
+  program: COMBTRAN
+  disposition: not_applicable
+  program_path: jcl/COMBTRAN.jcl
+  rule_name: Document step purposes
+  rule_text: THE Step Documentation SHALL document the business purpose of each processing
+    step.
+  reason: '[LLM-classified] Inline step comments documenting processing purpose —
+    static documentation artifact with no runtime business behavior'
+- rule_id: 3b6bcc7f_7348_4ef4_ae80_8accadc6a1a5
+  program: POSTTRAN
+  disposition: captured
+  program_path: jcl/POSTTRAN.jcl
+  rule_name: Execute transaction posting process
+  rule_text: THE Transaction Posting SHALL invoke the transaction posting program
+    to process daily transactions, validate them against reference data, accumulate
+    category balances, write rejected transactions to the output dataset, and update
+    the transaction master file.
+  req_id: REQ-F-031
+  traceability_lines:
+  - 20
+  - 21
+  - 22
+  - 23
+  - 24
+  - 25
+  - 26
+  - 27
+  - 28
+  - 29
+  - 30
+  - 31
+  - 32
+  - 33
+  - 34
+  - 35
+  - 36
+  - 37
+  - 38
+  - 39
+  - 40
+  - 41
+  - 42
+requirements:
+- req_id: REQ-F-001
+  rule_ids:
+  - 000e319c_9a9e_491c_ac3c_b1003a638c7c
+  - 53d80611_09aa_4023_bb60_14d0f0c0eb88
+  - fb2a6dcf_bbdd_4fce_8301_3aa37899a661
+  - 010ca01a_5d8a_4b99_b91d_a4e64b56ed45
+  - fd895f30_0a3b_4633_afaf_0bf5b8d05cf2
+- req_id: REQ-F-002
+  rule_ids:
+  - 5f386434_80d7_4f22_8a9b_7a6c720162a2
+  - 13a4042e_80b2_4d9b_bc10_29199017187a
+- req_id: REQ-F-003
+  rule_ids:
+  - 362a727a_f19b_4f31_82ba_4e2394c9a8ff
+  - 5ce9c2f7_153b_4531_b865_3ae23111cf41
+- req_id: REQ-F-004
+  rule_ids:
+  - 362a727a_f19b_4f31_82ba_4e2394c9a8ff
+  - 5ce9c2f7_153b_4531_b865_3ae23111cf41
+- req_id: REQ-F-005
+  rule_ids:
+  - 362a727a_f19b_4f31_82ba_4e2394c9a8ff
+  - 5ce9c2f7_153b_4531_b865_3ae23111cf41
+- req_id: REQ-F-006
+  rule_ids:
+  - 2f52ff9b_0d97_4edc_9592_26328a9e64dc
+  - cd93179d_cddd_44ca_81da_3604727a3510
+- req_id: REQ-F-007
+  rule_ids:
+  - 5e8ecc52_664f_40cd_b9e6_c161a580456f
+- req_id: REQ-F-008
+  rule_ids:
+  - 5e8ecc52_664f_40cd_b9e6_c161a580456f
+- req_id: REQ-F-009
+  rule_ids:
+  - 36911295_da30_4a52_a68b_e3212d3bb284
+- req_id: REQ-F-010
+  rule_ids:
+  - a02c996f_d094_4c98_8793_7b9c57017448
+- req_id: REQ-F-011
+  rule_ids:
+  - cd93179d_cddd_44ca_81da_3604727a3510
+  - 9e163303_74a9_4ddc_b335_4f317e555df3
+- req_id: REQ-F-012
+  rule_ids:
+  - 423621c0_8dd9_44b6_95ab_dc76da4019fa
+  - 13a4042e_80b2_4d9b_bc10_29199017187a
+- req_id: REQ-F-013
+  rule_ids:
+  - f20edb5e_978c_42d1_aa26_6134e263651a
+  - c8a6d8ed_bb1c_4bc8_a916_d13f8f09dc55
+  - 8b11d41f_3daf_4a83_88cc_518127421459
+  - 5f69fd89_6e14_4559_97cf_b241663e751b
+  - b852a446_b5ec_4727_b4a8_0eb8ea9d863c
+  - 06283db8_eeba_4532_813d_9ad0813ec42b
+  - 4faf4b8d_fe67_4e00_9717_4297522c6bc6
+  - bd2060f7_b309_4d06_be04_92f1aea5b792
+  - f6a3b3bc_5f85_4351_97e2_73519c47d091
+- req_id: REQ-F-014
+  rule_ids:
+  - a2f49dde_d776_49f7_87b0_0304f956b216
+  - afbee6fd_956f_43cd_828b_6f936666cbc3
+  - f11ff3f0_8af4_4ca9_9dee_510fdf5d97ac
+- req_id: REQ-F-015
+  rule_ids:
+  - 10259557_51ee_40c4_95d8_c57337d378c1
+  - 17b8201f_9e93_483e_b6f6_bccff8c8e0f6
+- req_id: REQ-F-016
+  rule_ids:
+  - 5bf60db5_4ccb_453e_ae7f_ee8ae01d7453
+  - 538cd736_bd27_4755_92ac_5b2057aed66e
+- req_id: REQ-F-017
+  rule_ids:
+  - 7b9ec6d9_1111_4c9c_a5bf_b62a82e3b752
+  - 8698404a_83e1_400b_b731_45e7eedb1860
+- req_id: REQ-F-018
+  rule_ids:
+  - 7b9ec6d9_1111_4c9c_a5bf_b62a82e3b752
+  - 8698404a_83e1_400b_b731_45e7eedb1860
+  - 81697142_c228_431f_ba3e_a337093be85b
+  - 16cc25e5_f877_4380_8d60_29f3afeeb65f
+  - b16220f4_c90c_4580_9a71_2d0304d3f675
+- req_id: REQ-F-019
+  rule_ids:
+  - 7b9ec6d9_1111_4c9c_a5bf_b62a82e3b752
+  - 8698404a_83e1_400b_b731_45e7eedb1860
+  - 81697142_c228_431f_ba3e_a337093be85b
+  - 16cc25e5_f877_4380_8d60_29f3afeeb65f
+  - b16220f4_c90c_4580_9a71_2d0304d3f675
+- req_id: REQ-F-020
+  rule_ids:
+  - adfb0714_ad25_4827_88e9_96a0e68c4705
+- req_id: REQ-F-021
+  rule_ids:
+  - e53dde1f_e858_4ea0_aa66_2dee8ae1ea30
+  - 3a3b4f34_d4ac_4ec7_aaa6_8f01b4bd90a1
+- req_id: REQ-F-022
+  rule_ids:
+  - 1ab522eb_4f56_435f_a242_45d113fd3946
+- req_id: REQ-F-023
+  rule_ids:
+  - 5d68d589_5dfe_42cb_88a1_56ccd98ee2ea
+  - 8111cc6c_1645_4602_9845_007e4ab219df
+  - b48c63f9_d230_4f89_8da0_d743db83793b
+  - 9611da2d_ce5b_4298_ac5d_1b8e34894b09
+- req_id: REQ-F-024
+  rule_ids:
+  - c87e4ee3_910a_4e9c_b073_8f28d5cf89a3
+- req_id: REQ-F-025
+  rule_ids:
+  - fbdaa1bb_765f_4d23_a9c9_8b2d17d0cf96
+- req_id: REQ-F-026
+  rule_ids:
+  - d6d864a7_b35f_4673_8969_3c7f1de5010d
+- req_id: REQ-F-027
+  rule_ids:
+  - a6398d51_1dfc_45a8_accc_b58f91566888
+- req_id: REQ-F-028
+  rule_ids:
+  - 90bcf115_6ec1_4d39_b8a6_7397cddad7a9
+- req_id: REQ-F-029
+  rule_ids:
+  - f6a3b3bc_5f85_4351_97e2_73519c47d091
+  - 8b11d41f_3daf_4a83_88cc_518127421459
+  - b852a446_b5ec_4727_b4a8_0eb8ea9d863c
+  - bd2060f7_b309_4d06_be04_92f1aea5b792
+  - c8a6d8ed_bb1c_4bc8_a916_d13f8f09dc55
+  - 5f69fd89_6e14_4559_97cf_b241663e751b
+  - 06283db8_eeba_4532_813d_9ad0813ec42b
+  - f20edb5e_978c_42d1_aa26_6134e263651a
+- req_id: REQ-F-030
+  rule_ids:
+  - 4faf4b8d_fe67_4e00_9717_4297522c6bc6
+- req_id: REQ-F-031
+  rule_ids:
+  - a2f49dde_d776_49f7_87b0_0304f956b216
+  - f11ff3f0_8af4_4ca9_9dee_510fdf5d97ac
+  - afbee6fd_956f_43cd_828b_6f936666cbc3
+  - 3b6bcc7f_7348_4ef4_ae80_8accadc6a1a5
+- req_id: REQ-F-032
+  rule_ids:
+  - 10259557_51ee_40c4_95d8_c57337d378c1
+  - 17b8201f_9e93_483e_b6f6_bccff8c8e0f6
+- req_id: REQ-F-033
+  rule_ids:
+  - 538cd736_bd27_4755_92ac_5b2057aed66e
+  - 5bf60db5_4ccb_453e_ae7f_ee8ae01d7453
+  - 16cc25e5_f877_4380_8d60_29f3afeeb65f
+  - 81697142_c228_431f_ba3e_a337093be85b
+  - b16220f4_c90c_4580_9a71_2d0304d3f675
+- req_id: REQ-F-034
+  rule_ids:
+  - 8698404a_83e1_400b_b731_45e7eedb1860
+  - 7b9ec6d9_1111_4c9c_a5bf_b62a82e3b752
+  - 81697142_c228_431f_ba3e_a337093be85b
+- req_id: REQ-F-035
+  rule_ids:
+  - 8698404a_83e1_400b_b731_45e7eedb1860
+  - 7b9ec6d9_1111_4c9c_a5bf_b62a82e3b752
+  - 16cc25e5_f877_4380_8d60_29f3afeeb65f
+  - 81697142_c228_431f_ba3e_a337093be85b
+- req_id: REQ-F-036
+  rule_ids:
+  - 8698404a_83e1_400b_b731_45e7eedb1860
+  - 7b9ec6d9_1111_4c9c_a5bf_b62a82e3b752
+  - 16cc25e5_f877_4380_8d60_29f3afeeb65f
+  - 81697142_c228_431f_ba3e_a337093be85b
+- req_id: REQ-F-037
+  rule_ids:
+  - adfb0714_ad25_4827_88e9_96a0e68c4705
+  - afbee6fd_956f_43cd_828b_6f936666cbc3
+- req_id: REQ-F-038
+  rule_ids:
+  - e53dde1f_e858_4ea0_aa66_2dee8ae1ea30
+  - 1ab522eb_4f56_435f_a242_45d113fd3946
+  - 3a3b4f34_d4ac_4ec7_aaa6_8f01b4bd90a1
+- req_id: REQ-F-039
+  rule_ids:
+  - 5d68d589_5dfe_42cb_88a1_56ccd98ee2ea
+  - 8111cc6c_1645_4602_9845_007e4ab219df
+  - b48c63f9_d230_4f89_8da0_d743db83793b
+  - 9611da2d_ce5b_4298_ac5d_1b8e34894b09
+- req_id: REQ-F-040
+  rule_ids:
+  - c87e4ee3_910a_4e9c_b073_8f28d5cf89a3
+- req_id: REQ-F-041
+  rule_ids:
+  - fbdaa1bb_765f_4d23_a9c9_8b2d17d0cf96
+- req_id: REQ-F-042
+  rule_ids:
+  - d6d864a7_b35f_4673_8969_3c7f1de5010d
+- req_id: REQ-F-043
+  rule_ids:
+  - 3a3b4f34_d4ac_4ec7_aaa6_8f01b4bd90a1

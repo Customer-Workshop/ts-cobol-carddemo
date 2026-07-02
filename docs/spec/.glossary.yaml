@@ -1,0 +1,561 @@
+# Auto-generated field glossary.
+# Source: KG record_field nodes + LLM interpretation.
+# To regenerate: delete this file and re-run the pipeline.
+
+tables:
+  ACCOUNT-FILE:
+    description: Credit card account master file (generic reference name).
+  ACCT-FILE:
+    description: Credit card account master file (short alias).
+  ACCTDAT:
+    description: Credit card account data file (short alias).
+  ACCTFILE-FILE:
+    description: Credit card account master file (program-level FD alias).
+  AWS.CCDA.CUSTDATA.CLUSTER:
+    description: VSAM cluster holding customer master data (alternate AWS CardDemo
+      namespace).
+  AWS.CUSTDATA.CLUSTER:
+    description: VSAM cluster holding customer master data (AWS namespace).
+  AWS.CUSTDATA.CLUSTER.DATA:
+    description: Data component of the customer master VSAM cluster.
+  AWS.CUSTDATA.CLUSTER.INDEX:
+    description: Index component of the customer master VSAM cluster.
+  AWS.M2.CARDDEMO.ACCTDATA.PS:
+    description: Sequential flat file containing credit card account records, used
+      for batch load/extract.
+  AWS.M2.CARDDEMO.ACCTDATA.VSAM.KSDS:
+    description: Primary VSAM KSDS storing credit card account master records, keyed
+      by account ID (copybook CVACT01Y).
+  AWS.M2.CARDDEMO.ACCTDATA.VSAM.KSDS.DATA:
+    description: Data component of the account master VSAM KSDS.
+  AWS.M2.CARDDEMO.ACCTDATA.VSAM.KSDS.INDEX:
+    description: Index component of the account master VSAM KSDS.
+  AWS.M2.CARDDEMO.CARDDATA.PS:
+    description: Sequential flat file containing credit card records, used for batch
+      load/extract.
+  AWS.M2.CARDDEMO.CARDDATA.VSAM.AIX:
+    description: Alternate index on the credit card VSAM KSDS, enabling lookup by
+      an alternate key.
+  AWS.M2.CARDDEMO.CARDDATA.VSAM.AIX.DATA:
+    description: Data component of the credit card alternate index.
+  AWS.M2.CARDDEMO.CARDDATA.VSAM.AIX.INDEX:
+    description: Index component of the credit card alternate index.
+  AWS.M2.CARDDEMO.CARDDATA.VSAM.AIX.PATH:
+    description: Access path through the credit card alternate index (copybook CVACT02Y).
+  AWS.M2.CARDDEMO.CARDDATA.VSAM.KSDS:
+    description: Primary VSAM KSDS storing individual credit card records, keyed by
+      card number (copybook CVACT02Y).
+  AWS.M2.CARDDEMO.CARDDATA.VSAM.KSDS.DATA:
+    description: Data component of the credit card master VSAM KSDS.
+  AWS.M2.CARDDEMO.CARDDATA.VSAM.KSDS.INDEX:
+    description: Index component of the credit card master VSAM KSDS.
+  AWS.M2.CARDDEMO.CARDXREF.PS:
+    description: Sequential flat file containing card-to-account cross-reference records,
+      used for batch load/extract.
+  AWS.M2.CARDDEMO.CARDXREF.VSAM.AIX:
+    description: Alternate index on the card cross-reference VSAM KSDS for alternate-key
+      lookups.
+  AWS.M2.CARDDEMO.CARDXREF.VSAM.AIX.DATA:
+    description: Data component of the card cross-reference alternate index.
+  AWS.M2.CARDDEMO.CARDXREF.VSAM.AIX.INDEX:
+    description: Index component of the card cross-reference alternate index.
+  AWS.M2.CARDDEMO.CARDXREF.VSAM.AIX.PATH:
+    description: Access path through the card cross-reference alternate index (copybook
+      CVACT03Y).
+  AWS.M2.CARDDEMO.CARDXREF.VSAM.KSDS:
+    description: Primary VSAM KSDS cross-referencing credit card numbers to account
+      IDs and customer IDs (copybook CVACT03Y).
+  AWS.M2.CARDDEMO.CARDXREF.VSAM.KSDS.DATA:
+    description: Data component of the card cross-reference VSAM KSDS.
+  AWS.M2.CARDDEMO.CARDXREF.VSAM.KSDS.INDEX:
+    description: Index component of the card cross-reference VSAM KSDS.
+  AWS.M2.CARDDEMO.CNTL(REPROCT):
+    description: JCL control member used to reproduce (REPRO) data between datasets.
+  AWS.M2.CARDDEMO.CUSTDATA.PS:
+    description: Sequential flat file containing customer master records, used for
+      batch load/extract.
+  AWS.M2.CARDDEMO.CUSTDATA.VSAM.KSDS:
+    description: Primary VSAM KSDS storing customer master records, keyed by customer
+      ID (copybook CVCUS01Y).
+  AWS.M2.CARDDEMO.CUSTDATA.VSAM.KSDS.DATA:
+    description: Data component of the customer master VSAM KSDS.
+  AWS.M2.CARDDEMO.CUSTDATA.VSAM.KSDS.INDEX:
+    description: Index component of the customer master VSAM KSDS.
+  AWS.M2.CARDDEMO.DALYREJS:
+    description: Output file capturing daily transaction records rejected during batch
+      processing.
+  AWS.M2.CARDDEMO.DALYTRAN.PS:
+    description: Sequential flat file of daily transaction input records for batch
+      processing (copybook CVTRA06Y).
+  AWS.M2.CARDDEMO.DALYTRAN.PS.INIT:
+    description: Initial/seed sequential file of daily transaction records used to
+      populate the daily transaction dataset.
+  AWS.M2.CARDDEMO.DATEPARM:
+    description: Parameter file supplying the processing date to batch jobs.
+  AWS.M2.CARDDEMO.DISCGRP.PS:
+    description: Sequential flat file containing disclosure group (interest/fee tier)
+      records for batch load.
+  AWS.M2.CARDDEMO.DISCGRP.VSAM.KSDS:
+    description: VSAM KSDS storing disclosure group records that define interest rate
+      and fee tiers by account group (copybook CVTRA02Y).
+  AWS.M2.CARDDEMO.DISCGRP.VSAM.KSDS.DATA:
+    description: Data component of the disclosure group VSAM KSDS.
+  AWS.M2.CARDDEMO.DISCGRP.VSAM.KSDS.INDEX:
+    description: Index component of the disclosure group VSAM KSDS.
+  AWS.M2.CARDDEMO.STATEMNT.HTML:
+    description: HTML-formatted credit card statement output file generated by batch
+      reporting.
+  AWS.M2.CARDDEMO.STATEMNT.PS:
+    description: Sequential flat file containing printed credit card statement output.
+  AWS.M2.CARDDEMO.SYSTRAN:
+    description: System transaction file used to stage or record system-generated
+      transactions (copybook CVTRA05Y).
+  AWS.M2.CARDDEMO.TCATBALF.BKUP:
+    description: Backup copy of the transaction category balance file.
+  AWS.M2.CARDDEMO.TCATBALF.PS:
+    description: Sequential flat file of transaction category balance records for
+      batch input.
+  AWS.M2.CARDDEMO.TCATBALF.REPT:
+    description: Report output file derived from transaction category balance data.
+  AWS.M2.CARDDEMO.TCATBALF.VSAM.KSDS:
+    description: VSAM KSDS storing running balance totals by transaction category
+      and account (copybook CVTRA01Y).
+  AWS.M2.CARDDEMO.TCATBALF.VSAM.KSDS.DATA:
+    description: Data component of the transaction category balance VSAM KSDS.
+  AWS.M2.CARDDEMO.TCATBALF.VSAM.KSDS.INDEX:
+    description: Index component of the transaction category balance VSAM KSDS.
+  AWS.M2.CARDDEMO.TRANCATG.PS:
+    description: Sequential flat file of transaction category reference records for
+      batch load.
+  AWS.M2.CARDDEMO.TRANCATG.VSAM.KSDS:
+    description: VSAM KSDS storing transaction category reference data (category codes
+      and descriptions) (copybook CVTRA04Y).
+  AWS.M2.CARDDEMO.TRANCATG.VSAM.KSDS.DATA:
+    description: Data component of the transaction category VSAM KSDS.
+  AWS.M2.CARDDEMO.TRANCATG.VSAM.KSDS.INDEX:
+    description: Index component of the transaction category VSAM KSDS.
+  AWS.M2.CARDDEMO.TRANREPT:
+    description: Transaction report output file produced by batch reporting (copybook
+      CVTRA07Y).
+  AWS.M2.CARDDEMO.TRANSACT.BKUP:
+    description: Backup copy of the transaction master VSAM file.
+  AWS.M2.CARDDEMO.TRANSACT.COMBINED:
+    description: Combined sequential file merging daily and historical transaction
+      records.
+  AWS.M2.CARDDEMO.TRANSACT.DALY:
+    description: Daily transaction working file used during batch processing cycle
+      (copybook CVTRA05Y).
+  AWS.M2.CARDDEMO.TRANSACT.VSAM.AIX:
+    description: Alternate index on the transaction master VSAM KSDS for alternate-key
+      access.
+  AWS.M2.CARDDEMO.TRANSACT.VSAM.AIX.DATA:
+    description: Data component of the transaction master alternate index.
+  AWS.M2.CARDDEMO.TRANSACT.VSAM.AIX.INDEX:
+    description: Index component of the transaction master alternate index.
+  AWS.M2.CARDDEMO.TRANSACT.VSAM.AIX.PATH:
+    description: Access path through the transaction master alternate index.
+  AWS.M2.CARDDEMO.TRANSACT.VSAM.KSDS:
+    description: Primary VSAM KSDS storing all credit card transaction records, keyed
+      by transaction ID (copybook CVTRA05Y).
+  AWS.M2.CARDDEMO.TRANSACT.VSAM.KSDS.DATA:
+    description: Data component of the transaction master VSAM KSDS.
+  AWS.M2.CARDDEMO.TRANSACT.VSAM.KSDS.INDEX:
+    description: Index component of the transaction master VSAM KSDS.
+  AWS.M2.CARDDEMO.TRANTYPE.PS:
+    description: Sequential flat file of transaction type reference records for batch
+      load.
+  AWS.M2.CARDDEMO.TRANTYPE.VSAM.KSDS:
+    description: VSAM KSDS storing transaction type reference data (type codes and
+      descriptions) (copybook CVTRA03Y).
+  AWS.M2.CARDDEMO.TRANTYPE.VSAM.KSDS.DATA:
+    description: Data component of the transaction type VSAM KSDS.
+  AWS.M2.CARDDEMO.TRANTYPE.VSAM.KSDS.INDEX:
+    description: Index component of the transaction type VSAM KSDS.
+  AWS.M2.CARDDEMO.TRXFL.DATA:
+    description: Data component of the transaction flow VSAM file.
+  AWS.M2.CARDDEMO.TRXFL.INDEX:
+    description: Index component of the transaction flow VSAM file.
+  AWS.M2.CARDDEMO.TRXFL.SEQ:
+    description: Sequential version of the transaction flow file used for batch processing.
+  AWS.M2.CARDDEMO.TRXFL.VSAM.KSDS:
+    description: VSAM KSDS used as a transaction flow/staging file during batch processing.
+  AWS.M2.CARDDEMO.USRSEC.PS:
+    description: Sequential flat file of user security records for batch load/extract.
+  AWS.M2.CARDDEMO.USRSEC.VSAM.KSDS:
+    description: VSAM KSDS storing user security records including user IDs, passwords,
+      and access roles (copybook CSUSR01Y).
+  AWS.M2.CARDDEMO.USRSEC.VSAM.KSDS.DAT:
+    description: Data component of the user security VSAM KSDS.
+  AWS.M2.CARDDEMO.USRSEC.VSAM.KSDS.IDX:
+    description: Index component of the user security VSAM KSDS.
+  CARD-FILE:
+    description: Credit card master file (generic program-level reference).
+  CARDAIX:
+    description: Credit card alternate index file (short alias).
+  CARDDAT:
+    description: Credit card data file (short alias).
+  CARDFILE-FILE:
+    description: Credit card master file (program-level FD alias).
+  CARDXREF:
+    description: Card-to-account cross-reference file (short alias).
+  CCXREF:
+    description: Credit card cross-reference file (short alias).
+  CUST-FILE:
+    description: Customer master file (generic reference name).
+  CUSTDAT:
+    description: Customer data file (short alias).
+  CUSTFILE-FILE:
+    description: Customer master file (program-level FD alias).
+  CUSTOMER-FILE:
+    description: Customer master file (long alias).
+  CXACAIX:
+    description: Card cross-reference alternate index file (short alias).
+  DALYREJS-FILE:
+    description: Daily rejected transactions output file (program-level FD alias).
+  DALYTRAN:
+    description: Daily transaction input file (short alias).
+  DALYTRAN-FILE:
+    description: Daily transaction input file (program-level FD alias).
+  DATE-PARMS-FILE:
+    description: Date parameter file supplying processing date to programs (program-level
+      FD alias).
+  DATEPARM:
+    description: Date parameter file (short alias).
+  DISCGRP-FILE:
+    description: Disclosure group reference file (program-level FD alias).
+  HTML-FILE:
+    description: HTML statement output file (program-level FD alias).
+  HTMLFILE:
+    description: HTML statement output file (short alias).
+  OEM.CICSTS.DFHCSD:
+    description: CICS system definition (CSD) file used to define CICS resources such
+      as programs, transactions, and files.
+  REPORT-FILE:
+    description: Generic report output file (program-level FD alias).
+  STMT-FILE:
+    description: Statement output file (program-level FD alias).
+  STMTFILE:
+    description: Statement output file (short alias).
+  TCATBAL-FILE:
+    description: Transaction category balance file (program-level FD alias).
+  TRANCATG-FILE:
+    description: Transaction category reference file (program-level FD alias).
+  TRANSACT:
+    description: Transaction master file (short alias).
+  TRANSACT-FILE:
+    description: Transaction master file (program-level FD alias).
+  TRANTYPE-FILE:
+    description: Transaction type reference file (program-level FD alias).
+  TRNX-FILE:
+    description: Transaction file (short program-level FD alias).
+  TRNXFILE:
+    description: Transaction file (short alias).
+  USRSEC:
+    description: User security file (short alias).
+  XREF-FILE:
+    description: Card-to-account cross-reference file (program-level FD alias).
+  XREFFILE-FILE:
+    description: Card-to-account cross-reference file (long program-level FD alias).
+fields:
+  ACCTSIDA:
+    description: "Account ID field attribute byte \u2014 controls BMS screen display\
+      \ attributes (color, intensity, protection) for the account identifier input\
+      \ field."
+  ACCTSIDC:
+    description: "Account ID field color attribute \u2014 specifies the foreground\
+      \ color of the account identifier field on the BMS map."
+  ACCTSIDF:
+    description: "Account ID field flag/fset attribute \u2014 indicates whether the\
+      \ account identifier field has been modified (MDT bit) on the BMS map."
+  ACCTSIDH:
+    description: "Account ID field highlight attribute \u2014 controls extended highlighting\
+      \ (blink, reverse video, underline) for the account identifier field."
+  ACCTSIDI:
+    description: "Account identifier input value \u2014 the 11-character account ID\
+      \ entered by the user or passed to the screen map."
+  ACCTSIDL:
+    description: "Account ID field length \u2014 binary length of the account identifier\
+      \ field as returned by CICS BMS."
+  ACCTSIDO:
+    description: "Account identifier output value \u2014 the 11-character account\
+      \ ID displayed to the user on the BMS screen map."
+  ACCTSIDP:
+    description: "Account ID field program-control attribute \u2014 used to programmatically\
+      \ set BMS field attributes for the account identifier."
+  ACCTSIDV:
+    description: "Account ID field validation attribute \u2014 indicates input validation\
+      \ status or cursor position for the account identifier field."
+  CARDSIDA:
+    description: "Card number field attribute byte \u2014 controls BMS screen display\
+      \ attributes for the credit card number input field."
+  CARDSIDC:
+    description: "Card number field color attribute \u2014 specifies the foreground\
+      \ color of the credit card number field on the BMS map."
+  CARDSIDF:
+    description: "Card number field flag/fset attribute \u2014 indicates whether the\
+      \ credit card number field has been modified (MDT bit) on the BMS map."
+  CARDSIDH:
+    description: "Card number field highlight attribute \u2014 controls extended highlighting\
+      \ for the credit card number field on the BMS map."
+  CARDSIDI:
+    description: "Card number input value \u2014 the 16-character credit card number\
+      \ entered by the user or passed to the screen map."
+  CARDSIDL:
+    description: "Card number field length \u2014 binary length of the credit card\
+      \ number field as returned by CICS BMS."
+  CARDSIDO:
+    description: "Card number output value \u2014 the 16-character credit card number\
+      \ displayed to the user on the BMS screen map."
+  CARDSIDP:
+    description: "Card number field program-control attribute \u2014 used to programmatically\
+      \ set BMS field attributes for the credit card number."
+  CARDSIDV:
+    description: "Card number field validation attribute \u2014 indicates input validation\
+      \ status or cursor position for the credit card number field."
+  CONFIRMA:
+    description: "Confirmation field attribute byte \u2014 controls BMS screen display\
+      \ attributes for the user confirmation input field."
+  CONFIRMC:
+    description: "Confirmation field color attribute \u2014 specifies the foreground\
+      \ color of the confirmation field on the BMS map."
+  CONFIRMF:
+    description: "Confirmation field flag/fset attribute \u2014 indicates whether\
+      \ the confirmation field has been modified (MDT bit) on the BMS map."
+  CONFIRMH:
+    description: "Confirmation field highlight attribute \u2014 controls extended\
+      \ highlighting for the confirmation field on the BMS map."
+  CONFIRMI:
+    description: "Confirmation input value \u2014 single character entered by the\
+      \ user to confirm an action (e.g., 'Y' = yes, 'N' = no)."
+  CONFIRML:
+    description: "Confirmation field length \u2014 binary length of the confirmation\
+      \ field as returned by CICS BMS."
+  CONFIRMO:
+    description: "Confirmation output value \u2014 single character displayed to the\
+      \ user in the confirmation field on the BMS screen map."
+  CONFIRMP:
+    description: "Confirmation field program-control attribute \u2014 used to programmatically\
+      \ set BMS field attributes for the confirmation field."
+  CONFIRMV:
+    description: "Confirmation field validation attribute \u2014 indicates input validation\
+      \ status or cursor position for the confirmation field."
+  CURDATEA:
+    description: "Current date field attribute byte \u2014 controls BMS screen display\
+      \ attributes for the current date display field."
+  CURDATEC:
+    description: "Current date field color attribute \u2014 specifies the foreground\
+      \ color of the current date field on the BMS map."
+  CURDATEF:
+    description: "Current date field flag/fset attribute \u2014 indicates whether\
+      \ the current date field has been modified (MDT bit) on the BMS map."
+  CURDATEH:
+    description: "Current date field highlight attribute \u2014 controls extended\
+      \ highlighting for the current date field on the BMS map."
+  CURDATEI:
+    description: "Current date input value \u2014 8-character current system date\
+      \ (typically YYYYMMDD or MM/DD/YY) passed to the screen map."
+  CURDATEL:
+    description: "Current date field length \u2014 binary length of the current date\
+      \ field as returned by CICS BMS."
+  CURDATEO:
+    description: "Current date output value \u2014 8-character current system date\
+      \ displayed to the user on the BMS screen map."
+  CURDATEP:
+    description: "Current date field program-control attribute \u2014 used to programmatically\
+      \ set BMS field attributes for the current date field."
+  CURDATEV:
+    description: "Current date field validation attribute \u2014 indicates input validation\
+      \ status or cursor position for the current date field."
+  CURTIMEA:
+    description: "Current time field attribute byte \u2014 controls BMS screen display\
+      \ attributes for the current time display field."
+  CURTIMEC:
+    description: "Current time field color attribute \u2014 specifies the foreground\
+      \ color of the current time field on the BMS map."
+  CURTIMEF:
+    description: "Current time field flag/fset attribute \u2014 indicates whether\
+      \ the current time field has been modified (MDT bit) on the BMS map."
+  CURTIMEH:
+    description: "Current time field highlight attribute \u2014 controls extended\
+      \ highlighting for the current time field on the BMS map."
+  CURTIMEI:
+    description: "Current time input value \u2014 8-character current system time\
+      \ (typically HH:MM:SS) passed to the screen map."
+  CURTIMEL:
+    description: "Current time field length \u2014 binary length of the current time\
+      \ field as returned by CICS BMS."
+  CURTIMEO:
+    description: "Current time output value \u2014 8-character current system time\
+      \ displayed to the user on the BMS screen map."
+  CURTIMEP:
+    description: "Current time field program-control attribute \u2014 used to programmatically\
+      \ set BMS field attributes for the current time field."
+  CURTIMEV:
+    description: "Current time field validation attribute \u2014 indicates input validation\
+      \ status or cursor position for the current time field."
+  ERRMSGA:
+    description: "Error message field attribute byte \u2014 controls BMS screen display\
+      \ attributes for the error message display field."
+  ERRMSGC:
+    description: "Error message field color attribute \u2014 specifies the foreground\
+      \ color of the error message field on the BMS map."
+  ERRMSGF:
+    description: "Error message field flag/fset attribute \u2014 indicates whether\
+      \ the error message field has been modified (MDT bit) on the BMS map."
+  ERRMSGH:
+    description: "Error message field highlight attribute \u2014 controls extended\
+      \ highlighting for the error message field on the BMS map."
+  ERRMSGI:
+    description: "Error message input value \u2014 78-character error or informational\
+      \ message text passed to the screen map."
+  ERRMSGL:
+    description: "Error message field length \u2014 binary length of the error message\
+      \ field as returned by CICS BMS."
+  ERRMSGO:
+    description: "Error message output value \u2014 78-character error or informational\
+      \ message text displayed to the user on the BMS screen map."
+  ERRMSGP:
+    description: "Error message field program-control attribute \u2014 used to programmatically\
+      \ set BMS field attributes for the error message field."
+  ERRMSGV:
+    description: "Error message field validation attribute \u2014 indicates input\
+      \ validation status or cursor position for the error message field."
+  EXPMONA:
+    description: "Card expiration month field attribute byte \u2014 controls BMS screen\
+      \ display attributes for the card expiry month input field."
+  EXPMONC:
+    description: "Card expiration month field color attribute \u2014 specifies the\
+      \ foreground color of the expiry month field on the BMS map."
+  EXPMONF:
+    description: "Card expiration month field flag/fset attribute \u2014 indicates\
+      \ whether the expiry month field has been modified (MDT bit) on the BMS map."
+  EXPMONH:
+    description: "Card expiration month field highlight attribute \u2014 controls\
+      \ extended highlighting for the card expiry month field on the BMS map."
+  EXPMONI:
+    description: "Card expiration month input value \u2014 2-character month (01\u2013\
+      12) of the credit card expiration date entered by the user."
+  EXPMONL:
+    description: "Card expiration month field length \u2014 binary length of the expiry\
+      \ month field as returned by CICS BMS."
+  EXPMONO:
+    description: "Card expiration month output value \u2014 2-character expiration\
+      \ month displayed to the user on the BMS screen map."
+  EXPMONP:
+    description: "Card expiration month field program-control attribute \u2014 used\
+      \ to programmatically set BMS field attributes for the expiry month field."
+  EXPMONV:
+    description: "Card expiration month field validation attribute \u2014 indicates\
+      \ input validation status or cursor position for the expiry month field."
+  EXPYEARA:
+    description: "Card expiration year field attribute byte \u2014 controls BMS screen\
+      \ display attributes for the card expiry year input field."
+  EXPYEARC:
+    description: "Card expiration year field color attribute \u2014 specifies the\
+      \ foreground color of the expiry year field on the BMS map."
+  EXPYEARF:
+    description: "Card expiration year field flag/fset attribute \u2014 indicates\
+      \ whether the expiry year field has been modified (MDT bit) on the BMS map."
+  EXPYEARH:
+    description: "Card expiration year field highlight attribute \u2014 controls extended\
+      \ highlighting for the card expiry year field on the BMS map."
+  EXPYEARI:
+    description: "Card expiration year input value \u2014 4-character year (YYYY)\
+      \ of the credit card expiration date entered by the user."
+  EXPYEARL:
+    description: "Card expiration year field length \u2014 binary length of the expiry\
+      \ year field as returned by CICS BMS."
+  EXPYEARO:
+    description: "Card expiration year output value \u2014 4-character expiration\
+      \ year displayed to the user on the BMS screen map."
+  EXPYEARP:
+    description: "Card expiration year field program-control attribute \u2014 used\
+      \ to programmatically set BMS field attributes for the expiry year field."
+  EXPYEARV:
+    description: "Card expiration year field validation attribute \u2014 indicates\
+      \ input validation status or cursor position for the expiry year field."
+  FILLER-1:
+    description: Unused padding field (20 bytes) reserved for alignment or future
+      use in the copybook layout.
+  FILLER-101:
+    description: Unused padding field (4 bytes) reserved for alignment or future use
+      in the copybook layout.
+  FILLER-103:
+    description: Unused padding field (4 bytes) reserved for alignment or future use
+      in the copybook layout.
+  FILLER-105:
+    description: Unused padding field (4 bytes) reserved for alignment or future use
+      in the copybook layout.
+  FILLER-107:
+    description: Unused padding field (4 bytes) reserved for alignment or future use
+      in the copybook layout.
+  FILLER-109:
+    description: Unused padding field (4 bytes) reserved for alignment or future use
+      in the copybook layout.
+  FILLER-11:
+    description: Unused padding field (4 bytes) reserved for alignment or future use
+      in the copybook layout.
+  FILLER-111:
+    description: Unused padding field (3 bytes) reserved for alignment or future use
+      in the copybook layout.
+  FILLER-112:
+    description: Unused padding field (3 bytes) reserved for alignment or future use
+      in the copybook layout.
+  FILLER-113:
+    description: Unused padding field (3 bytes) reserved for alignment or future use
+      in the copybook layout.
+  FILLER-121:
+    description: Unused padding field (3 bytes) reserved for alignment or future use
+      in the copybook layout.
+  FILLER-122:
+    description: Unused padding field (3 bytes) reserved for alignment or future use
+      in the copybook layout.
+  FILLER-123:
+    description: Unused padding field (3 bytes) reserved for alignment or future use
+      in the copybook layout.
+  FILLER-124:
+    description: Unused padding field (3 bytes) reserved for alignment or future use
+      in the copybook layout.
+  FILLER-125:
+    description: Unused padding field (3 bytes) reserved for alignment or future use
+      in the copybook layout.
+  FILLER-126:
+    description: Unused padding field (3 bytes) reserved for alignment or future use
+      in the copybook layout.
+  FILLER-127:
+    description: Unused padding field (3 bytes) reserved for alignment or future use
+      in the copybook layout.
+  FILLER-128:
+    description: Unused padding field (3 bytes) reserved for alignment or future use
+      in the copybook layout.
+  FILLER-129:
+    description: Unused padding field (3 bytes) reserved for alignment or future use
+      in the copybook layout.
+  FILLER-13:
+    description: Unused padding field (4 bytes) reserved for alignment or future use
+      in the copybook layout.
+  FILLER-130:
+    description: Unused padding field (3 bytes) reserved for alignment or future use
+      in the copybook layout.
+  FILLER-131:
+    description: Unused padding field (3 bytes) reserved for alignment or future use
+      in the copybook layout.
+  FILLER-132:
+    description: Unused padding field (3 bytes) reserved for alignment or future use
+      in the copybook layout.
+  FILLER-133:
+    description: Unused padding field (3 bytes) reserved for alignment or future use
+      in the copybook layout.
+  FILLER-134:
+    description: Unused padding field (3 bytes) reserved for alignment or future use
+      in the copybook layout.
+  FILLER-135:
+    description: Unused padding field (3 bytes) reserved for alignment or future use
+      in the copybook layout.
+  FILLER-136:
+    description: Unused padding field (3 bytes) reserved for alignment or future use
+      in the copybook layout.
+  FILLER-137:
+    description: Unused padding field (3 bytes) reserved for alignment or future use
+      in the copybook layout.
+_generated_at: '2026-06-25T13:27:52.455212+00:00'

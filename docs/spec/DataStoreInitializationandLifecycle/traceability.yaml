@@ -1,0 +1,445 @@
+function: DataStoreInitializationandLifecycle
+generated_at: '2026-06-25T13:28:29Z'
+summary:
+  total_rules: 19
+  captured: 16
+  not_applicable: 3
+  unreachable: 0
+  delegated: 0
+  not_accounted_for: 0
+rules:
+- rule_id: 31984326_08d4_40db_b576_6ce388464471
+  program: ACCTFILE
+  disposition: captured
+  rule_name: Define account data store with indexed-sequential structure
+  rule_text: THE Account Data Store Initialization SHALL define an indexed-sequential
+    account data store with 1 primary and 5 secondary cylinders, 11-byte key at offset
+    0, 300-byte fixed records, shared access for 2 readers and 3 writers, and automatic
+    erasure on deletion.
+  req_ids:
+  - REQ-F-002
+  - REQ-N-001
+  traceability_lines:
+  - 30
+  - 31
+  - 32
+  - 33
+  - 34
+  - 35
+  - 36
+  - 37
+  - 38
+  - 39
+  - 40
+  - 41
+  - 42
+  - 43
+  - 44
+  - 45
+  - 46
+  - 47
+  - 48
+  - 49
+- rule_id: c0d4fad8_f4df_4944_aec5_bf24dae95b86
+  program: ACCTFILE
+  disposition: captured
+  rule_name: Populate account data store from flat-file source
+  rule_text: THE Account Data Store Initialization SHALL copy all account records
+    from the flat-file source to the indexed-sequential account data store.
+  req_ids:
+  - REQ-F-003
+  - REQ-N-001
+  traceability_lines:
+  - 51
+  - 52
+  - 53
+  - 54
+  - 55
+  - 56
+  - 57
+  - 58
+  - 59
+  - 60
+  - 61
+- rule_id: e3fce689_d714_48e1_8e89_604503cb4b96
+  program: ACCTFILE
+  disposition: captured
+  rule_name: Remove existing account data store if present
+  rule_text: THE Account Data Store Initialization SHALL remove the existing account
+    data store cluster.
+  req_ids:
+  - REQ-F-001
+  - REQ-N-001
+  traceability_lines:
+  - 19
+  - 20
+  - 21
+  - 22
+  - 23
+  - 24
+  - 25
+  - 26
+- rule_id: c7a6708c_de2a_4a43_8ed8_831c4d2c2372
+  program: DEFCUST
+  disposition: captured
+  program_path: jcl/DEFCUST.jcl
+  rule_name: Delete existing customer data store
+  rule_text: THE Customer Data Store Management SHALL delete the customer data store
+    cluster from the system catalog.
+  req_id: REQ-F-004
+  traceability_lines:
+  - 3
+  - 4
+  - 5
+  - 7
+  - 8
+  - 9
+  - 11
+  - 13
+  - 14
+  - 15
+  - 16
+  - 17
+  - 18
+  - 19
+  - 20
+  - 21
+  - 22
+  - 23
+  - 24
+  - 25
+  - 26
+- rule_id: 3f5774ab_17f2_48d6_9c33_dfddf4c2fa24
+  program: DEFCUST
+  disposition: captured
+  program_path: jcl/DEFCUST.jcl
+  rule_name: Define indexed customer data store with allocation and sharing parameters
+  rule_text: THE Customer Data Store Provisioning SHALL create an indexed customer
+    data store with a 10-byte key, 500-byte fixed records, primary allocation of 1
+    cylinder and secondary allocation of 5 cylinders, configured for single-writer
+    cross-region access and multi-reader cross-system access, with separate named
+    data and index components.
+  req_id: REQ-F-006
+  traceability_lines:
+  - 32
+  - 33
+  - 34
+  - 35
+  - 36
+  - 37
+  - 38
+  - 39
+  - 40
+  - 41
+  - 42
+  - 43
+  - 44
+  - 45
+  - 46
+- rule_id: 7892493a_100c_42f2_bc94_4743af4a8295
+  program: DEFCUST
+  disposition: captured
+  program_path: jcl/DEFCUST.jcl
+  rule_name: Delete existing customer data store if present
+  rule_text: THE Customer Data Store Provisioning SHALL delete any existing customer
+    data store named AWS.CCDA.CUSTDATA.CLUSTER to clear the namespace for the new
+    definition.
+  req_id: REQ-F-005
+  traceability_lines:
+  - 22
+  - 23
+  - 24
+  - 25
+  - 26
+  - 27
+- rule_id: e1d9b6c1_b0b1_44d2_ae6b_dbb6f5b04398
+  program: DEFCUST
+  disposition: not_applicable
+  program_path: jcl/DEFCUST.jcl
+  rule_name: 'Comment block: deletion rationale'
+  reason: '[LLM-classified] Comment block documenting deletion rationale — no business
+    rule content, pure documentation/traceability annotation'
+- rule_id: 355ea1cb_2440_4864_872f_78fc7e43ecde
+  program: DISCGRP
+  disposition: not_applicable
+  reason: '[Pattern-classified] CICS/BMS platform mechanics'
+  program_path: jcl/DISCGRP.jcl
+  rule_name: Define disclosure group indexed-sequential dataset
+  rule_text: THE Dataset Definition Manager SHALL define an indexed-sequential VSAM
+    cluster with 16-byte keys, 50-byte fixed records, 1 primary and 5 secondary cylinders
+    on volume AWSHJ1, shared access options, and erase protection.
+- rule_id: b3703975_b379_4dd9_9b76_00b53e0542d0
+  program: DISCGRP
+  disposition: captured
+  rule_name: Populate disclosure group dataset from source file
+  rule_text: THE Dataset Population Manager SHALL copy all records from the disclosure
+    group sequential file to the newly defined VSAM indexed-sequential dataset.
+  req_id: REQ-F-008
+  traceability_lines:
+  - 51
+  - 52
+  - 53
+  - 54
+  - 55
+  - 56
+  - 57
+  - 58
+  - 59
+  - 60
+  - 61
+- rule_id: c6fe2cb7_7540_4414_b0ce_fa559bbbb6bb
+  program: DISCGRP
+  disposition: captured
+  rule_name: Remove existing disclosure group dataset
+  rule_text: THE Dataset Lifecycle Manager SHALL delete the disclosure group dataset
+    cluster if it exists, allowing the subsequent initialization to proceed.
+  req_id: REQ-F-007
+  traceability_lines:
+  - 19
+  - 20
+  - 21
+  - 22
+  - 23
+  - 24
+  - 25
+  - 26
+- rule_id: afbf0400_4aa2_4027_99e8_9b51b00a9efa
+  program: TCATBALF
+  disposition: captured
+  rule_name: Remove existing transaction category balance data store
+  rule_text: THE Data Store Lifecycle Manager SHALL remove the existing transaction
+    category balance data store to prepare for redefinition.
+  req_ids:
+  - REQ-F-009
+  - REQ-F-012
+  traceability_lines:
+  - 19
+  - 20
+  - 21
+  - 22
+  - 23
+  - 24
+  - 25
+  - 26
+- rule_id: b58e8fe6_83d5_4240_8a99_2e84d4eb8646
+  program: TCATBALF
+  disposition: captured
+  rule_name: Define transaction category balance data store structure
+  rule_text: THE Data Store Lifecycle Manager SHALL define a new indexed-sequential
+    data store with a 17-byte key, 50-byte fixed records, 1 primary and 5 secondary
+    cylinders on volume AWSHJ1, sharing options (2,3), and automatic space erasure.
+  req_ids:
+  - REQ-F-010
+  - REQ-F-012
+  traceability_lines:
+  - 30
+  - 31
+  - 32
+  - 33
+  - 34
+  - 35
+  - 36
+  - 37
+  - 38
+  - 39
+  - 40
+  - 41
+  - 42
+  - 43
+  - 44
+  - 45
+  - 46
+  - 47
+  - 48
+  - 49
+- rule_id: dfbb2814_5c1a_4826_85ef_ed03346aadfd
+  program: TCATBALF
+  disposition: captured
+  rule_name: Populate transaction category balance data store from source file
+  rule_text: THE Data Store Population SHALL copy all transaction category balance
+    records from the source sequential file into the indexed-sequential data store.
+  req_ids:
+  - REQ-F-011
+  - REQ-F-012
+  traceability_lines:
+  - 51
+  - 52
+  - 53
+  - 54
+  - 55
+  - 56
+  - 57
+  - 58
+  - 59
+  - 60
+  - 61
+- rule_id: 255d7f32_0836_45e3_93bb_5e1bb6ff0612
+  program: TRANCATG
+  disposition: captured
+  rule_name: Populate transaction category dataset from source file
+  rule_text: THE Transaction Category Dataset Manager SHALL copy all transaction category
+    records from the source sequential file to the indexed sequential dataset.
+  req_id: REQ-F-015
+  traceability_lines:
+  - 51
+  - 52
+  - 53
+  - 54
+  - 55
+  - 56
+  - 57
+  - 58
+  - 59
+  - 60
+  - 61
+- rule_id: 8919821d_dffe_4e1c_8b12_e12882943bc9
+  program: TRANCATG
+  disposition: captured
+  rule_name: Remove existing transaction category dataset
+  rule_text: THE Transaction Category Dataset Manager SHALL remove the existing transaction
+    category dataset if present.
+  req_id: REQ-F-013
+  traceability_lines:
+  - 19
+  - 20
+  - 21
+  - 22
+  - 23
+  - 24
+  - 25
+  - 26
+- rule_id: afc6b2e3_41f4_4a95_8df4_529db4d56dc0
+  program: TRANCATG
+  disposition: captured
+  rule_name: Define transaction category VSAM dataset structure
+  rule_text: THE Transaction Category Dataset Manager SHALL define a new indexed sequential
+    dataset with 6-byte keys, 60-byte fixed records, shared access, and separate data
+    and index components on volume AWSHJ1.
+  req_id: REQ-F-014
+  traceability_lines:
+  - 30
+  - 31
+  - 32
+  - 33
+  - 34
+  - 35
+  - 36
+  - 37
+  - 38
+  - 39
+  - 40
+  - 41
+  - 42
+  - 43
+  - 44
+  - 45
+  - 46
+  - 47
+  - 48
+  - 49
+- rule_id: 09ff8f27_caff_408c_8791_5291a744458b
+  program: TRANTYPE
+  disposition: not_applicable
+  reason: '[Pattern-classified] CICS/BMS platform mechanics'
+  program_path: jcl/TRANTYPE.jcl
+  rule_name: Create indexed transaction type data store
+  rule_text: THE Transaction Type Data Store Manager SHALL create an indexed transaction
+    type data store with 2-byte key, 60-byte fixed records, 1 primary + 5 secondary
+    cylinders on volume AWSHJ1, shared read access, and erase-on-delete enabled.
+- rule_id: 75b2f1f5_99e0_45f5_a005_9f8e9251ae4f
+  program: TRANTYPE
+  disposition: captured
+  rule_name: Populate transaction type data store from source file
+  rule_text: THE Transaction Type Data Store Manager SHALL copy all transaction type
+    records from the flat-file source to the indexed data store.
+  req_id: REQ-F-018
+  traceability_lines:
+  - 51
+  - 52
+  - 53
+  - 54
+  - 55
+  - 56
+  - 57
+  - 58
+  - 59
+  - 60
+  - 61
+- rule_id: 7eced11d_ffd8_439e_8eb2_b27ab176e2ee
+  program: TRANTYPE
+  disposition: captured
+  rule_name: Remove existing transaction type data store
+  rule_text: THE Transaction Type Data Store Manager SHALL delete the existing transaction
+    type data store cluster if present.
+  req_id: REQ-F-016
+  traceability_lines:
+  - 19
+  - 20
+  - 21
+  - 22
+  - 23
+  - 24
+  - 25
+  - 26
+requirements:
+- req_id: REQ-F-001
+  rule_ids:
+  - e3fce689_d714_48e1_8e89_604503cb4b96
+- req_id: REQ-F-002
+  rule_ids:
+  - 31984326_08d4_40db_b576_6ce388464471
+- req_id: REQ-F-003
+  rule_ids:
+  - c0d4fad8_f4df_4944_aec5_bf24dae95b86
+- req_id: REQ-F-004
+  rule_ids:
+  - c7a6708c_de2a_4a43_8ed8_831c4d2c2372
+- req_id: REQ-F-005
+  rule_ids:
+  - 7892493a_100c_42f2_bc94_4743af4a8295
+- req_id: REQ-F-006
+  rule_ids:
+  - 3f5774ab_17f2_48d6_9c33_dfddf4c2fa24
+- req_id: REQ-F-007
+  rule_ids:
+  - c6fe2cb7_7540_4414_b0ce_fa559bbbb6bb
+- req_id: REQ-F-008
+  rule_ids:
+  - b3703975_b379_4dd9_9b76_00b53e0542d0
+- req_id: REQ-F-009
+  rule_ids:
+  - afbf0400_4aa2_4027_99e8_9b51b00a9efa
+- req_id: REQ-F-010
+  rule_ids:
+  - b58e8fe6_83d5_4240_8a99_2e84d4eb8646
+- req_id: REQ-F-011
+  rule_ids:
+  - dfbb2814_5c1a_4826_85ef_ed03346aadfd
+- req_id: REQ-F-012
+  rule_ids:
+  - afbf0400_4aa2_4027_99e8_9b51b00a9efa
+  - b58e8fe6_83d5_4240_8a99_2e84d4eb8646
+  - dfbb2814_5c1a_4826_85ef_ed03346aadfd
+- req_id: REQ-F-013
+  rule_ids:
+  - 8919821d_dffe_4e1c_8b12_e12882943bc9
+- req_id: REQ-F-014
+  rule_ids:
+  - afc6b2e3_41f4_4a95_8df4_529db4d56dc0
+- req_id: REQ-F-015
+  rule_ids:
+  - 255d7f32_0836_45e3_93bb_5e1bb6ff0612
+- req_id: REQ-F-016
+  rule_ids:
+  - 7eced11d_ffd8_439e_8eb2_b27ab176e2ee
+- req_id: REQ-F-017
+  rule_ids:
+  - 09ff8f27_caff_408c_8791_5291a744458b
+- req_id: REQ-F-018
+  rule_ids:
+  - 75b2f1f5_99e0_45f5_a005_9f8e9251ae4f
+- req_id: REQ-N-001
+  rule_ids:
+  - e3fce689_d714_48e1_8e89_604503cb4b96
+  - 31984326_08d4_40db_b576_6ce388464471
+  - c0d4fad8_f4df_4944_aec5_bf24dae95b86

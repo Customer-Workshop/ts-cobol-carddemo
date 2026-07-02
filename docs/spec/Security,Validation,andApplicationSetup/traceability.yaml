@@ -1,0 +1,551 @@
+function: Security,Validation,andApplicationSetup
+generated_at: '2026-06-25T13:29:08Z'
+summary:
+  total_rules: 27
+  captured: 26
+  not_applicable: 1
+  unreachable: 0
+  delegated: 0
+  not_accounted_for: 0
+rules:
+- rule_id: 08bf7cf3_63d5_45ad_b6ac_b1c2fa8497cf
+  program: CBADMCDJ
+  disposition: captured
+  program_path: jcl/CBADMCDJ.jcl
+  rule_name: Define bill-pay program
+  rule_text: THE CSD Resource Definition SHALL register the bill-pay program in the
+    CARDDEMO group.
+  req_id: REQ-F-004
+  traceability_lines:
+  - 127
+  - 128
+- rule_id: 20e262d0_45d7_4b5c_9a25_412cd0890857
+  program: CBADMCDJ
+  disposition: captured
+  program_path: jcl/CBADMCDJ.jcl
+  rule_name: Define transaction management programs
+  rule_text: THE CSD Resource Definition SHALL register the transaction management
+    programs in the CARDDEMO group.
+  req_id: REQ-F-007
+  traceability_lines:
+  - 118
+  - 119
+  - 120
+  - 121
+  - 122
+  - 123
+  - 124
+  - 125
+- rule_id: 2b67ed10_8179_49fc_bada_066666183642
+  program: CBADMCDJ
+  disposition: captured
+  program_path: jcl/CBADMCDJ.jcl
+  rule_name: Define account management screen mapsets
+  rule_text: THE CSD Resource Definition SHALL register the account management screen
+    mapsets in the CARDDEMO group.
+  req_id: REQ-F-012
+  traceability_lines:
+  - 56
+  - 57
+  - 58
+  - 59
+  - 60
+  - 61
+  - 62
+  - 63
+- rule_id: 51113c8b_3772_47f7_ad98_08d8e67ce112
+  program: CBADMCDJ
+  disposition: captured
+  program_path: jcl/CBADMCDJ.jcl
+  rule_name: Define login screen mapset
+  rule_text: THE CSD Resource Definition SHALL register the login screen mapset in
+    the CARDDEMO group.
+  req_id: REQ-F-009
+  traceability_lines:
+  - 50
+  - 51
+  - 52
+  - 53
+  - 54
+- rule_id: 55b4837b_e67e_4766_acea_0164e18bf6dc
+  program: CBADMCDJ
+  disposition: captured
+  program_path: jcl/CBADMCDJ.jcl
+  rule_name: Define administration program
+  rule_text: THE CSD Resource Definition SHALL register the administration program
+    with transaction identifier CCAD in the CARDDEMO group.
+  req_id: REQ-F-003
+  traceability_lines:
+  - 130
+  - 131
+  - 132
+- rule_id: 56ecdaa8_57c0_41f3_9031_e7dade8e7dfc
+  program: CBADMCDJ
+  disposition: captured
+  program_path: jcl/CBADMCDJ.jcl
+  rule_name: Define transaction management screen mapsets
+  rule_text: THE CSD Resource Definition SHALL register the transaction management
+    screen mapsets in the CARDDEMO group.
+  req_id: REQ-F-014
+  traceability_lines:
+  - 74
+  - 75
+  - 76
+  - 77
+  - 78
+  - 79
+  - 80
+  - 81
+- rule_id: 7c76ab1d_d5e8_43f5_bb57_bd0ea5d88beb
+  program: CBADMCDJ
+  disposition: captured
+  program_path: jcl/CBADMCDJ.jcl
+  rule_name: Define administration screen mapset
+  rule_text: THE CSD Resource Definition SHALL register the administration menu screen
+    mapset in the CARDDEMO group.
+  req_id: REQ-F-010
+  traceability_lines:
+  - 86
+  - 87
+- rule_id: 7d64c7a9_8894_46ae_8eb7_f3838749820b
+  program: CBADMCDJ
+  disposition: captured
+  program_path: jcl/CBADMCDJ.jcl
+  rule_name: Define test program screen mapsets
+  rule_text: THE CSD Resource Definition SHALL register the test program screen mapsets
+    in the CARDDEMO group.
+  req_id: REQ-F-015
+  traceability_lines:
+  - 89
+  - 90
+  - 91
+  - 92
+  - 93
+  - 94
+  - 95
+  - 96
+- rule_id: 81fc22b9_5030_4d86_b2c3_e282f1d7c34f
+  program: CBADMCDJ
+  disposition: captured
+  program_path: jcl/CBADMCDJ.jcl
+  rule_name: Define card management programs
+  rule_text: THE CSD Resource Definition SHALL register the card management programs
+    in the CARDDEMO group.
+  req_id: REQ-F-006
+  traceability_lines:
+  - 110
+  - 111
+  - 112
+  - 113
+  - 114
+  - 115
+  - 116
+  - 117
+- rule_id: 87c60584_a65b_4aa4_bf26_0aaed221437f
+  program: CBADMCDJ
+  disposition: captured
+  program_path: jcl/CBADMCDJ.jcl
+  rule_name: Define account management programs
+  rule_text: THE CSD Resource Definition SHALL register the account management programs
+    in the CARDDEMO group.
+  req_id: REQ-F-005
+  traceability_lines:
+  - 101
+  - 102
+  - 103
+  - 104
+  - 105
+  - 106
+  - 107
+  - 108
+- rule_id: a5e36ebf_2844_4ea2_8127_40c9520b7153
+  program: CBADMCDJ
+  disposition: captured
+  program_path: jcl/CBADMCDJ.jcl
+  rule_name: List and verify CARDDEMO resource group
+  rule_text: THE CSD Resource Definition SHALL list and verify all resources in the
+    CARDDEMO group.
+  req_id: REQ-F-017
+  traceability_lines:
+  - 159
+  - 161
+  - 163
+- rule_id: cd0b68f2_9724_4e26_9e3a_f87c76572ef6
+  program: CBADMCDJ
+  disposition: captured
+  program_path: jcl/CBADMCDJ.jcl
+  rule_name: Define login program
+  rule_text: THE CSD Resource Definition SHALL register the login program with transaction
+    identifier CC00 in the CARDDEMO group.
+  req_id: REQ-F-002
+  traceability_lines:
+  - 98
+  - 99
+- rule_id: d8d48e3d_0b7d_4972_8efc_bfd9c801dc18
+  program: CBADMCDJ
+  disposition: captured
+  program_path: jcl/CBADMCDJ.jcl
+  rule_name: Define CARDDEMO resource library
+  rule_text: THE CSD Resource Definition SHALL register the COM2DOLL library resource
+    pointing to the application load library.
+  req_id: REQ-F-001
+  traceability_lines:
+  - 35
+  - 37
+  - 38
+  - 40
+  - 42
+  - 43
+  - 44
+  - 45
+- rule_id: de74cd88_6df3_4feb_a044_9ef951bbc6a3
+  program: CBADMCDJ
+  disposition: captured
+  program_path: jcl/CBADMCDJ.jcl
+  rule_name: Define bill-pay screen mapset
+  rule_text: THE CSD Resource Definition SHALL register the bill-pay setup screen
+    mapset in the CARDDEMO group.
+  req_id: REQ-F-011
+  traceability_lines:
+  - 83
+  - 84
+- rule_id: ebf0cdcb_a597_4f4c_b012_2b0355ca385f
+  program: CBADMCDJ
+  disposition: captured
+  program_path: jcl/CBADMCDJ.jcl
+  rule_name: Define test programs
+  rule_text: THE CSD Resource Definition SHALL register the test programs with their
+    transaction identifiers in the CARDDEMO group.
+  req_id: REQ-F-008
+  traceability_lines:
+  - 134
+  - 135
+  - 136
+  - 137
+  - 138
+  - 139
+  - 140
+  - 141
+  - 142
+  - 143
+  - 144
+  - 145
+- rule_id: efe5c3c1_3d74_4e54_b28d_682334c364db
+  program: CBADMCDJ
+  disposition: captured
+  program_path: jcl/CBADMCDJ.jcl
+  rule_name: Allocate CSD utility execution environment
+  rule_text: THE CSD Utility Execution SHALL allocate the CSD utility with read-write
+    access to the CSD database, configure console output, and load the CSD library.
+  req_id: REQ-F-018
+  traceability_lines:
+  - 27
+  - 28
+  - 29
+  - 30
+  - 31
+  - 32
+  - 33
+- rule_id: f3b74d17_5ff0_4af2_9177_985d079034df
+  program: CBADMCDJ
+  disposition: captured
+  program_path: jcl/CBADMCDJ.jcl
+  rule_name: Define transaction routing entries
+  rule_text: THE CSD Resource Definition SHALL register transaction routing entries
+    that map transaction identifiers to their corresponding programs in the CARDDEMO
+    group.
+  req_id: REQ-F-016
+  traceability_lines:
+  - 147
+  - 148
+  - 149
+  - 150
+  - 151
+  - 152
+  - 153
+  - 154
+  - 155
+  - 156
+  - 157
+- rule_id: ff203043_532c_42a6_9d4b_bf908fc1d74b
+  program: CBADMCDJ
+  disposition: captured
+  program_path: jcl/CBADMCDJ.jcl
+  rule_name: Define card management screen mapsets
+  rule_text: THE CSD Resource Definition SHALL register the card management screen
+    mapsets in the CARDDEMO group.
+  req_id: REQ-F-013
+  traceability_lines:
+  - 65
+  - 66
+  - 67
+  - 68
+  - 69
+  - 70
+  - 71
+  - 72
+- rule_id: 7a66cc60_3dd3_4e67_b105_07864e39cf5b
+  program: CSUTLDTC
+  disposition: not_applicable
+  reason: '[Pattern-classified] Data formatting for display'
+  program_path: cbl/CSUTLDTC.cbl
+  rule_name: Prepare date and format for validation service
+  rule_text: THE Date Validation Handler SHALL copy the input date and format mask
+    into working storage fields and initialize the output Lillian field to zero.
+- rule_id: 5d704398_ca98_48c2_a160_b46672f43d6d
+  program: CSUTLDTC
+  disposition: captured
+  program_path: cbl/CSUTLDTC.cbl
+  rule_name: Return validation result to caller
+  rule_text: THE Date Validation Handler SHALL return the complete diagnostic message
+    record containing the validation result, severity, message number, date, and format
+    mask to the caller.
+  req_id: REQ-F-022
+  traceability_lines:
+  - 88
+  - 97
+- rule_id: 6e469d8b_1277_4556_91a5_20a4f790c389
+  program: CSUTLDTC
+  disposition: captured
+  program_path: cbl/CSUTLDTC.cbl
+  rule_name: Initialize date validation inputs from caller parameters
+  rule_text: THE Date Validation Handler SHALL accept the input date, format mask,
+    and result buffer from the caller.
+  req_id: REQ-F-019
+  traceability_lines:
+  - 88
+  - 93
+  - 94
+- rule_id: 88172e02_3a99_48f5_9ba0_975c6ccd1108
+  program: CSUTLDTC
+  disposition: captured
+  program_path: cbl/CSUTLDTC.cbl
+  rule_name: Map validation feedback code to result message
+  rule_text: 'WHEN the feedback code is returned from the validation service, THE
+    Date Validation Handler SHALL map the feedback code to a corresponding result
+    message: ''Date is valid'' for valid dates, ''Insufficient'' for insufficient
+    data, ''Datevalue error'' for invalid date values, ''Invalid Era'' for invalid
+    era, ''Unsupp. Range'' for unsupported ranges, ''Invalid month'' for invalid months,
+    ''Bad Pic String'' for invalid format strings, ''Nonnumeric data'' for non-numeric
+    input, ''YearInEra is 0'' for zero year in era, and ''Date is invalid'' for all
+    other conditions.'
+  req_id: REQ-F-021
+  traceability_lines:
+  - 103
+  - 128
+  - 129
+  - 130
+  - 131
+  - 132
+  - 133
+  - 134
+  - 135
+  - 136
+  - 137
+  - 138
+  - 139
+  - 140
+  - 141
+  - 142
+  - 143
+  - 144
+  - 145
+  - 146
+  - 147
+  - 148
+  - 149
+- rule_id: e9df5447_6c59_44b0_80d1_ff52315ebe19
+  program: CSUTLDTC
+  disposition: captured
+  program_path: cbl/CSUTLDTC.cbl
+  rule_name: Invoke date validation service and capture feedback
+  rule_text: WHEN the date and format mask are prepared in working storage, THE Date
+    Validation Handler SHALL invoke the date validation service to convert the date
+    to Lillian format, capture the feedback code, and extract the severity and message
+    number from the feedback response.
+  req_id: REQ-F-020
+  traceability_lines:
+  - 103
+  - 114
+  - 116
+  - 117
+  - 118
+  - 119
+  - 120
+  - 122
+  - 123
+  - 124
+- rule_id: 42aafff5_d4f3_45e7_ace8_e8e2e5c832f7
+  program: DUSRSECJ
+  disposition: captured
+  rule_name: Define indexed user security data store with key-sequenced structure
+  rule_text: THE User Security Data Store Manager SHALL define an indexed data store
+    (AWS.M2.CARDDEMO.USRSEC.VSAM.KSDS) with an 8-byte key at offset 0, 80-byte fixed-length
+    records, 45 primary and 15 secondary tracks, 10% data free space, 15% index free
+    space, and 8192-byte control intervals.
+  req_id: REQ-F-025
+  traceability_lines:
+  - 64
+  - 65
+  - 66
+  - 67
+  - 68
+  - 69
+  - 70
+  - 71
+  - 72
+  - 73
+- rule_id: 80313086_a551_48f4_bdce_9342b17d4f40
+  program: DUSRSECJ
+  disposition: captured
+  rule_name: Delete existing user security indexed data store
+  rule_text: THE User Security Data Store Manager SHALL delete the existing indexed
+    user security data store (AWS.M2.CARDDEMO.USRSEC.VSAM.KSDS) if present, allowing
+    a fresh definition.
+  req_ids:
+  - REQ-F-024
+  - REQ-N-001
+  traceability_lines:
+  - 54
+  - 55
+  - 56
+  - 58
+  - 59
+  - 60
+  - 61
+  - 62
+- rule_id: ac7491f9_11b6_4b12_b5f8_062fb5a0ed52
+  program: DUSRSECJ
+  disposition: captured
+  rule_name: Generate user security records from inline data
+  rule_text: THE User Credential Generator SHALL create a sequential file containing
+    user records (user identifier, name, surname, and password type) from inline data,
+    allocating 80-byte fixed-length records and cataloging the output dataset.
+  req_id: REQ-F-023
+  traceability_lines:
+  - 28
+  - 29
+  - 30
+  - 32
+  - 33
+  - 34
+  - 35
+  - 36
+  - 37
+  - 38
+  - 39
+  - 40
+  - 41
+  - 42
+  - 43
+  - 44
+  - 45
+  - 46
+  - 47
+  - 48
+  - 49
+  - 50
+  - 51
+  - 52
+- rule_id: de7cabcf_89e8_480f_89c6_3113a0ef0743
+  program: DUSRSECJ
+  disposition: captured
+  rule_name: Copy user security records to indexed data store
+  rule_text: THE User Security Data Store Manager SHALL copy all user security records
+    from the sequential file (AWS.M2.CARDDEMO.USRSEC.PS) into the indexed data store
+    (AWS.M2.CARDDEMO.USRSEC.VSAM.KSDS), keying each record by its 8-byte user identifier.
+  req_id: REQ-F-026
+  traceability_lines:
+  - 76
+  - 77
+  - 78
+  - 80
+  - 81
+  - 82
+  - 83
+  - 84
+  - 85
+  - 86
+  - 87
+requirements:
+- req_id: REQ-F-001
+  rule_ids:
+  - d8d48e3d_0b7d_4972_8efc_bfd9c801dc18
+- req_id: REQ-F-002
+  rule_ids:
+  - cd0b68f2_9724_4e26_9e3a_f87c76572ef6
+- req_id: REQ-F-003
+  rule_ids:
+  - 55b4837b_e67e_4766_acea_0164e18bf6dc
+- req_id: REQ-F-004
+  rule_ids:
+  - 08bf7cf3_63d5_45ad_b6ac_b1c2fa8497cf
+- req_id: REQ-F-005
+  rule_ids:
+  - 87c60584_a65b_4aa4_bf26_0aaed221437f
+- req_id: REQ-F-006
+  rule_ids:
+  - 81fc22b9_5030_4d86_b2c3_e282f1d7c34f
+- req_id: REQ-F-007
+  rule_ids:
+  - 20e262d0_45d7_4b5c_9a25_412cd0890857
+- req_id: REQ-F-008
+  rule_ids:
+  - ebf0cdcb_a597_4f4c_b012_2b0355ca385f
+- req_id: REQ-F-009
+  rule_ids:
+  - 51113c8b_3772_47f7_ad98_08d8e67ce112
+- req_id: REQ-F-010
+  rule_ids:
+  - 7c76ab1d_d5e8_43f5_bb57_bd0ea5d88beb
+- req_id: REQ-F-011
+  rule_ids:
+  - de74cd88_6df3_4feb_a044_9ef951bbc6a3
+- req_id: REQ-F-012
+  rule_ids:
+  - 2b67ed10_8179_49fc_bada_066666183642
+- req_id: REQ-F-013
+  rule_ids:
+  - ff203043_532c_42a6_9d4b_bf908fc1d74b
+- req_id: REQ-F-014
+  rule_ids:
+  - 56ecdaa8_57c0_41f3_9031_e7dade8e7dfc
+- req_id: REQ-F-015
+  rule_ids:
+  - 7d64c7a9_8894_46ae_8eb7_f3838749820b
+- req_id: REQ-F-016
+  rule_ids:
+  - f3b74d17_5ff0_4af2_9177_985d079034df
+- req_id: REQ-F-017
+  rule_ids:
+  - a5e36ebf_2844_4ea2_8127_40c9520b7153
+- req_id: REQ-F-018
+  rule_ids:
+  - efe5c3c1_3d74_4e54_b28d_682334c364db
+- req_id: REQ-F-019
+  rule_ids:
+  - 6e469d8b_1277_4556_91a5_20a4f790c389
+- req_id: REQ-F-020
+  rule_ids:
+  - e9df5447_6c59_44b0_80d1_ff52315ebe19
+- req_id: REQ-F-021
+  rule_ids:
+  - 88172e02_3a99_48f5_9ba0_975c6ccd1108
+- req_id: REQ-F-022
+  rule_ids:
+  - 5d704398_ca98_48c2_a160_b46672f43d6d
+- req_id: REQ-F-023
+  rule_ids:
+  - ac7491f9_11b6_4b12_b5f8_062fb5a0ed52
+- req_id: REQ-F-024
+  rule_ids:
+  - 80313086_a551_48f4_bdce_9342b17d4f40
+- req_id: REQ-F-025
+  rule_ids:
+  - 42aafff5_d4f3_45e7_ace8_e8e2e5c832f7
+- req_id: REQ-F-026
+  rule_ids:
+  - de7cabcf_89e8_480f_89c6_3113a0ef0743
+- req_id: REQ-N-001
+  rule_ids:
+  - 80313086_a551_48f4_bdce_9342b17d4f40
