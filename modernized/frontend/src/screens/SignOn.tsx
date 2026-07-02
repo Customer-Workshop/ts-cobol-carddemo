@@ -52,7 +52,7 @@ export function SignOn() {
           <input
             id="userId"
             value={userId}
-            maxLength={8}
+            maxLength={9}
             autoFocus
             onChange={(e) => setUserId(e.target.value)}
           />

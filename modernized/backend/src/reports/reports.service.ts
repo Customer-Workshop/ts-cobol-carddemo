@@ -33,9 +33,11 @@ export class ReportsService {
     const input = parseWith(reportRequestSchema, body);
     const jobRun = await this.prisma.jobRun.create({
       data: {
-        jobName: input.name,
+        // Queued under the well-known request job name so the batch
+        // transaction-report job picks it up (see batch REPORT_REQUEST_JOB_NAME).
+        jobName: 'transaction-report-request',
         status: 'PENDING',
-        message: JSON.stringify({ startDate: input.startDate, endDate: input.endDate }),
+        message: JSON.stringify({ name: input.name, startDate: input.startDate, endDate: input.endDate }),
       },
     });
     // REQ-F-370: success response confirms the report was submitted.

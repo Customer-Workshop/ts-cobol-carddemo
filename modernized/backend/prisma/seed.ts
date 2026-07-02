@@ -58,6 +58,12 @@ const CITIES = [
   'North Enoshaven', 'Fidelshire', 'North Makenziemouth', 'South Lynn', 'East Eulahstad',
 ];
 const STATES = ['NC', 'IN', 'GA', 'MI', 'TX', 'CA', 'NY', 'FL', 'OH', 'WA'];
+// First two zip digits valid for each state above (matches the state/zip
+// cross-edit used by the Account Update screen).
+const STATE_ZIP2: Record<string, string> = {
+  NC: '27', IN: '46', GA: '30', MI: '48', TX: '75',
+  CA: '90', NY: '10', FL: '33', OH: '44', WA: '98',
+};
 const MERCHANTS = [
   'Abshire-Lowe', 'Nitzsche, Nicolas and Lowe', 'Ernser, Roob and Gleason', 'Guann LLC',
   'Kertzmann-Schoen', 'Blanda Group', 'Legros Plaza Stores', 'Deshaun Retail', 'Myrna Flats Market', 'Esta Parks Inc',
@@ -134,9 +140,9 @@ async function main(): Promise<void> {
       addressLine3: pick(CITIES, i - 1),
       stateCode: pick(STATES, i - 1),
       countryCode: 'USA',
-      zipCode: `${pad(10000 + i * 731, 5)}`,
-      phoneNumber1: `(${pad(200 + i, 3)})555-${pad(1000 + i * 17, 4)}`,
-      phoneNumber2: `(${pad(300 + i, 3)})555-${pad(2000 + i * 23, 4)}`,
+      zipCode: `${STATE_ZIP2[pick(STATES, i - 1)]}${pad(100 + i * 7, 3)}`,
+      phoneNumber1: `(${pad(220 + i, 3)})555-${pad(1000 + i * 17, 4)}`,
+      phoneNumber2: `(${pad(320 + i, 3)})555-${pad(2000 + i * 23, 4)}`,
       ssn: pad(20973888 + i * 104729, 9),
       governmentIssuedId: pad(493684371 + i * 12345, 20),
       dateOfBirth: new Date(Date.UTC(1955 + (i % 40), i % 12, 1 + (i % 27))),
@@ -162,7 +168,7 @@ async function main(): Promise<void> {
       reissueDate: new Date(Date.UTC(2025, i % 12, 1 + (i % 27))),
       currCycleCredit: D('0.00'),
       currCycleDebit: D((i * 11.5).toFixed(2)),
-      addressZip: pad(10000 + i * 731, 5),
+      addressZip: `${STATE_ZIP2[pick(STATES, i - 1)]}${pad(100 + i * 7, 3)}`,
       groupId: i % 3 === 0 ? 'DEFAULT' : 'A000000000',
     });
   }

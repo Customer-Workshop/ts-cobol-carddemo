@@ -117,7 +117,7 @@ export function UserUpdate() {
       >
         <div className="field">
           <label htmlFor="userId">User ID</label>
-          <input id="userId" value={userId} maxLength={8} onChange={(e) => setUserId(e.target.value)} />
+          <input id="userId" value={userId} maxLength={9} onChange={(e) => setUserId(e.target.value)} />
         </div>
         <button type="submit" className="btn">
           Search
