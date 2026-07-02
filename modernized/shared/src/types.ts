@@ -19,7 +19,7 @@ export enum DailyTransactionStatus {
 }
 
 export interface User {
-  id: string; // 8 chars, legacy SEC-USR-ID
+  id: string; // up to 9 chars, legacy SEC-USR-ID
   firstName: string;
   lastName: string;
   role: UserRole;
@@ -146,6 +146,7 @@ export interface Report {
   version: number;
   startDate: string;
   endDate: string;
+  content?: string;
   createdAt: string;
 }
 
