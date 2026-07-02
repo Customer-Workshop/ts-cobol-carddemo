@@ -1,0 +1,31 @@
+{
+  "name": "carddemo-modernized",
+  "version": "0.1.0",
+  "private": true,
+  "description": "CardDemo modernization monorepo (forward-engineered from COBOL/CICS/VSAM)",
+  "engines": {
+    "node": ">=20"
+  },
+  "workspaces": [
+    "shared",
+    "backend",
+    "batch",
+    "frontend"
+  ],
+  "scripts": {
+    "lint": "eslint .",
+    "typecheck": "npm run typecheck --workspaces --if-present",
+    "test": "npm run test --workspaces --if-present",
+    "build": "npm run build --workspaces --if-present",
+    "db:up": "docker compose up -d postgres",
+    "db:down": "docker compose down",
+    "db:migrate": "npm run migrate:dev -w @carddemo/backend",
+    "db:seed": "npm run seed -w @carddemo/backend"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.14.0",
+    "eslint": "^9.14.0",
+    "typescript": "^5.6.3",
+    "typescript-eslint": "^8.14.0"
+  }
+}

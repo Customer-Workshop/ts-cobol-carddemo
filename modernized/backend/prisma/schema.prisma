@@ -1,0 +1,288 @@
+// CardDemo modernized relational schema.
+// Implements the Domain Model of docs/ARCHITECTURE.md, forward-engineered from the
+// legacy VSAM/GDG record layouts in app/cpy (CVACT01Y, CVACT02Y, CVACT03Y, CVCUS01Y,
+// CVTRA01Y..CVTRA06Y, CSUSR01Y).
+// REQ-F-001..REQ-F-018 (DataStoreInitializationandLifecycle),
+// REQ-F-023..REQ-F-026 (Security,Validation,andApplicationSetup — user security store).
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  USER
+  ADMIN
+}
+
+enum JobStatus {
+  RUNNING
+  SUCCEEDED
+  FAILED
+}
+
+enum DailyTransactionStatus {
+  PENDING
+  POSTED
+  REJECTED
+}
+
+/// Legacy USRSEC (CSUSR01Y): SEC-USR-ID X(8), SEC-USR-FNAME X(20), SEC-USR-LNAME X(20),
+/// SEC-USR-PWD X(8), SEC-USR-TYPE X(1) (A=admin, U=user).
+/// id widened to 9 chars to accommodate the seeded ADMIN0001 account.
+model User {
+  id        String   @id @db.VarChar(9)
+  firstName String   @db.VarChar(20)
+  lastName  String   @db.VarChar(20)
+  password  String // bcrypt hash
+  role      UserRole @default(USER)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("users")
+}
+
+/// Legacy CUSTDATA (CVCUS01Y), 9-digit customer id preserved as string.
+model Customer {
+  id                  String   @id @db.VarChar(9)
+  firstName           String   @db.VarChar(25)
+  middleName          String?  @db.VarChar(25)
+  lastName            String   @db.VarChar(25)
+  addressLine1        String   @db.VarChar(50)
+  addressLine2        String?  @db.VarChar(50)
+  addressLine3        String?  @db.VarChar(50)
+  stateCode           String   @db.VarChar(2)
+  countryCode         String   @db.VarChar(3)
+  zipCode             String   @db.VarChar(10)
+  phoneNumber1        String?  @db.VarChar(15)
+  phoneNumber2        String?  @db.VarChar(15)
+  ssn                 String   @db.VarChar(9)
+  governmentIssuedId  String?  @db.VarChar(20)
+  dateOfBirth         DateTime @db.Date
+  eftAccountId        String?  @db.VarChar(10)
+  primaryCardHolder   Boolean  @default(true)
+  ficoCreditScore     Int
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+
+  cardXrefs CardXref[]
+
+  @@map("customers")
+}
+
+/// Legacy ACCTDATA (CVACT01Y), 11-digit account id preserved as string.
+model Account {
+  id              String    @id @db.VarChar(11)
+  activeStatus    Boolean   @default(true)
+  currentBalance  Decimal   @db.Decimal(12, 2)
+  creditLimit     Decimal   @db.Decimal(12, 2)
+  cashCreditLimit Decimal   @db.Decimal(12, 2)
+  openDate        DateTime  @db.Date
+  expirationDate  DateTime  @db.Date
+  reissueDate     DateTime? @db.Date
+  currCycleCredit Decimal   @default(0) @db.Decimal(12, 2)
+  currCycleDebit  Decimal   @default(0) @db.Decimal(12, 2)
+  addressZip      String?   @db.VarChar(10)
+  groupId         String?   @db.VarChar(10)
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  cards                Card[]
+  cardXrefs            CardXref[]
+  tranCategoryBalances TransactionCategoryBalance[]
+
+  @@map("accounts")
+}
+
+/// Legacy CARDDATA (CVACT02Y), 16-char card number.
+model Card {
+  cardNumber   String   @id @db.VarChar(16)
+  accountId    String   @db.VarChar(11)
+  cvv          String   @db.VarChar(3)
+  embossedName String   @db.VarChar(50)
+  expiryDate   DateTime @db.Date
+  activeStatus Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  account Account   @relation(fields: [accountId], references: [id])
+  xref    CardXref?
+
+  @@index([accountId])
+  @@map("cards")
+}
+
+/// Legacy CARDXREF (CVACT03Y): card number -> customer + account.
+model CardXref {
+  cardNumber String @id @db.VarChar(16)
+  customerId String @db.VarChar(9)
+  accountId  String @db.VarChar(11)
+
+  card     Card     @relation(fields: [cardNumber], references: [cardNumber])
+  customer Customer @relation(fields: [customerId], references: [id])
+  account  Account  @relation(fields: [accountId], references: [id])
+
+  @@index([customerId])
+  @@index([accountId])
+  @@map("card_xref")
+}
+
+/// Legacy TRANTYPE (CVTRA04Y): 2-char type code + description.
+model TransactionType {
+  code        String @id @db.VarChar(2)
+  description String @db.VarChar(50)
+
+  categories       TransactionCategory[]
+  transactions     Transaction[]
+  disclosureGroups DisclosureGroup[]
+
+  @@map("transaction_types")
+}
+
+/// Legacy TRANCATG (CVTRA03Y): type code + 4-digit category code + description.
+model TransactionCategory {
+  typeCode     String @db.VarChar(2)
+  categoryCode Int
+  description  String @db.VarChar(50)
+
+  type         TransactionType              @relation(fields: [typeCode], references: [code])
+  transactions Transaction[]
+  balances     TransactionCategoryBalance[]
+  disclosures  DisclosureGroup[]
+
+  @@id([typeCode, categoryCode])
+  @@map("transaction_categories")
+}
+
+/// Legacy TRANSACT (CVTRA05Y), 16-char transaction id.
+model Transaction {
+  id            String   @id @db.VarChar(16)
+  typeCode      String   @db.VarChar(2)
+  categoryCode  Int
+  source        String   @db.VarChar(10)
+  description   String   @db.VarChar(100)
+  amount        Decimal  @db.Decimal(12, 2)
+  merchantId    String   @db.VarChar(9)
+  merchantName  String   @db.VarChar(50)
+  merchantCity  String   @db.VarChar(50)
+  merchantZip   String   @db.VarChar(10)
+  cardNumber    String   @db.VarChar(16)
+  originalTs    DateTime
+  processedTs   DateTime
+
+  type     TransactionType     @relation(fields: [typeCode], references: [code])
+  category TransactionCategory @relation(fields: [typeCode, categoryCode], references: [typeCode, categoryCode])
+
+  @@index([cardNumber])
+  @@index([processedTs])
+  @@map("transactions")
+}
+
+/// Legacy TCATBALF (CVTRA01Y): account + type + category -> balance.
+model TransactionCategoryBalance {
+  accountId    String  @db.VarChar(11)
+  typeCode     String  @db.VarChar(2)
+  categoryCode Int
+  balance      Decimal @default(0) @db.Decimal(12, 2)
+
+  account  Account             @relation(fields: [accountId], references: [id])
+  category TransactionCategory @relation(fields: [typeCode, categoryCode], references: [typeCode, categoryCode])
+
+  @@id([accountId, typeCode, categoryCode])
+  @@map("transaction_category_balances")
+}
+
+/// Legacy DISCGRP (CVTRA02Y): account group + type + category -> interest rate.
+model DisclosureGroup {
+  accountGroupId String  @db.VarChar(10)
+  typeCode       String  @db.VarChar(2)
+  categoryCode   Int
+  interestRate   Decimal @db.Decimal(6, 2)
+
+  type     TransactionType     @relation(fields: [typeCode], references: [code])
+  category TransactionCategory @relation(fields: [typeCode, categoryCode], references: [typeCode, categoryCode])
+
+  @@id([accountGroupId, typeCode, categoryCode])
+  @@map("disclosure_groups")
+}
+
+/// Legacy DALYTRAN (CVTRA06Y): staging table for the daily posting batch.
+model DailyTransaction {
+  id           String                 @id @db.VarChar(16)
+  typeCode     String                 @db.VarChar(2)
+  categoryCode Int
+  source       String                 @db.VarChar(10)
+  description  String                 @db.VarChar(100)
+  amount       Decimal                @db.Decimal(12, 2)
+  merchantId   String                 @db.VarChar(9)
+  merchantName String                 @db.VarChar(50)
+  merchantCity String                 @db.VarChar(50)
+  merchantZip  String                 @db.VarChar(10)
+  cardNumber   String                 @db.VarChar(16)
+  originalTs   DateTime
+  processedTs  DateTime?
+  status       DailyTransactionStatus @default(PENDING)
+
+  reject DailyReject?
+
+  @@index([status])
+  @@map("daily_transactions")
+}
+
+/// Legacy DALYREJS: rejected daily transactions with reason.
+model DailyReject {
+  id                 Int      @id @default(autoincrement())
+  dailyTransactionId String   @unique @db.VarChar(16)
+  rejectReason       String   @db.VarChar(80)
+  rejectedAt         DateTime @default(now())
+
+  dailyTransaction DailyTransaction @relation(fields: [dailyTransactionId], references: [id])
+
+  @@map("daily_rejects")
+}
+
+/// Replaces STATEMNT.PS / STATEMNT.HTML GDG artifacts, versioned per account.
+model Statement {
+  id          Int      @id @default(autoincrement())
+  accountId   String   @db.VarChar(11)
+  version     Int
+  periodStart DateTime @db.Date
+  periodEnd   DateTime @db.Date
+  textContent String
+  htmlContent String
+  createdAt   DateTime @default(now())
+
+  @@unique([accountId, version])
+  @@map("statements")
+}
+
+/// Replaces TRANREPT / SYSTRAN GDG artifacts, versioned per report name.
+model Report {
+  id        Int      @id @default(autoincrement())
+  name      String   @db.VarChar(50)
+  version   Int
+  startDate DateTime @db.Date
+  endDate   DateTime @db.Date
+  content   String
+  createdAt DateTime @default(now())
+
+  @@unique([name, version])
+  @@map("reports")
+}
+
+/// Batch job execution/audit log (replaces Control-M history & GDG versioning).
+model JobRun {
+  id          Int       @id @default(autoincrement())
+  jobName     String    @db.VarChar(50)
+  status      JobStatus @default(RUNNING)
+  startedAt   DateTime  @default(now())
+  completedAt DateTime?
+  message     String?
+
+  @@index([jobName, startedAt])
+  @@map("job_runs")
+}

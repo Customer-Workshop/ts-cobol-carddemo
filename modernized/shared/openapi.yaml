@@ -1,0 +1,955 @@
+openapi: 3.0.3
+info:
+  title: CardDemo API
+  description: >
+    REST API contract for the modernized CardDemo credit card management application.
+    Forward-engineered from the legacy CICS/BMS transactions per docs/spec/**.
+    This file is the source of truth consumed by @carddemo/backend (implementation)
+    and @carddemo/frontend (client).
+  version: 0.1.0
+servers:
+  - url: /api/v1
+tags:
+  - name: auth
+  - name: accounts
+  - name: cards
+  - name: transactions
+  - name: billpay
+  - name: reports
+  - name: users
+paths:
+  /auth/signin:
+    post:
+      tags: [auth]
+      summary: Sign in and obtain a JWT (legacy COSGN00C sign-on screen)
+      operationId: signIn
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SignInRequest'
+      responses:
+        '200':
+          description: Authenticated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SignInResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /accounts/{accountId}:
+    parameters:
+      - $ref: '#/components/parameters/AccountId'
+    get:
+      tags: [accounts]
+      summary: View combined account + customer details (legacy COACTVWC)
+      operationId: getAccount
+      responses:
+        '200':
+          description: Account with its primary customer
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccountDetail'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    put:
+      tags: [accounts]
+      summary: Update account and/or customer fields (legacy COACTUPC)
+      operationId: updateAccount
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AccountUpdateRequest'
+      responses:
+        '200':
+          description: Updated account with its primary customer
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccountDetail'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /cards:
+    get:
+      tags: [cards]
+      summary: List cards, filterable by account, paginated (legacy COCRDLIC)
+      operationId: listCards
+      parameters:
+        - name: accountId
+          in: query
+          schema:
+            type: string
+            pattern: '^\d{11}$'
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/PageSize'
+      responses:
+        '200':
+          description: Paginated card list
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/Page'
+                  - type: object
+                    required: [items]
+                    properties:
+                      items:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/Card'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /cards/{cardNumber}:
+    parameters:
+      - $ref: '#/components/parameters/CardNumber'
+    get:
+      tags: [cards]
+      summary: View card details (legacy COCRDSLC)
+      operationId: getCard
+      responses:
+        '200':
+          description: Card details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Card'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    put:
+      tags: [cards]
+      summary: Update card name, expiry, or status (legacy COCRDUPC)
+      operationId: updateCard
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CardUpdateRequest'
+      responses:
+        '200':
+          description: Updated card
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Card'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /transactions:
+    get:
+      tags: [transactions]
+      summary: List transactions, paginated (legacy COTRN00C)
+      operationId: listTransactions
+      parameters:
+        - name: cardNumber
+          in: query
+          schema:
+            type: string
+            pattern: '^\d{16}$'
+        - name: accountId
+          in: query
+          schema:
+            type: string
+            pattern: '^\d{11}$'
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/PageSize'
+      responses:
+        '200':
+          description: Paginated transaction list
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/Page'
+                  - type: object
+                    required: [items]
+                    properties:
+                      items:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/Transaction'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+    post:
+      tags: [transactions]
+      summary: Add a transaction (legacy COTRN02C)
+      operationId: createTransaction
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TransactionCreateRequest'
+      responses:
+        '201':
+          description: Created transaction
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Transaction'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /transactions/{transactionId}:
+    parameters:
+      - name: transactionId
+        in: path
+        required: true
+        schema:
+          type: string
+          pattern: '^\d{16}$'
+    get:
+      tags: [transactions]
+      summary: View transaction details (legacy COTRN01C)
+      operationId: getTransaction
+      responses:
+        '200':
+          description: Transaction details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Transaction'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /billpay:
+    post:
+      tags: [billpay]
+      summary: Pay the full current balance of an account (legacy COBIL00C)
+      operationId: payBill
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BillPayRequest'
+      responses:
+        '201':
+          description: Payment transaction created; account balance set to zero
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BillPayResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          description: Nothing to pay (balance is zero or negative)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /reports:
+    get:
+      tags: [reports]
+      summary: List generated reports (legacy CORPT00C / TRANREPT)
+      operationId: listReports
+      parameters:
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/PageSize'
+      responses:
+        '200':
+          description: Paginated report list
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/Page'
+                  - type: object
+                    required: [items]
+                    properties:
+                      items:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/Report'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+    post:
+      tags: [reports]
+      summary: Trigger report generation for a date range (legacy CORPT00C submit)
+      operationId: createReport
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReportRequest'
+      responses:
+        '202':
+          description: Report generation accepted; a job run is recorded
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JobRun'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /users:
+    get:
+      tags: [users]
+      summary: List users (admin only, legacy COUSR00C)
+      operationId: listUsers
+      parameters:
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/PageSize'
+      responses:
+        '200':
+          description: Paginated user list
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/Page'
+                  - type: object
+                    required: [items]
+                    properties:
+                      items:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/User'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+    post:
+      tags: [users]
+      summary: Create a user (admin only, legacy COUSR01C)
+      operationId: createUser
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserCreateRequest'
+      responses:
+        '201':
+          description: Created user
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '409':
+          description: User ID already exists
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /users/{userId}:
+    parameters:
+      - name: userId
+        in: path
+        required: true
+        schema:
+          type: string
+          maxLength: 9
+    put:
+      tags: [users]
+      summary: Update a user (admin only, legacy COUSR02C)
+      operationId: updateUser
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserUpdateRequest'
+      responses:
+        '200':
+          description: Updated user
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    delete:
+      tags: [users]
+      summary: Delete a user (admin only, legacy COUSR03C)
+      operationId: deleteUser
+      responses:
+        '204':
+          description: Deleted
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  parameters:
+    AccountId:
+      name: accountId
+      in: path
+      required: true
+      schema:
+        type: string
+        pattern: '^\d{11}$'
+    CardNumber:
+      name: cardNumber
+      in: path
+      required: true
+      schema:
+        type: string
+        pattern: '^\d{16}$'
+    Page:
+      name: page
+      in: query
+      schema:
+        type: integer
+        minimum: 1
+        default: 1
+    PageSize:
+      name: pageSize
+      in: query
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 100
+        default: 20
+  responses:
+    BadRequest:
+      description: Validation error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    Unauthorized:
+      description: Missing or invalid JWT
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    Forbidden:
+      description: Caller lacks the required role
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    NotFound:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+  schemas:
+    ErrorResponse:
+      type: object
+      required: [statusCode, error, message]
+      properties:
+        statusCode:
+          type: integer
+        error:
+          type: string
+          example: Bad Request
+        message:
+          type: string
+        details:
+          type: array
+          description: Field-level validation issues, when applicable
+          items:
+            type: object
+            required: [field, message]
+            properties:
+              field:
+                type: string
+              message:
+                type: string
+    Page:
+      type: object
+      required: [page, pageSize, totalItems, totalPages]
+      properties:
+        page:
+          type: integer
+        pageSize:
+          type: integer
+        totalItems:
+          type: integer
+        totalPages:
+          type: integer
+    Money:
+      type: string
+      pattern: '^-?\d{1,10}(\.\d{1,2})?$'
+      example: '1234.56'
+    IsoDate:
+      type: string
+      format: date
+      example: '2024-01-15'
+    UserRole:
+      type: string
+      enum: [USER, ADMIN]
+    SignInRequest:
+      type: object
+      required: [userId, password]
+      properties:
+        userId:
+          type: string
+          maxLength: 9
+        password:
+          type: string
+          maxLength: 8
+    SignInResponse:
+      type: object
+      required: [token, user]
+      properties:
+        token:
+          type: string
+          description: JWT bearer token
+        user:
+          $ref: '#/components/schemas/User'
+    User:
+      type: object
+      required: [id, firstName, lastName, role]
+      properties:
+        id:
+          type: string
+          maxLength: 9
+        firstName:
+          type: string
+          maxLength: 20
+        lastName:
+          type: string
+          maxLength: 20
+        role:
+          $ref: '#/components/schemas/UserRole'
+    UserCreateRequest:
+      type: object
+      required: [id, firstName, lastName, password, role]
+      properties:
+        id:
+          type: string
+          maxLength: 9
+        firstName:
+          type: string
+          maxLength: 20
+        lastName:
+          type: string
+          maxLength: 20
+        password:
+          type: string
+          maxLength: 8
+        role:
+          $ref: '#/components/schemas/UserRole'
+    UserUpdateRequest:
+      type: object
+      properties:
+        firstName:
+          type: string
+          maxLength: 20
+        lastName:
+          type: string
+          maxLength: 20
+        password:
+          type: string
+          maxLength: 8
+        role:
+          $ref: '#/components/schemas/UserRole'
+    Customer:
+      type: object
+      required:
+        [id, firstName, lastName, addressLine1, stateCode, countryCode, zipCode, ssn, dateOfBirth, primaryCardHolder, ficoCreditScore]
+      properties:
+        id:
+          type: string
+          pattern: '^\d{9}$'
+        firstName:
+          type: string
+          maxLength: 25
+        middleName:
+          type: string
+          maxLength: 25
+          nullable: true
+        lastName:
+          type: string
+          maxLength: 25
+        addressLine1:
+          type: string
+          maxLength: 50
+        addressLine2:
+          type: string
+          maxLength: 50
+          nullable: true
+        addressLine3:
+          type: string
+          maxLength: 50
+          nullable: true
+        stateCode:
+          type: string
+          maxLength: 2
+        countryCode:
+          type: string
+          maxLength: 3
+        zipCode:
+          type: string
+          maxLength: 10
+        phoneNumber1:
+          type: string
+          maxLength: 15
+          nullable: true
+        phoneNumber2:
+          type: string
+          maxLength: 15
+          nullable: true
+        ssn:
+          type: string
+          pattern: '^\d{9}$'
+        governmentIssuedId:
+          type: string
+          maxLength: 20
+          nullable: true
+        dateOfBirth:
+          $ref: '#/components/schemas/IsoDate'
+        eftAccountId:
+          type: string
+          maxLength: 10
+          nullable: true
+        primaryCardHolder:
+          type: boolean
+        ficoCreditScore:
+          type: integer
+          minimum: 300
+          maximum: 850
+    Account:
+      type: object
+      required:
+        [id, activeStatus, currentBalance, creditLimit, cashCreditLimit, openDate, expirationDate, currCycleCredit, currCycleDebit]
+      properties:
+        id:
+          type: string
+          pattern: '^\d{11}$'
+        activeStatus:
+          type: boolean
+        currentBalance:
+          $ref: '#/components/schemas/Money'
+        creditLimit:
+          $ref: '#/components/schemas/Money'
+        cashCreditLimit:
+          $ref: '#/components/schemas/Money'
+        openDate:
+          $ref: '#/components/schemas/IsoDate'
+        expirationDate:
+          $ref: '#/components/schemas/IsoDate'
+        reissueDate:
+          nullable: true
+          allOf:
+            - $ref: '#/components/schemas/IsoDate'
+        currCycleCredit:
+          $ref: '#/components/schemas/Money'
+        currCycleDebit:
+          $ref: '#/components/schemas/Money'
+        addressZip:
+          type: string
+          maxLength: 10
+          nullable: true
+        groupId:
+          type: string
+          maxLength: 10
+          nullable: true
+    AccountDetail:
+      type: object
+      required: [account, customer]
+      properties:
+        account:
+          $ref: '#/components/schemas/Account'
+        customer:
+          $ref: '#/components/schemas/Customer'
+    AccountUpdateRequest:
+      type: object
+      description: Partial update of account and/or its primary customer
+      properties:
+        activeStatus:
+          type: boolean
+        creditLimit:
+          $ref: '#/components/schemas/Money'
+        cashCreditLimit:
+          $ref: '#/components/schemas/Money'
+        expirationDate:
+          $ref: '#/components/schemas/IsoDate'
+        reissueDate:
+          $ref: '#/components/schemas/IsoDate'
+        groupId:
+          type: string
+          maxLength: 10
+        customer:
+          type: object
+          properties:
+            firstName:
+              type: string
+              maxLength: 25
+            middleName:
+              type: string
+              maxLength: 25
+            lastName:
+              type: string
+              maxLength: 25
+            addressLine1:
+              type: string
+              maxLength: 50
+            addressLine2:
+              type: string
+              maxLength: 50
+            addressLine3:
+              type: string
+              maxLength: 50
+            stateCode:
+              type: string
+              maxLength: 2
+            countryCode:
+              type: string
+              maxLength: 3
+            zipCode:
+              type: string
+              maxLength: 10
+            phoneNumber1:
+              type: string
+              maxLength: 15
+            phoneNumber2:
+              type: string
+              maxLength: 15
+            ssn:
+              type: string
+              pattern: '^\d{9}$'
+            governmentIssuedId:
+              type: string
+              maxLength: 20
+            dateOfBirth:
+              $ref: '#/components/schemas/IsoDate'
+            eftAccountId:
+              type: string
+              maxLength: 10
+            primaryCardHolder:
+              type: boolean
+            ficoCreditScore:
+              type: integer
+              minimum: 300
+              maximum: 850
+    Card:
+      type: object
+      required: [cardNumber, accountId, embossedName, expiryDate, activeStatus]
+      properties:
+        cardNumber:
+          type: string
+          pattern: '^\d{16}$'
+        accountId:
+          type: string
+          pattern: '^\d{11}$'
+        embossedName:
+          type: string
+          maxLength: 50
+        expiryDate:
+          $ref: '#/components/schemas/IsoDate'
+        activeStatus:
+          type: boolean
+    CardUpdateRequest:
+      type: object
+      properties:
+        embossedName:
+          type: string
+          maxLength: 50
+        expiryDate:
+          $ref: '#/components/schemas/IsoDate'
+        activeStatus:
+          type: boolean
+    Transaction:
+      type: object
+      required:
+        [id, typeCode, categoryCode, source, description, amount, merchantId, merchantName, merchantCity, merchantZip, cardNumber, originalTs, processedTs]
+      properties:
+        id:
+          type: string
+          pattern: '^\d{16}$'
+        typeCode:
+          type: string
+          pattern: '^\d{2}$'
+        categoryCode:
+          type: integer
+          minimum: 0
+          maximum: 9999
+        source:
+          type: string
+          maxLength: 10
+        description:
+          type: string
+          maxLength: 100
+        amount:
+          $ref: '#/components/schemas/Money'
+        merchantId:
+          type: string
+          maxLength: 9
+        merchantName:
+          type: string
+          maxLength: 50
+        merchantCity:
+          type: string
+          maxLength: 50
+        merchantZip:
+          type: string
+          maxLength: 10
+        cardNumber:
+          type: string
+          pattern: '^\d{16}$'
+        originalTs:
+          type: string
+          format: date-time
+        processedTs:
+          type: string
+          format: date-time
+    TransactionCreateRequest:
+      type: object
+      required:
+        [typeCode, categoryCode, source, description, amount, merchantId, merchantName, merchantCity, merchantZip, cardNumber, originalTs]
+      properties:
+        typeCode:
+          type: string
+          pattern: '^\d{2}$'
+        categoryCode:
+          type: integer
+          minimum: 0
+          maximum: 9999
+        source:
+          type: string
+          maxLength: 10
+        description:
+          type: string
+          maxLength: 100
+        amount:
+          $ref: '#/components/schemas/Money'
+        merchantId:
+          type: string
+          maxLength: 9
+        merchantName:
+          type: string
+          maxLength: 50
+        merchantCity:
+          type: string
+          maxLength: 50
+        merchantZip:
+          type: string
+          maxLength: 10
+        cardNumber:
+          type: string
+          pattern: '^\d{16}$'
+        originalTs:
+          type: string
+          format: date-time
+    BillPayRequest:
+      type: object
+      required: [accountId, confirm]
+      properties:
+        accountId:
+          type: string
+          pattern: '^\d{11}$'
+        confirm:
+          type: boolean
+          description: Must be true to execute the payment
+    BillPayResponse:
+      type: object
+      required: [transaction, account]
+      properties:
+        transaction:
+          $ref: '#/components/schemas/Transaction'
+        account:
+          $ref: '#/components/schemas/Account'
+    ReportRequest:
+      type: object
+      required: [name, startDate, endDate]
+      properties:
+        name:
+          type: string
+          maxLength: 50
+          example: TRANREPT
+        startDate:
+          $ref: '#/components/schemas/IsoDate'
+        endDate:
+          $ref: '#/components/schemas/IsoDate'
+    Report:
+      type: object
+      required: [id, name, version, startDate, endDate, createdAt]
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        version:
+          type: integer
+        startDate:
+          $ref: '#/components/schemas/IsoDate'
+        endDate:
+          $ref: '#/components/schemas/IsoDate'
+        content:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+    JobRun:
+      type: object
+      required: [id, jobName, status, startedAt]
+      properties:
+        id:
+          type: integer
+        jobName:
+          type: string
+        status:
+          type: string
+          enum: [RUNNING, SUCCEEDED, FAILED]
+        startedAt:
+          type: string
+          format: date-time
+        completedAt:
+          type: string
+          format: date-time
+          nullable: true
+        message:
+          type: string
+          nullable: true
+security:
+  - bearerAuth: []
