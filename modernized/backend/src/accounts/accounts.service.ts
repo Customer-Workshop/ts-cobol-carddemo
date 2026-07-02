@@ -92,10 +92,19 @@ export class AccountsService {
     }
 
     // REQ-F-069..REQ-F-076, REQ-N-001: account + customer writes are atomic.
-    const [updatedAccount, updatedCustomer] = await this.prisma.$transaction([
-      this.prisma.account.update({ where: { id: accountId }, data: accountData }),
-      this.prisma.customer.update({ where: { id: customer.id }, data: customerData }),
-    ]);
+    // Only entities with actual changes are written, so unchanged records keep
+    // their timestamps.
+    const [updatedAccount, updatedCustomer] = await this.prisma.$transaction(async (tx) => {
+      const acct =
+        Object.keys(accountData).length > 0
+          ? await tx.account.update({ where: { id: accountId }, data: accountData })
+          : account;
+      const cust =
+        Object.keys(customerData).length > 0
+          ? await tx.customer.update({ where: { id: customer.id }, data: customerData })
+          : customer;
+      return [acct, cust] as const;
+    });
     return { account: serializeAccount(updatedAccount), customer: serializeCustomer(updatedCustomer) };
   }
 

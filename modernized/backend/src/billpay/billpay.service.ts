@@ -39,9 +39,14 @@ export class BillPayService {
     }
 
     const now = new Date();
-    // REQ-F-158..REQ-F-164, REQ-N-002: id generation, transaction write, and
-    // balance update execute as a single atomic operation.
+    // REQ-F-158..REQ-F-164, REQ-N-002: balance re-read, id generation,
+    // transaction write, and balance update execute as a single atomic
+    // operation so a concurrent payment cannot double-pay a stale balance.
     const [transaction, updatedAccount] = await this.prisma.$transaction(async (tx) => {
+      const current = await tx.account.findUniqueOrThrow({ where: { id: accountId } });
+      if (current.currentBalance.lessThanOrEqualTo(0)) {
+        throw new ConflictException('You have nothing to pay...');
+      }
       const highest = await tx.transaction.findFirst({
         orderBy: { id: 'desc' },
         select: { id: true },
@@ -54,7 +59,7 @@ export class BillPayService {
           categoryCode: 2,
           source: 'POS TERM',
           description: 'BILL PAYMENT - ONLINE',
-          amount: account.currentBalance,
+          amount: current.currentBalance,
           merchantId: '999999999',
           merchantName: 'BILL PAYMENT',
           merchantCity: 'N/A',

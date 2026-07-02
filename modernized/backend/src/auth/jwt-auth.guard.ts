@@ -9,7 +9,16 @@ import type { Request } from 'express';
 import type { UserRole } from '@prisma/client';
 import { AuthenticatedUser, IS_PUBLIC_KEY } from './decorators';
 
-export const JWT_SECRET = process.env.JWT_SECRET ?? 'carddemo-dev-secret';
+function resolveJwtSecret(): string {
+  const secret = process.env.JWT_SECRET;
+  if (secret) return secret;
+  if (process.env.NODE_ENV === 'production') {
+    throw new Error('JWT_SECRET must be set in production');
+  }
+  return 'carddemo-dev-secret';
+}
+
+export const JWT_SECRET = resolveJwtSecret();
 
 interface JwtPayload {
   sub: string;

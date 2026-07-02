@@ -40,7 +40,7 @@ export function validateDateOfBirth(value: string, now = new Date()): FieldIssue
   if (formatIssue) return formatIssue;
   // REQ-F-028..REQ-F-030: date of birth cannot be in the future.
   const today = now.toISOString().slice(0, 10);
-  if (value >= today) {
+  if (value > today) {
     return { field: 'customer.dateOfBirth', message: 'Date of birth cannot be in the future' };
   }
   return null;

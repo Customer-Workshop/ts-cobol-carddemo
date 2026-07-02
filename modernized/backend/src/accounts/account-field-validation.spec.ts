@@ -41,6 +41,11 @@ describe('account field validation (COACTUPC rules)', () => {
       expect(validateDateOfBirth('1980-06-15')).toBeNull();
       expect(validateDateOfBirth('2999-01-01')).not.toBeNull();
     });
+    it('accepts a date of birth equal to today', () => {
+      const now = new Date('2026-07-02T12:00:00.000Z');
+      expect(validateDateOfBirth('2026-07-02', now)).toBeNull();
+      expect(validateDateOfBirth('2026-07-03', now)).not.toBeNull();
+    });
   });
 
   describe('names (REQ-F-031..REQ-F-033)', () => {
