@@ -940,7 +940,7 @@ components:
           type: string
         status:
           type: string
-          enum: [RUNNING, SUCCEEDED, FAILED]
+          enum: [PENDING, RUNNING, SUCCEEDED, FAILED]
         startedAt:
           type: string
           format: date-time
