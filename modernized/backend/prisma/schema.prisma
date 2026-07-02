@@ -20,6 +20,7 @@ enum UserRole {
 }
 
 enum JobStatus {
+  PENDING
   RUNNING
   SUCCEEDED
   FAILED
