@@ -3,7 +3,7 @@
 
 import { http, HttpResponse } from 'msw';
 import { UserRole, type JobRun, type Transaction, type User } from '@carddemo/shared';
-import { db } from './db';
+import { db, type MockUser } from './db';
 
 const API = '*/api/v1';
 
@@ -234,8 +234,11 @@ export const handlers = [
     if (caller.role !== UserRole.ADMIN) return error(403, 'Caller lacks the required role');
     const user = db.users.find((u) => u.id === params.userId);
     if (!user) return error(404, 'User ID NOT found...');
-    const body = (await request.json()) as Record<string, unknown>;
-    Object.assign(user, body);
+    const body = (await request.json()) as Partial<Pick<MockUser, 'firstName' | 'lastName' | 'password' | 'role'>>;
+    if (body.firstName !== undefined) user.firstName = body.firstName;
+    if (body.lastName !== undefined) user.lastName = body.lastName;
+    if (body.password !== undefined) user.password = body.password;
+    if (body.role !== undefined) user.role = body.role;
     return HttpResponse.json({ id: user.id, firstName: user.firstName, lastName: user.lastName, role: user.role });
   }),
 

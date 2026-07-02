@@ -57,7 +57,7 @@ export function UserDelete() {
       setMessage({ text: `User ${deletedId} has been deleted ...`, kind: 'success' });
     } catch (err) {
       setMessage({
-        text: err instanceof ApiError ? err.message : 'Unable to Update User...',
+        text: err instanceof ApiError ? err.message : 'Unable to Delete User...',
         kind: 'error',
       });
     }
