@@ -31,7 +31,13 @@ export async function interestCalc(logger: Logger): Promise<JobResult> {
   const now = new Date();
   // REQ-F-084: unique transaction id = processing date + incremented suffix.
   const datePrefix = `${p(now.getUTCFullYear(), 4)}${p(now.getUTCMonth() + 1, 2)}${p(now.getUTCDate(), 2)}`;
-  let suffix = 0;
+  // Continue the suffix from any interest transactions already generated
+  // today so same-day re-runs never collide on transaction ids.
+  const lastToday = await prisma.transaction.findFirst({
+    where: { id: { startsWith: datePrefix } },
+    orderBy: { id: 'desc' },
+  });
+  let suffix = lastToday ? Number(lastToday.id.slice(datePrefix.length)) : 0;
   let accountsProcessed = 0;
   let interestTxns = 0;
 

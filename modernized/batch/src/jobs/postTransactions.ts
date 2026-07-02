@@ -87,7 +87,7 @@ export async function postTransactions(logger: Logger): Promise<JobResult> {
           currentBalance: { increment: txn.amount },
           ...(isCredit
             ? { currCycleCredit: { increment: txn.amount } }
-            : { currCycleDebit: { increment: txn.amount } }),
+            : { currCycleDebit: { increment: txn.amount.negated() } }),
         },
       }),
       prisma.transactionCategoryBalance.upsert({

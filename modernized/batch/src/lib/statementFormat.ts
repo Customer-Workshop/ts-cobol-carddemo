@@ -98,7 +98,9 @@ export function renderHtmlStatement(data: StatementData): string {
 <body>
   <table border="1">
     <tr><th colspan="3">Account ID: ${esc(account.id)}</th></tr>
-    <tr><td colspan="3">${esc(customerName(customer))}<br/>${esc(customer.addressLine1)}<br/>${esc(
+    <tr><td colspan="3">${esc(customerName(customer))}<br/>${esc(customer.addressLine1)}${
+      customer.addressLine2 ? `<br/>${esc(customer.addressLine2)}` : ''
+    }<br/>${esc(
       [customer.addressLine3 ?? '', customer.stateCode, customer.countryCode, customer.zipCode]
         .filter(Boolean)
         .join(' '),
