@@ -36,6 +36,58 @@ npm run db:migrate       # = prisma migrate dev in @carddemo/backend
 npm run db:seed          # = prisma db seed in @carddemo/backend
 ```
 
+## Running the full stack
+
+One command (starts Postgres, migrates + seeds, runs backend + frontend):
+
+```bash
+cd modernized
+./dev.sh
+```
+
+Or step by step:
+
+```bash
+cd modernized
+npm install
+npm run db:up                                 # PostgreSQL 16 on :5432 (docker)
+cp backend/.env.example backend/.env          # DATABASE_URL
+npm run db:migrate && npm run db:seed
+npm run build -w @carddemo/shared -w @carddemo/backend
+
+# Backend REST API on http://localhost:3000 (routes under /api/v1)
+(set -a; source backend/.env; set +a; node backend/dist/src/main.js) &
+
+# Frontend on http://localhost:5173, talking to the real backend (no MSW mocks)
+VITE_USE_MOCKS=false VITE_API_URL=http://localhost:3000 npm run dev -w @carddemo/frontend
+```
+
+| Component | Port / location | Env vars |
+|-----------|-----------------|----------|
+| PostgreSQL | `localhost:5432` (db/user/password `carddemo`) | — |
+| Backend | `http://localhost:3000/api/v1` | `DATABASE_URL`, optional `PORT`, `JWT_SECRET` |
+| Frontend | `http://localhost:5173` | `VITE_API_URL` (backend base URL), `VITE_USE_MOCKS` (`true` = MSW mocks) |
+
+Sign in as `ADMIN0001`/`PASSWORD` (admin) or `USER0001`/`PASSWORD` (user).
+
+Batch jobs run against the same database:
+
+```bash
+npm run build -w @carddemo/batch
+(set -a; source backend/.env; set +a; node batch/dist/cli.js run-pipeline)
+```
+
+### E2E smoke test
+
+`e2e/smoke.mjs` drives a real Chromium browser through sign-in → account view →
+transaction list against the real backend. CI runs it as the `e2e-smoke` job;
+locally:
+
+```bash
+npm i --no-save playwright && npx playwright install chromium
+node e2e/smoke.mjs        # stack must be running (see above)
+```
+
 ## Workspace script conventions
 
 All packages expose the same scripts; run them from the workspace root:

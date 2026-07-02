@@ -401,7 +401,7 @@ describe('CardDemo API (e2e)', () => {
         .set('Authorization', `Bearer ${userToken}`)
         .send({ name: 'TRANREPT', startDate: '2024-01-01', endDate: '2024-01-31' })
         .expect(201);
-      expect(res.body).toMatchObject({ jobName: 'TRANREPT', status: 'PENDING' });
+      expect(res.body).toMatchObject({ jobName: 'transaction-report-request', status: 'PENDING' });
     });
 
     it('rejects an invalid date range', async () => {

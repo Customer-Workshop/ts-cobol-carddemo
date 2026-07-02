@@ -96,7 +96,7 @@ export function UserAdd() {
         <div className="form-grid">
           {field('firstName', 'First Name', 20)}
           {field('lastName', 'Last Name', 20)}
-          {field('id', 'User ID', 8)}
+          {field('id', 'User ID', 9)}
           {field('password', 'Password', 8, 'password')}
           <div className={`field ${fieldErrors.role ? 'invalid' : ''}`}>
             <label htmlFor="role">User Type</label>
