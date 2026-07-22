@@ -1,0 +1,98 @@
+# 7. Grouping & Sequencing
+
+_Application: AWS CardDemo (mainframe credit-card management)_  
+_Generated: 2026-07-22T22:23:08Z_
+
+## Functional grouping (by business domain)
+
+| Business Domain | # Programs | Programs |
+| --- | --- | --- |
+| Account Management | 6 | CBACT01C, CBACT02C, CBACT03C, CBACT04C, COACTUPC, COACTVWC |
+| Authorization (optional) | 8 | CBPAUP0C, COPAUA0C, COPAUS0C, COPAUS1C, COPAUS2C, DBUNLDGS, PAUDBLOD, PAUDBUNL |
+| Batch (other) | 2 | CBEXPORT, CBIMPORT |
+| Bill Payment | 1 | COBIL00C |
+| Card Management | 3 | COCRDLIC, COCRDSLC, COCRDUPC |
+| Common Utilities | 2 | COBSWAIT, CSUTLDTC |
+| Customer Management | 1 | CBCUS01C |
+| Date/MQ Services (optional) | 2 | COACCT01, CODATE01 |
+| Reporting & Statements | 3 | CBSTM03A, CBSTM03B, CORPT00C |
+| Sign-on & Navigation | 3 | COADM01C, COMEN01C, COSGN00C |
+| Transaction Processing | 6 | CBTRN01C, CBTRN02C, CBTRN03C, COTRN00C, COTRN01C, COTRN02C |
+| Transaction Type (optional DB2) | 3 | COBTUPDT, COTRTLIC, COTRTUPC |
+| User / Security Admin | 4 | COUSR00C, COUSR01C, COUSR02C, COUSR03C |
+
+## Batch execution sequence (run book)
+
+Operational ordering of the nightly batch stream, from JCL scheduling and the application run book.
+
+| # | Job | Program/Utility | Purpose |
+| --- | --- | --- | --- |
+| 1 | CLOSEFIL | IEFBR14 | Close VSAM files held by CICS |
+| 2 | ACCTFILE | IDCAMS | Load / refresh Account Master |
+| 3 | CARDFILE | IDCAMS | Load / refresh Card Master (+AIX) |
+| 4 | XREFFILE | IDCAMS | Load Card-Account-Customer cross-reference (+AIX) |
+| 5 | CUSTFILE | IDCAMS | Create / refresh Customer Master |
+| 6 | TRANBKP | IDCAMS | Create / back up Transaction Master |
+| 7 | TRANCATG | IDCAMS | Load Transaction Category file |
+| 8 | TRANTYPE | IDCAMS | Load Transaction Type file |
+| 9 | DISCGRP | IDCAMS | Load Disclosure Group file |
+| 10 | TCATBALF | IDCAMS | Load Transaction Category Balance file |
+| 11 | DUSRSECJ | IEBGENER | Set up User Security file |
+| 12 | POSTTRAN | CBTRN02C | Post daily transactions (validate, update balances) |
+| 13 | INTCALC | CBACT04C | Calculate interest and generate interest transactions |
+| 14 | COMBTRAN | SORT | Combine system transactions with daily transactions |
+| 15 | CREASTMT | CBSTM03A | Produce customer transaction statements |
+| 16 | TRANIDX | IDCAMS | Define alternate index (LF) on Transaction Master |
+| 17 | OPENFIL | IEFBR14 | Re-open VSAM files for CICS |
+
+## Per-job step sequence (from JCL)
+
+| Job | # Steps | Step sequence |
+| --- | --- | --- |
+| ACCTFILE | 3 | STEP05:IDCAMS -> STEP10:IDCAMS -> STEP15:IDCAMS |
+| CARDFILE | 8 | CLCIFIL:SDSF -> STEP05:IDCAMS -> STEP10:IDCAMS -> STEP15:IDCAMS -> STEP40:IDCAMS -> STEP50:IDCAMS -> STEP60:IDCAMS -> OPCIFIL:SDSF |
+| CBADMCDJ | 1 | STEP1:DFHCSDUP |
+| CBEXPORT | 2 | STEP01:IDCAMS -> STEP02:CBEXPORT |
+| CBIMPORT | 1 | STEP01:CBIMPORT |
+| CBPAUP0J | 1 | STEP01:DFSRRC00 |
+| CLOSEFIL | 1 | CLCIFIL:SDSF |
+| COMBTRAN | 2 | STEP05R:SORT -> STEP10:IDCAMS |
+| CREADB21 | 5 | FREEPLN:IKJEFT01 -> CRCRDDB:IKJEFT01 -> LDTTYPE:IEFBR14 -> RUNTEP2:IKJEFT01 -> LDTCCAT:IKJEFT01 |
+| CREASTMT | 5 | DELDEF01:IDCAMS -> STEP010:SORT -> STEP020:IDCAMS -> STEP030:IEFBR14 -> STEP040:CBSTM03A |
+| CUSTFILE | 5 | CLCIFIL:SDSF -> STEP05:IDCAMS -> STEP10:IDCAMS -> STEP15:IDCAMS -> OPCIFIL:SDSF |
+| DALYREJS | 1 | STEP05:IDCAMS |
+| DBPAUTP0 | 2 | STEPDEL:IEFBR14 -> UNLOAD:DFSRRC00 |
+| DEFCUST | 2 | STEP05:IDCAMS -> STEP05:IDCAMS |
+| DEFGDGB | 1 | STEP05:IDCAMS |
+| DEFGDGD | 6 | STEP10:IDCAMS -> STEP20:IEBGENER -> STEP30:IDCAMS -> STEP40:IEBGENER -> STEP50:IDCAMS -> STEP60:IEBGENER |
+| DISCGRP | 3 | STEP05:IDCAMS -> STEP10:IDCAMS -> STEP15:IDCAMS |
+| DUSRSECJ | 4 | PREDEL:IEFBR14 -> STEP01:IEBGENER -> STEP02:IDCAMS -> STEP03:IDCAMS |
+| ESDSRRDS | 6 | PREDEL:IEFBR14 -> STEP01:IEBGENER -> STEP02:IDCAMS -> STEP03:IDCAMS -> STEP04:IDCAMS -> STEP05:IDCAMS |
+| FTPJCL | 1 | STEP1:FTP |
+| INTCALC | 1 | STEP15:CBACT04C |
+| INTRDRJ1 | 2 | IDCAMS:IDCAMS -> STEP01:IEBGENER |
+| INTRDRJ2 | 1 | IDCAMS:IDCAMS |
+| LOADPADB | 1 | STEP01:DFSRRC00 |
+| MNTTRDB2 | 1 | STEP1:IKJEFT01 |
+| OPENFIL | 1 | OPCIFIL:SDSF |
+| POSTTRAN | 1 | STEP15:CBTRN02C |
+| PRTCATBL | 3 | DELDEF:IEFBR14 -> STEP05R:PROC=REPROC -> STEP10R:SORT |
+| READACCT | 2 | PREDEL:IEFBR14 -> STEP05:CBACT01C |
+| READCARD | 1 | STEP05:CBACT02C |
+| READCUST | 1 | STEP05:CBCUS01C |
+| READXREF | 1 | STEP05:CBACT03C |
+| REPROC | 1 | PRC001:IDCAMS |
+| REPTFILE | 1 | STEP05:IDCAMS |
+| TCATBALF | 3 | STEP05:IDCAMS -> STEP10:IDCAMS -> STEP15:IDCAMS |
+| TRANBKP | 3 | STEP05R:PROC=REPROC -> STEP05:IDCAMS -> STEP10:IDCAMS |
+| TRANCATG | 3 | STEP05:IDCAMS -> STEP10:IDCAMS -> STEP15:IDCAMS |
+| TRANEXTR | 5 | STEP10:IEBGENER -> STEP20:IEBGENER -> STEP30:IEFBR14 -> STEP40:IKJEFT01 -> STEP50:IKJEFT01 |
+| TRANFILE | 8 | CLCIFIL:SDSF -> STEP05:IDCAMS -> STEP10:IDCAMS -> STEP15:IDCAMS -> STEP20:IDCAMS -> STEP25:IDCAMS -> STEP30:IDCAMS -> OPCIFIL:SDSF |
+| TRANIDX | 3 | STEP20:IDCAMS -> STEP25:IDCAMS -> STEP30:IDCAMS |
+| TRANREPT | 3 | STEP01R:PROC=REPROC -> STEP05R:SORT -> STEP10R:CBTRN03C |
+| TRANTYPE | 3 | STEP05:IDCAMS -> STEP10:IDCAMS -> STEP15:IDCAMS |
+| TXT2PDF1 | 1 | TXT2PDF:IKJEFT1B |
+| UNLDGSAM | 1 | STEP01:DFSRRC00 |
+| UNLDPADB | 2 | STEP0:IEFBR14 -> STEP01:DFSRRC00 |
+| WAITSTEP | 1 | WAIT:COBSWAIT |
+| XREFFILE | 6 | STEP05:IDCAMS -> STEP10:IDCAMS -> STEP15:IDCAMS -> STEP20:IDCAMS -> STEP25:IDCAMS -> STEP30:IDCAMS |

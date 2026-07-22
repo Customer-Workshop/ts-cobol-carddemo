@@ -1,0 +1,77 @@
+# 2. Program-to-Program Dependencies / Call Chain
+
+_Application: AWS CardDemo (mainframe credit-card management)_  
+_Generated: 2026-07-22T22:23:08Z_
+
+Static call graph derived from COBOL `CALL`, CICS `XCTL`/`LINK`, the menu-navigation copybooks (`COMEN02Y`, `COADM02Y`), and JCL `EXEC PGM` (including indirect IMS `DFSRRC00` and DB2 `IKJEFT01 RUN PROGRAM`).
+
+| Caller | Callee | Mechanism | Unresolved |
+| --- | --- | --- | --- |
+| CBACT01C | CEE3ABD | COBOL CALL | system |
+| CBACT01C | COBDATFT | COBOL CALL | system |
+| CBACT02C | CEE3ABD | COBOL CALL | system |
+| CBACT03C | CEE3ABD | COBOL CALL | system |
+| CBACT04C | CEE3ABD | COBOL CALL | system |
+| CBCUS01C | CEE3ABD | COBOL CALL | system |
+| CBEXPORT | CEE3ABD | COBOL CALL | system |
+| CBEXPORT (JCL) | CBEXPORT | JCL EXEC PGM |  |
+| CBIMPORT | CEE3ABD | COBOL CALL | system |
+| CBIMPORT (JCL) | CBIMPORT | JCL EXEC PGM |  |
+| CBPAUP0J (JCL) | CBPAUP0C | JCL indirect (IMS/DB2) |  |
+| CBSTM03A | CBSTM03B | COBOL CALL |  |
+| CBSTM03A | CEE3ABD | COBOL CALL | system |
+| CBTRN01C | CEE3ABD | COBOL CALL | system |
+| CBTRN02C | CEE3ABD | COBOL CALL | system |
+| CBTRN03C | CEE3ABD | COBOL CALL | system |
+| COACCT01 | MQCLOSE | COBOL CALL | system |
+| COACCT01 | MQGET | COBOL CALL | system |
+| COACCT01 | MQOPEN | COBOL CALL | system |
+| COACCT01 | MQPUT | COBOL CALL | system |
+| COADM01C | COTRTLIC | CICS menu (XCTL) |  |
+| COADM01C | COTRTUPC | CICS menu (XCTL) |  |
+| COADM01C | COUSR00C | CICS menu (XCTL) |  |
+| COADM01C | COUSR01C | CICS menu (XCTL) |  |
+| COADM01C | COUSR02C | CICS menu (XCTL) |  |
+| COADM01C | COUSR03C | CICS menu (XCTL) |  |
+| COBSWAIT | MVSWAIT | COBOL CALL | system |
+| CODATE01 | MQCLOSE | COBOL CALL | system |
+| CODATE01 | MQGET | COBOL CALL | system |
+| CODATE01 | MQOPEN | COBOL CALL | system |
+| CODATE01 | MQPUT | COBOL CALL | system |
+| COMEN01C | COACTUPC | CICS menu (XCTL) |  |
+| COMEN01C | COACTVWC | CICS menu (XCTL) |  |
+| COMEN01C | COBIL00C | CICS menu (XCTL) |  |
+| COMEN01C | COCRDLIC | CICS menu (XCTL) |  |
+| COMEN01C | COCRDSLC | CICS menu (XCTL) |  |
+| COMEN01C | COCRDUPC | CICS menu (XCTL) |  |
+| COMEN01C | COPAUS0C | CICS menu (XCTL) |  |
+| COMEN01C | CORPT00C | CICS menu (XCTL) |  |
+| COMEN01C | COTRN00C | CICS menu (XCTL) |  |
+| COMEN01C | COTRN01C | CICS menu (XCTL) |  |
+| COMEN01C | COTRN02C | CICS menu (XCTL) |  |
+| COPAUA0C | MQCLOSE | COBOL CALL | system |
+| COPAUA0C | MQGET | COBOL CALL | system |
+| COPAUA0C | MQOPEN | COBOL CALL | system |
+| COPAUA0C | MQPUT1 | COBOL CALL | system |
+| CORPT00C | CSUTLDTC | COBOL CALL |  |
+| COSGN00C | COADM01C | CICS XCTL/LINK |  |
+| COSGN00C | COMEN01C | CICS XCTL/LINK |  |
+| COTRN02C | CSUTLDTC | COBOL CALL |  |
+| CREASTMT (JCL) | CBSTM03A | JCL EXEC PGM |  |
+| CSUTLDTC | CEEDAYS | COBOL CALL | system |
+| DBUNLDGS | CBLTDLI | COBOL CALL | system |
+| INTCALC (JCL) | CBACT04C | JCL EXEC PGM |  |
+| LOADPADB (JCL) | PAUDBLOD | JCL indirect (IMS/DB2) |  |
+| MNTTRDB2 (JCL) | COBTUPDT | JCL indirect (IMS/DB2) |  |
+| PAUDBLOD | CBLTDLI | COBOL CALL | system |
+| PAUDBUNL | CBLTDLI | COBOL CALL | system |
+| POSTTRAN (JCL) | CBTRN02C | JCL EXEC PGM |  |
+| READACCT (JCL) | CBACT01C | JCL EXEC PGM |  |
+| READCARD (JCL) | CBACT02C | JCL EXEC PGM |  |
+| READCUST (JCL) | CBCUS01C | JCL EXEC PGM |  |
+| READXREF (JCL) | CBACT03C | JCL EXEC PGM |  |
+| TRANEXTR (JCL) | DSNTIAUL | JCL indirect (IMS/DB2) | system |
+| TRANREPT (JCL) | CBTRN03C | JCL EXEC PGM |  |
+| UNLDGSAM (JCL) | DBUNLDGS | JCL indirect (IMS/DB2) |  |
+| UNLDPADB (JCL) | PAUDBUNL | JCL indirect (IMS/DB2) |  |
+| WAITSTEP (JCL) | COBSWAIT | JCL EXEC PGM |  |
