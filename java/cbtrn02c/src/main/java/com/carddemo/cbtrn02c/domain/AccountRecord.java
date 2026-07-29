@@ -1,0 +1,7 @@
+package com.carddemo.cbtrn02c.domain;
+import java.math.BigDecimal;
+public class AccountRecord {
+ public String acctId="",activeStatus="",openDate="",expirationDate="",reissueDate="",addrZip="",groupId="",filler=""; public BigDecimal currBal=BigDecimal.ZERO,creditLimit=BigDecimal.ZERO,cashCreditLimit=BigDecimal.ZERO,currCycCredit=BigDecimal.ZERO,currCycDebit=BigDecimal.ZERO;
+ public static AccountRecord parse(String s){FixedWidth.require(s,300);AccountRecord r=new AccountRecord();int p=0;r.acctId=s.substring(p,p+=11);r.activeStatus=s.substring(p,p+=1);r.currBal=FixedWidth.parseSigned(s.substring(p,p+=12),12);r.creditLimit=FixedWidth.parseSigned(s.substring(p,p+=12),12);r.cashCreditLimit=FixedWidth.parseSigned(s.substring(p,p+=12),12);r.openDate=s.substring(p,p+=10);r.expirationDate=s.substring(p,p+=10);r.reissueDate=s.substring(p,p+=10);r.currCycCredit=FixedWidth.parseSigned(s.substring(p,p+=12),12);r.currCycDebit=FixedWidth.parseSigned(s.substring(p,p+=12),12);r.addrZip=s.substring(p,p+=10);r.groupId=s.substring(p,p+=10);r.filler=s.substring(p);return r;}
+ public String format(){return FixedWidth.num(acctId,11)+FixedWidth.text(activeStatus,1)+FixedWidth.signed(currBal,12)+FixedWidth.signed(creditLimit,12)+FixedWidth.signed(cashCreditLimit,12)+FixedWidth.text(openDate,10)+FixedWidth.text(expirationDate,10)+FixedWidth.text(reissueDate,10)+FixedWidth.signed(currCycCredit,12)+FixedWidth.signed(currCycDebit,12)+FixedWidth.text(addrZip,10)+FixedWidth.text(groupId,10)+FixedWidth.text(filler,178);}
+}
