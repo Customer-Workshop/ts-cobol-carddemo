@@ -1,9 +1,90 @@
 package com.carddemo.cbact04c;
-import static org.junit.jupiter.api.Assertions.*;
-import java.math.*;import org.junit.jupiter.api.Test;
-import com.carddemo.cbact04c.io.*;import com.carddemo.cbact04c.util.*;
+
+import com.carddemo.cbact04c.domain.Records.Account;
+import com.carddemo.cbact04c.io.RecordCodecs;
+import com.carddemo.cbact04c.util.ZonedDecimal;
+
+import java.io.IOException;
+import java.math.BigDecimal;
+import java.nio.file.Files;
+import java.nio.file.Path;
+
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 class CodecTest {
- @Test void overpunchedValuesRoundTrip(){assertEquals("00000001940{",ZonedDecimal.format(new BigDecimal("1940.00"),10));assertEquals(new BigDecimal("1940.00"),ZonedDecimal.parse("00000001940{"));assertEquals(new BigDecimal("-12.39"),ZonedDecimal.parse("00000000012R"));}
- @Test void realRecordsParseAtCopybookOffsets(){var t=RecordCodecs.tranCat("000000000010100010000000000{0000000000000000000000");assertEquals("00000000001",t.acctId());assertEquals("01",t.typeCd());assertEquals("0001",t.catCd());assertEquals(new BigDecimal("0.00"),t.balance());var x=RecordCodecs.xref("050002445376574000000005000000000050");assertEquals("00000000005",x.acctId());var d=RecordCodecs.disc("A00000000001000100150{0000000000000000000000000000");assertEquals("A000000000",d.key().groupId());assertEquals(new BigDecimal("15.00"),d.rate());}
- @Test void shortXrefIsPadded(){assertEquals(11,RecordCodecs.xref("CARD").acctId().length());}
+
+    @Test
+    void realTransactionCategoryRecordRoundTripsAtCopybookOffsets() throws IOException {
+        String line = firstLine("tcatbal.txt");
+        assertEquals(line, RecordCodecs.encodeTranCat(RecordCodecs.decodeTranCat(line)));
+        assertEquals("00000000001", RecordCodecs.decodeTranCat(line).acctId());
+        assertEquals("01", RecordCodecs.decodeTranCat(line).typeCd());
+        assertEquals("0001", RecordCodecs.decodeTranCat(line).catCd());
+    }
+
+    @Test
+    void realDisclosureGroupRecordRoundTripsAtCopybookOffsets() throws IOException {
+        String line = firstLine("discgrp.txt");
+        assertEquals(line, RecordCodecs.encodeDiscGroup(RecordCodecs.decodeDiscGroup(line)));
+        assertEquals(new BigDecimal("15.00"), RecordCodecs.decodeDiscGroup(line).rate());
+    }
+
+    @Test
+    void realAccountRecordRoundTripsAllThreeHundredBytes() throws IOException {
+        String line = firstLine("acctdata.txt");
+        Account account = RecordCodecs.decodeAccount(line);
+        assertEquals(300, line.length());
+        assertEquals(line, RecordCodecs.encodeAccount(account));
+    }
+
+    @Test
+    void shortCardXrefIsPaddedAndRoundTripsAtTheDeclaredFields() throws IOException {
+        String line = firstLine("cardxref.txt");
+        assertEquals(36, line.length());
+        assertEquals(50, RecordCodecs.decodeXref(line).raw().length());
+        assertEquals(
+                RecordCodecs.decodeXref(line).raw(),
+                RecordCodecs.encodeXref(RecordCodecs.decodeXref(line)));
+    }
+
+    @Test
+    void everyOverpunchCharacterParses() {
+        assertEquals(BigDecimal.ZERO.setScale(2), ZonedDecimal.parse("0000000000{"));
+        for (char overpunch = 'A'; overpunch <= 'I'; overpunch++) {
+            assertEquals(
+                    BigDecimal.valueOf(overpunch - 'A' + 1, 2),
+                    ZonedDecimal.parse("0000000000" + overpunch));
+        }
+        assertEquals(BigDecimal.ZERO.setScale(2).negate(),
+                ZonedDecimal.parse("0000000000}"));
+        for (char overpunch = 'J'; overpunch <= 'R'; overpunch++) {
+            assertEquals(
+                    BigDecimal.valueOf(-(overpunch - 'J' + 1), 2),
+                    ZonedDecimal.parse("0000000000" + overpunch));
+        }
+        assertEquals(new BigDecimal("12.34"),
+                ZonedDecimal.parse("0000000001234"));
+    }
+
+    @Test
+    void negativeValuesFormatWithTrailingOverpunch() {
+        assertEquals("00000000123M", ZonedDecimal.format(new BigDecimal("-12.34"), 10));
+        assertEquals("00000000000R", ZonedDecimal.format(new BigDecimal("-0.09"), 10));
+    }
+
+    @Test
+    void valuesExceedingPicDigitsAreRejectedBeforeRecordCorruption() {
+        assertThrows(
+                ArithmeticException.class,
+                () -> ZonedDecimal.format(new BigDecimal("10000000000.00"), 10));
+    }
+
+    private String firstLine(String fileName) throws IOException {
+        return Files.readAllLines(
+                        Path.of("src", "test", "resources", "fixtures", fileName))
+                .get(0);
+    }
 }
