@@ -4,22 +4,71 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 
 public final class FixedWidth {
-  private FixedWidth() {}
-  public static String text(String s, int n) { s = s == null ? "" : s; return (s + " ".repeat(n)).substring(0, n); }
-  public static String num(String s, int n) { s = s == null ? "" : s; String p="0".repeat(n)+s.trim(); return p.substring(Math.max(0,p.length()-n)); }
-  public static String signed(BigDecimal value, int digits) {
-    long cents = value.movePointRight(2).setScale(0, RoundingMode.UNNECESSARY).longValueExact();
-    boolean neg = cents < 0; String raw = Long.toString(Math.abs(cents));
-    raw = ("0".repeat(digits) + raw); raw = raw.substring(Math.max(0,raw.length()-digits));
-    char last = raw.charAt(digits-1); int d = last-'0';
-    char over = neg ? (char)('J'+d) : (d == 0 ? '{' : (char)('A'+d-1));
-    return raw.substring(0,digits-1) + over;
-  }
-  public static BigDecimal parseSigned(String s, int digits) {
-    s = s.substring(0, digits); char c=s.charAt(digits-1); boolean neg=false; int d;
-    if (c >= 'A' && c <= 'I') d=c-'A'+1; else if(c=='{') d=0; else if(c >= 'J' && c <= 'R'){neg=true; d=c-'J';} else if(c=='}'){neg=true; d=0;} else d=c-'0';
-    String raw=s.substring(0,digits-1)+d; BigDecimal v=new BigDecimal(raw).movePointLeft(2);
-    return neg ? v.negate() : v;
-  }
-  public static void require(String s, int n) { if (s.length()!=n) throw new IllegalArgumentException("Expected "+n+" bytes, got "+s.length()); }
+    private FixedWidth() {
+    }
+
+    public static String text(String value, int width) {
+        String safeValue = value == null ? "" : value;
+        return (safeValue + " ".repeat(width)).substring(0, width);
+    }
+
+    public static String unsignedNumber(String value, int width) {
+        String safeValue = value == null ? "" : value.trim();
+        String padded = "0".repeat(width) + safeValue;
+        return padded.substring(Math.max(0, padded.length() - width));
+    }
+
+    public static String signedNumber(BigDecimal value, int digits) {
+        long cents = value.movePointRight(2)
+                .setScale(0, RoundingMode.UNNECESSARY)
+                .longValueExact();
+        boolean negative = cents < 0;
+        String raw = Long.toString(Math.abs(cents));
+        String padded = "0".repeat(digits) + raw;
+        padded = padded.substring(Math.max(0, padded.length() - digits));
+
+        int lastDigit = padded.charAt(digits - 1) - '0';
+        char overpunch;
+        if (negative) {
+            overpunch = lastDigit == 0 ? '}' : (char) ('I' + lastDigit);
+        } else {
+            overpunch = lastDigit == 0 ? '{' : (char) ('@' + lastDigit);
+        }
+        return padded.substring(0, digits - 1) + overpunch;
+    }
+
+    public static BigDecimal parseSignedNumber(String value, int digits) {
+        require(value, digits);
+        char lastCharacter = value.charAt(digits - 1);
+        boolean negative = false;
+        int lastDigit;
+
+        if (lastCharacter == '}') {
+            negative = true;
+            lastDigit = 0;
+        } else if (lastCharacter >= 'J' && lastCharacter <= 'R') {
+            negative = true;
+            lastDigit = lastCharacter - 'I';
+        } else if (lastCharacter == '{') {
+            lastDigit = 0;
+        } else if (lastCharacter >= 'A' && lastCharacter <= 'I') {
+            lastDigit = lastCharacter - '@';
+        } else if (Character.isDigit(lastCharacter)) {
+            lastDigit = lastCharacter - '0';
+        } else {
+            throw new IllegalArgumentException("Invalid signed numeric overpunch: " + lastCharacter);
+        }
+
+        String digitsOnly = value.substring(0, digits - 1) + lastDigit;
+        BigDecimal parsed = new BigDecimal(digitsOnly).movePointLeft(2);
+        return negative ? parsed.negate() : parsed;
+    }
+
+    public static void require(String value, int expectedLength) {
+        if (value == null || value.length() != expectedLength) {
+            throw new IllegalArgumentException(
+                    "Expected " + expectedLength + " bytes, got "
+                            + (value == null ? "null" : value.length()));
+        }
+    }
 }

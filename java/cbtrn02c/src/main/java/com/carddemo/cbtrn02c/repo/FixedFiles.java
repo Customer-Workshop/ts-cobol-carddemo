@@ -1,9 +1,72 @@
 package com.carddemo.cbtrn02c.repo;
-import java.io.*;import java.nio.file.*;import java.util.*;import java.util.function.*;
+
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
+import java.util.function.Function;
+
 public final class FixedFiles {
- private FixedFiles(){}
- public static <T> List<T> readSequential(Path p, Function<String,T> parser)throws IOException{if(!Files.exists(p))return new ArrayList<>();List<T> out=new ArrayList<>();try(BufferedReader b=Files.newBufferedReader(p)){String s;while((s=b.readLine())!=null){if(!s.isEmpty())out.add(parser.apply(s));}}return out;}
- public static <T> void writeSequential(Path p,List<T> data,Function<T,String> formatter)throws IOException{if(p.getParent()!=null)Files.createDirectories(p.getParent());try(BufferedWriter w=Files.newBufferedWriter(p)){for(T x:data){w.write(formatter.apply(x));w.newLine();}}}
- public static <T> TreeMap<String,T> readMap(Path p,Function<String,T> parser,Function<T,String> key)throws IOException{TreeMap<String,T> m=new TreeMap<>();for(T x:readSequential(p,parser))m.put(key.apply(x),x);return m;}
- public static <T> void writeMap(Path p,Map<String,T> m,Function<T,String> formatter)throws IOException{writeSequential(p,new ArrayList<>(m.values()),formatter);}
+    private FixedFiles() {
+    }
+
+    public static <T> List<T> readSequential(
+            Path path,
+            Function<String, T> parser) throws IOException {
+        if (!Files.exists(path)) {
+            return new ArrayList<>();
+        }
+        List<T> records = new ArrayList<>();
+        try (BufferedReader reader = Files.newBufferedReader(path)) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                if (!line.isEmpty()) {
+                    records.add(parser.apply(line));
+                }
+            }
+        }
+        return records;
+    }
+
+    public static <T> TreeMap<String, T> readMap(
+            Path path,
+            Function<String, T> parser,
+            Function<T, String> keyExtractor) throws IOException {
+        TreeMap<String, T> records = new TreeMap<>();
+        for (T record : readSequential(path, parser)) {
+            records.put(keyExtractor.apply(record), record);
+        }
+        return records;
+    }
+
+    public static <T> void writeSequential(
+            Path path,
+            List<T> records,
+            Function<T, String> formatter) throws IOException {
+        createParent(path);
+        try (BufferedWriter writer = Files.newBufferedWriter(path)) {
+            for (T record : records) {
+                writer.write(formatter.apply(record));
+                writer.newLine();
+            }
+        }
+    }
+
+    public static <T> void writeMap(
+            Path path,
+            Map<String, T> records,
+            Function<T, String> formatter) throws IOException {
+        writeSequential(path, new ArrayList<>(records.values()), formatter);
+    }
+
+    private static void createParent(Path path) throws IOException {
+        if (path.getParent() != null) {
+            Files.createDirectories(path.getParent());
+        }
+    }
 }

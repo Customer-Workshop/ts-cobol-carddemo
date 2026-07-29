@@ -1,8 +1,71 @@
 package com.carddemo.cbtrn02c.domain;
+
 import java.math.BigDecimal;
+
 public class TranRecord {
-  public String id="", typeCd="", catCd="", source="", desc="", merchantId="", merchantName="", merchantCity="", merchantZip="", cardNum="", origTs="", procTs="", filler="";
-  public BigDecimal amt=BigDecimal.ZERO;
-  public static TranRecord parse(String s){ FixedWidth.require(s,350); TranRecord r=new TranRecord(); int p=0; r.id=s.substring(p,p+=16);r.typeCd=s.substring(p,p+=2);r.catCd=s.substring(p,p+=4);r.source=s.substring(p,p+=10);r.desc=s.substring(p,p+=100);r.amt=FixedWidth.parseSigned(s.substring(p,p+=11),11);r.merchantId=s.substring(p,p+=9);r.merchantName=s.substring(p,p+=50);r.merchantCity=s.substring(p,p+=50);r.merchantZip=s.substring(p,p+=10);r.cardNum=s.substring(p,p+=16);r.origTs=s.substring(p,p+=26);r.procTs=s.substring(p,p+=26);r.filler=s.substring(p,p+20);return r;}
-  public String format(){return FixedWidth.text(id,16)+FixedWidth.text(typeCd,2)+FixedWidth.num(catCd,4)+FixedWidth.text(source,10)+FixedWidth.text(desc,100)+FixedWidth.signed(amt,11)+FixedWidth.num(merchantId,9)+FixedWidth.text(merchantName,50)+FixedWidth.text(merchantCity,50)+FixedWidth.text(merchantZip,10)+FixedWidth.text(cardNum,16)+FixedWidth.text(origTs,26)+FixedWidth.text(procTs,26)+FixedWidth.text(filler,20);}
+    public String id = "";
+    public String typeCd = "";
+    public String catCd = "";
+    public String source = "";
+    public String desc = "";
+    public BigDecimal amt = BigDecimal.ZERO;
+    public String merchantId = "";
+    public String merchantName = "";
+    public String merchantCity = "";
+    public String merchantZip = "";
+    public String cardNum = "";
+    public String origTs = "";
+    public String procTs = "";
+    public String filler = "";
+
+    public static TranRecord parse(String value) {
+        FixedWidth.require(value, 350);
+        TranRecord record = new TranRecord();
+        int offset = 0;
+        record.id = value.substring(offset, offset + 16);
+        offset += 16;
+        record.typeCd = value.substring(offset, offset + 2);
+        offset += 2;
+        record.catCd = value.substring(offset, offset + 4);
+        offset += 4;
+        record.source = value.substring(offset, offset + 10);
+        offset += 10;
+        record.desc = value.substring(offset, offset + 100);
+        offset += 100;
+        record.amt = FixedWidth.parseSignedNumber(value.substring(offset, offset + 11), 11);
+        offset += 11;
+        record.merchantId = value.substring(offset, offset + 9);
+        offset += 9;
+        record.merchantName = value.substring(offset, offset + 50);
+        offset += 50;
+        record.merchantCity = value.substring(offset, offset + 50);
+        offset += 50;
+        record.merchantZip = value.substring(offset, offset + 10);
+        offset += 10;
+        record.cardNum = value.substring(offset, offset + 16);
+        offset += 16;
+        record.origTs = value.substring(offset, offset + 26);
+        offset += 26;
+        record.procTs = value.substring(offset, offset + 26);
+        offset += 26;
+        record.filler = value.substring(offset, offset + 20);
+        return record;
+    }
+
+    public String format() {
+        return FixedWidth.text(id, 16)
+                + FixedWidth.text(typeCd, 2)
+                + FixedWidth.unsignedNumber(catCd, 4)
+                + FixedWidth.text(source, 10)
+                + FixedWidth.text(desc, 100)
+                + FixedWidth.signedNumber(amt, 11)
+                + FixedWidth.unsignedNumber(merchantId, 9)
+                + FixedWidth.text(merchantName, 50)
+                + FixedWidth.text(merchantCity, 50)
+                + FixedWidth.text(merchantZip, 10)
+                + FixedWidth.text(cardNum, 16)
+                + FixedWidth.text(origTs, 26)
+                + FixedWidth.text(procTs, 26)
+                + FixedWidth.text(filler, 20);
+    }
 }

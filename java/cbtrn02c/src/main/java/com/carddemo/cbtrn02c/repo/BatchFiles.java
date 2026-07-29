@@ -1,8 +1,78 @@
 package com.carddemo.cbtrn02c.repo;
-import com.carddemo.cbtrn02c.domain.*;import java.io.*;import java.nio.file.*;import java.util.*;
+
+import com.carddemo.cbtrn02c.domain.AccountRecord;
+import com.carddemo.cbtrn02c.domain.CardXrefRecord;
+import com.carddemo.cbtrn02c.domain.DalyTranRecord;
+import com.carddemo.cbtrn02c.domain.TranCatBalRecord;
+import com.carddemo.cbtrn02c.domain.TranRecord;
+
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.ArrayList;
+
 public class BatchFiles {
- public final List<DalyTranRecord> daily; public final TreeMap<String,TranRecord> transact; public final TreeMap<String,CardXrefRecord> xref; public final List<String> rejects; public final TreeMap<String,AccountRecord> accounts; public final TreeMap<String,TranCatBalRecord> tcatbal;
- private final Path dir;
- public BatchFiles(Path dir)throws IOException{this.dir=dir;daily=FixedFiles.readSequential(dir.resolve("DALYTRAN"),DalyTranRecord::parse);transact=FixedFiles.readMap(dir.resolve("TRANSACT"),TranRecord::parse,x->x.id);xref=FixedFiles.readMap(dir.resolve("XREF"),CardXrefRecord::parse,x->x.cardNum);rejects=Files.exists(dir.resolve("DALYREJS"))?Files.readAllLines(dir.resolve("DALYREJS")):new ArrayList<>();accounts=FixedFiles.readMap(dir.resolve("ACCOUNT"),AccountRecord::parse,x->x.acctId);tcatbal=FixedFiles.readMap(dir.resolve("TCATBAL"),TranCatBalRecord::parse,TranCatBalRecord::key);}
- public void save()throws IOException{Files.createDirectories(dir);FixedFiles.writeMap(dir.resolve("TRANSACT"),transact,x->x.format());FixedFiles.writeMap(dir.resolve("XREF"),xref,x->x.format());FixedFiles.writeSequential(dir.resolve("DALYREJS"),rejects,x->x);FixedFiles.writeMap(dir.resolve("ACCOUNT"),accounts,x->x.format());FixedFiles.writeMap(dir.resolve("TCATBAL"),tcatbal,x->x.format());}
+    public final SequentialInputFile<DalyTranRecord> dailyTransactions;
+    public final IndexedFile<String, TranRecord> transactions;
+    public final IndexedFile<String, CardXrefRecord> cardXrefs;
+    public final SequentialOutputFile<String> rejects;
+    public final IndexedFile<String, AccountRecord> accounts;
+    public final IndexedFile<String, TranCatBalRecord> categoryBalances;
+
+    private final Path directory;
+
+    public BatchFiles(Path directory) throws IOException {
+        this.directory = directory;
+        dailyTransactions = new SequentialInputFile<>(
+                FixedFiles.readSequential(
+                        directory.resolve("DALYTRAN"),
+                        DalyTranRecord::parse));
+        transactions = new IndexedFile<>(
+                FixedFiles.readMap(
+                        directory.resolve("TRANSACT"),
+                        TranRecord::parse,
+                        record -> record.id));
+        cardXrefs = new IndexedFile<>(
+                FixedFiles.readMap(
+                        directory.resolve("XREF"),
+                        CardXrefRecord::parse,
+                        record -> record.cardNum));
+        rejects = new SequentialOutputFile<>(
+                Files.exists(directory.resolve("DALYREJS"))
+                        ? Files.readAllLines(directory.resolve("DALYREJS"))
+                        : new ArrayList<>());
+        accounts = new IndexedFile<>(
+                FixedFiles.readMap(
+                        directory.resolve("ACCOUNT"),
+                        AccountRecord::parse,
+                        record -> record.acctId));
+        categoryBalances = new IndexedFile<>(
+                FixedFiles.readMap(
+                        directory.resolve("TCATBAL"),
+                        TranCatBalRecord::parse,
+                        TranCatBalRecord::key));
+    }
+
+    public void save() throws IOException {
+        FixedFiles.writeMap(
+                directory.resolve("TRANSACT"),
+                transactions.records(),
+                TranRecord::format);
+        FixedFiles.writeMap(
+                directory.resolve("XREF"),
+                cardXrefs.records(),
+                CardXrefRecord::format);
+        FixedFiles.writeSequential(
+                directory.resolve("DALYREJS"),
+                rejects.records(),
+                value -> value);
+        FixedFiles.writeMap(
+                directory.resolve("ACCOUNT"),
+                accounts.records(),
+                AccountRecord::format);
+        FixedFiles.writeMap(
+                directory.resolve("TCATBAL"),
+                categoryBalances.records(),
+                TranCatBalRecord::format);
+    }
 }
