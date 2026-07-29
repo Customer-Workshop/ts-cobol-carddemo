@@ -1,0 +1,14 @@
+package com.carddemo.cbact04c.io;
+import com.carddemo.cbact04c.domain.Records.*;
+import com.carddemo.cbact04c.util.*;
+public final class RecordCodecs {
+  private RecordCodecs(){}
+  public static TranCat tranCat(String r){r=FixedWidth.pad(r,50);return new TranCat(FixedWidth.at(r,0,11),FixedWidth.at(r,11,2),FixedWidth.at(r,13,4),ZonedDecimal.parse(FixedWidth.at(r,17,11)),r);}
+  public static Xref xref(String r){r=FixedWidth.pad(r,50);return new Xref(FixedWidth.at(r,0,16),FixedWidth.at(r,16,9),FixedWidth.at(r,25,11),r);}
+  public static DiscGroup disc(String r){r=FixedWidth.pad(r,50);return new DiscGroup(new DiscKey(FixedWidth.at(r,0,10),FixedWidth.at(r,10,2),FixedWidth.at(r,12,4)),ZonedDecimal.parse(FixedWidth.at(r,16,6)),r);}
+  public static Account account(String r){r=FixedWidth.pad(r,300); Account a=new Account(); a.raw=r;a.id=FixedWidth.at(r,0,11);a.status=FixedWidth.at(r,11,1);a.balance=ZonedDecimal.parse(FixedWidth.at(r,12,12));a.creditLimit=ZonedDecimal.parse(FixedWidth.at(r,24,12));a.cashCreditLimit=ZonedDecimal.parse(FixedWidth.at(r,36,12));a.openDate=FixedWidth.at(r,48,10);a.expirationDate=FixedWidth.at(r,58,10);a.reissueDate=FixedWidth.at(r,68,10);a.currentCredit=ZonedDecimal.parse(FixedWidth.at(r,78,12));a.currentDebit=ZonedDecimal.parse(FixedWidth.at(r,90,12));a.zip=FixedWidth.at(r,102,10);a.groupId=FixedWidth.at(r,112,10);return a;}
+  public static String account(Account a){StringBuilder b=new StringBuilder(a.raw==null?FixedWidth.pad("",300):a.raw); put(b,0,CobolField.digits(a.id,11));put(b,11,CobolField.text(a.status,1));put(b,12,ZonedDecimal.format(a.balance,10));put(b,24,ZonedDecimal.format(a.creditLimit,10));put(b,36,ZonedDecimal.format(a.cashCreditLimit,10));put(b,48,CobolField.text(a.openDate,10));put(b,58,CobolField.text(a.expirationDate,10));put(b,68,CobolField.text(a.reissueDate,10));put(b,78,ZonedDecimal.format(a.currentCredit,10));put(b,90,ZonedDecimal.format(a.currentDebit,10));put(b,102,CobolField.text(a.zip,10));put(b,112,CobolField.text(a.groupId,10));return b.toString();}
+  private static void put(StringBuilder b,int at,String s){b.replace(at,at+s.length(),s);}
+  public static String transaction(Transaction t){StringBuilder b=new StringBuilder();putAppend(b,CobolField.text(t.id,16));putAppend(b,CobolField.text(t.typeCd,2));putAppend(b,CobolField.digits(t.catCd,4));putAppend(b,CobolField.text(t.source,10));putAppend(b,CobolField.text(t.description,100));putAppend(b,ZonedDecimal.format(t.amount,9));putAppend(b,CobolField.digits("0",9));putAppend(b,CobolField.text("",50));putAppend(b,CobolField.text("",50));putAppend(b,CobolField.text("",10));putAppend(b,CobolField.text(t.cardNum,16));putAppend(b,CobolField.text(t.origTs,26));putAppend(b,CobolField.text(t.procTs,26));return FixedWidth.pad(b.toString(),350);}
+  private static void putAppend(StringBuilder b,String s){b.append(s);}
+}
