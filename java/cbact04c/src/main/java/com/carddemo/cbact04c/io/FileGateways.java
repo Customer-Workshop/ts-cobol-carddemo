@@ -54,13 +54,16 @@ public final class FileGateways {
         private final Path path;
         private final List<String> rawRecords;
         private final Map<String, Account> recordsById = new TreeMap<>();
+        private final Map<String, Integer> lineIndexById = new HashMap<>();
 
         private AccountGateway(Path path, List<String> rawRecords) {
             this.path = path;
             this.rawRecords = new ArrayList<>(rawRecords);
-            for (String rawRecord : rawRecords) {
+            for (int index = 0; index < rawRecords.size(); index++) {
+                String rawRecord = rawRecords.get(index);
                 Account account = RecordCodecs.decodeAccount(rawRecord);
                 recordsById.put(account.id, account);
+                lineIndexById.put(account.id, index);
             }
         }
 
@@ -74,12 +77,11 @@ public final class FileGateways {
 
         public void rewrite(Account account) throws IOException {
             recordsById.put(account.id, account);
-            for (int index = 0; index < rawRecords.size(); index++) {
-                if (RecordCodecs.decodeAccount(rawRecords.get(index)).id.equals(account.id)) {
-                    rawRecords.set(index, RecordCodecs.encodeAccount(account));
-                    break;
-                }
+            Integer lineIndex = lineIndexById.get(account.id);
+            if (lineIndex == null) {
+                throw new IOException("Account key not found during rewrite: " + account.id);
             }
+            rawRecords.set(lineIndex, RecordCodecs.encodeAccount(account));
             writeThrough();
         }
 

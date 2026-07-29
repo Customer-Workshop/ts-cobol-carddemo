@@ -34,21 +34,14 @@ public class Cbact04cService {
 
     private final Clock clock;
 
-    private Account currentAccount;
-    private Xref currentXref;
-    private DiscGroup disclosureGroup;
-    private BigDecimal totalInterest = BigDecimal.ZERO.setScale(2);
-    private int transactionSuffix;
-    private int recordCount;
-
     public Cbact04cService(Clock clock) {
         this.clock = clock;
     }
 
     public BatchResult run(BatchJob job) {
+        RunState state = new RunState(job.parmDate());
         try {
             display("START OF EXECUTION OF PROGRAM CBACT04C");
-            currentParmDate = job.parmDate();
 
             List<TranCat> transactionCategories = loadTransactionCategories(job.tcatbal());
             Map<String, Xref> xrefs = FileGateways.readXrefs(job.xref());
@@ -62,43 +55,43 @@ public class Cbact04cService {
                 Iterator<TranCat> nextRecord = getNextTranCatBal(transactionCategories);
                 while (nextRecord.hasNext()) {
                     TranCat transactionCategory = nextRecord.next();
-                    recordCount++;
+                    state.recordCount++;
                     display(transactionCategory.raw());
 
                     if (!transactionCategory.acctId().equals(lastAccount)) {
-                        if (currentAccount != null) {
-                            updateAccount(accounts);
+                        if (state.currentAccount != null) {
+                            updateAccount(state, accounts);
                         }
-                        totalInterest = BigDecimal.ZERO.setScale(2);
+                        state.totalInterest = BigDecimal.ZERO.setScale(2);
                         lastAccount = transactionCategory.acctId();
-                        currentAccount = getAcctData(accounts, transactionCategory.acctId());
-                        currentXref = getXrefData(xrefs, transactionCategory.acctId());
+                        state.currentAccount = getAcctData(
+                                accounts, transactionCategory.acctId());
+                        state.currentXref = getXrefData(
+                                xrefs, transactionCategory.acctId());
                     }
 
-                    disclosureGroup = getInterestRate(
+                    state.disclosureGroup = getInterestRate(
                             disclosureGroups,
-                            currentAccount.groupId,
+                            state.currentAccount.groupId,
                             transactionCategory.typeCd(),
                             transactionCategory.catCd());
-                    if (disclosureGroup.rate().compareTo(BigDecimal.ZERO) != 0) {
-                        computeInterest(transactionCategory, transactions);
+                    if (state.disclosureGroup.rate().compareTo(BigDecimal.ZERO) != 0) {
+                        computeInterest(state, transactionCategory, transactions);
                         computeFees();
                     }
                 }
 
-                if (job.finalUpdateAtEof() && currentAccount != null) {
-                    updateAccount(accounts);
+                if (job.finalUpdateAtEof() && state.currentAccount != null) {
+                    updateAccount(state, accounts);
                 }
             }
 
             display("END OF EXECUTION OF PROGRAM CBACT04C");
-            return new BatchResult(recordCount, transactionSuffix);
+            return new BatchResult(state.recordCount, state.transactionSuffix);
         } catch (AbendException exception) {
             throw exception;
         } catch (Exception exception) {
             throw new AbendException("ABENDING PROGRAM", exception);
-        } finally {
-            resetState();
         }
     }
 
@@ -110,11 +103,12 @@ public class Cbact04cService {
                 .iterator();
     }
 
-    public void updateAccount(AccountGateway accounts) throws IOException {
-        currentAccount.balance = currentAccount.balance.add(totalInterest);
-        currentAccount.currentCredit = BigDecimal.ZERO.setScale(2);
-        currentAccount.currentDebit = BigDecimal.ZERO.setScale(2);
-        accounts.rewrite(currentAccount);
+    public void updateAccount(RunState state, AccountGateway accounts) throws IOException {
+        state.currentAccount.balance =
+                state.currentAccount.balance.add(state.totalInterest);
+        state.currentAccount.currentCredit = BigDecimal.ZERO.setScale(2);
+        state.currentAccount.currentDebit = BigDecimal.ZERO.setScale(2);
+        accounts.rewrite(state.currentAccount);
     }
 
     public Account getAcctData(AccountGateway accounts, String accountId) {
@@ -143,7 +137,6 @@ public class Cbact04cService {
         DiscKey requestedKey = new DiscKey(accountGroupId, typeCode, categoryCode);
         DiscGroup found = disclosureGroups.get(requestedKey);
         if (found != null) {
-            disclosureGroup = found;
             return found;
         }
 
@@ -154,19 +147,19 @@ public class Cbact04cService {
         if (defaultGroup == null) {
             abend("ERROR READING DEFAULT DISCLOSURE GROUP");
         }
-        disclosureGroup = defaultGroup;
         return defaultGroup;
     }
 
     public BigDecimal computeInterest(
+            RunState state,
             TranCat transactionCategory,
             TransactionGateway transactions) throws IOException {
         BigDecimal monthlyInterest = transactionCategory.balance()
-                .multiply(disclosureGroup.rate())
+                .multiply(state.disclosureGroup.rate())
                 .divide(BigDecimal.valueOf(1200), 20, RoundingMode.DOWN)
                 .setScale(2, RoundingMode.DOWN);
-        totalInterest = totalInterest.add(monthlyInterest);
-        writeTransaction(transactionCategory, monthlyInterest, transactions);
+        state.totalInterest = state.totalInterest.add(monthlyInterest);
+        writeTransaction(state, monthlyInterest, transactions);
         return monthlyInterest;
     }
 
@@ -188,41 +181,26 @@ public class Cbact04cService {
     }
 
     private void writeTransaction(
-            TranCat transactionCategory,
+            RunState state,
             BigDecimal amount,
             TransactionGateway transactions) throws IOException {
-        transactionSuffix++;
+        state.transactionSuffix++;
         Transaction transaction = new Transaction();
-        transaction.id = transactionId(transactionSuffix);
+        transaction.id = state.parmDate
+                + String.format("%06d", state.transactionSuffix);
         transaction.typeCd = "01";
         transaction.catCd = "05";
         transaction.source = "System";
-        transaction.description = "Int. for a/c " + currentAccount.id;
+        transaction.description = "Int. for a/c " + state.currentAccount.id;
         transaction.amount = amount;
         transaction.merchantId = "0";
         transaction.merchantName = "";
         transaction.merchantCity = "";
         transaction.merchantZip = "";
-        transaction.cardNum = currentXref.cardNum();
+        transaction.cardNum = state.currentXref.cardNum();
         transaction.origTs = formatTimestamp();
         transaction.procTs = transaction.origTs;
         transactions.write(RecordCodecs.encodeTransaction(transaction));
-    }
-
-    private String transactionId(int suffix) {
-        return currentParmDate + String.format("%06d", suffix);
-    }
-
-    private String currentParmDate;
-
-    private void resetState() {
-        currentAccount = null;
-        currentXref = null;
-        disclosureGroup = null;
-        totalInterest = BigDecimal.ZERO.setScale(2);
-        transactionSuffix = 0;
-        recordCount = 0;
-        currentParmDate = null;
     }
 
     private void abend(String message) {
@@ -233,5 +211,20 @@ public class Cbact04cService {
 
     private void display(String message) {
         System.out.println(message);
+    }
+
+    private static final class RunState {
+
+        private final String parmDate;
+        private Account currentAccount;
+        private Xref currentXref;
+        private DiscGroup disclosureGroup;
+        private BigDecimal totalInterest = BigDecimal.ZERO.setScale(2);
+        private int transactionSuffix;
+        private int recordCount;
+
+        private RunState(String parmDate) {
+            this.parmDate = parmDate;
+        }
     }
 }
