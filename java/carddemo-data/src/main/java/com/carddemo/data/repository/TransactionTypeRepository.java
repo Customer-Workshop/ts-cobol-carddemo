@@ -1,1 +1,6 @@
-package com.carddemo.data.repository; import com.carddemo.data.entity.TransactionType; import org.springframework.data.jpa.repository.JpaRepository; public interface TransactionTypeRepository extends JpaRepository<TransactionType,String>{}
+package com.carddemo.data.repository;
+
+import com.carddemo.data.entity.TransactionType;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface TransactionTypeRepository extends JpaRepository<TransactionType, String> {}

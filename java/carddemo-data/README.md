@@ -20,7 +20,7 @@ never floating point, preserving an exact scale of two. The loader understands
 the ASCII overpunch sign convention (`{`/`}` and `A`–`R`).
 
 Run with `mvn spring-boot:run -Dspring-boot.run.arguments=--carddemo.loader.enabled=true`.
-The data directory defaults to `../../../app/data/ASCII` and can be changed with
+The data directory defaults to `../../app/data/ASCII` and can be changed with
 `carddemo.loader.data-directory` or `CARDDEMO_DATA_DIRECTORY`. Datasource
 properties are configurable for a later PostgreSQL swap. H2 local files are
 written under `data/` and ignored by Git.
