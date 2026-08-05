@@ -1,0 +1,1 @@
+package com.carddemo.data.repository; import com.carddemo.data.entity.Card; import org.springframework.data.jpa.repository.JpaRepository; public interface CardRepository extends JpaRepository<Card,String>{}

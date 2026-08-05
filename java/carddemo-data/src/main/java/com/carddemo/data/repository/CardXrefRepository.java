@@ -1,0 +1,1 @@
+package com.carddemo.data.repository; import com.carddemo.data.entity.CardXref; import org.springframework.data.jpa.repository.JpaRepository; public interface CardXrefRepository extends JpaRepository<CardXref,String>{CardXref findByXrefCardNum(String cardNum);}

@@ -1,0 +1,1 @@
+package com.carddemo.data.repository; import com.carddemo.data.entity.*; import org.springframework.data.jpa.repository.JpaRepository; public interface TransactionCategoryBalanceRepository extends JpaRepository<TransactionCategoryBalance,TransactionCategoryBalanceId>{}
