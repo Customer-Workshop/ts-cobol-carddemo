@@ -63,7 +63,7 @@ All numeric fields above are display/zoned unless a source declaration says othe
 1. Read the next `DALYTRAN` record. Status `10` means EOF and ends processing; any other non-`00` status displays `ERROR READING DALYTRAN FILE`, displays status, and abends.
 2. Lookup `DALYTRAN-CARD-NUM` in `XREFFILE`. Missing key sets reason `100`, exact text `INVALID CARD NUMBER FOUND`; no account lookup or posting follows.
 3. Read the xref-derived account ID in `ACCTFILE`. Missing key sets reason `101`, exact text `ACCOUNT RECORD NOT FOUND`; no posting follows.
-4. Compute `WS-TEMP-BAL = ACCT-CURR-CYC-CREDIT - ACCT-CURR-CYC-DEBIT + DALYTRAN-AMT`. If `ACCT-CREDIT-LIMIT < WS-TEMP-BAL`, set reason `102`, exact text `OVERLIMIT TRANSACTION`.
+4. Compute `WS-TEMP-BAL = ACCT-CURR-CYC-CREDIT - ACCT-CURR-CYC-DEBIT + DALYTRAN-AMT`. The source then executes `IF ACCT-CREDIT-LIMIT >= WS-TEMP-BAL`; the true branch continues, while the false branch (equivalently, `ACCT-CREDIT-LIMIT < WS-TEMP-BAL`) sets reason `102`, exact text `OVERLIMIT TRANSACTION`.
 5. Compare `ACCT-EXPIRAION-DATE` with `DALYTRAN-ORIG-TS(1:10)`. If the account date is earlier, set reason `103`, exact text `TRANSACTION RECEIVED AFTER ACCT EXPIRATION`.
 6. Only reason zero enters posting. A failed record increments `WS-REJECT-COUNT` and writes the original record plus the reason/description trailer to `DALYREJS`; it does not update the master. Accepted records increment the transaction count and enter the post paragraphs.
 
@@ -97,7 +97,7 @@ Files open in order `DALYTRAN` input, `TRANFILE` output, `XREFFILE` input, `DALY
 | 2 | Card `0500024453765740` from fixture, account `00000000005`, cycle credit `0.00`, cycle debit `0.00`, amount `0.00`, limit `202.00`, expiration `2025-05-20`, origin `2022-06-10` | Accepted; temporary balance `0.00`; no reject. |
 | 3 | Card value `9999999999999999` absent from `CARDXREF` | Reject reason `100`, `INVALID CARD NUMBER FOUND`; no account read/post. |
 | 4 | Existing xref points to account `00000000100`, but that account key is absent | Reject reason `101`, `ACCOUNT RECORD NOT FOUND`. |
-| 5 | Limit `613.00`, cycle credit `0.00`, cycle debit `0.00`, amount `613.00` | Accepted exactly at limit because comparison is `>=`. |
+| 5 | Limit `613.00`, cycle credit `0.00`, cycle debit `0.00`, amount `613.00` | Accepted exactly at limit because the source `IF ACCT-CREDIT-LIMIT >= WS-TEMP-BAL` takes its true branch. |
 | 6 | Same account and cycles, amount `613.01` | Reject reason `102`, `OVERLIMIT TRANSACTION`. |
 | 7 | Account expiration `2022-06-09`, origin date `2022-06-10`, otherwise valid | Reject reason `103`, `TRANSACTION RECEIVED AFTER ACCT EXPIRATION`. |
 | 8 | Input status `10` after the last fixture record | Normal EOF; close files; return code remains `0` if no earlier rejects. |
