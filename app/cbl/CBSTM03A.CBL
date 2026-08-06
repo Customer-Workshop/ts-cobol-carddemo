@@ -38,6 +38,7 @@
        FILE-CONTROL.
            SELECT STMT-FILE ASSIGN TO STMTFILE.
            SELECT HTML-FILE ASSIGN TO HTMLFILE.
+           SELECT JSON-FILE ASSIGN TO JSONFILE.
       *
        DATA DIVISION.
        FILE SECTION.
@@ -45,6 +46,10 @@
        01  FD-STMTFILE-REC         PIC X(80).
        FD  HTML-FILE.
        01  FD-HTMLFILE-REC         PIC X(100).
+       FD  JSON-FILE
+           RECORD VARYING IN SIZE FROM 1 TO 16000
+             DEPENDING ON WS-JSON-LEN.
+       01  FD-JSONFILE-REC         PIC X(16000).
 
        WORKING-STORAGE SECTION.
 
@@ -68,6 +73,22 @@
            05  WS-TRN-AMT          PIC S9(9)V99 VALUE 0.
            05  WS-SAVE-CARD VALUE SPACES PIC X(16).
            05  END-OF-FILE         PIC X(01) VALUE 'N'.
+       01  JSON-WORKING-STORAGE.
+           05  WS-JSON-BUF         PIC X(16000).
+           05  WS-JSON-LEN         PIC 9(05) COMP VALUE 0.
+           05  WS-JSON-SRC         PIC X(318).
+           05  WS-JSON-SRC-LEN     PIC 9(03) COMP VALUE 0.
+           05  WS-JSON-SRC-POS     PIC 9(03) COMP VALUE 0.
+           05  WS-JSON-AMT-ABS     PIC 9(10)V99 COMP-3 VALUE 0.
+           05  WS-JSON-AMT-EDIT    PIC Z(10)9.99.
+           05  WS-JSON-AMT-SIGN    PIC X VALUE 'N'.
+           05  WS-JSON-NUM-SRC     PIC X(20).
+           05  WS-JSON-NUM-LEN     PIC 9(02) COMP VALUE 0.
+           05  WS-JSON-NUM-POS     PIC 9(03) COMP VALUE 0.
+           05  WS-JSON-CHAR        PIC X.
+           05  WS-JSON-FICO-EDIT   PIC ZZ9.
+           05  WS-JSON-FIRST-TRAN  PIC X VALUE 'Y'.
+           05  WS-JSON-OVERFLOW    PIC X VALUE 'N'.
        01  WS-M03B-AREA.
            05  WS-M03B-DD          PIC X(08).
            05  WS-M03B-OPER        PIC X(01).
@@ -290,7 +311,7 @@
                DISPLAY ': ' TIOCDDNM ' -- null  UCB'
            END-IF.
 
-           OPEN OUTPUT STMT-FILE HTML-FILE.
+           OPEN OUTPUT STMT-FILE HTML-FILE JSON-FILE.
            INITIALIZE WS-TRNX-TABLE WS-TRN-TBL-CNTR.
 
        0000-START.
@@ -336,7 +357,7 @@
 
            PERFORM 9400-ACCTFILE-CLOSE.
 
-           CLOSE STMT-FILE HTML-FILE.
+           CLOSE STMT-FILE HTML-FILE JSON-FILE.
 
        9999-GOBACK.
            GOBACK.
@@ -430,6 +451,11 @@
                    END-PERFORM
                END-IF
            END-PERFORM.
+           MOVE ']}'
+             TO WS-JSON-SRC.
+           PERFORM JSON-APPEND-LITERAL.
+           MOVE WS-JSON-BUF TO FD-JSONFILE-REC.
+           WRITE FD-JSONFILE-REC.
            MOVE WS-TOTAL-AMT TO WS-TRN-AMT.
            MOVE WS-TRN-AMT TO ST-TOTAL-TRAMT.
            WRITE FD-STMTFILE-REC FROM ST-LINE12.
@@ -456,6 +482,136 @@
            EXIT.
       *---------------------------------------------------------------*
        5000-CREATE-STATEMENT.
+           INITIALIZE WS-JSON-BUF.
+           MOVE 0 TO WS-JSON-LEN.
+           MOVE 'N' TO WS-JSON-OVERFLOW.
+           MOVE 'Y' TO WS-JSON-FIRST-TRAN.
+           MOVE '{' TO WS-JSON-SRC.
+           PERFORM JSON-APPEND-LITERAL.
+           MOVE '"accountId":' TO WS-JSON-SRC.
+           PERFORM JSON-APPEND-LITERAL.
+           MOVE ACCT-ID TO WS-JSON-SRC.
+           MOVE 11 TO WS-JSON-SRC-LEN.
+           PERFORM JSON-APPEND-STRING.
+           MOVE ',"customer":{' TO WS-JSON-SRC.
+           PERFORM JSON-APPEND-LITERAL.
+           MOVE '"customerId":' TO WS-JSON-SRC.
+           PERFORM JSON-APPEND-LITERAL.
+           MOVE CUST-ID TO WS-JSON-SRC.
+           MOVE 9 TO WS-JSON-SRC-LEN.
+           PERFORM JSON-APPEND-STRING.
+           MOVE ',"firstName":' TO WS-JSON-SRC.
+           PERFORM JSON-APPEND-LITERAL.
+           MOVE CUST-FIRST-NAME TO WS-JSON-SRC.
+           MOVE 25 TO WS-JSON-SRC-LEN.
+           PERFORM JSON-APPEND-STRING.
+           MOVE ',"middleName":' TO WS-JSON-SRC.
+           PERFORM JSON-APPEND-LITERAL.
+           MOVE CUST-MIDDLE-NAME TO WS-JSON-SRC.
+           MOVE 25 TO WS-JSON-SRC-LEN.
+           PERFORM JSON-APPEND-STRING.
+           MOVE ',"lastName":' TO WS-JSON-SRC.
+           PERFORM JSON-APPEND-LITERAL.
+           MOVE CUST-LAST-NAME TO WS-JSON-SRC.
+           MOVE 25 TO WS-JSON-SRC-LEN.
+           PERFORM JSON-APPEND-STRING.
+           MOVE ',"addressLine1":' TO WS-JSON-SRC.
+           PERFORM JSON-APPEND-LITERAL.
+           MOVE CUST-ADDR-LINE-1 TO WS-JSON-SRC.
+           MOVE 50 TO WS-JSON-SRC-LEN.
+           PERFORM JSON-APPEND-STRING.
+           MOVE ',"addressLine2":' TO WS-JSON-SRC.
+           PERFORM JSON-APPEND-LITERAL.
+           MOVE CUST-ADDR-LINE-2 TO WS-JSON-SRC.
+           MOVE 50 TO WS-JSON-SRC-LEN.
+           PERFORM JSON-APPEND-STRING.
+           MOVE ',"addressLine3":' TO WS-JSON-SRC.
+           PERFORM JSON-APPEND-LITERAL.
+           MOVE CUST-ADDR-LINE-3 TO WS-JSON-SRC.
+           MOVE 50 TO WS-JSON-SRC-LEN.
+           PERFORM JSON-APPEND-STRING.
+           MOVE ',"stateCode":' TO WS-JSON-SRC.
+           PERFORM JSON-APPEND-LITERAL.
+           MOVE CUST-ADDR-STATE-CD TO WS-JSON-SRC.
+           MOVE 2 TO WS-JSON-SRC-LEN.
+           PERFORM JSON-APPEND-STRING.
+           MOVE ',"countryCode":' TO WS-JSON-SRC.
+           PERFORM JSON-APPEND-LITERAL.
+           MOVE CUST-ADDR-COUNTRY-CD TO WS-JSON-SRC.
+           MOVE 3 TO WS-JSON-SRC-LEN.
+           PERFORM JSON-APPEND-STRING.
+           MOVE ',"zip":' TO WS-JSON-SRC.
+           PERFORM JSON-APPEND-LITERAL.
+           MOVE CUST-ADDR-ZIP TO WS-JSON-SRC.
+           MOVE 10 TO WS-JSON-SRC-LEN.
+           PERFORM JSON-APPEND-STRING.
+           MOVE ',"phone1":' TO WS-JSON-SRC.
+           PERFORM JSON-APPEND-LITERAL.
+           MOVE CUST-PHONE-NUM-1 TO WS-JSON-SRC.
+           MOVE 15 TO WS-JSON-SRC-LEN.
+           PERFORM JSON-APPEND-STRING.
+           MOVE ',"phone2":' TO WS-JSON-SRC.
+           PERFORM JSON-APPEND-LITERAL.
+           MOVE CUST-PHONE-NUM-2 TO WS-JSON-SRC.
+           MOVE 15 TO WS-JSON-SRC-LEN.
+           PERFORM JSON-APPEND-STRING.
+           MOVE ',"ficoScore":' TO WS-JSON-SRC.
+           PERFORM JSON-APPEND-LITERAL.
+           MOVE CUST-FICO-CREDIT-SCORE TO WS-JSON-FICO-EDIT.
+           MOVE WS-JSON-FICO-EDIT TO WS-JSON-NUM-SRC.
+           MOVE 3 TO WS-JSON-NUM-LEN.
+           PERFORM JSON-APPEND-UNSIGNED.
+           MOVE '}' TO WS-JSON-SRC.
+           PERFORM JSON-APPEND-LITERAL.
+           MOVE ',"account":{' TO WS-JSON-SRC.
+           PERFORM JSON-APPEND-LITERAL.
+           MOVE '"activeStatus":' TO WS-JSON-SRC.
+           PERFORM JSON-APPEND-LITERAL.
+           MOVE ACCT-ACTIVE-STATUS TO WS-JSON-SRC.
+           MOVE 1 TO WS-JSON-SRC-LEN.
+           PERFORM JSON-APPEND-STRING.
+           MOVE ',"currentBalance":' TO WS-JSON-SRC.
+           PERFORM JSON-APPEND-LITERAL.
+           PERFORM JSON-APPEND-ACCT-CURR-BAL.
+           MOVE ',"creditLimit":' TO WS-JSON-SRC.
+           PERFORM JSON-APPEND-LITERAL.
+           PERFORM JSON-APPEND-ACCT-CREDIT-LIMIT.
+           MOVE ',"cashCreditLimit":' TO WS-JSON-SRC.
+           PERFORM JSON-APPEND-LITERAL.
+           PERFORM JSON-APPEND-ACCT-CASH-LIMIT.
+           MOVE ',"openDate":' TO WS-JSON-SRC.
+           PERFORM JSON-APPEND-LITERAL.
+           MOVE ACCT-OPEN-DATE TO WS-JSON-SRC.
+           MOVE 10 TO WS-JSON-SRC-LEN.
+           PERFORM JSON-APPEND-STRING.
+           MOVE ',"expirationDate":' TO WS-JSON-SRC.
+           PERFORM JSON-APPEND-LITERAL.
+           MOVE ACCT-EXPIRAION-DATE TO WS-JSON-SRC.
+           MOVE 10 TO WS-JSON-SRC-LEN.
+           PERFORM JSON-APPEND-STRING.
+           MOVE ',"reissueDate":' TO WS-JSON-SRC.
+           PERFORM JSON-APPEND-LITERAL.
+           MOVE ACCT-REISSUE-DATE TO WS-JSON-SRC.
+           MOVE 10 TO WS-JSON-SRC-LEN.
+           PERFORM JSON-APPEND-STRING.
+           MOVE ',"currentCycleCredit":' TO WS-JSON-SRC.
+           PERFORM JSON-APPEND-LITERAL.
+           PERFORM JSON-APPEND-ACCT-CURR-CREDIT.
+           MOVE ',"currentCycleDebit":' TO WS-JSON-SRC.
+           PERFORM JSON-APPEND-LITERAL.
+           PERFORM JSON-APPEND-ACCT-CURR-DEBIT.
+           MOVE ',"groupId":' TO WS-JSON-SRC.
+           PERFORM JSON-APPEND-LITERAL.
+           MOVE ACCT-GROUP-ID TO WS-JSON-SRC.
+           MOVE 10 TO WS-JSON-SRC-LEN.
+           PERFORM JSON-APPEND-STRING.
+           MOVE '},"cards":[{"cardNumber":' TO WS-JSON-SRC.
+           PERFORM JSON-APPEND-LITERAL.
+           MOVE XREF-CARD-NUM TO WS-JSON-SRC.
+           MOVE 16 TO WS-JSON-SRC-LEN.
+           PERFORM JSON-APPEND-STRING.
+           MOVE '}],"transactions":[' TO WS-JSON-SRC.
+           PERFORM JSON-APPEND-LITERAL.
            INITIALIZE STATEMENT-LINES.
            WRITE FD-STMTFILE-REC FROM ST-LINE0.
            PERFORM 5100-WRITE-HTML-HEADER THRU 5100-EXIT.
@@ -678,6 +834,83 @@
            MOVE TRNX-AMT TO ST-TRANAMT.
            WRITE FD-STMTFILE-REC FROM ST-LINE14.
 
+           IF WS-JSON-FIRST-TRAN = 'N'
+               MOVE ',' TO WS-JSON-SRC
+               PERFORM JSON-APPEND-LITERAL
+           END-IF
+           MOVE 'N' TO WS-JSON-FIRST-TRAN
+           MOVE '{"transactionId":' TO WS-JSON-SRC
+           PERFORM JSON-APPEND-LITERAL
+           MOVE TRNX-ID TO WS-JSON-SRC
+           MOVE 16 TO WS-JSON-SRC-LEN
+           PERFORM JSON-APPEND-STRING
+           MOVE ',"cardNumber":' TO WS-JSON-SRC
+           PERFORM JSON-APPEND-LITERAL
+           MOVE TRNX-CARD-NUM TO WS-JSON-SRC
+           MOVE 16 TO WS-JSON-SRC-LEN
+           PERFORM JSON-APPEND-STRING
+           MOVE ',"typeCode":' TO WS-JSON-SRC
+           PERFORM JSON-APPEND-LITERAL
+           MOVE TRNX-TYPE-CD TO WS-JSON-SRC
+           MOVE 2 TO WS-JSON-SRC-LEN
+           PERFORM JSON-APPEND-STRING
+           MOVE ',"categoryCode":' TO WS-JSON-SRC
+           PERFORM JSON-APPEND-LITERAL
+           MOVE TRNX-CAT-CD TO WS-JSON-SRC
+           MOVE 4 TO WS-JSON-SRC-LEN
+           PERFORM JSON-APPEND-STRING
+           MOVE ',"source":' TO WS-JSON-SRC
+           PERFORM JSON-APPEND-LITERAL
+           MOVE TRNX-SOURCE TO WS-JSON-SRC
+           MOVE 10 TO WS-JSON-SRC-LEN
+           PERFORM JSON-APPEND-STRING
+           MOVE ',"description":' TO WS-JSON-SRC
+           PERFORM JSON-APPEND-LITERAL
+           MOVE TRNX-DESC TO WS-JSON-SRC
+           MOVE 100 TO WS-JSON-SRC-LEN
+           PERFORM JSON-APPEND-STRING
+           MOVE ',"amount":' TO WS-JSON-SRC
+           PERFORM JSON-APPEND-LITERAL
+           MOVE TRNX-AMT TO WS-JSON-AMT-ABS
+           MOVE 'N' TO WS-JSON-AMT-SIGN
+           IF TRNX-AMT < 0
+               COMPUTE WS-JSON-AMT-ABS = 0 - TRNX-AMT
+               MOVE 'Y' TO WS-JSON-AMT-SIGN
+           END-IF
+           PERFORM JSON-APPEND-AMOUNT
+           MOVE ',"merchantId":' TO WS-JSON-SRC
+           PERFORM JSON-APPEND-LITERAL
+           MOVE TRNX-MERCHANT-ID TO WS-JSON-SRC
+           MOVE 9 TO WS-JSON-SRC-LEN
+           PERFORM JSON-APPEND-STRING
+           MOVE ',"merchantName":' TO WS-JSON-SRC
+           PERFORM JSON-APPEND-LITERAL
+           MOVE TRNX-MERCHANT-NAME TO WS-JSON-SRC
+           MOVE 50 TO WS-JSON-SRC-LEN
+           PERFORM JSON-APPEND-STRING
+           MOVE ',"merchantCity":' TO WS-JSON-SRC
+           PERFORM JSON-APPEND-LITERAL
+           MOVE TRNX-MERCHANT-CITY TO WS-JSON-SRC
+           MOVE 50 TO WS-JSON-SRC-LEN
+           PERFORM JSON-APPEND-STRING
+           MOVE ',"merchantZip":' TO WS-JSON-SRC
+           PERFORM JSON-APPEND-LITERAL
+           MOVE TRNX-MERCHANT-ZIP TO WS-JSON-SRC
+           MOVE 10 TO WS-JSON-SRC-LEN
+           PERFORM JSON-APPEND-STRING
+           MOVE ',"originTimestamp":' TO WS-JSON-SRC
+           PERFORM JSON-APPEND-LITERAL
+           MOVE TRNX-ORIG-TS TO WS-JSON-SRC
+           MOVE 26 TO WS-JSON-SRC-LEN
+           PERFORM JSON-APPEND-STRING
+           MOVE ',"processTimestamp":' TO WS-JSON-SRC
+           PERFORM JSON-APPEND-LITERAL
+           MOVE TRNX-PROC-TS TO WS-JSON-SRC
+           MOVE 26 TO WS-JSON-SRC-LEN
+           PERFORM JSON-APPEND-STRING
+           MOVE '}' TO WS-JSON-SRC
+           PERFORM JSON-APPEND-LITERAL.
+
            SET HTML-LTRS TO TRUE.
            WRITE FD-HTMLFILE-REC FROM HTML-FIXED-LN.
 
@@ -721,6 +954,132 @@
            WRITE FD-HTMLFILE-REC FROM HTML-FIXED-LN.
 
            EXIT.
+
+       JSON-APPEND-LITERAL.
+           MOVE 318 TO WS-JSON-SRC-POS.
+           PERFORM UNTIL WS-JSON-SRC-POS = 0
+             OR WS-JSON-SRC (WS-JSON-SRC-POS:1) NOT = SPACE
+               SUBTRACT 1 FROM WS-JSON-SRC-POS
+           END-PERFORM
+           IF WS-JSON-SRC-POS > 0
+               PERFORM VARYING WS-JSON-NUM-POS FROM 1 BY 1
+                 UNTIL WS-JSON-NUM-POS > WS-JSON-SRC-POS
+                   MOVE WS-JSON-SRC (WS-JSON-NUM-POS:1)
+                     TO WS-JSON-CHAR
+                   PERFORM JSON-APPEND-CHAR
+               END-PERFORM
+           END-IF.
+
+       JSON-APPEND-STRING.
+           PERFORM JSON-APPEND-CHAR-QUOTE.
+           MOVE WS-JSON-SRC-LEN TO WS-JSON-SRC-POS.
+           PERFORM UNTIL WS-JSON-SRC-POS = 0
+             OR WS-JSON-SRC (WS-JSON-SRC-POS:1) NOT = SPACE
+               SUBTRACT 1 FROM WS-JSON-SRC-POS
+           END-PERFORM
+           PERFORM VARYING WS-JSON-NUM-POS FROM 1 BY 1
+             UNTIL WS-JSON-NUM-POS > WS-JSON-SRC-POS
+               MOVE WS-JSON-SRC (WS-JSON-NUM-POS:1) TO WS-JSON-CHAR
+               IF WS-JSON-CHAR = '"' OR WS-JSON-CHAR = '\'
+                   MOVE '\' TO WS-JSON-CHAR
+                   PERFORM JSON-APPEND-CHAR
+                   MOVE WS-JSON-SRC (WS-JSON-NUM-POS:1) TO WS-JSON-CHAR
+               ELSE
+                   IF FUNCTION ORD(WS-JSON-CHAR) < FUNCTION ORD(' ')
+                       MOVE SPACE TO WS-JSON-CHAR
+                   END-IF
+               END-IF
+               PERFORM JSON-APPEND-CHAR
+           END-PERFORM
+           PERFORM JSON-APPEND-CHAR-QUOTE.
+
+       JSON-APPEND-CHAR-QUOTE.
+           MOVE '"' TO WS-JSON-CHAR.
+           PERFORM JSON-APPEND-CHAR.
+
+       JSON-APPEND-CHAR.
+           IF WS-JSON-OVERFLOW = 'N'
+               IF WS-JSON-LEN < 16000
+                   ADD 1 TO WS-JSON-LEN
+                   MOVE WS-JSON-CHAR TO WS-JSON-BUF (WS-JSON-LEN:1)
+               ELSE
+                   DISPLAY 'ERROR JSON BUFFER OVERFLOW'
+                   MOVE 'Y' TO WS-JSON-OVERFLOW
+               END-IF
+           END-IF.
+
+       JSON-APPEND-UNSIGNED.
+           MOVE WS-JSON-NUM-SRC TO WS-JSON-SRC.
+           MOVE WS-JSON-NUM-LEN TO WS-JSON-SRC-LEN.
+           PERFORM JSON-APPEND-NUMBER.
+
+       JSON-APPEND-AMOUNT.
+           MOVE WS-JSON-AMT-ABS TO WS-JSON-AMT-EDIT.
+           IF WS-JSON-AMT-SIGN = 'Y'
+               MOVE '-' TO WS-JSON-CHAR
+               PERFORM JSON-APPEND-CHAR
+           END-IF
+           MOVE WS-JSON-AMT-EDIT TO WS-JSON-SRC.
+           MOVE LENGTH OF WS-JSON-AMT-EDIT TO WS-JSON-SRC-LEN.
+           PERFORM JSON-APPEND-NUMBER.
+
+       JSON-APPEND-NUMBER.
+           MOVE 1 TO WS-JSON-SRC-POS.
+           PERFORM UNTIL WS-JSON-SRC-POS > WS-JSON-SRC-LEN
+             OR WS-JSON-SRC (WS-JSON-SRC-POS:1) NOT = SPACE
+               ADD 1 TO WS-JSON-SRC-POS
+           END-PERFORM
+           MOVE WS-JSON-SRC-POS TO WS-JSON-NUM-POS
+           PERFORM UNTIL WS-JSON-NUM-POS > WS-JSON-SRC-LEN
+               MOVE WS-JSON-SRC (WS-JSON-NUM-POS:1) TO WS-JSON-CHAR
+               PERFORM JSON-APPEND-CHAR
+               ADD 1 TO WS-JSON-NUM-POS
+           END-PERFORM.
+
+       JSON-APPEND-ACCT-CURR-BAL.
+           MOVE ACCT-CURR-BAL TO WS-JSON-AMT-ABS.
+           MOVE 'N' TO WS-JSON-AMT-SIGN.
+           IF ACCT-CURR-BAL < 0
+               COMPUTE WS-JSON-AMT-ABS = 0 - ACCT-CURR-BAL
+               MOVE 'Y' TO WS-JSON-AMT-SIGN
+           END-IF
+           PERFORM JSON-APPEND-AMOUNT.
+
+       JSON-APPEND-ACCT-CREDIT-LIMIT.
+           MOVE ACCT-CREDIT-LIMIT TO WS-JSON-AMT-ABS.
+           MOVE 'N' TO WS-JSON-AMT-SIGN.
+           IF ACCT-CREDIT-LIMIT < 0
+               COMPUTE WS-JSON-AMT-ABS = 0 - ACCT-CREDIT-LIMIT
+               MOVE 'Y' TO WS-JSON-AMT-SIGN
+           END-IF
+           PERFORM JSON-APPEND-AMOUNT.
+
+       JSON-APPEND-ACCT-CASH-LIMIT.
+           MOVE ACCT-CASH-CREDIT-LIMIT TO WS-JSON-AMT-ABS.
+           MOVE 'N' TO WS-JSON-AMT-SIGN.
+           IF ACCT-CASH-CREDIT-LIMIT < 0
+               COMPUTE WS-JSON-AMT-ABS = 0 - ACCT-CASH-CREDIT-LIMIT
+               MOVE 'Y' TO WS-JSON-AMT-SIGN
+           END-IF
+           PERFORM JSON-APPEND-AMOUNT.
+
+       JSON-APPEND-ACCT-CURR-CREDIT.
+           MOVE ACCT-CURR-CYC-CREDIT TO WS-JSON-AMT-ABS.
+           MOVE 'N' TO WS-JSON-AMT-SIGN.
+           IF ACCT-CURR-CYC-CREDIT < 0
+               COMPUTE WS-JSON-AMT-ABS = 0 - ACCT-CURR-CYC-CREDIT
+               MOVE 'Y' TO WS-JSON-AMT-SIGN
+           END-IF
+           PERFORM JSON-APPEND-AMOUNT.
+
+       JSON-APPEND-ACCT-CURR-DEBIT.
+           MOVE ACCT-CURR-CYC-DEBIT TO WS-JSON-AMT-ABS.
+           MOVE 'N' TO WS-JSON-AMT-SIGN.
+           IF ACCT-CURR-CYC-DEBIT < 0
+               COMPUTE WS-JSON-AMT-ABS = 0 - ACCT-CURR-CYC-DEBIT
+               MOVE 'Y' TO WS-JSON-AMT-SIGN
+           END-IF
+           PERFORM JSON-APPEND-AMOUNT.
 
       *---------------------------------------------------------------*
        8100-FILE-OPEN.
