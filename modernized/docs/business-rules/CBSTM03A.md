@@ -2,51 +2,49 @@
 
 ## Purpose and trigger
 
-**Trigger:** `CREASTMT`. statement production.
+`CREASTMT` invokes `CBSTM03A` to produce both an 80-byte plain-text account statement and 100-byte HTML statement records. It groups sequential transaction input by card and obtains account/customer details through `CBSTM03B`.
 
 ## Inputs and outputs
 
-Reads account/customer/transaction/xref data through `CBSTM03B`; writes statement and HTML outputs.
+`TRNXFILE`, `XREFFILE`, `CUSTFILE`, and `ACCTFILE` are opened/read through the linkage subroutine. `STMTFILE` is opened `OUTPUT` with `FD-STMTFILE-REC PIC X(80)`; `HTMLFILE` is opened `OUTPUT` with `FD-HTMLFILE-REC PIC X(100)`.
 
-### Exact layouts
+### Exact working layouts
 
-`CUSTREC` customer record; `CVACT01Y` account; `CVACT03Y` card/account/customer xref; outputs are fixed records `FD-STMTFILE-REC PIC X(80)` and `FD-HTMLFILE-REC PIC X(100)`. Working totals include `WS-TOTAL-AMT PIC S9(9)V99` under `COMP-3`; statement fields include account ID `PIC X(20)`, current balance display `PIC 9(9).99-`, transaction ID `PIC X(16)`, transaction amount display `PIC Z(9).99-`, and a 16-byte saved card key.
+`WS-TOTAL-AMT PIC S9(9)V99 COMP-3`; `WS-TRN-AMT PIC S9(9)V99` display signed; `WS-SAVE-CARD PIC X(16)`; `END-OF-FILE PIC X(01)`.
 
-## Validation and error rules
+Statement line fields include `ST-NAME PIC X(75)`, `ST-ADD1 PIC X(50)`, `ST-ADD2 PIC X(50)`, `ST-ADD3 PIC X(80)`, `ST-ACCT-ID PIC X(20)`, `ST-CURR-BAL PIC 9(9).99-`, `ST-FICO-SCORE PIC X(20)`, `ST-TRANID PIC X(16)`, `ST-TRANDT PIC X(49)`, `ST-TRANAMT PIC Z(9).99-`, and `ST-TOTAL-TRAMT PIC Z(9).99-`. HTML lines are each `PIC X(100)`.
 
-Calls `CBSTM03B` using `WS-M03B-AREA`: DD name `PIC X(08)`, operation `PIC X(01)` (`O` open, `C` close, `R` sequential read, `K` keyed read, `W` write, `Z` rewrite), return code `PIC X(02)`, key `PIC X(25)`, key length `PIC S9(4)`, and file-data buffer `PIC X(1000)`. Source has no CICS screen.
+## Validation and error rules (source order)
 
-Source message assignments observed (where present):
+1. Open statement and HTML outputs; an unsuccessful open enters the abend paragraph.
+2. Ask `CBSTM03B` to open `TRNXFILE`, `XREFFILE`, `CUSTFILE`, and `ACCTFILE`. Each call returns a two-byte file status in the linkage area; non-`00` statuses cause display/abend rather than a partial report.
+3. Read the next transaction. EOF closes all four files and report outputs. A non-EOF read error displays the status and abends.
+4. On a new card, lookup xref, customer, and account; populate header/basic-detail lines. Transactions for the same card are accumulated in `WS-TOTAL-AMT` until the card changes.
+5. At card change/EOF, write the transaction total and closing statement/HTML sections, then begin the next card. There is no reject-record output.
 
+## Calculations and source excerpt
 
-
-Rules are listed in source paragraph order above. Any source behavior not decipherable from declarations is deliberately not guessed.
-
-## Calculations
-
-Statement totals and formatting are delegated partly to `CBSTM03B`; do not substitute SQL aggregation until field-level source comparison is complete.
-
-Relevant source excerpt:
+`WS-TOTAL-AMT` is packed decimal with two fractional digits. The program executes `ADD TRNX-AMT TO WS-TOTAL-AMT`; each transaction amount is therefore accumulated at cent scale. Display edits use `PIC Z(9).99-`, which suppresses leading zeroes and places a trailing minus for negative amounts.
 
 ```cobol
-    COMPUTE BUMP-TIOT = BUMP-TIOT + LENGTH OF TIOT-BLOCK.
-    COMPUTE BUMP-TIOT = BUMP-TIOT + LENGTH OF TIOT-SEG
-    COMPUTE WS-M03B-KEY-LN = LENGTH OF XREF-CUST-ID.
-    COMPUTE WS-M03B-KEY-LN = LENGTH OF XREF-ACCT-ID.
+IF WS-SAVE-CARD NOT = TRNX-CARD-NUM
+    PERFORM 8000-CLOSE-STATEMENT
+    MOVE TRNX-CARD-NUM TO WS-SAVE-CARD
+    MOVE ZERO TO WS-TOTAL-AMT
+END-IF
+ADD TRNX-AMT TO WS-TOTAL-AMT
 ```
 
 ## Control flow and failure handling
 
-Batch file failures call `CEE3ABD`; no reject-record file is declared in this program.
+The program uses the TIOT to derive DD names, then calls `CBSTM03B` with `O`, `R`, `K`, and `C` operations. It has no CICS transaction, PF keys, or COMMAREA. Any file failure calls the abend paragraph; output files are not append targets.
 
 ## Test cases
 
-| # | Concrete input | Expected output/error |
+| # | Concrete input | Expected output |
 |---:|---|---|
-| 1 | Existing customer/account/card with two transactions totaling `25.50` | Writes 80-byte statement lines and 100-byte HTML lines; total is `25.50` in the statement total field. |
-| 2 | Missing required key field (blank/LOW-VALUES) | Validation error attached to that field; no data write. |
-| 3 | Non-numeric value in a numeric PIC input | Numeric validation error; no data write. |
-| 4 | Referenced account/card/xref absent | CICS NOTFND or batch lookup failure; source error message and no partial update. |
-| 5 | Duplicate output key (transaction/user/card as applicable) | DUPKEY/DUPREC branch and source error message. |
-| 6 | Maximum representable amount for the declared PIC | Accepted only if source numeric validation permits; preserve declared scale and sign. |
-| 7 | Negative/zero boundary value where business validation applies | Follow the explicit source comparison; reject when the rule above says so. |
+| 1 | Fixture card `0683586198171516`, account xref `00000000027`, two transactions `504.78` and `919.00` | One statement group for that card; `WS-TOTAL-AMT` is `1,423.78`; closing total line contains formatted `1,423.78`. |
+| 2 | One transaction amount `0.00` for card `0500024453765740` | Statement is emitted with total `0.00`; no omitted group. |
+| 3 | Same card receives `-10.25` then `5.00` | Packed total becomes `-5.25`; `ST-TOTAL-TRAMT` uses trailing minus edit. |
+| 4 | Transaction references card absent from xref | `CBSTM03B` keyed read returns non-`00`; source displays file status and abends; no fabricated statement. |
+| 5 | Empty transaction input (`EOF` on first read) | Headers are not invented; files close and report completes without a card statement. |
