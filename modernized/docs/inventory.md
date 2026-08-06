@@ -1,241 +1,158 @@
 # Legacy asset inventory
 
-Generated from the files under `app/`; names and relationships below are source observations, not assumptions. `—` means the source contains no corresponding declaration.
+This inventory is based on the COBOL, copybook, BMS, JCL, CSD, Control-M, assembler, and fixture files under `app/`. Dataset names below are DD-resolved names from JCL/CSD, not working-storage variable names.
 
 ## COBOL programs (`app/cbl/`, 31 files)
 
-| Program | Type | Purpose (source comment/structure) | Files/tables read and written | CALL/XCTL/LINK targets |
+| Program | Type | Purpose | Files/tables read and written | CALL/XCTL/LINK targets |
 |---|---|---|---|---|
-| `CBACT01C` | batch | Type : BATCH COBOL Program | `ACCTFILE`, `ARRYFILE`, `OUTFILE`, `VBRCFILE` | `CEE3ABD`, `COBDATFT` |
-| `CBACT02C` | batch | Type : BATCH COBOL Program | `CARDFILE` | `CEE3ABD` |
-| `CBACT03C` | batch | Type : BATCH COBOL Program | `XREFFILE` | `CEE3ABD` |
-| `CBACT04C` | batch | Type : BATCH COBOL Program | `ACCTFILE`, `DISCGRP`, `TCATBALF`, `TRANSACT`, `XREFFILE` | `CEE3ABD` |
-| `CBCUS01C` | batch | Type : BATCH COBOL Program | `CUSTFILE` | `CEE3ABD` |
-| `CBEXPORT` | batch | Type : BATCH COBOL Program | `ACCTFILE`, `CARDFILE`, `CUSTFILE`, `EXPFILE`, `TRANSACT`, `XREFFILE` | `CEE3ABD` |
-| `CBIMPORT` | batch | Type : BATCH COBOL Program | `ACCTOUT`, `CARDOUT`, `CUSTOUT`, `ERROUT`, `EXPFILE`, `TRNXOUT`, `XREFOUT` | `CEE3ABD` |
-| `CBSTM03A` | batch | Type : BATCH COBOL Program | `HTMLFILE`, `STMTFILE` | `CBSTM03B`, `CEE3ABD`, `to` |
-| `CBSTM03B` | batch | Type : BATCH COBOL Subroutine | `ACCTFILE`, `CUSTFILE`, `TRNXFILE`, `XREFFILE` | — |
-| `CBTRN01C` | batch | Type : BATCH COBOL Program | `ACCTFILE`, `CARDFILE`, `CUSTFILE`, `DALYTRAN`, `TRANFILE`, `XREFFILE` | `CEE3ABD` |
-| `CBTRN02C` | batch | Type : BATCH COBOL Program | `ACCTFILE`, `DALYREJS`, `DALYTRAN`, `TCATBALF`, `TRANFILE`, `XREFFILE` | `CEE3ABD` |
-| `CBTRN03C` | batch | Type : BATCH COBOL Program | `CARDXREF`, `DATEPARM`, `TRANCATG`, `TRANFILE`, `TRANREPT`, `TRANTYPE` | `CEE3ABD` |
-| `COACTUPC` | online CICS | Function: Accept and process ACCOUNT UPDATE * | `LIT-ACCTFILENAME`, `LIT-CARDXREFNAME-ACCT-PATH`, `LIT-CUSTFILENAME` | — |
-| `COACTVWC` | online CICS | Function: Accept and process Account View request * | `LIT-ACCTFILENAME`, `LIT-CARDXREFNAME-ACCT-PATH`, `LIT-CUSTFILENAME` | — |
-| `COADM01C` | online CICS | Type : CICS COBOL Program | — | — |
-| `COBIL00C` | online CICS | Type : CICS COBOL Program | `WS-ACCTDAT-FILE`, `WS-CXACAIX-FILE`, `WS-TRANSACT-FILE` | — |
-| `COBSWAIT` | utility | Type : BATCH COBOL Program | — | `MVSWAIT` |
-| `COCRDLIC` | online CICS | Function: List Credit Cards | `LIT-CARD-FILE` | `CARD`, `MENU` |
-| `COCRDSLC` | online CICS | Function: Accept and process credit card detail request * | — | — |
-| `COCRDUPC` | online CICS | Function: Accept and process credit card detail request * | — | — |
-| `COMEN01C` | online CICS | Type : CICS COBOL Program | — | — |
-| `CORPT00C` | online CICS | Type : CICS COBOL Program | — | `CSUTLDTC` |
-| `COSGN00C` | online CICS | Type : CICS COBOL Program | `WS-USRSEC-FILE` | — |
-| `COTRN00C` | online CICS | Type : CICS COBOL Program | `WS-TRANSACT-FILE` | — |
-| `COTRN01C` | online CICS | Type : CICS COBOL Program | `WS-TRANSACT-FILE` | — |
-| `COTRN02C` | online CICS | Type : CICS COBOL Program | `WS-CCXREF-FILE`, `WS-CXACAIX-FILE`, `WS-TRANSACT-FILE` | `CSUTLDTC` |
-| `COUSR00C` | online CICS | Type : CICS COBOL Program | `WS-USRSEC-FILE` | — |
-| `COUSR01C` | online CICS | Type : CICS COBOL Program | `WS-USRSEC-FILE` | — |
-| `COUSR02C` | online CICS | Type : CICS COBOL Program | `WS-USRSEC-FILE` | — |
-| `COUSR03C` | online CICS | Type : CICS COBOL Program | `WS-USRSEC-FILE` | — |
-| `CSUTLDTC` | utility | Purpose is represented by procedure names; see source. | — | `CEEDAYS` |
+| CBACT01C | batch | Reads every account VSAM record and writes three diagnostic representations (packed, array, variable-block). | ACCTFILE read; OUTFILE, ARRYFILE, VBRCFILE write | COBDATFT, CEE3ABD |
+| CBACT02C | batch | Sequentially reads and displays card master records for file verification. | CARDFILE read | CEE3ABD |
+| CBACT03C | batch | Sequentially reads and displays card/account/customer cross-reference records. | XREFFILE read | CEE3ABD |
+| CBACT04C | batch | Calculates monthly interest from category balances and disclosure rates, writes interest transactions, and updates accounts. | TCATBALF read/rewrite; XREFFILE read; ACCTFILE read/rewrite; DISCGRP read; TRANSACT write | CEE3ABD |
+| CBCUS01C | batch | Sequentially reads and displays customer master records. | CUSTFILE read | CEE3ABD |
+| CBEXPORT | batch | Exports customer, account, xref, card, and transaction VSAM records into one tagged interchange file. | CUSTFILE, ACCTFILE, XREFFILE, CARDFILE, TRANSACT read; EXPFILE write | CEE3ABD |
+| CBIMPORT | batch | Validates tagged interchange records and recreates customer, account, xref, transaction, and card sequential outputs, recording malformed records separately. | EXPFILE read; CUSTOUT, ACCTOUT, XREFOUT, TRNXOUT, CARDOUT, ERROUT write | CEE3ABD |
+| CBSTM03A | batch | Groups transactions by card and produces fixed-width plain-text and HTML statements. | TRNXFILE, XREFFILE, CUSTFILE, ACCTFILE read through CBSTM03B; STMTFILE, HTMLFILE write | CBSTM03B, CEE3ABD |
+| CBSTM03B | batch subroutine | Performs open/read/close operations on the four statement input files through a linkage area. | TRNXFILE, XREFFILE, CUSTFILE, ACCTFILE read | — (called by CBSTM03A) |
+| CBTRN01C | batch | Reads daily transactions, resolves card/account/customer references, and displays the resulting records for diagnostic validation. | DALYTRAN, XREFFILE, ACCTFILE, CUSTFILE, CARDFILE, TRANFILE read | CEE3ABD |
+| CBTRN02C | batch | Validates daily transactions, writes accepted postings and category-balance updates, and writes rejected records with reason trailers. | DALYTRAN read; XREFFILE read; ACCTFILE/TCATBALF I-O; TRANFILE output; DALYREJS output | CEE3ABD |
+| CBTRN03C | batch | Reads posted transactions and lookup files to produce a dated transaction report. | TRANFILE, CARDXREF, TRANTYPE, TRANCATG, DATEPARM read; TRANREPT write | CEE3ABD |
+| COACTUPC | online CICS | Searches and updates account/customer details, preserving old/new values through pseudo-conversational confirmation. | ACCTDAT read/update; CUSTDAT read/update; CARDDAT/CARDAIX/CXACAIX read | COCRDUPC, COCRDLIC, COCRDSLC, COMEN01C; CICS XCTL |
+| COACTVWC | online CICS | Searches and displays account, customer, and linked card information without rewriting master data. | ACCTDAT, CUSTDAT, CARDDAT, CARDAIX, CXACAIX read | COCRDLIC, COCRDUPC, COCRDSLC, COMEN01C; CICS XCTL |
+| COADM01C | online CICS | Displays the administrator menu and routes authorized users to user-management functions. | No VSAM data access in visible program | COUSR00C, COMEN01C; CICS XCTL |
+| COBIL00C | online CICS | Reads an account balance, confirms a full-balance bill payment, posts a payment transaction, and rewrites the account. | ACCTDAT read/update; CXACAIX read; TRANSACT browse/write | CICS XCTL to COMMAREA target |
+| COBSWAIT | utility | Converts a centisecond wait parameter and calls the assembler wait routine. | No data files | MVSWAIT |
+| COCRDLIC | online CICS | Lists cards selected by account or customer criteria and routes to card detail/update. | CARDDAT/CARDAIX/CXACAIX/CUSTDAT read | COCRDSLC, COCRDUPC, COMEN01C; CICS XCTL |
+| COCRDSLC | online CICS | Reads and displays one card with its account/customer context. | CARDDAT, CARDAIX, ACCTDAT, CUSTDAT read | COCRDLIC, COCRDUPC, COMEN01C; CICS XCTL |
+| COCRDUPC | online CICS | Fetches a card, validates changed card fields, and rewrites CARDDAT after confirmation. | CARDDAT read/update; CARDAIX read | COCRDLIC, COCRDSLC, COMEN01C; CICS XCTL |
+| COMEN01C | online CICS | Displays the main menu and dispatches selected account, card, transaction, report, and payment functions. | No master file read in menu flow | COACTVWC, COACTUPC, COCRDLIC, COCRDSLC, COCRDUPC, COTRN00C, COTRN01C, COTRN02C, CORPT00C, COBIL00C; CICS XCTL |
+| CORPT00C | online CICS | Collects report criteria and starts the transaction report job/flow. | DATEPARM/report context; no direct master rewrite | CBTRN03C; CSUTLDTC; CICS START/XCTL |
+| COSGN00C | online CICS | Authenticates a user against the security file and establishes signed-on COMMAREA context. | USRSEC read | COMEN01C; CICS XCTL |
+| COTRN00C | online CICS | Lists transactions using browse/navigation criteria and routes to transaction view/add. | TRANSACT browse/read | COTRN01C, COTRN02C, COMEN01C; CICS XCTL |
+| COTRN01C | online CICS | Displays one selected transaction and its lookup descriptions. | TRANSACT read; TRANTYPE/TRANCATG lookup | COTRN00C, COTRN02C, COMEN01C; CICS XCTL |
+| COTRN02C | online CICS | Validates and adds a transaction from the transaction-add map. | CXACAIX/CCXREF read; TRANSACT browse/write | CSUTLDTC; CICS XCTL |
+| COUSR00C | online CICS | Lists user-security records for administration. | USRSEC browse/read | COUSR01C, COUSR02C, COUSR03C, COADM01C; CICS XCTL |
+| COUSR01C | online CICS | Validates and adds a user-security record. | USRSEC read/write | COUSR00C, COADM01C; CICS XCTL |
+| COUSR02C | online CICS | Fetches and updates a user-security record. | USRSEC read/update | COUSR00C, COADM01C; CICS XCTL |
+| COUSR03C | online CICS | Fetches and deletes a user-security record after confirmation. | USRSEC read/delete | COUSR00C, COADM01C; CICS XCTL |
+| CSUTLDTC | utility | Validates/converts a date through the source date utility interface. | No data files | CEEDAYS |
 
 ## BMS maps (`app/bms/`, 17 files)
 
-Field attributes summarize DFHMDF ATTRB/COLOR/HILIGHT/LENGTH; unnamed literals are omitted. Program use is source COPY inclusion.
-
-| Map | Mapset | Screen title/literals | Fields (name; length; attributes) | Program(s) |
+| Map | Mapset | Title/literals | Fields and attributes (summary) | Program |
 |---|---|---|---|---|
-| `CACTUPA` | `COACTUP` | Tran:; Date:; mm/dd/yy | `TRNNAME` (4; ASKIP,FSET,NORM); `TITLE01` (40; ASKIP,NORM); `CURDATE` (8; ASKIP,NORM); `PGMNAME` (8; ASKIP,NORM); `TITLE02` (40; ASKIP,NORM); `CURTIME` (8; ASKIP,NORM); `ACCTSID` (11; IC,UNPROT); `ACSTTUS` (1; UNPROT); `OPNYEAR` (4; FSET,UNPROT); `OPNMON` (2; UNPROT); `OPNDAY` (2; UNPROT); `ACRDLIM` (15; FSET,UNPROT); `EXPYEAR` (4; UNPROT); `EXPMON` (2; UNPROT); `EXPDAY` (2; UNPROT); `ACSHLIM` (15; FSET,UNPROT); `RISYEAR` (4; UNPROT); `RISMON` (2; UNPROT); `RISDAY` (2; UNPROT); `ACURBAL` (15; FSET,UNPROT); `ACRCYCR` (15; FSET,UNPROT); `AADDGRP` (10; UNPROT); `ACRCYDB` (15; FSET,UNPROT); `ACSTNUM` (9; UNPROT); `ACTSSN1` (3; UNPROT); `ACTSSN2` (2; UNPROT); `ACTSSN3` (4; UNPROT); `DOBYEAR` (4; UNPROT); `DOBMON` (2; UNPROT); `DOBDAY` (2; UNPROT); `ACSTFCO` (3; UNPROT); `ACSFNAM` (25; UNPROT); `ACSMNAM` (25; UNPROT); `ACSLNAM` (25; UNPROT); `ACSADL1` (50; UNPROT); `ACSSTTE` (2; UNPROT); `ACSADL2` (50; UNPROT); `ACSZIPC` (5; UNPROT); `ACSCITY` (50; UNPROT); `ACSCTRY` (3; UNPROT); `ACSPH1A` (3; UNPROT); `ACSPH1B` (3; UNPROT); `ACSPH1C` (4; UNPROT); `ACSGOVT` (20; UNPROT); `ACSPH2A` (3; UNPROT); `ACSPH2B` (3; UNPROT); `ACSPH2C` (4; UNPROT); `ACSEFTC` (10; UNPROT); `ACSPFLG` (1; UNPROT); `INFOMSG` (45; ASKIP); `ERRMSG` (78; ASKIP,BRT,FSET); `FKEYS` (21; ASKIP,NORM); `FKEY05` (7; ASKIP,DRK); `FKEY12` (10; ASKIP,DRK) | `COACTUPC` |
-| `CACTVWA` | `COACTVW` | Tran:; Date:; mm/dd/yy | `TRNNAME` (4; ASKIP,FSET,NORM); `TITLE01` (40; ASKIP,NORM); `CURDATE` (8; ASKIP,NORM); `PGMNAME` (8; ASKIP,NORM); `TITLE02` (40; ASKIP,NORM); `CURTIME` (8; ASKIP,NORM); `ACCTSID` (11; FSET,IC,NORM,UNPROT); `ACSTTUS` (1; ASKIP); `ADTOPEN` (10; default); `ACRDLIM` (15; default); `AEXPDT` (10; default); `ACSHLIM` (15; default); `AREISDT` (10; default); `ACURBAL` (15; default); `ACRCYCR` (15; default); `AADDGRP` (10; default); `ACRCYDB` (15; default); `ACSTNUM` (9; default); `ACSTSSN` (12; default); `ACSTDOB` (10; default); `ACSTFCO` (3; default); `ACSFNAM` (25; default); `ACSMNAM` (25; default); `ACSLNAM` (25; default); `ACSADL1` (50; default); `ACSSTTE` (2; default); `ACSADL2` (50; default); `ACSZIPC` (5; default); `ACSCITY` (50; default); `ACSCTRY` (3; default); `ACSPHN1` (13; default); `ACSGOVT` (20; default); `ACSPHN2` (13; default); `ACSEFTC` (10; default); `ACSPFLG` (1; default); `INFOMSG` (45; PROT); `ERRMSG` (78; ASKIP,BRT,FSET) | `COACTVWC` |
-| `COADM1A` | `COADM01` | Tran:; Date:; mm/dd/yy | `TRNNAME` (4; ASKIP,FSET,NORM); `TITLE01` (40; ASKIP,FSET,NORM); `CURDATE` (8; ASKIP,FSET,NORM); `PGMNAME` (8; ASKIP,FSET,NORM); `TITLE02` (40; ASKIP,FSET,NORM); `CURTIME` (8; ASKIP,FSET,NORM); `OPTN001` (40; ASKIP,FSET,NORM); `OPTN002` (40; ASKIP,FSET,NORM); `OPTN003` (40; ASKIP,FSET,NORM); `OPTN004` (40; ASKIP,FSET,NORM); `OPTN005` (40; ASKIP,FSET,NORM); `OPTN006` (40; ASKIP,FSET,NORM); `OPTN007` (40; ASKIP,FSET,NORM); `OPTN008` (40; ASKIP,FSET,NORM); `OPTN009` (40; ASKIP,FSET,NORM); `OPTN010` (40; ASKIP,FSET,NORM); `OPTN011` (40; ASKIP,FSET,NORM); `OPTN012` (40; ASKIP,FSET,NORM); `OPTION` (2; FSET,IC,NORM,NUM,UNPROT); `ERRMSG` (78; ASKIP,BRT,FSET) | `COADM01C` |
-| `COBIL0A` | `COBIL00` | Tran:; Date:; mm/dd/yy | `TRNNAME` (4; ASKIP,FSET,NORM); `TITLE01` (40; ASKIP,FSET,NORM); `CURDATE` (8; ASKIP,FSET,NORM); `PGMNAME` (8; ASKIP,FSET,NORM); `TITLE02` (40; ASKIP,FSET,NORM); `CURTIME` (8; ASKIP,FSET,NORM); `ACTIDIN` (11; FSET,IC,NORM,UNPROT); `CURBAL` (14; ASKIP,FSET,NORM); `CONFIRM` (1; FSET,NORM,UNPROT); `ERRMSG` (78; ASKIP,BRT,FSET) | `COBIL00C` |
-| `CCRDLIA` | `COCRDLI` | Tran:; Date:; mm/dd/yy | `TRNNAME` (4; ASKIP,FSET,NORM); `TITLE01` (40; ASKIP,NORM); `CURDATE` (8; ASKIP,NORM); `PGMNAME` (8; ASKIP,NORM); `TITLE02` (40; ASKIP,NORM); `CURTIME` (8; ASKIP,NORM); `PAGENO` (3; default); `ACCTSID` (11; FSET,IC,NORM,UNPROT); `CARDSID` (16; FSET,NORM,UNPROT); `CRDSEL1` (1; FSET,NORM,PROT); `ACCTNO1` (11; NORM,PROT); `CRDNUM1` (16; NORM,PROT); `CRDSTS1` (1; NORM,PROT); `CRDSEL2` (1; FSET,NORM,PROT); `CRDSTP2` (1; ASKIP,DRK,FSET); `ACCTNO2` (11; NORM,PROT); `CRDNUM2` (16; NORM,PROT); `CRDSTS2` (1; NORM,PROT); `CRDSEL3` (1; FSET,NORM,PROT); `CRDSTP3` (1; ASKIP,DRK,FSET); `ACCTNO3` (11; NORM,PROT); `CRDNUM3` (16; NORM,PROT); `CRDSTS3` (1; NORM,PROT); `CRDSEL4` (1; FSET,NORM,PROT); `CRDSTP4` (1; ASKIP,DRK,FSET); `ACCTNO4` (11; NORM,PROT); `CRDNUM4` (16; NORM,PROT); `CRDSTS4` (1; NORM,PROT); `CRDSEL5` (1; FSET,NORM,PROT); `CRDSTP5` (1; ASKIP,DRK,FSET); `ACCTNO5` (11; NORM,PROT); `CRDNUM5` (16; NORM,PROT); `CRDSTS5` (1; NORM,PROT); `CRDSEL6` (1; FSET,NORM,PROT); `CRDSTP6` (1; ASKIP,DRK,FSET); `ACCTNO6` (11; NORM,PROT); `CRDNUM6` (16; NORM,PROT); `CRDSTS6` (1; NORM,PROT); `CRDSEL7` (1; FSET,NORM,PROT); `CRDSTP7` (1; ASKIP,DRK,FSET); `ACCTNO7` (11; NORM,PROT); `CRDNUM7` (16; NORM,PROT); `CRDSTS7` (1; NORM,PROT); `INFOMSG` (45; PROT); `ERRMSG` (78; ASKIP,BRT,FSET) | `COCRDLIC` |
-| `CCRDSLA` | `COCRDSL` | Tran:; Date:; mm/dd/yy | `TRNNAME` (4; ASKIP,FSET,NORM); `TITLE01` (40; ASKIP,NORM); `CURDATE` (8; ASKIP,NORM); `PGMNAME` (8; ASKIP,NORM); `TITLE02` (40; ASKIP,NORM); `CURTIME` (8; ASKIP,NORM); `ACCTSID` (11; FSET,IC,NORM,UNPROT); `CARDSID` (16; FSET,NORM,UNPROT); `CRDNAME` (50; default); `CRDSTCD` (1; ASKIP); `EXPMON` (2; ASKIP); `EXPYEAR` (4; ASKIP); `INFOMSG` (40; PROT); `ERRMSG` (80; ASKIP,BRT,FSET); `FKEYS` (75; ASKIP,NORM) | `COCRDLIC`, `COCRDSLC` |
-| `CCRDUPA` | `COCRDUP` | Tran:; Date:; mm/dd/yy | `TRNNAME` (4; ASKIP,FSET,NORM); `TITLE01` (40; ASKIP,NORM); `CURDATE` (8; ASKIP,NORM); `PGMNAME` (8; ASKIP,NORM); `TITLE02` (40; ASKIP,NORM); `CURTIME` (8; ASKIP,NORM); `ACCTSID` (11; FSET,IC,NORM,PROT); `CARDSID` (16; FSET,NORM,UNPROT); `CRDNAME` (50; UNPROT); `CRDSTCD` (1; UNPROT); `EXPMON` (2; UNPROT); `EXPYEAR` (4; UNPROT); `EXPDAY` (2; DRK,FSET,PROT); `INFOMSG` (40; PROT); `ERRMSG` (80; ASKIP,BRT,FSET); `FKEYS` (21; ASKIP,NORM); `FKEYSC` (18; ASKIP,DRK) | `COCRDUPC` |
-| `COMEN1A` | `COMEN01` | Tran:; Date:; mm/dd/yy | `TRNNAME` (4; ASKIP,FSET,NORM); `TITLE01` (40; ASKIP,FSET,NORM); `CURDATE` (8; ASKIP,FSET,NORM); `PGMNAME` (8; ASKIP,FSET,NORM); `TITLE02` (40; ASKIP,FSET,NORM); `CURTIME` (8; ASKIP,FSET,NORM); `OPTN001` (40; ASKIP,FSET,NORM); `OPTN002` (40; ASKIP,FSET,NORM); `OPTN003` (40; ASKIP,FSET,NORM); `OPTN004` (40; ASKIP,FSET,NORM); `OPTN005` (40; ASKIP,FSET,NORM); `OPTN006` (40; ASKIP,FSET,NORM); `OPTN007` (40; ASKIP,FSET,NORM); `OPTN008` (40; ASKIP,FSET,NORM); `OPTN009` (40; ASKIP,FSET,NORM); `OPTN010` (40; ASKIP,FSET,NORM); `OPTN011` (40; ASKIP,FSET,NORM); `OPTN012` (40; ASKIP,FSET,NORM); `OPTION` (2; FSET,IC,NORM,NUM,UNPROT); `ERRMSG` (78; ASKIP,BRT,FSET) | `COMEN01C` |
-| `CORPT0A` | `CORPT00` | Tran:; Date:; mm/dd/yy | `TRNNAME` (4; ASKIP,FSET,NORM); `TITLE01` (40; ASKIP,FSET,NORM); `CURDATE` (8; ASKIP,FSET,NORM); `PGMNAME` (8; ASKIP,FSET,NORM); `TITLE02` (40; ASKIP,FSET,NORM); `CURTIME` (8; ASKIP,FSET,NORM); `MONTHLY` (1; FSET,IC,NORM,UNPROT); `YEARLY` (1; FSET,NORM,UNPROT); `CUSTOM` (1; FSET,NORM,UNPROT); `SDTMM` (2; FSET,NORM,NUM,UNPROT); `SDTDD` (2; FSET,NORM,NUM,UNPROT); `SDTYYYY` (4; FSET,NORM,NUM,UNPROT); `EDTMM` (2; FSET,NORM,NUM,UNPROT); `EDTDD` (2; FSET,NORM,NUM,UNPROT); `EDTYYYY` (4; FSET,NORM,NUM,UNPROT); `CONFIRM` (1; FSET,NORM,UNPROT); `ERRMSG` (78; ASKIP,BRT,FSET) | `CORPT00C` |
-| `COSGN0A` | `COSGN00` | Tran :; Date :; mm/dd/yy | `TRNNAME` (4; ASKIP,FSET,NORM); `TITLE01` (40; ASKIP,FSET,NORM); `CURDATE` (8; ASKIP,FSET,NORM); `PGMNAME` (8; FSET,NORM,PROT); `TITLE02` (40; ASKIP,FSET,NORM); `CURTIME` (9; FSET,NORM,PROT); `APPLID` (8; FSET,NORM,PROT); `SYSID` (8; FSET,NORM,PROT); `USERID` (8; FSET,IC,NORM,UNPROT); `PASSWD` (8; DRK,FSET,UNPROT); `ERRMSG` (78; ASKIP,BRT,FSET) | `COSGN00C` |
-| `COTRN0A` | `COTRN00` | Tran:; Date:; mm/dd/yy | `TRNNAME` (4; ASKIP,FSET,NORM); `TITLE01` (40; ASKIP,FSET,NORM); `CURDATE` (8; ASKIP,FSET,NORM); `PGMNAME` (8; ASKIP,FSET,NORM); `TITLE02` (40; ASKIP,FSET,NORM); `CURTIME` (8; ASKIP,FSET,NORM); `PAGENUM` (8; ASKIP,FSET,NORM); `TRNIDIN` (16; FSET,NORM,UNPROT); `SEL0001` (1; FSET,NORM,UNPROT); `TRNID01` (16; ASKIP,FSET,NORM); `TDATE01` (8; ASKIP,FSET,NORM); `TDESC01` (26; ASKIP,FSET,NORM); `TAMT001` (12; ASKIP,FSET,NORM); `SEL0002` (1; FSET,NORM,UNPROT); `TRNID02` (16; ASKIP,FSET,NORM); `TDATE02` (8; ASKIP,FSET,NORM); `TDESC02` (26; ASKIP,FSET,NORM); `TAMT002` (12; ASKIP,FSET,NORM); `SEL0003` (1; FSET,NORM,UNPROT); `TRNID03` (16; ASKIP,FSET,NORM); `TDATE03` (8; ASKIP,FSET,NORM); `TDESC03` (26; ASKIP,FSET,NORM); `TAMT003` (12; ASKIP,FSET,NORM); `SEL0004` (1; FSET,NORM,UNPROT); `TRNID04` (16; ASKIP,FSET,NORM); `TDATE04` (8; ASKIP,FSET,NORM); `TDESC04` (26; ASKIP,FSET,NORM); `TAMT004` (12; ASKIP,FSET,NORM); `SEL0005` (1; FSET,NORM,UNPROT); `TRNID05` (16; ASKIP,FSET,NORM); `TDATE05` (8; ASKIP,FSET,NORM); `TDESC05` (26; ASKIP,FSET,NORM); `TAMT005` (12; ASKIP,FSET,NORM); `SEL0006` (1; FSET,NORM,UNPROT); `TRNID06` (16; ASKIP,FSET,NORM); `TDATE06` (8; ASKIP,FSET,NORM); `TDESC06` (26; ASKIP,FSET,NORM); `TAMT006` (12; ASKIP,FSET,NORM); `SEL0007` (1; FSET,NORM,UNPROT); `TRNID07` (16; ASKIP,FSET,NORM); `TDATE07` (8; ASKIP,FSET,NORM); `TDESC07` (26; ASKIP,FSET,NORM); `TAMT007` (12; ASKIP,FSET,NORM); `SEL0008` (1; FSET,NORM,UNPROT); `TRNID08` (16; ASKIP,FSET,NORM); `TDATE08` (8; ASKIP,FSET,NORM); `TDESC08` (26; ASKIP,FSET,NORM); `TAMT008` (12; ASKIP,FSET,NORM); `SEL0009` (1; FSET,NORM,UNPROT); `TRNID09` (16; ASKIP,FSET,NORM); `TDATE09` (8; ASKIP,FSET,NORM); `TDESC09` (26; ASKIP,FSET,NORM); `TAMT009` (12; ASKIP,FSET,NORM); `SEL0010` (1; FSET,NORM,UNPROT); `TRNID10` (16; ASKIP,FSET,NORM); `TDATE10` (8; ASKIP,FSET,NORM); `TDESC10` (26; ASKIP,FSET,NORM); `TAMT010` (12; ASKIP,FSET,NORM); `ERRMSG` (78; ASKIP,BRT,FSET) | `COTRN00C` |
-| `COTRN1A` | `COTRN01` | Tran:; Date:; mm/dd/yy | `TRNNAME` (4; ASKIP,FSET,NORM); `TITLE01` (40; ASKIP,FSET,NORM); `CURDATE` (8; ASKIP,FSET,NORM); `PGMNAME` (8; ASKIP,FSET,NORM); `TITLE02` (40; ASKIP,FSET,NORM); `CURTIME` (8; ASKIP,FSET,NORM); `TRNIDIN` (16; FSET,IC,NORM,UNPROT); `TRNID` (16; ASKIP,NORM); `CARDNUM` (16; ASKIP,NORM); `TTYPCD` (2; ASKIP,NORM); `TCATCD` (4; ASKIP,NORM); `TRNSRC` (10; ASKIP,NORM); `TDESC` (60; ASKIP,NORM); `TRNAMT` (12; ASKIP,NORM); `TORIGDT` (10; ASKIP,NORM); `TPROCDT` (10; ASKIP,NORM); `MID` (9; ASKIP,NORM); `MNAME` (30; ASKIP,NORM); `MCITY` (25; ASKIP,NORM); `MZIP` (10; ASKIP,NORM); `ERRMSG` (78; ASKIP,BRT,FSET) | `COTRN01C` |
-| `COTRN2A` | `COTRN02` | Tran:; Date:; mm/dd/yy | `TRNNAME` (4; ASKIP,FSET,NORM); `TITLE01` (40; ASKIP,FSET,NORM); `CURDATE` (8; ASKIP,FSET,NORM); `PGMNAME` (8; ASKIP,FSET,NORM); `TITLE02` (40; ASKIP,FSET,NORM); `CURTIME` (8; ASKIP,FSET,NORM); `ACTIDIN` (11; FSET,IC,NORM,UNPROT); `CARDNIN` (16; FSET,NORM,UNPROT); `TTYPCD` (2; FSET,NORM,UNPROT); `TCATCD` (4; FSET,NORM,UNPROT); `TRNSRC` (10; FSET,NORM,UNPROT); `TDESC` (60; FSET,NORM,UNPROT); `TRNAMT` (12; FSET,NORM,UNPROT); `TORIGDT` (10; FSET,NORM,UNPROT); `TPROCDT` (10; FSET,NORM,UNPROT); `MID` (9; FSET,NORM,UNPROT); `MNAME` (30; FSET,NORM,UNPROT); `MCITY` (25; FSET,NORM,UNPROT); `MZIP` (10; FSET,NORM,UNPROT); `CONFIRM` (1; FSET,NORM,UNPROT); `ERRMSG` (78; ASKIP,BRT,FSET) | `COTRN02C` |
-| `COUSR0A` | `COUSR00` | Tran:; Date:; mm/dd/yy | `TRNNAME` (4; ASKIP,FSET,NORM); `TITLE01` (40; ASKIP,FSET,NORM); `CURDATE` (8; ASKIP,FSET,NORM); `PGMNAME` (8; ASKIP,FSET,NORM); `TITLE02` (40; ASKIP,FSET,NORM); `CURTIME` (8; ASKIP,FSET,NORM); `PAGENUM` (8; ASKIP,FSET,NORM); `USRIDIN` (8; FSET,NORM,UNPROT); `SEL0001` (1; FSET,NORM,UNPROT); `USRID01` (8; ASKIP,FSET,NORM); `FNAME01` (20; ASKIP,FSET,NORM); `LNAME01` (20; ASKIP,FSET,NORM); `UTYPE01` (1; ASKIP,FSET,NORM); `SEL0002` (1; FSET,NORM,UNPROT); `USRID02` (8; ASKIP,FSET,NORM); `FNAME02` (20; ASKIP,FSET,NORM); `LNAME02` (20; ASKIP,FSET,NORM); `UTYPE02` (1; ASKIP,FSET,NORM); `SEL0003` (1; FSET,NORM,UNPROT); `USRID03` (8; ASKIP,FSET,NORM); `FNAME03` (20; ASKIP,FSET,NORM); `LNAME03` (20; ASKIP,FSET,NORM); `UTYPE03` (1; ASKIP,FSET,NORM); `SEL0004` (1; FSET,NORM,UNPROT); `USRID04` (8; ASKIP,FSET,NORM); `FNAME04` (20; ASKIP,FSET,NORM); `LNAME04` (20; ASKIP,FSET,NORM); `UTYPE04` (1; ASKIP,FSET,NORM); `SEL0005` (1; FSET,NORM,UNPROT); `USRID05` (8; ASKIP,FSET,NORM); `FNAME05` (20; ASKIP,FSET,NORM); `LNAME05` (20; ASKIP,FSET,NORM); `UTYPE05` (1; ASKIP,FSET,NORM); `SEL0006` (1; FSET,NORM,UNPROT); `USRID06` (8; ASKIP,FSET,NORM); `FNAME06` (20; ASKIP,FSET,NORM); `LNAME06` (20; ASKIP,FSET,NORM); `UTYPE06` (1; ASKIP,FSET,NORM); `SEL0007` (1; FSET,NORM,UNPROT); `USRID07` (8; ASKIP,FSET,NORM); `FNAME07` (20; ASKIP,FSET,NORM); `LNAME07` (20; ASKIP,FSET,NORM); `UTYPE07` (1; ASKIP,FSET,NORM); `SEL0008` (1; FSET,NORM,UNPROT); `USRID08` (8; ASKIP,FSET,NORM); `FNAME08` (20; ASKIP,FSET,NORM); `LNAME08` (20; ASKIP,FSET,NORM); `UTYPE08` (1; ASKIP,FSET,NORM); `SEL0009` (1; FSET,NORM,UNPROT); `USRID09` (8; ASKIP,FSET,NORM); `FNAME09` (20; ASKIP,FSET,NORM); `LNAME09` (20; ASKIP,FSET,NORM); `UTYPE09` (1; ASKIP,FSET,NORM); `SEL0010` (1; FSET,NORM,UNPROT); `USRID10` (8; ASKIP,FSET,NORM); `FNAME10` (20; ASKIP,FSET,NORM); `LNAME10` (20; ASKIP,FSET,NORM); `UTYPE10` (1; ASKIP,FSET,NORM); `ERRMSG` (78; ASKIP,BRT,FSET) | `COUSR00C` |
-| `COUSR1A` | `COUSR01` | Tran:; Date:; mm/dd/yy | `TRNNAME` (4; ASKIP,FSET,NORM); `TITLE01` (40; ASKIP,FSET,NORM); `CURDATE` (8; ASKIP,FSET,NORM); `PGMNAME` (8; ASKIP,FSET,NORM); `TITLE02` (40; ASKIP,FSET,NORM); `CURTIME` (8; ASKIP,FSET,NORM); `FNAME` (20; FSET,IC,NORM,UNPROT); `LNAME` (20; FSET,NORM,UNPROT); `USERID` (8; FSET,NORM,UNPROT); `PASSWD` (8; DRK,FSET,UNPROT); `USRTYPE` (1; FSET,NORM,UNPROT); `ERRMSG` (78; ASKIP,BRT,FSET) | `COUSR01C` |
-| `COUSR2A` | `COUSR02` | Tran:; Date:; mm/dd/yy | `TRNNAME` (4; ASKIP,FSET,NORM); `TITLE01` (40; ASKIP,FSET,NORM); `CURDATE` (8; ASKIP,FSET,NORM); `PGMNAME` (8; ASKIP,FSET,NORM); `TITLE02` (40; ASKIP,FSET,NORM); `CURTIME` (8; ASKIP,FSET,NORM); `USRIDIN` (8; FSET,IC,NORM,UNPROT); `FNAME` (20; FSET,NORM,UNPROT); `LNAME` (20; FSET,NORM,UNPROT); `PASSWD` (8; DRK,FSET,UNPROT); `USRTYPE` (1; FSET,NORM,UNPROT); `ERRMSG` (78; ASKIP,BRT,FSET) | `COUSR02C` |
-| `COUSR3A` | `COUSR03` | Tran:; Date:; mm/dd/yy | `TRNNAME` (4; ASKIP,FSET,NORM); `TITLE01` (40; ASKIP,FSET,NORM); `CURDATE` (8; ASKIP,FSET,NORM); `PGMNAME` (8; ASKIP,FSET,NORM); `TITLE02` (40; ASKIP,FSET,NORM); `CURTIME` (8; ASKIP,FSET,NORM); `USRIDIN` (8; FSET,IC,NORM,UNPROT); `FNAME` (20; ASKIP,FSET,NORM); `LNAME` (20; ASKIP,FSET,NORM); `USRTYPE` (1; ASKIP,FSET,NORM); `ERRMSG` (78; ASKIP,BRT,FSET) | `COUSR03C` |
+| CACTUPA | COACTUP | Account Update | Account/customer editable fields; numeric/date fields `UNPROT,FSET`; message `ERRMSG` `ASKIP,BRT,FSET`; PF5/PF12 labels | COACTUPC |
+| CACTVWA | COACTVW | Account View | Account search `ACCTSID`; account/customer display fields default-protected; `ERRMSG`/`INFOMSG` | COACTVWC |
+| COADM1A | COADM01 | Administrator Menu | Menu option fields and PF-key footer | COADM01C |
+| COBIL0A | COBIL00 | Bill Payment | Account ID, current balance, confirmation, error/message fields | COBIL00C |
+| CCRDLIA | COCRDLI | Card List | Account/card/customer search and list fields; protected output and selectable rows | COCRDLIC |
+| CCRDSLA | COCRDSL | Card Detail | Card number, account, CVV/name/expiry/status display fields | COCRDSLC |
+| CCRDUPA | COCRDUP | Card Update | Search fields plus editable name/expiry/status; PF5/PF12 fields; error message | COCRDUPC |
+| COMEN1A | COMEN01 | Main Menu | Menu selection and common header/footer | COMEN01C |
+| CORPT0A | CORPT00 | Transaction Reports | Start/end date and report selection fields | CORPT00C |
+| COSGN0A | COSGN00 | Signon | User ID/password and signon message | COSGN00C |
+| COTRN0A | COTRN00 | Transaction List | Account/card filters, browse controls, transaction rows | COTRN00C |
+| COTRN1A | COTRN01 | Transaction View | Transaction detail output fields | COTRN01C |
+| COTRN2A | COTRN02 | Transaction Add | Account/card key, type/category/source/amount/date/merchant fields; confirmation/error | COTRN02C |
+| COUSR0A | COUSR00 | User List | User search/list and PF actions | COUSR00C |
+| COUSR1A | COUSR01 | Add User | User identity/role fields and confirmation | COUSR01C |
+| COUSR2A | COUSR02 | Update User | User search/edit fields and confirmation | COUSR02C |
+| COUSR3A | COUSR03 | Delete User | User key/details and confirmation | COUSR03C |
 
 ## Copybooks (`app/cpy/`, 30 files)
 
-| Copybook | Defined record/structure (top-level and fields) | Including programs | Classification |
+The data layouts are `CVACT01Y` account (300 bytes), `CVACT02Y` card (150 bytes), `CVACT03Y` card xref (50 bytes), `CVCUS01Y` customer (500 bytes), `CVTRA01Y` category balance (50 bytes), `CVTRA02Y` disclosure group (50 bytes), `CVTRA03Y` transaction type (60 bytes), `CVTRA04Y` transaction category (60 bytes), `CVTRA05Y` posted transaction (350 bytes), and `CVTRA06Y` daily transaction (350 bytes). Screen copybooks define BMS input/output structures; `COCOM01Y`, `CSDAT01Y`, `CSMSG01Y`, `CSMSG02Y`, and `CSUSR01Y` define COMMAREA, date, message/abend, and signed-on-user state. `DFHBMSCA`/`DFHAID` are IBM supplied. `COTTL01Y` contains screen titles. Remaining copybooks are constants or utility interfaces; includers are recorded by the `COPY` statements in each program and include the nine business-rule programs documented separately.
+
+## JCL jobs (`app/jcl/`, 38 files)
+
+| Job | Utility/program and actual work | Meaningful inputs → outputs | Stream placement |
 |---|---|---|---|
-| `COADM02Y.cpy` | `unnamed`; no PIC fields | COADM01C | data record layout |
-| `COCOM01Y.cpy` | `CARDDEMO-COMMAREA`; `CDEMO-FROM-TRANID` `X(04)`, `CDEMO-FROM-PROGRAM` `X(08)`, `CDEMO-TO-TRANID` `X(04)`, `CDEMO-TO-PROGRAM` `X(08)`, `CDEMO-USER-ID` `X(08)`, `CDEMO-USER-TYPE` `X(01)`, `CDEMO-PGM-CONTEXT` `9(01)`, `CDEMO-CUST-ID` `9(09)` | COACTUPC, COACTVWC, COADM01C, COBIL00C, COCRDLIC, COCRDSLC, COCRDUPC, COMEN01C, CORPT00C, COSGN00C, COTRN00C, COTRN01C, COTRN02C, COUSR00C, COUSR01C, COUSR02C, COUSR03C | screen/COMMAREA structure or constants/lookup |
-| `CODATECN.cpy` | `CODATECN-REC`; `CODATECN-TYPE` `X`, `CODATECN-INP-DATE` `X(20)`, `CODATECN-1YYYY` `XXXX`, `CODATECN-1MM` `XX`, `CODATECN-1DD` `XX`, `CODATECN-1FIL` `X(12)`, `CODATECN-1O-YYYY` `XXXX`, `CODATECN-1I-S1` `X` | CBACT01C | utility structure |
-| `COMEN02Y.cpy` | `CARDDEMO-MAIN-MENU-OPTIONS`; `CDEMO-MENU-OPT-COUNT` `9(02)`, `FILLER` `9(02)`, `FILLER` `X(35)`, `FILLER` `X(08)`, `FILLER` `X(01)`, `FILLER` `9(02)`, `FILLER` `X(35)`, `FILLER` `X(08)` | COMEN01C | data record layout |
-| `COSTM01.CPY` | `TRNX-RECORD`; `TRNX-CARD-NUM` `X(16)`, `TRNX-ID` `X(16)`, `TRNX-TYPE-CD` `X(02)`, `TRNX-CAT-CD` `9(04)`, `TRNX-SOURCE` `X(10)`, `TRNX-DESC` `X(100)`, `TRNX-AMT` `S9(09)V99`, `TRNX-MERCHANT-ID` `9(09)` | CBSTM03A | utility structure |
-| `COTTL01Y.cpy` | `CCDA-SCREEN-TITLE`; `CCDA-TITLE01` `X(40)`, `CCDA-TITLE02` `X(40)`, `CCDA-THANK-YOU` `X(40)` | COACTUPC, COACTVWC, COADM01C, COBIL00C, COCRDLIC, COCRDSLC, COCRDUPC, COMEN01C, CORPT00C, COSGN00C, COTRN00C, COTRN01C, COTRN02C, COUSR00C, COUSR01C, COUSR02C, COUSR03C | screen/COMMAREA structure or constants/lookup |
-| `CSDAT01Y.cpy` | `WS-DATE-TIME`; `WS-CURDATE-YEAR` `9(04)`, `WS-CURDATE-MONTH` `9(02)`, `WS-CURDATE-DAY` `9(02)`, `WS-CURDATE-N` `9(08)`, `WS-CURTIME-HOURS` `9(02)`, `WS-CURTIME-MINUTE` `9(02)`, `WS-CURTIME-SECOND` `9(02)`, `WS-CURTIME-MILSEC` `9(02)` | COACTUPC, COACTVWC, COADM01C, COBIL00C, COCRDLIC, COCRDSLC, COCRDUPC, COMEN01C, CORPT00C, COSGN00C, COTRN00C, COTRN01C, COTRN02C, COUSR00C, COUSR01C, COUSR02C, COUSR03C | screen/COMMAREA structure or constants/lookup |
-| `CSLKPCDY.cpy` | `WS-US-PHONE-AREA-CODE-TO-EDIT, US-STATE-CODE-TO-EDIT, US-STATE-ZIPCODE-TO-EDIT`; `WS-US-PHONE-AREA-CODE-TO-EDIT` `XXX`, `US-STATE-CODE-TO-EDIT` `X(2)`, `US-STATE-AND-FIRST-ZIP2` `X(4)`, `LAST-3-OF-ZIP` `X(3)` | COACTUPC | screen/COMMAREA structure or constants/lookup |
-| `CSMSG01Y.cpy` | `CCDA-COMMON-MESSAGES`; `CCDA-MSG-THANK-YOU` `X(50)`, `CCDA-MSG-INVALID-KEY` `X(50)` | COACTUPC, COACTVWC, COADM01C, COBIL00C, COCRDLIC, COCRDSLC, COCRDUPC, COMEN01C, CORPT00C, COSGN00C, COTRN00C, COTRN01C, COTRN02C, COUSR00C, COUSR01C, COUSR02C, COUSR03C | screen/COMMAREA structure or constants/lookup |
-| `CSMSG02Y.cpy` | `unnamed`; no PIC fields | COACTUPC, COACTVWC, COCRDLIC, COCRDSLC, COCRDUPC | screen/COMMAREA structure or constants/lookup |
-| `CSSETATY.cpy` | `unnamed`; no PIC fields | COACTUPC | screen/COMMAREA structure or constants/lookup |
-| `CSSTRPFY.cpy` | `unnamed`; no PIC fields | — | screen/COMMAREA structure or constants/lookup |
-| `CSUSR01Y.cpy` | `SEC-USER-DATA`; `SEC-USR-ID` `X(08)`, `SEC-USR-FNAME` `X(20)`, `SEC-USR-LNAME` `X(20)`, `SEC-USR-PWD` `X(08)`, `SEC-USR-TYPE` `X(01)`, `SEC-USR-FILLER` `X(23)` | COACTUPC, COACTVWC, COADM01C, COCRDLIC, COCRDSLC, COCRDUPC, COMEN01C, COSGN00C, COUSR00C, COUSR01C, COUSR02C, COUSR03C | screen/COMMAREA structure or constants/lookup |
-| `CSUTLDPY.cpy` | `unnamed`; no PIC fields | COACTUPC | screen/COMMAREA structure or constants/lookup |
-| `CSUTLDWY.cpy` | `unnamed`; `WS-EDIT-DATE-CC` `X(2)`, `WS-EDIT-DATE-YY` `X(2)`, `WS-EDIT-DATE-MM` `X(2)`, `WS-EDIT-DATE-DD` `X(2)`, `WS-EDIT-DATE-BINARY` `S9(9) BINARY`, `WS-CURRENT-DATE-YYYYMMDD` `X(8)`, `WS-CURRENT-DATE-BINARY` `S9(9) BINARY`, `WS-EDIT-YEAR-FLG` `X(01)` | — | screen/COMMAREA structure or constants/lookup |
-| `CUSTREC.cpy` | `CUSTOMER-RECORD`; `CUST-ID` `9(09)`, `CUST-FIRST-NAME` `X(25)`, `CUST-MIDDLE-NAME` `X(25)`, `CUST-LAST-NAME` `X(25)`, `CUST-ADDR-LINE-1` `X(50)`, `CUST-ADDR-LINE-2` `X(50)`, `CUST-ADDR-LINE-3` `X(50)`, `CUST-ADDR-STATE-CD` `X(02)` | CBSTM03A | data record layout |
-| `CVACT01Y.cpy` | `ACCOUNT-RECORD`; `ACCT-ID` `9(11)`, `ACCT-ACTIVE-STATUS` `X(01)`, `ACCT-CURR-BAL` `S9(10)V99`, `ACCT-CREDIT-LIMIT` `S9(10)V99`, `ACCT-CASH-CREDIT-LIMIT` `S9(10)V99`, `ACCT-OPEN-DATE` `X(10)`, `ACCT-EXPIRAION-DATE` `X(10)`, `ACCT-REISSUE-DATE` `X(10)` | CBACT01C, CBACT04C, CBEXPORT, CBIMPORT, CBSTM03A, CBTRN01C, CBTRN02C, COACTUPC, COACTVWC, COBIL00C, COCRDSLC, COCRDUPC, COTRN02C | data record layout |
-| `CVACT02Y.cpy` | `CARD-RECORD`; `CARD-NUM` `X(16)`, `CARD-ACCT-ID` `9(11)`, `CARD-CVV-CD` `9(03)`, `CARD-EMBOSSED-NAME` `X(50)`, `CARD-EXPIRAION-DATE` `X(10)`, `CARD-ACTIVE-STATUS` `X(01)`, `FILLER` `X(59)` | CBACT02C, CBEXPORT, CBIMPORT, CBTRN01C, COACTVWC, COCRDLIC, COCRDSLC, COCRDUPC | data record layout |
-| `CVACT03Y.cpy` | `CARD-XREF-RECORD`; `XREF-CARD-NUM` `X(16)`, `XREF-CUST-ID` `9(09)`, `XREF-ACCT-ID` `9(11)`, `FILLER` `X(14)` | CBACT03C, CBACT04C, CBEXPORT, CBIMPORT, CBSTM03A, CBTRN01C, CBTRN02C, CBTRN03C, COACTUPC, COACTVWC, COBIL00C, COCRDSLC, COCRDUPC, COTRN02C | data record layout |
-| `CVCRD01Y.cpy` | `unnamed`; `CC-ACCT-ID-N` `9(11)`, `CC-CARD-NUM-N` `9(16)` | COACTUPC, COACTVWC, COCRDLIC, COCRDSLC, COCRDUPC | data record layout |
-| `CVCUS01Y.cpy` | `CUSTOMER-RECORD`; `CUST-ID` `9(09)`, `CUST-FIRST-NAME` `X(25)`, `CUST-MIDDLE-NAME` `X(25)`, `CUST-LAST-NAME` `X(25)`, `CUST-ADDR-LINE-1` `X(50)`, `CUST-ADDR-LINE-2` `X(50)`, `CUST-ADDR-LINE-3` `X(50)`, `CUST-ADDR-STATE-CD` `X(02)` | CBCUS01C, CBEXPORT, CBIMPORT, CBTRN01C, COACTUPC, COACTVWC, COCRDSLC, COCRDUPC | data record layout |
-| `CVEXPORT.cpy` | `EXPORT-RECORD`; `EXPORT-REC-TYPE` `X(1)`, `EXPORT-TIMESTAMP` `X(26)`, `EXPORT-DATE` `X(10)`, `EXPORT-DATE-TIME-SEP` `X(1)`, `EXPORT-TIME` `X(15)`, `EXPORT-SEQUENCE-NUM` `9(9) COMP`, `EXPORT-BRANCH-ID` `X(4)`, `EXPORT-REGION-CODE` `X(5)` | CBEXPORT, CBIMPORT | data record layout |
-| `CVTRA01Y.cpy` | `TRAN-CAT-BAL-RECORD`; `TRANCAT-ACCT-ID` `9(11)`, `TRANCAT-TYPE-CD` `X(02)`, `TRANCAT-CD` `9(04)`, `TRAN-CAT-BAL` `S9(09)V99`, `FILLER` `X(22)` | CBACT04C, CBTRN02C | data record layout |
-| `CVTRA02Y.cpy` | `DIS-GROUP-RECORD`; `DIS-ACCT-GROUP-ID` `X(10)`, `DIS-TRAN-TYPE-CD` `X(02)`, `DIS-TRAN-CAT-CD` `9(04)`, `DIS-INT-RATE` `S9(04)V99`, `FILLER` `X(28)` | CBACT04C | data record layout |
-| `CVTRA03Y.cpy` | `TRAN-TYPE-RECORD`; `TRAN-TYPE` `X(02)`, `TRAN-TYPE-DESC` `X(50)`, `FILLER` `X(08)` | CBTRN03C | data record layout |
-| `CVTRA04Y.cpy` | `TRAN-CAT-RECORD`; `TRAN-TYPE-CD` `X(02)`, `TRAN-CAT-CD` `9(04)`, `TRAN-CAT-TYPE-DESC` `X(50)`, `FILLER` `X(04)` | CBTRN03C | data record layout |
-| `CVTRA05Y.cpy` | `TRAN-RECORD`; `TRAN-ID` `X(16)`, `TRAN-TYPE-CD` `X(02)`, `TRAN-CAT-CD` `9(04)`, `TRAN-SOURCE` `X(10)`, `TRAN-DESC` `X(100)`, `TRAN-AMT` `S9(09)V99`, `TRAN-MERCHANT-ID` `9(09)`, `TRAN-MERCHANT-NAME` `X(50)` | CBACT04C, CBEXPORT, CBIMPORT, CBTRN01C, CBTRN02C, CBTRN03C, COBIL00C, CORPT00C, COTRN00C, COTRN01C, COTRN02C | data record layout |
-| `CVTRA06Y.cpy` | `DALYTRAN-RECORD`; `DALYTRAN-ID` `X(16)`, `DALYTRAN-TYPE-CD` `X(02)`, `DALYTRAN-CAT-CD` `9(04)`, `DALYTRAN-SOURCE` `X(10)`, `DALYTRAN-DESC` `X(100)`, `DALYTRAN-AMT` `S9(09)V99`, `DALYTRAN-MERCHANT-ID` `9(09)`, `DALYTRAN-MERCHANT-NAME` `X(50)` | CBTRN01C, CBTRN02C | data record layout |
-| `CVTRA07Y.cpy` | `REPORT-NAME-HEADER, TRANSACTION-DETAIL-REPORT, TRANSACTION-HEADER-1, TRANSACTION-HEADER-2, REPORT-PAGE-TOTALS, REPORT-ACCOUNT-TOTALS, REPORT-GRAND-TOTALS`; `REPT-SHORT-NAME` `X(38)`, `REPT-LONG-NAME` `X(41)`, `REPT-DATE-HEADER` `X(12)`, `REPT-START-DATE` `X(10)`, `FILLER` `X(04)`, `REPT-END-DATE` `X(10)`, `TRAN-REPORT-TRANS-ID` `X(16)`, `FILLER` `X(01)` | CBTRN03C | data record layout |
-| `UNUSED1Y.cpy` | `UNUSED-DATA`; `UNUSED-ID` `X(08)`, `UNUSED-FNAME` `X(20)`, `UNUSED-LNAME` `X(20)`, `UNUSED-PWD` `X(08)`, `UNUSED-TYPE` `X(01)`, `UNUSED-FILLER` `X(23)` | — | data record layout |
+| ACCTFILE | IDCAMS DEFINE/REPRO account KSDS | `ACCTDATA.PS` → `ACCTDATA.VSAM.KSDS` | Initial master load |
+| CARDFILE | IDCAMS DEFINE/REPRO card KSDS/AIX | `CARDDATA.PS` → card KSDS and AIX | Initial master load |
+| CUSTFILE | IDCAMS DEFINE/REPRO customer KSDS | `CUSTDATA.PS` → `CUSTDATA.VSAM.KSDS` | Initial master load |
+| XREFFILE | IDCAMS DEFINE/REPRO xref KSDS/AIX/path | `CARDXREF.PS` → xref KSDS/AIX | Initial master load |
+| DISCGRP | IDCAMS DEFINE/REPRO disclosure KSDS | `DISCGRP.PS` → `DISCGRP.VSAM.KSDS` | Weekly disclosure refresh |
+| TCATBALF | IDCAMS DEFINE/REPRO category balance KSDS | `TCATBALF.PS` → `TCATBALF.VSAM.KSDS` | Interest input refresh |
+| TRANCATG | IDCAMS DEFINE/REPRO category KSDS | `TRANCATG.PS` → category KSDS | Reference load |
+| TRANTYPE | IDCAMS DEFINE/REPRO type KSDS | `TRANTYPE.PS` → type KSDS | Reference load |
+| TRANFILE | IDCAMS DEFINE/REPRO transaction input | `DALYTRAN.PS.INIT` → `DALYTRAN.PS` | Daily input preparation |
+| TRANBKP | REPROC/IDCAMS backup and redefine | `TRANSACT.VSAM.KSDS` → `TRANSACT.BKUP(+1)`; recreates transaction KSDS | Control-M daily chain |
+| POSTTRAN | CBTRN02C | `DALYTRAN.PS`, xref/account/category VSAM → transaction KSDS, `DALYREJS(+1)` | After daily input; no scheduler definition in supplied Control-M |
+| TRANIDX | IDCAMS alternate index/path | `TRANSACT.VSAM.KSDS` → transaction AIX/path | After transaction KSDS definition |
+| INTCALC | CBACT04C | category/xref/account/disclosure VSAM → transaction output/account/category updates | Control-M monthly chain |
+| COMBTRAN | SORT | transaction backup/current datasets → combined transaction dataset | Control-M monthly chain |
+| CREASTMT | CBSTM03A | transaction/xref/account/customer VSAM → statement and HTML GDG outputs | JCL supplied; no scheduler definition |
+| TRANREPT | PROC `TRANREPT`: REPROC, SORT, CBTRN03C | transaction KSDS → sorted GDG, `TRANREPT(+1)` report | Submitted from CICS/proc |
+| CLOSEFIL | SDSF/Control-M operator step | CICS close commands; no application dataset output | Control-M daily/weekly pre-step |
+| OPENFIL | SDSF/Control-M operator step | CICS open commands; no application dataset output | Control-M chain post-step |
+| WAITSTEP | COBSWAIT | wait parameter → elapsed delay | Control-M chain barrier |
+| DUSRSECJ | IEFBR14/IEBGENER/IDCAMS | inline security records → `USRSEC.PS` → `USRSEC.VSAM.KSDS` | Security initialization |
+| DEFGDGB | IDCAMS | defines base GDGs for application backups/reports | Dataset setup |
+| DEFGDGD | IDCAMS/IEBGENER | defines DB2/reference GDGs and copies PS generations | Dataset setup |
+| ESDSRRDS | IDCAMS | defines/loads `USRSEC.VSAM.ESDS` and `.RRDS` | VSAM format examples |
+| READACCT | CBACT01C | account KSDS → packed/array/VB PS diagnostics | Diagnostic batch |
+| READCARD | CBACT02C | card KSDS → SYSOUT diagnostic display | Diagnostic batch |
+| READCUST | CBCUS01C | customer KSDS → SYSOUT diagnostic display | Diagnostic batch |
+| READXREF | CBACT03C | xref KSDS → SYSOUT diagnostic display | Diagnostic batch |
+| REPTFILE | IDCAMS | defines report GDG | Report setup |
+| PRTCATBL | IDCAMS/SORT | category balance KSDS → report and backup generation | Reporting utility |
+| DALYREJS | IDCAMS | defines daily reject GDG used by POSTTRAN | Reject setup |
+| CBEXPORT | CBEXPORT | master VSAM files → `EXPORT.DATA` | Migration/export utility |
+| CBIMPORT | CBIMPORT | `EXPORT.DATA` → imported PS outputs and error output | Migration/import utility |
+| FTPJCL | FTP | local report/export datasets → remote FTP target from SYSIN | Transfer utility |
+| TXT2PDF1 | text-to-PDF utility | statement/report text → PDF output | Presentation utility |
+| INTRDRJ1 | internal reader submitter | generated JCL stream → JES internal reader | Job submission utility |
+| INTRDRJ2 | internal reader submitter | generated JCL stream → JES internal reader | Job submission utility |
+| CBADMCDJ | IDCAMS/CICS definitions | CSD map/program/transaction definitions → CICS resource group | CICS deployment |
+| DEFCUST | IDCAMS | defines customer-related VSAM resources | Dataset setup |
 
-## JCL, procedures, control, catalog, CSD, and scheduler assets
 
-The job table lists all 38 files in `app/jcl/`; utility/program and DD names are extracted from EXEC and DD statements. Scheduler ordering is documented after the table.
+## Procedures, controls, catalog, CSD, and scheduler
 
-| Job/file | Utility/program invoked | Inputs and outputs (DD/DSN observations) | Stream/order evidence |
-|---|---|---|---|
-| `ACCTFILE.jcl` | `IDCAMS` | `SYSPRINT=inline/DD`, `SYSIN=inline/DD`, `SYSPRINT=inline/DD`, `SYSIN=inline/DD`, `SYSPRINT=inline/DD`, `ACCTDATA=inline/DD`, `ACCTVSAM=inline/DD`, `SYSIN=inline/DD` | See Control-M stream below / not scheduled in supplied definitions |
-| `CARDFILE.jcl` | `IDCAMS`, `SDSF` | `ISFOUT=inline/DD`, `CMDOUT=inline/DD`, `ISFIN=inline/DD`, `SYSPRINT=inline/DD`, `SYSIN=inline/DD`, `SYSPRINT=inline/DD`, `SYSIN=inline/DD`, `SYSPRINT=inline/DD`, `CARDDATA=inline/DD`, `CARDVSAM=inline/DD`, `SYSIN=inline/DD`, `SYSPRINT=inline/DD` | See Control-M stream below / not scheduled in supplied definitions |
-| `CBADMCDJ.jcl` | `DFHCSDUP` | `STEPLIB=inline/DD`, `DFHCSD=inline/DD`, `OUTDD=inline/DD`, `SYSPRINT=inline/DD`, `SYSIN=inline/DD` | See Control-M stream below / not scheduled in supplied definitions |
-| `CBEXPORT.jcl` | `CBEXPORT`, `IDCAMS` | `SYSPRINT=inline/DD`, `SYSIN=inline/DD`, `STEPLIB=inline/DD`, `CUSTFILE=inline/DD`, `ACCTFILE=inline/DD`, `XREFFILE=inline/DD`, `TRANSACT=inline/DD`, `CARDFILE=inline/DD`, `EXPFILE=inline/DD`, `SYSOUT=inline/DD`, `SYSPRINT=inline/DD` | See Control-M stream below / not scheduled in supplied definitions |
-| `CBIMPORT.jcl` | `CBIMPORT` | `STEPLIB=inline/DD`, `EXPFILE=inline/DD`, `CUSTOUT=inline/DD`, `ACCTOUT=inline/DD`, `XREFOUT=inline/DD`, `TRNXOUT=inline/DD`, `ERROUT=inline/DD`, `SYSOUT=inline/DD`, `SYSPRINT=inline/DD` | See Control-M stream below / not scheduled in supplied definitions |
-| `CLOSEFIL.jcl` | `SDSF` | `ISFOUT=inline/DD`, `CMDOUT=inline/DD`, `ISFIN=inline/DD` | See Control-M stream below / not scheduled in supplied definitions |
-| `COMBTRAN.jcl` | `IDCAMS`, `SORT` | `SORTIN=inline/DD`, `SYMNAMES=inline/DD`, `SYSIN=inline/DD`, `SYSOUT=inline/DD`, `SORTOUT=inline/DD`, `SYSPRINT=inline/DD`, `TRANSACT=inline/DD`, `TRANVSAM=inline/DD`, `SYSIN=inline/DD` | See Control-M stream below / not scheduled in supplied definitions |
-| `CREASTMT.JCL` | `CBSTM03A`, `IDCAMS`, `IEFBR14`, `SORT` | `SYSPRINT=inline/DD`, `SYSIN=inline/DD`, `SORTIN=inline/DD`, `SYSPRINT=inline/DD`, `SYSOUT=inline/DD`, `SORTOUT=inline/DD`, `SYSIN=inline/DD`, `SYSPRINT=inline/DD`, `INFILE=inline/DD`, `OUTFILE=inline/DD`, `SYSIN=inline/DD`, `HTMLFILE=inline/DD` | See Control-M stream below / not scheduled in supplied definitions |
-| `CUSTFILE.jcl` | `IDCAMS`, `SDSF` | `ISFOUT=inline/DD`, `CMDOUT=inline/DD`, `ISFIN=inline/DD`, `SYSPRINT=inline/DD`, `SYSIN=inline/DD`, `SYSPRINT=inline/DD`, `SYSIN=inline/DD`, `SYSPRINT=inline/DD`, `CUSTDATA=inline/DD`, `CUSTVSAM=inline/DD`, `SYSIN=inline/DD`, `ISFOUT=inline/DD` | See Control-M stream below / not scheduled in supplied definitions |
-| `DALYREJS.jcl` | `IDCAMS` | `SYSPRINT=inline/DD`, `SYSIN=inline/DD` | See Control-M stream below / not scheduled in supplied definitions |
-| `DEFCUST.jcl` | `IDCAMS` | `SYSPRINT=inline/DD`, `SYSIN=inline/DD`, `SYSPRINT=inline/DD`, `SYSIN=inline/DD` | See Control-M stream below / not scheduled in supplied definitions |
-| `DEFGDGB.jcl` | `IDCAMS` | `SYSPRINT=inline/DD`, `SYSIN=inline/DD` | See Control-M stream below / not scheduled in supplied definitions |
-| `DEFGDGD.jcl` | `IDCAMS`, `IEBGENER` | `SYSPRINT=inline/DD`, `SYSIN=inline/DD`, `SYSPRINT=inline/DD`, `SYSIN=inline/DD`, `SYSUT1=inline/DD`, `SYSUT2=inline/DD`, `SYSPRINT=inline/DD`, `SYSIN=inline/DD`, `SYSPRINT=inline/DD`, `SYSIN=inline/DD`, `SYSUT1=inline/DD`, `SYSUT2=inline/DD` | See Control-M stream below / not scheduled in supplied definitions |
-| `DISCGRP.jcl` | `IDCAMS` | `SYSPRINT=inline/DD`, `SYSIN=inline/DD`, `SYSPRINT=inline/DD`, `SYSIN=inline/DD`, `SYSPRINT=inline/DD`, `DISCGRP=inline/DD`, `DISCVSAM=inline/DD`, `SYSIN=inline/DD` | See Control-M stream below / not scheduled in supplied definitions |
-| `DUSRSECJ.jcl` | `IDCAMS`, `IEBGENER`, `IEFBR14` | `DD01=inline/DD`, `SYSUT1=inline/DD`, `SYSUT2=inline/DD`, `SYSPRINT=inline/DD`, `SYSIN=inline/DD`, `SYSPRINT=inline/DD`, `SYSIN=inline/DD`, `IN=inline/DD`, `OUT=inline/DD`, `SYSOUT=inline/DD`, `SYSPRINT=inline/DD`, `SYSIN=inline/DD` | See Control-M stream below / not scheduled in supplied definitions |
-| `ESDSRRDS.jcl` | `IDCAMS`, `IEBGENER`, `IEFBR14` | `DD01=inline/DD`, `SYSUT1=inline/DD`, `SYSUT2=inline/DD`, `SYSPRINT=inline/DD`, `SYSIN=inline/DD`, `SYSPRINT=inline/DD`, `SYSIN=inline/DD`, `IN=inline/DD`, `OUT=inline/DD`, `SYSOUT=inline/DD`, `SYSPRINT=inline/DD`, `SYSIN=inline/DD` | See Control-M stream below / not scheduled in supplied definitions |
-| `FTPJCL.JCL` | `FTP` | `SYSIN=inline/DD` | See Control-M stream below / not scheduled in supplied definitions |
-| `INTCALC.jcl` | `CBACT04C` | `STEPLIB=inline/DD`, `SYSPRINT=inline/DD`, `SYSOUT=inline/DD`, `TCATBALF=inline/DD`, `XREFFILE=inline/DD`, `XREFFIL1=inline/DD`, `ACCTFILE=inline/DD`, `DISCGRP=inline/DD`, `TRANSACT=inline/DD` | See Control-M stream below / not scheduled in supplied definitions |
-| `INTRDRJ1.JCL` | `IDCAMS`, `IEBGENER` | `SYSPRINT=inline/DD`, `IN=inline/DD`, `OUT=inline/DD`, `SYSIN=inline/DD`, `SYSPRINT=inline/DD`, `SYSIN=inline/DD`, `SYSUT1=inline/DD`, `SYSUT2=inline/DD` | See Control-M stream below / not scheduled in supplied definitions |
-| `INTRDRJ2.JCL` | `IDCAMS` | `SYSPRINT=inline/DD`, `IN=inline/DD`, `OUT=inline/DD`, `SYSIN=inline/DD` | See Control-M stream below / not scheduled in supplied definitions |
-| `OPENFIL.jcl` | `SDSF` | `ISFOUT=inline/DD`, `CMDOUT=inline/DD`, `ISFIN=inline/DD` | See Control-M stream below / not scheduled in supplied definitions |
-| `POSTTRAN.jcl` | `CBTRN02C` | `STEPLIB=inline/DD`, `SYSPRINT=inline/DD`, `SYSOUT=inline/DD`, `TRANFILE=inline/DD`, `DALYTRAN=inline/DD`, `XREFFILE=inline/DD`, `DALYREJS=inline/DD`, `ACCTFILE=inline/DD`, `TCATBALF=inline/DD` | See Control-M stream below / not scheduled in supplied definitions |
-| `PRTCATBL.jcl` | `IEFBR14`, `SORT` | `THEFILE=inline/DD`, `SORTIN=inline/DD`, `SYMNAMES=inline/DD`, `SYSIN=inline/DD`, `SYSOUT=inline/DD`, `SORTOUT=inline/DD` | See Control-M stream below / not scheduled in supplied definitions |
-| `READACCT.jcl` | `CBACT01C`, `IEFBR14` | `DD01=inline/DD`, `DD02=inline/DD`, `DD03=inline/DD`, `STEPLIB=inline/DD`, `ACCTFILE=inline/DD`, `OUTFILE=inline/DD`, `ARRYFILE=inline/DD`, `VBRCFILE=inline/DD`, `SYSOUT=inline/DD`, `SYSPRINT=inline/DD` | See Control-M stream below / not scheduled in supplied definitions |
-| `READCARD.jcl` | `CBACT02C` | `STEPLIB=inline/DD`, `CARDFILE=inline/DD`, `SYSOUT=inline/DD`, `SYSPRINT=inline/DD` | See Control-M stream below / not scheduled in supplied definitions |
-| `READCUST.jcl` | `CBCUS01C` | `STEPLIB=inline/DD`, `CUSTFILE=inline/DD`, `SYSOUT=inline/DD`, `SYSPRINT=inline/DD` | See Control-M stream below / not scheduled in supplied definitions |
-| `READXREF.jcl` | `CBACT03C` | `STEPLIB=inline/DD`, `XREFFILE=inline/DD`, `SYSOUT=inline/DD`, `SYSPRINT=inline/DD` | See Control-M stream below / not scheduled in supplied definitions |
-| `REPTFILE.jcl` | `IDCAMS` | `SYSPRINT=inline/DD`, `SYSIN=inline/DD` | See Control-M stream below / not scheduled in supplied definitions |
-| `TCATBALF.jcl` | `IDCAMS` | `SYSPRINT=inline/DD`, `SYSIN=inline/DD`, `SYSPRINT=inline/DD`, `SYSIN=inline/DD`, `SYSPRINT=inline/DD`, `TCATBAL=inline/DD`, `TCATBALV=inline/DD`, `SYSIN=inline/DD` | See Control-M stream below / not scheduled in supplied definitions |
-| `TRANBKP.jcl` | `IDCAMS` | `SYSPRINT=inline/DD`, `SYSIN=inline/DD`, `SYSPRINT=inline/DD`, `SYSIN=inline/DD` | See Control-M stream below / not scheduled in supplied definitions |
-| `TRANCATG.jcl` | `IDCAMS` | `SYSPRINT=inline/DD`, `SYSIN=inline/DD`, `SYSPRINT=inline/DD`, `SYSIN=inline/DD`, `SYSPRINT=inline/DD`, `TRANCATG=inline/DD`, `TCATVSAM=inline/DD`, `SYSIN=inline/DD` | See Control-M stream below / not scheduled in supplied definitions |
-| `TRANFILE.jcl` | `IDCAMS`, `SDSF` | `ISFOUT=inline/DD`, `CMDOUT=inline/DD`, `ISFIN=inline/DD`, `SYSPRINT=inline/DD`, `SYSIN=inline/DD`, `SYSPRINT=inline/DD`, `SYSIN=inline/DD`, `SYSPRINT=inline/DD`, `TRANSACT=inline/DD`, `TRANVSAM=inline/DD`, `SYSIN=inline/DD`, `SYSPRINT=inline/DD` | See Control-M stream below / not scheduled in supplied definitions |
-| `TRANIDX.jcl` | `IDCAMS` | `SYSPRINT=inline/DD`, `SYSIN=inline/DD`, `SYSPRINT=inline/DD`, `SYSIN=inline/DD`, `SYSPRINT=inline/DD`, `SYSIN=inline/DD` | See Control-M stream below / not scheduled in supplied definitions |
-| `TRANREPT.jcl` | `CBTRN03C`, `SORT` | `SORTIN=inline/DD`, `SYMNAMES=inline/DD`, `SYSIN=inline/DD`, `SYSOUT=inline/DD`, `SORTOUT=inline/DD`, `STEPLIB=inline/DD`, `SYSOUT=inline/DD`, `SYSPRINT=inline/DD`, `TRANFILE=inline/DD`, `CARDXREF=inline/DD`, `TRANTYPE=inline/DD`, `TRANCATG=inline/DD` | See Control-M stream below / not scheduled in supplied definitions |
-| `TRANTYPE.jcl` | `IDCAMS` | `SYSPRINT=inline/DD`, `SYSIN=inline/DD`, `SYSPRINT=inline/DD`, `SYSIN=inline/DD`, `SYSPRINT=inline/DD`, `TRANTYPE=inline/DD`, `TTYPVSAM=inline/DD`, `SYSIN=inline/DD` | See Control-M stream below / not scheduled in supplied definitions |
-| `TXT2PDF1.JCL` | `IKJEFT1B` | `STEPLIB=inline/DD`, `SYSEXEC=inline/DD`, `INDD=inline/DD`, `SYSPRINT=inline/DD`, `SYSTSPRT=inline/DD`, `SYSTSIN=inline/DD` | See Control-M stream below / not scheduled in supplied definitions |
-| `WAITSTEP.jcl` | `COBSWAIT` | `STEPLIB=inline/DD`, `SYSOUT=inline/DD`, `SYSIN=inline/DD` | See Control-M stream below / not scheduled in supplied definitions |
-| `XREFFILE.jcl` | `IDCAMS` | `SYSPRINT=inline/DD`, `SYSIN=inline/DD`, `SYSPRINT=inline/DD`, `SYSIN=inline/DD`, `SYSPRINT=inline/DD`, `XREFDATA=inline/DD`, `XREFVSAM=inline/DD`, `SYSIN=inline/DD`, `SYSPRINT=inline/DD`, `SYSIN=inline/DD`, `SYSPRINT=inline/DD`, `SYSIN=inline/DD` | See Control-M stream below / not scheduled in supplied definitions |
-
-### `app/proc/`
-
-- `REPROC.prc`: //REPROC PROC //****************************************************************** //* Copyright Amazon.com, Inc. or its affiliates. //* All Rights Reserved. //* //* Licensed under the Apache License, Version 2.0 (the "License"). //* You may not use this file except in compliance with the License. //* You may obtain a copy of the License at //* //* http://www.apache.org/licenses/LICENSE-2.0 //* //* Unless required by applicable law or agreed to in writing, //* software distributed under the Lice
-- `TRANREPT.prc`: //REPROC PROC //****************************************************************** //* Copyright Amazon.com, Inc. or its affiliates. //* All Rights Reserved. //* //* Licensed under the Apache License, Version 2.0 (the "License"). //* You may not use this file except in compliance with the License. //* You may obtain a copy of the License at //* //* http://www.apache.org/licenses/LICENSE-2.0 //* //* Unless required by applicable law or agreed to in writing, //* software distributed under the Lice
-
-### `app/ctl/`
-
-- `REPROCT.ctl`: /* Copyright Amazon.com, Inc. or its affiliates. */ /* All Rights Reserved. */ /* */ /* Licensed under the Apache License, Version 2.0 (the "License"). */ /* You may not use this file except in compliance with the License.*/ /* You may obtain a copy of the License at */ /* */ /* http://www.apache.org/licenses/LICENSE-2.0 */ /* */ /* Unless required by applicable law or agreed to in writing, */ /* software distributed under the License is distributed on an */ /* "AS IS" BASIS, WITHOUT WARRANTIES 
-
-### `app/catlg/`
-
-- `LISTCAT.txt`: 1IDCAMS SYSTEM SERVICES TIME: 15:36:44 09/01/22 PAGE 1 0 LISTCAT LEVEL(AWS.M2.CARDDEMO) - ALL 1IDCAMS SYSTEM SERVICES TIME: 15:36:44 09/01/22 PAGE 2 - LISTING FROM CATALOG -- CATALOG.XXXXXXXX.YYYY 0NONVSAM ------- AWS.M2.CARDDEMO.ACCTDATA.PS IN-CAT --- CATALOG.XXXXXXXX.YYYY HISTORY DATASET-OWNER-----(NULL) CREATION--------2022.136 RELEASE----------------2 EXPIRATION------0000.000 ACCOUNT-INFO-----------------------------------(NULL) SMSDATA STORAGECLASS -----SCTECH MANAGEMENTCLASS---(NULL) DATAC
-
-### `app/csd/`
-
-- `.gitkeep`: placeholder; no source content
-- `CARDDEMO.CSD`: DEFINE FILE(ACCTDAT) GROUP(CARDDEMO) DSNAME(AWS.M2.CARDDEMO.ACCTDATA.VSAM.KSDS) RLSACCESS(NO) LSRPOOLNUM(1) READINTEG(UNCOMMITTED) DSNSHARING(ALLREQS) STRINGS(1) STATUS(ENABLED) OPENTIME(FIRSTREF) DISPOSITION(SHARE) DATABUFFERS(2) INDEXBUFFERS(1) TABLE(NO) MAXNUMRECS(NOLIMIT) UPDATEMODEL(LOCKING) LOAD(NO) RECORDFORMAT(V) ADD(YES) BROWSE(YES) DELETE(YES) READ(YES) UPDATE(YES) JOURNAL(NO) JNLREAD(NONE) JNLSYNCREAD(NO) JNLUPDATE(NO) JNLADD(NONE) JNLSYNCWRITE(YES) RECOVERY(NONE) FWDRECOVLOG(NO) BACK
-
-### Actual Control-M ordering (`app/scheduler/CardDemo.controlm`)
-
-The supplied definitions contain four folders and explicit in/out conditions. The observed chains are:
-- **Daily TransactionBackup:** `CLOSEFIL → TRANBKP → WAITSTEP`; each successor consumes the predecessor condition.
-- **Weekly DisclosureGroupsRefresh:** `CLOSEFIL → DISCGRP → WAITSTEP → OPENFIL`; the folder also emits the condition consumed by the transaction-type refresh.
-- **Weekly TransactionTypesDBRefresh:** `MNTTRDB2 → TRANEXTR` (the source XML places this condition relationship across the folder definitions; verify scheduler deployment before cutover).
-- **Monthly InterestCalculation:** `CLOSEFIL → INTCALC → COMBTRAN → WAITSTEP → OPENFIL`.
+- `app/proc/REPROC.prc` is the parameterized IDCAMS `REPRO INFILE(FILEIN) OUTFILE(FILEOUT)` procedure used by transaction backup/report jobs; it is not an application program.
+- `app/proc/TRANREPT.prc` runs the transaction backup, sorts the backup by transaction card number, then invokes `CBTRN03C` with the sorted GDG, lookup KSDSs, date parameter, and report GDG.
+- `app/ctl/REPROCT.ctl` contains the same `REPRO` control statement for procedure substitution. `app/ctl/` also contains DB2/authorization controls in optional modules.
+- `app/catlg/LISTCAT.txt` is an IDCAMS catalog listing showing PS input datasets and the corresponding VSAM clusters; it is evidence for dataset names/types, not executable application logic.
+- `app/csd/CARDDEMO.CSD` defines base CICS FILE resources (`ACCTDAT`, `CARDDAT`, `CARDAIX`, `CCXREF`, etc.), programs, transactions, mapsets, and dataset names. `app/csd/CARDDEMO.CSD` declares real IDs such as `CAVW`, `CAUP`, `CCLI`, `CCDL`, `CCUP`, `CB00`, `CT00`, `CT01`, `CT02`, `CU00`–`CU03`, and `CR00`.
+- `app/scheduler/CardDemo.controlm` contains four relevant chains: daily `CLOSEFIL → TRANBKP → WAITSTEP → OPENFIL`; weekly transaction-type `MNTTRDB2 → TRANEXTR`; weekly disclosure refresh `CLOSEFIL → DISCGRP → WAITSTEP → OPENFIL`; and monthly interest `CLOSEFIL → INTCALC → COMBTRAN → WAITSTEP → OPENFIL`. `app/scheduler/CardDemo.ca7` is a Control-M export showing a `CLOSEFIL` trigger for optional `CBPAUP0J`; it is not evidence that all JCL jobs have schedules.
 
 ## Assembler (`app/asm/`)
 
-| Routine | Behavior and calling convention |
+| Routine | Calling convention and behavior |
 |---|---|
-| `COBDATFT` | Receives address of `CODATECN-REC` as the first (R1) argument; accepts type `1` (YYYYMMDD) or `2` (YYYY-MM-DD), writes the requested output format, and writes `INVALID INPUT` on incompatible type/separator/output-type combinations; returns with R15=0. |
-| `MVSWAIT` | Receives address of a fullword delay value through the first argument (R1 points to pointer, then value is loaded); invokes `ASMWAIT` with that value, restores registers, returns R15=0. |
+| `COBDATFT` | Caller passes the address of `CODATECN-REC` in the first argument register (`R1`). Input type 1 is `YYYYMMDD`; type 2 is `YYYY-MM-DD`; output type selects the requested conversion. Incompatible type/separator combinations produce `INVALID INPUT`; return code is `R15=0`. |
+| `MVSWAIT` | First argument points to a fullword delay value; routine loads it and calls `ASMWAIT`, restores registers, and returns `R15=0`. |
 
 ## Optional modules
 
-### `app-authorization-ims-db2-mq`
-
-- `bms/`: 2 files; COPAU01.bms, COPAU00.bms
-- `cbl/`: 8 files; PAUDBLOD.CBL, CBPAUP0C.cbl, COPAUA0C.cbl, COPAUS2C.cbl, PAUDBUNL.CBL, COPAUS0C.cbl, DBUNLDGS.CBL, COPAUS1C.cbl
-- `cpy/`: 9 files; CIPAUDTY.cpy, CCPAURQY.cpy, PADFLPCB.CPY, IMSFUNCS.cpy, CCPAURLY.cpy, PAUTBPCB.CPY, CIPAUSMY.cpy, CCPAUERY.cpy, PASFLPCB.CPY
-- `cpy-bms/`: 2 files; COPAU01.cpy, COPAU00.cpy
-- `csd/`: 1 files; CRDDEMO2.csd
-- `data/`: 1 files; EBCDIC
-- `dcl/`: 1 files; AUTHFRDS.dcl
-- `ddl/`: 2 files; XAUTHFRD.ddl, AUTHFRDS.ddl
-- `ims/`: 8 files; DBPAUTP0.dbd, PADFLDBD.DBD, PAUTBUNL.PSB, PASFLDBD.DBD, DBPAUTX0.dbd, DLIGSAMP.PSB, PSBPAUTB.psb, PSBPAUTL.psb
-- `jcl/`: 5 files; UNLDPADB.JCL, CBPAUP0J.jcl, LOADPADB.JCL, DBPAUTP0.jcl, UNLDGSAM.JCL
-- External dependency: **IMS DB + DB2 + IBM MQ**. Source files in this module are optional and are not part of the 31 base `app/cbl` programs.
-- Components: `COPAUS0C`/`COPAUS1C`/`COPAUS2C` are summary/detail/process online flows with `COPAU00`/`COPAU01` BMS; `COPAUA0C` is the MQ-triggered authorization processor; `CBPAUP0C` purges expired authorizations; `PAUDBLOD`/`PAUDBUNL`/`DBUNLDGS` are IMS load/unload utilities. IMS DBD/PSB and DCL/DDL files define the pending-authorization segments/tables; IBM MQ request/reply behavior is declared in the COBOL/CSD.
-### `app-transaction-type-db2`
-
-- `bms/`: 2 files; COTRTUP.bms, COTRTLI.bms
-- `cbl/`: 3 files; COTRTUPC.cbl, COBTUPDT.cbl, COTRTLIC.cbl
-- `cpy/`: 2 files; CSDB2RWY.cpy, CSDB2RPY.cpy
-- `cpy-bms/`: 2 files; COTRTLI.cpy, COTRTUP.cpy
-- `csd/`: 1 files; CRDDEMOD.csd
-- `ctl/`: 7 files; DB2LTCAT.ctl, DB2TIAD1.ctl, DB2CREAT.ctl, DB2LTTYP.ctl, REPROCT.ctl, DB2FREE.ctl, DB2TEP41.ctl
-- `dcl/`: 2 files; DCLTRTYP.dcl, DCLTRCAT.dcl
-- `ddl/`: 4 files; XTRNTYCAT.ddl, TRNTYPE.ddl, XTRNTYPE.ddl, TRNTYCAT.ddl
-- `jcl/`: 3 files; CREADB21.jcl, TRANEXTR.jcl, MNTTRDB2.jcl
-- External dependency: **DB2**. Source files in this module are optional and are not part of the 31 base `app/cbl` programs.
-- Components: `COTRTUPC`/`COTRTLIC` provide transaction-type/category update/list online flows with `COTRTUP`/`COTRTLI` BMS; `COBTUPDT` and `MNTTRDB2` maintain DB2 tables. `CREADB21` creates/loads the DB2 database and `TRANEXTR` extracts transaction-type data. DCL/DDL and DB2 control members are included.
-### `app-vsam-mq`
-
-- `cbl/`: 2 files; CODATE01.cbl, COACCT01.cbl
-- `csd/`: 1 files; CRDDEMOM.csd
-- External dependency: **VSAM + IBM MQ**. Source files in this module are optional and are not part of the 31 base `app/cbl` programs.
-- Components: `COACCT01` and `CODATE01` are MQ request/reply examples for account and date inquiries; `CRDDEMOM.csd` declares the CICS-side resources. This module does not include DB2 or IMS definitions.
+- `app/app-authorization-ims-db2-mq/`: `COPAUS0C`/`COPAUS1C`/`COPAUS2C` online summary/detail/process flows (`COPAU00`/`COPAU01` maps), `COPAUA0C` MQ authorization processor, `CBPAUP0C` expiry purge, and IMS load/unload utilities (`PAUDBLOD`, `PAUDBUNL`, `DBUNLDGS`). Depends on IMS DBD/PSB, DB2 declarations, and IBM MQ request/reply resources.
+- `app/app-transaction-type-db2/`: `COTRTUPC`/`COTRTLIC` online DB2 transaction-type/category maintenance, `COBTUPDT` table maintenance, `CREADB21` database creation/load, `TRANEXTR` extraction, and `MNTTRDB2` refresh. Depends on DB2 DDL/DCL/control members.
+- `app/app-vsam-mq/`: `COACCT01` and `CODATE01` VSAM/MQ request-reply examples plus `CRDDEMOM.csd`; depends on VSAM and IBM MQ, not IMS/DB2.
 
 ## Data files (`app/data/`)
 
-ASCII files are readable fixtures; EBCDIC files are mainframe-oriented fixed records. LRECL is derived from the source copybook/file definition where present and checked against fixture line widths. VSAM type is the JCL/IDCAMS target, not a property of the ASCII fixture.
-
-| File | Encoding | LRECL | Record layout copybook | VSAM type |
+| File | Encoding | LRECL / records | Layout | VSAM type |
 |---|---|---:|---|---|
-| `acctdata.txt` | ASCII | 300 (fixture widths observed: 300) | `CVACT01Y` | KSDS |
-| `carddata.txt` | ASCII | 150 (fixture widths observed: 150) | `CVACT02Y` | KSDS |
-| `cardxref.txt` | ASCII | 36 (fixture widths observed: 36) | `CVACT03Y` | KSDS |
-| `custdata.txt` | ASCII | 500 (fixture widths observed: 500) | `CVCUS01Y` | KSDS |
-| `dailytran.txt` | ASCII | 350 (fixture widths observed: 350) | `CVTRA06Y` | sequential |
-| `discgrp.txt` | ASCII | 50 (fixture widths observed: 50) | `CVTRA02Y` | KSDS |
-| `tcatbal.txt` | ASCII | 50 (fixture widths observed: 50) | `CVTRA01Y` | KSDS |
-| `trancatg.txt` | ASCII | 60 (fixture widths observed: 60) | `CVTRA04Y` | KSDS |
-| `trantype.txt` | ASCII | 60 (fixture widths observed: 60) | `CVTRA03Y` | KSDS |
-| `AWS.M2.CARDDEMO.ACCDATA.PS` | EBCDIC (binary/fixed) | not safely inferable from bytes alone; see copybook/JCL | source dataset name identifies layout; see ASCII companion where available | JCL-defined; mostly PS input to KSDS load |
-| `AWS.M2.CARDDEMO.ACCTDATA.PS` | EBCDIC (binary/fixed) | not safely inferable from bytes alone; see copybook/JCL | source dataset name identifies layout; see ASCII companion where available | JCL-defined; mostly PS input to KSDS load |
-| `AWS.M2.CARDDEMO.CARDDATA.PS` | EBCDIC (binary/fixed) | not safely inferable from bytes alone; see copybook/JCL | source dataset name identifies layout; see ASCII companion where available | JCL-defined; mostly PS input to KSDS load |
-| `AWS.M2.CARDDEMO.CARDXREF.PS` | EBCDIC (binary/fixed) | not safely inferable from bytes alone; see copybook/JCL | source dataset name identifies layout; see ASCII companion where available | JCL-defined; mostly PS input to KSDS load |
-| `AWS.M2.CARDDEMO.CUSTDATA.PS` | EBCDIC (binary/fixed) | not safely inferable from bytes alone; see copybook/JCL | source dataset name identifies layout; see ASCII companion where available | JCL-defined; mostly PS input to KSDS load |
-| `AWS.M2.CARDDEMO.DALYTRAN.PS` | EBCDIC (binary/fixed) | not safely inferable from bytes alone; see copybook/JCL | source dataset name identifies layout; see ASCII companion where available | JCL-defined; mostly PS input to KSDS load |
-| `AWS.M2.CARDDEMO.DALYTRAN.PS.INIT` | EBCDIC (binary/fixed) | not safely inferable from bytes alone; see copybook/JCL | source dataset name identifies layout; see ASCII companion where available | JCL-defined; mostly PS input to KSDS load |
-| `AWS.M2.CARDDEMO.DISCGRP.PS` | EBCDIC (binary/fixed) | not safely inferable from bytes alone; see copybook/JCL | source dataset name identifies layout; see ASCII companion where available | JCL-defined; mostly PS input to KSDS load |
-| `AWS.M2.CARDDEMO.EXPORT.DATA.PS` | EBCDIC (binary/fixed) | not safely inferable from bytes alone; see copybook/JCL | source dataset name identifies layout; see ASCII companion where available | JCL-defined; mostly PS input to KSDS load |
-| `AWS.M2.CARDDEMO.TCATBALF.PS` | EBCDIC (binary/fixed) | not safely inferable from bytes alone; see copybook/JCL | source dataset name identifies layout; see ASCII companion where available | JCL-defined; mostly PS input to KSDS load |
-| `AWS.M2.CARDDEMO.TRANCATG.PS` | EBCDIC (binary/fixed) | not safely inferable from bytes alone; see copybook/JCL | source dataset name identifies layout; see ASCII companion where available | JCL-defined; mostly PS input to KSDS load |
-| `AWS.M2.CARDDEMO.TRANTYPE.PS` | EBCDIC (binary/fixed) | not safely inferable from bytes alone; see copybook/JCL | source dataset name identifies layout; see ASCII companion where available | JCL-defined; mostly PS input to KSDS load |
-| `AWS.M2.CARDDEMO.USRSEC.PS` | EBCDIC (binary/fixed) | not safely inferable from bytes alone; see copybook/JCL | source dataset name identifies layout; see ASCII companion where available | JCL-defined; mostly PS input to KSDS load |
+| `AWS.M2.CARDDEMO.ACCDATA.PS` | EBCDIC fixed | 300 / 50 | `CVACT01Y` | PS source for KSDS |
+| `AWS.M2.CARDDEMO.ACCTDATA.PS` | EBCDIC fixed | 300 / 50 | `CVACT01Y` | PS source for `ACCTDATA.VSAM.KSDS` |
+| `AWS.M2.CARDDEMO.CARDDATA.PS` | EBCDIC fixed | 100 / 75 by byte count; **conflicts with `CVACT02Y` 150-byte layout and 150-byte ASCII lines** | `CVACT02Y` | PS source claimed by `CARDFILE`; source fixture requires reconciliation |
+| `AWS.M2.CARDDEMO.CARDXREF.PS` | EBCDIC fixed | 50 / 50 | `CVACT03Y` | PS source for xref KSDS |
+| `AWS.M2.CARDDEMO.CUSTDATA.PS` | EBCDIC fixed | 500 / 50 | `CVCUS01Y` | PS source for customer KSDS |
+| `AWS.M2.CARDDEMO.DALYTRAN.PS` | EBCDIC fixed | 350 / 300 | `CVTRA06Y` | PS input |
+| `AWS.M2.CARDDEMO.DALYTRAN.PS.INIT` | EBCDIC fixed | 350 / 1 | `CVTRA06Y` | PS seed |
+| `AWS.M2.CARDDEMO.DISCGRP.PS` | EBCDIC fixed | 50 / 51 | `CVTRA02Y` | PS source for disclosure KSDS |
+| `AWS.M2.CARDDEMO.EXPORT.DATA.PS` | EBCDIC fixed | 500 / 500 | CBEXPORT interchange record | PS export |
+| `AWS.M2.CARDDEMO.TCATBALF.PS` | EBCDIC fixed | 50 / 50 | `CVTRA01Y` | PS source for category KSDS |
+| `AWS.M2.CARDDEMO.TRANCATG.PS` | EBCDIC fixed | 60 / 18 | `CVTRA04Y` | PS source for category KSDS |
+| `AWS.M2.CARDDEMO.TRANTYPE.PS` | EBCDIC fixed | 60 / 7 | `CVTRA03Y` | PS source for type KSDS |
+| `AWS.M2.CARDDEMO.USRSEC.PS` | EBCDIC fixed | 80 / 10 | security copybook in `CSUSR01Y` | PS source for security KSDS |
+| `ASCII/acctdata.txt` | ASCII fixture | 300 / 50 records | `CVACT01Y` | fixture for account KSDS |
+| `ASCII/carddata.txt` | ASCII fixture | 150 data bytes + newline / 50 | `CVACT02Y` | fixture for card KSDS |
+| `ASCII/cardxref.txt` | ASCII fixture | 36 data bytes + newline / 50 | `CVACT03Y` fixture representation | fixture for xref KSDS |
+| `ASCII/custdata.txt` | ASCII fixture | 500 data bytes + newline / 50 | `CVCUS01Y` | fixture for customer KSDS |
+| `ASCII/dailytran.txt` | ASCII fixture | 350 data bytes + newline / 300 | `CVTRA06Y` | sequential fixture |
+| `ASCII/discgrp.txt` | ASCII fixture | 50 data bytes + newline / 51 | `CVTRA02Y` | fixture for disclosure KSDS |
+| `ASCII/tcatbal.txt` | ASCII fixture | 50 data bytes + newline / 50 | `CVTRA01Y` | fixture for category KSDS |
+| `ASCII/trancatg.txt` | ASCII fixture | 60 data bytes + newline / 18 | `CVTRA04Y` | fixture for category KSDS |
+| `ASCII/trantype.txt` | ASCII fixture | 60 data bytes + newline / 7 | `CVTRA03Y` | fixture for type KSDS |
