@@ -1,0 +1,130 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://github.com/Cognition-Partner-Workshops/ts-cobol-carddemo/statement-viewer/statement-contract.schema.json",
+  "title": "CardDemo account statement (DJ-82 locked contract)",
+  "description": "One JSON object per account, emitted by app/cbl/CBSTM03A.CBL alongside the legacy STMTFILE and HTMLFILE outputs. Multi-account output is JSON Lines: one complete JSON object per output record/line. Amounts are JSON numbers with 2 decimals, dates are YYYY-MM-DD, and all COBOL space-padded strings are trimmed. Sensitive customer fields (CUST-SSN, CUST-GOVT-ISSUED-ID, CUST-DOB-YYYYMMDD, CUST-EFT-ACCOUNT-ID) are deliberately excluded.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["accountId", "customer", "account", "cards", "transactions"],
+  "properties": {
+    "accountId": {
+      "type": "string",
+      "description": "ACCT-ID / XREF-ACCT-ID, zero-padded to 11 digits"
+    },
+    "customer": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "customerId",
+        "firstName",
+        "middleName",
+        "lastName",
+        "addressLine1",
+        "addressLine2",
+        "addressLine3",
+        "stateCode",
+        "countryCode",
+        "zip",
+        "phone1",
+        "phone2",
+        "ficoScore"
+      ],
+      "properties": {
+        "customerId": { "type": "string", "description": "CUST-ID, zero-padded to 9 digits" },
+        "firstName": { "type": "string", "description": "CUST-FIRST-NAME" },
+        "middleName": { "type": "string", "description": "CUST-MIDDLE-NAME" },
+        "lastName": { "type": "string", "description": "CUST-LAST-NAME" },
+        "addressLine1": { "type": "string", "description": "CUST-ADDR-LINE-1" },
+        "addressLine2": { "type": "string", "description": "CUST-ADDR-LINE-2" },
+        "addressLine3": { "type": "string", "description": "CUST-ADDR-LINE-3" },
+        "stateCode": { "type": "string", "description": "CUST-ADDR-STATE-CD" },
+        "countryCode": { "type": "string", "description": "CUST-ADDR-COUNTRY-CD" },
+        "zip": { "type": "string", "description": "CUST-ADDR-ZIP" },
+        "phone1": { "type": "string", "description": "CUST-PHONE-NUM-1" },
+        "phone2": { "type": "string", "description": "CUST-PHONE-NUM-2" },
+        "ficoScore": { "type": "integer", "description": "CUST-FICO-CREDIT-SCORE" }
+      }
+    },
+    "account": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "activeStatus",
+        "currentBalance",
+        "creditLimit",
+        "cashCreditLimit",
+        "openDate",
+        "expirationDate",
+        "reissueDate",
+        "currentCycleCredit",
+        "currentCycleDebit",
+        "groupId"
+      ],
+      "properties": {
+        "activeStatus": { "type": "string", "description": "ACCT-ACTIVE-STATUS" },
+        "currentBalance": { "type": "number", "description": "ACCT-CURR-BAL" },
+        "creditLimit": { "type": "number", "description": "ACCT-CREDIT-LIMIT" },
+        "cashCreditLimit": { "type": "number", "description": "ACCT-CASH-CREDIT-LIMIT" },
+        "openDate": { "type": "string", "description": "ACCT-OPEN-DATE, YYYY-MM-DD" },
+        "expirationDate": {
+          "type": "string",
+          "description": "ACCT-EXPIRAION-DATE (legacy misspelling normalised), YYYY-MM-DD"
+        },
+        "reissueDate": { "type": "string", "description": "ACCT-REISSUE-DATE, YYYY-MM-DD" },
+        "currentCycleCredit": { "type": "number", "description": "ACCT-CURR-CYC-CREDIT" },
+        "currentCycleDebit": { "type": "number", "description": "ACCT-CURR-CYC-DEBIT" },
+        "groupId": { "type": "string", "description": "ACCT-GROUP-ID" }
+      }
+    },
+    "cards": {
+      "type": "array",
+      "description": "Cards cross-referenced to the account via CVACT03Y (CARD-XREF-RECORD)",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["cardNumber"],
+        "properties": {
+          "cardNumber": { "type": "string", "description": "XREF-CARD-NUM" }
+        }
+      }
+    },
+    "transactions": {
+      "type": "array",
+      "description": "Statement transactions, in the order 6000-WRITE-TRANS emits them",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "transactionId",
+          "cardNumber",
+          "typeCode",
+          "categoryCode",
+          "source",
+          "description",
+          "amount",
+          "merchantId",
+          "merchantName",
+          "merchantCity",
+          "merchantZip",
+          "originTimestamp",
+          "processTimestamp"
+        ],
+        "properties": {
+          "transactionId": { "type": "string", "description": "TRNX-ID" },
+          "cardNumber": { "type": "string", "description": "TRNX-CARD-NUM" },
+          "typeCode": { "type": "string", "description": "TRNX-TYPE-CD" },
+          "categoryCode": { "type": "string", "description": "TRNX-CAT-CD, zero-padded to 4 digits" },
+          "source": { "type": "string", "description": "TRNX-SOURCE" },
+          "description": { "type": "string", "description": "TRNX-DESC" },
+          "amount": { "type": "number", "description": "TRNX-AMT" },
+          "merchantId": { "type": "string", "description": "TRNX-MERCHANT-ID, zero-padded to 9 digits" },
+          "merchantName": { "type": "string", "description": "TRNX-MERCHANT-NAME" },
+          "merchantCity": { "type": "string", "description": "TRNX-MERCHANT-CITY" },
+          "merchantZip": { "type": "string", "description": "TRNX-MERCHANT-ZIP" },
+          "originTimestamp": { "type": "string", "description": "TRNX-ORIG-TS" },
+          "processTimestamp": { "type": "string", "description": "TRNX-PROC-TS" }
+        }
+      }
+    }
+  }
+}
