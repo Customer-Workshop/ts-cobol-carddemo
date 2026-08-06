@@ -151,7 +151,8 @@
              88  HTML-L02 VALUE '<html lang="en">'.
              88  HTML-L03 VALUE '<head>'.
              88  HTML-L04 VALUE '<meta charset="utf-8">'.
-             88  HTML-L05 VALUE '<title>HTML Table Layout</title>'.
+             88  HTML-L05 VALUE '<title>Customer Account Statement</
+      -             'title>'.
              88  HTML-L06 VALUE '</head>'.
              88  HTML-L07 VALUE '<body style="margin:0px;">'.
              88  HTML-L08 VALUE '<table  align="center" frame="box" styl
@@ -165,11 +166,14 @@
              88  HTML-L15 VALUE '<td colspan="3" style="padding:0px 5px;
       -             'background-color:#FFAF33;">'.
              88  HTML-L16
-               VALUE '<p style="font-size:16px">Bank of XYZ</p>'.
+               VALUE '<p style="font-size:20px; font-weight:bold; ma
+      -              'rgin:2px 0px;">Bank of XYZ</p>'.
              88  HTML-L17
-               VALUE '<p>410 Terry Ave N</p>'.
+               VALUE '<p style="font-size:13px; margin:2px 0px;">410
+      -              ' Terry Ave N</p>'.
              88  HTML-L18
-               VALUE '<p>Seattle WA 99999</p>'.
+               VALUE '<p style="font-size:13px; margin:2px 0px;">Sea
+      -              'ttle WA 99999</p>'.
              88  HTML-L22-35
                           VALUE '<td colspan="3" style="padding:0px 5px;
       -              'background-color:#f2f2f2;">'.
