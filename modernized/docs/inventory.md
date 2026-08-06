@@ -2,6 +2,8 @@
 
 This inventory is based on the COBOL, copybook, BMS, JCL, CSD, Control-M, assembler, and fixture files under `app/`. Dataset names below are DD-resolved names from JCL/CSD, not working-storage variable names.
 
+Field-level BMS positions, lengths, attributes, literals, and layout notes are in [BMS screen specifications](bms-screens.md).
+
 ## COBOL programs (`app/cbl/`, 31 files)
 
 | Program | Type | Purpose | Files/tables read and written | CALL/XCTL/LINK targets |
@@ -62,7 +64,40 @@ This inventory is based on the COBOL, copybook, BMS, JCL, CSD, Control-M, assemb
 
 ## Copybooks (`app/cpy/`, 30 files)
 
-The data layouts are `CVACT01Y` account (300 bytes), `CVACT02Y` card (150 bytes), `CVACT03Y` card xref (50 bytes), `CVCUS01Y` customer (500 bytes), `CVTRA01Y` category balance (50 bytes), `CVTRA02Y` disclosure group (50 bytes), `CVTRA03Y` transaction type (60 bytes), `CVTRA04Y` transaction category (60 bytes), `CVTRA05Y` posted transaction (350 bytes), and `CVTRA06Y` daily transaction (350 bytes). Screen copybooks define BMS input/output structures; `COCOM01Y`, `CSDAT01Y`, `CSMSG01Y`, `CSMSG02Y`, and `CSUSR01Y` define COMMAREA, date, message/abend, and signed-on-user state. `DFHBMSCA`/`DFHAID` are IBM supplied. `COTTL01Y` contains screen titles. Remaining copybooks are constants or utility interfaces; includers are recorded by the `COPY` statements in each program and include the nine business-rule programs documented separately.
+The table records the source `COPY` includers, including optional-module programs where they use a base copybook. Record length is the fixed source layout length; `variable` means a work area or screen/state structure rather than a persisted fixed record.
+
+| Copybook | Category | Defines | Record length | Including programs |
+|---|---|---|---:|---|
+| `COADM02Y.cpy` | BMS screen structure | Administrator menu option literals and screen data names | — | COADM01C |
+| `COCOM01Y.cpy` | COMMAREA state | Common CARDDEMO COMMAREA fields: caller/next program, transaction, user and map context | variable | COACTUPC, COACTVWC, COADM01C, COBIL00C, COCRDLIC, COCRDSLC, COCRDUPC, COMEN01C, COPAUS0C, COPAUS1C, CORPT00C, COSGN00C, COTRN00C, COTRN01C, COTRN02C, COTRTLIC, COTRTUPC, COUSR00C, COUSR01C, COUSR02C, COUSR03C |
+| `CODATECN.cpy` | IBM-supplied utility | COBDATFT date conversion input/output record | variable | CBACT01C |
+| `COMEN02Y.cpy` | BMS screen structure | Main-menu option and output fields | variable | COMEN01C |
+| `COSTM01.CPY` | BMS screen structure | Statement output line and statement formatting work areas | variable | CBSTM03A |
+| `COTTL01Y.cpy` | constants-lookup | Common screen title literals | — | COACTUPC, COACTVWC, COADM01C, COBIL00C, COCRDLIC, COCRDSLC, COCRDUPC, COMEN01C, COPAUS0C, COPAUS1C, CORPT00C, COSGN00C, COTRN00C, COTRN01C, COTRN02C, COTRTLIC, COTRTUPC, COUSR00C, COUSR01C, COUSR02C, COUSR03C |
+| `CSDAT01Y.cpy` | COMMAREA state | Current date/time and formatted timestamp work areas | variable | COACTUPC, COACTVWC, COADM01C, COBIL00C, COCRDLIC, COCRDSLC, COCRDUPC, COMEN01C, COPAUS0C, COPAUS1C, CORPT00C, COSGN00C, COTRN00C, COTRN01C, COTRN02C, COTRTLIC, COTRTUPC, COUSR00C, COUSR01C, COUSR02C, COUSR03C |
+| `CSLKPCDY.cpy` | COMMAREA state | Account-update lock/key and CICS file-control state | variable | COACTUPC |
+| `CSMSG01Y.cpy` | constants-lookup | Common informational and error message literals | — | COACTUPC, COACTVWC, COADM01C, COBIL00C, COCRDLIC, COCRDSLC, COCRDUPC, COMEN01C, COPAUS0C, COPAUS1C, CORPT00C, COSGN00C, COTRN00C, COTRN01C, COTRN02C, COTRTLIC, COTRTUPC, COUSR00C, COUSR01C, COUSR02C, COUSR03C |
+| `CSMSG02Y.cpy` | constants-lookup | Abend/file-error message literals and work fields | — | COACTUPC, COACTVWC, COCRDLIC, COCRDSLC, COCRDUPC, COPAUS0C, COPAUS1C, COTRTUPC |
+| `CSSETATY.cpy` | COMMAREA state | Common validation flag-setting procedures and flags | variable | COACTUPC, COTRTUPC |
+| `CSSTRPFY.cpy` | COMMAREA state | Stored PF-key and navigation state | variable | COACTUPC, COACTVWC, COCRDLIC, COCRDSLC, COCRDUPC, COTRTLIC, COTRTUPC |
+| `CSUSR01Y.cpy` | COMMAREA state | Signed-on user identity and authorization data | variable | COACTUPC, COACTVWC, COADM01C, COCRDLIC, COCRDSLC, COCRDUPC, COMEN01C, COSGN00C, COTRTLIC, COTRTUPC, COUSR00C, COUSR01C, COUSR02C, COUSR03C |
+| `CSUTLDPY.cpy` | IBM-supplied utility | Date edit/conversion procedures used by online validation | variable | COACTUPC |
+| `CSUTLDWY.cpy` | IBM-supplied utility | Date utility working storage and century/date decomposition | variable | COACTUPC, COTRTUPC |
+| `CUSTREC.cpy` | data record layout | Statement customer record layout | 500 | CBSTM03A |
+| `CVACT01Y.cpy` | data record layout | Account master record (`ACCOUNT-RECORD`) | 300 | CBACT01C, CBACT04C, CBEXPORT, CBIMPORT, CBSTM03A, CBTRN01C, CBTRN02C, COACCT01, COACTUPC, COACTVWC, COBIL00C, COCRDSLC, COCRDUPC, COPAUA0C, COPAUS0C, COTRN02C |
+| `CVACT02Y.cpy` | data record layout | Card master record (`CARD-RECORD`) | 150 | CBACT02C, CBEXPORT, CBIMPORT, CBTRN01C, COACTVWC, COCRDLIC, COCRDSLC, COCRDUPC, COPAUS0C, COTRTLIC |
+| `CVACT03Y.cpy` | data record layout | Card/customer/account cross-reference record | 50 | CBACT03C, CBACT04C, CBEXPORT, CBIMPORT, CBSTM03A, CBTRN01C, CBTRN02C, CBTRN03C, COACTUPC, COACTVWC, COBIL00C, COCRDSLC, COCRDUPC, COPAUA0C, COPAUS0C, COTRN02C |
+| `CVCRD01Y.cpy` | BMS screen structure | Card screen work area and attention-key conditions | variable | COACTUPC, COACTVWC, COCRDLIC, COCRDSLC, COCRDUPC, COTRTLIC, COTRTUPC |
+| `CVCUS01Y.cpy` | data record layout | Customer master record | 500 | CBCUS01C, CBEXPORT, CBIMPORT, CBTRN01C, COACTUPC, COACTVWC, COCRDSLC, COCRDUPC, COPAUA0C, COPAUS0C |
+| `CVEXPORT.cpy` | data record layout | Tagged export interchange record | 500 | CBEXPORT, CBIMPORT |
+| `CVTRA01Y.cpy` | data record layout | Transaction-category balance record | 50 | CBACT04C, CBTRN02C |
+| `CVTRA02Y.cpy` | data record layout | Disclosure-group interest-rate record | 50 | CBACT04C |
+| `CVTRA03Y.cpy` | data record layout | Transaction-type lookup record | 60 | CBTRN03C |
+| `CVTRA04Y.cpy` | data record layout | Transaction-category lookup record | 60 | CBTRN03C |
+| `CVTRA05Y.cpy` | data record layout | Posted transaction record | 350 | CBACT04C, CBEXPORT, CBIMPORT, CBTRN01C, CBTRN02C, CBTRN03C, COBIL00C, CORPT00C, COTRN00C, COTRN01C, COTRN02C |
+| `CVTRA06Y.cpy` | data record layout | Daily transaction input record | 350 | CBTRN01C, CBTRN02C |
+| `CVTRA07Y.cpy` | constants-lookup | Transaction report header and report formatting literals | variable | CBTRN03C |
+| `UNUSED1Y.cpy` | constants-lookup | Unused legacy customer/user-shaped data structure; no active COPY includers | variable | — |
 
 ## JCL jobs (`app/jcl/`, 38 files)
 
@@ -136,7 +171,7 @@ The data layouts are `CVACT01Y` account (300 bytes), `CVACT02Y` card (150 bytes)
 |---|---|---:|---|---|
 | `AWS.M2.CARDDEMO.ACCDATA.PS` | EBCDIC fixed | 300 / 50 | `CVACT01Y` | PS source for KSDS |
 | `AWS.M2.CARDDEMO.ACCTDATA.PS` | EBCDIC fixed | 300 / 50 | `CVACT01Y` | PS source for `ACCTDATA.VSAM.KSDS` |
-| `AWS.M2.CARDDEMO.CARDDATA.PS` | EBCDIC fixed | 100 / 75 by byte count; **conflicts with `CVACT02Y` 150-byte layout and 150-byte ASCII lines** | `CVACT02Y` | PS source claimed by `CARDFILE`; source fixture requires reconciliation |
+| `AWS.M2.CARDDEMO.CARDDATA.PS` | EBCDIC fixed | 150 / 50 | `CVACT02Y` | PS source for `CARDDATA.VSAM.KSDS`; 7,500 bytes divide exactly by the declared 150-byte RECLN |
 | `AWS.M2.CARDDEMO.CARDXREF.PS` | EBCDIC fixed | 50 / 50 | `CVACT03Y` | PS source for xref KSDS |
 | `AWS.M2.CARDDEMO.CUSTDATA.PS` | EBCDIC fixed | 500 / 50 | `CVCUS01Y` | PS source for customer KSDS |
 | `AWS.M2.CARDDEMO.DALYTRAN.PS` | EBCDIC fixed | 350 / 300 | `CVTRA06Y` | PS input |
@@ -149,7 +184,7 @@ The data layouts are `CVACT01Y` account (300 bytes), `CVACT02Y` card (150 bytes)
 | `AWS.M2.CARDDEMO.USRSEC.PS` | EBCDIC fixed | 80 / 10 | security copybook in `CSUSR01Y` | PS source for security KSDS |
 | `ASCII/acctdata.txt` | ASCII fixture | 300 / 50 records | `CVACT01Y` | fixture for account KSDS |
 | `ASCII/carddata.txt` | ASCII fixture | 150 data bytes + newline / 50 | `CVACT02Y` | fixture for card KSDS |
-| `ASCII/cardxref.txt` | ASCII fixture | 36 data bytes + newline / 50 | `CVACT03Y` fixture representation | fixture for xref KSDS |
+| `ASCII/cardxref.txt` | ASCII fixture | 36 data bytes + newline / 50 records | `CVACT03Y`; ASCII omits its trailing 14-byte filler | fixture for xref KSDS; loader must right-pad 14 spaces |
 | `ASCII/custdata.txt` | ASCII fixture | 500 data bytes + newline / 50 | `CVCUS01Y` | fixture for customer KSDS |
 | `ASCII/dailytran.txt` | ASCII fixture | 350 data bytes + newline / 300 | `CVTRA06Y` | sequential fixture |
 | `ASCII/discgrp.txt` | ASCII fixture | 50 data bytes + newline / 51 | `CVTRA02Y` | fixture for disclosure KSDS |

@@ -3,6 +3,7 @@
 This directory records source-verified discovery for the CardDemo modernization.
 
 - [Legacy inventory](inventory.md): COBOL, BMS, copybooks, batch assets, assembler, optional modules, and data files.
+- [BMS screen specifications](bms-screens.md): field-level positions, lengths, attributes, literals, and layout notes for all 17 maps.
 - [Traceability matrix](traceability-matrix.md): online and batch contracts carried into later phases.
 - [Business rules](business-rules/): line-by-line specifications for the highest-risk programs.
 - [Open questions](open-questions.md): behavior requiring a later migration decision or mainframe evidence.
