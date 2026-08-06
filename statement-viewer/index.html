@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" href="data:,">
+  <title>CardDemo Bank — Account Statement</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="toolbar">
+    <div class="brand">
+      <span class="brand-mark" aria-hidden="true">◆</span>
+      <span>CardDemo Bank</span>
+    </div>
+    <label class="file-button" for="statement-file">Open statement</label>
+    <input id="statement-file" type="file" accept=".json,.jsonl,application/json,text/plain">
+    <div id="account-picker" class="account-picker is-hidden">
+      <label for="account-select">Account</label>
+      <select id="account-select"></select>
+    </div>
+  </header>
+
+  <main>
+    <section id="drop-zone" class="drop-zone" aria-label="Statement file drop zone">
+      <div class="drop-icon" aria-hidden="true">↥</div>
+      <h1>View your account statement</h1>
+      <p>Drop a JSON or JSON Lines statement here, or open a file to begin.</p>
+      <p class="drop-hint">Your file stays in this browser session.</p>
+    </section>
+    <section id="error-panel" class="error-panel is-hidden" role="alert">
+      <h2>We couldn't open that statement</h2>
+      <ul id="error-list"></ul>
+    </section>
+    <section id="statement" class="statement is-hidden" aria-live="polite"></section>
+  </main>
+  <script src="app.js"></script>
+</body>
+</html>
