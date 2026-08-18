@@ -151,9 +151,13 @@
              88  HTML-L02 VALUE '<html lang="en">'.
              88  HTML-L03 VALUE '<head>'.
              88  HTML-L04 VALUE '<meta charset="utf-8">'.
-             88  HTML-L05 VALUE '<title>HTML Table Layout</title>'.
+             88  HTML-L05
+               VALUE '<title>CardDemo Account Statement</title>'.
              88  HTML-L06 VALUE '</head>'.
              88  HTML-L07 VALUE '<body style="margin:0px;">'.
+             88  HTML-L07A
+               VALUE '<h2 style="text-align:center; font:20px Segoe UI,s
+      -             'ans-serif;">CardDemo Account Statement</h2>'.
              88  HTML-L08 VALUE '<table  align="center" frame="box" styl
       -             'e="width:70%; font:12px Segoe UI,sans-serif;">'.
              88  HTML-LTRS VALUE '<tr>'.
@@ -518,6 +522,8 @@
            SET HTML-L06 TO TRUE.
            WRITE FD-HTMLFILE-REC FROM HTML-FIXED-LN.
            SET HTML-L07 TO TRUE.
+           WRITE FD-HTMLFILE-REC FROM HTML-FIXED-LN.
+           SET HTML-L07A TO TRUE.
            WRITE FD-HTMLFILE-REC FROM HTML-FIXED-LN.
            SET HTML-L08 TO TRUE.
            WRITE FD-HTMLFILE-REC FROM HTML-FIXED-LN.
