@@ -1,0 +1,88 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://github.com/Cognition-Partner-Workshops/ts-cobol-carddemo/app/data/json/statements.schema.json",
+  "title": "CardDemo statements.json (DJ-96)",
+  "description": "Contract for the statement extract produced by app/cbl/CBSTM04C.cbl and consumed by samples/html/statement-viewer.html. Statement array order follows the XREFFILE card-number sequence; consumers must not depend on it.",
+  "type": "object",
+  "required": ["statements"],
+  "additionalProperties": false,
+  "properties": {
+    "statements": {
+      "type": "array",
+      "items": { "$ref": "#/definitions/statement" }
+    }
+  },
+  "definitions": {
+    "statement": {
+      "type": "object",
+      "required": ["accountId", "currentBalance", "ficoScore", "customer", "transactions", "totalAmount"],
+      "additionalProperties": false,
+      "properties": {
+        "accountId": {
+          "description": "ACCT-ID (CVACT01Y), 11 digits, zero padded, emitted as a string to preserve leading zeros",
+          "type": "string",
+          "pattern": "^[0-9]{11}$"
+        },
+        "currentBalance": {
+          "description": "ACCT-CURR-BAL (CVACT01Y), signed, 2 decimals",
+          "type": "number"
+        },
+        "ficoScore": {
+          "description": "CUST-FICO-CREDIT-SCORE (CUSTREC)",
+          "type": "integer"
+        },
+        "customer": { "$ref": "#/definitions/customer" },
+        "transactions": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/transaction" }
+        },
+        "totalAmount": {
+          "description": "Sum of transactions[].amount for this account (WS-TOTAL-AMT), 2 decimals",
+          "type": "number"
+        }
+      }
+    },
+    "customer": {
+      "type": "object",
+      "required": ["id", "name", "address"],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "description": "CUST-ID (CUSTREC), 9 digits, zero padded, emitted as a string",
+          "type": "string",
+          "pattern": "^[0-9]{9}$"
+        },
+        "name": {
+          "description": "CUST-FIRST-NAME, CUST-MIDDLE-NAME, CUST-LAST-NAME joined by single spaces, trailing spaces trimmed",
+          "type": "string"
+        },
+        "address": {
+          "description": "[CUST-ADDR-LINE-1, CUST-ADDR-LINE-2, CUST-ADDR-LINE-3 + CUST-ADDR-STATE-CD + CUST-ADDR-COUNTRY-CD + CUST-ADDR-ZIP]",
+          "type": "array",
+          "minItems": 3,
+          "maxItems": 3,
+          "items": { "type": "string" }
+        }
+      }
+    },
+    "transaction": {
+      "type": "object",
+      "required": ["tranId", "details", "amount"],
+      "additionalProperties": false,
+      "properties": {
+        "tranId": {
+          "description": "TRNX-ID (COSTM01), 16 characters, emitted as a string",
+          "type": "string"
+        },
+        "details": {
+          "description": "TRNX-DESC (COSTM01), trailing spaces trimmed",
+          "type": "string"
+        },
+        "amount": {
+          "description": "TRNX-AMT (COSTM01), signed, 2 decimals",
+          "type": "number"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,145 @@
+{
+  "statements": [
+    {
+      "accountId": "00000000050",
+      "currentBalance": 492.0,
+      "ficoScore": 623,
+      "customer": {
+        "id": "000000050",
+        "name": "Aniya Alba Von",
+        "address": [
+          "1588 Nienow Cape",
+          "Suite 187",
+          "New Aricchester OR USA 04257"
+        ]
+      },
+      "transactions": [
+        {
+          "tranId": "0000000058866561",
+          "details": "Purchase at Blick-Rippin",
+          "amount": 183.88
+        },
+        {
+          "tranId": "0000000329724245",
+          "details": "Purchase at Reichel Group",
+          "amount": 14.0
+        },
+        {
+          "tranId": "0000000475746885",
+          "details": "Purchase at Adams-Watsica",
+          "amount": 967.44
+        },
+        {
+          "tranId": "0000000577826814",
+          "details": "Return item at DuBuque, Wuckert and Mraz",
+          "amount": -47.88
+        },
+        {
+          "tranId": "0000000685488982",
+          "details": "Purchase at Williamson Group",
+          "amount": 94.77
+        },
+        {
+          "tranId": "0000000838587312",
+          "details": "Purchase at Abbott-Gerlach",
+          "amount": 241.66
+        }
+      ],
+      "totalAmount": 1453.87
+    },
+    {
+      "accountId": "00000000027",
+      "currentBalance": 284.0,
+      "ficoScore": 78,
+      "customer": {
+        "id": "000000027",
+        "name": "Ward Henri Jones",
+        "address": [
+          "210 Amaya Turnpike",
+          "Suite 180",
+          "Port Dwight GU USA 07923-8822"
+        ]
+      },
+      "transactions": [
+        {
+          "tranId": "0000000130111733",
+          "details": "Purchase at Rogahn Group",
+          "amount": 777.33
+        },
+        {
+          "tranId": "0000000187573156",
+          "details": "Purchase at Cruickshank and Daughters",
+          "amount": 579.77
+        },
+        {
+          "tranId": "0000000486159054",
+          "details": "Purchase at Christiansen-Jacobi",
+          "amount": 319.88
+        },
+        {
+          "tranId": "0000000802663079",
+          "details": "Purchase at Zulauf-O'Keefe",
+          "amount": 975.11
+        },
+        {
+          "tranId": "0000000903281896",
+          "details": "Purchase at Schmitt, Mills and Yundt",
+          "amount": 932.55
+        },
+        {
+          "tranId": "0000000925687557",
+          "details": "Return item at Zboncak-Franecki",
+          "amount": -372.99
+        }
+      ],
+      "totalAmount": 3211.65
+    },
+    {
+      "accountId": "00000000002",
+      "currentBalance": 158.0,
+      "ficoScore": 268,
+      "customer": {
+        "id": "000000002",
+        "name": "Enrico April Rosenbaum",
+        "address": [
+          "4917 Myrna Flats",
+          "Apt. 453",
+          "West Bernita IN USA 22770"
+        ]
+      },
+      "transactions": [
+        {
+          "tranId": "0000000070754800",
+          "details": "Purchase at Blick, Kris and Gerlach",
+          "amount": 355.11
+        },
+        {
+          "tranId": "0000000274427056",
+          "details": "Return item at Gibson-Maggio",
+          "amount": -763.0
+        },
+        {
+          "tranId": "0000000325686503",
+          "details": "Purchase at Cruickshank-Marvin",
+          "amount": 569.99
+        },
+        {
+          "tranId": "0000000504099546",
+          "details": "Purchase at Jewess, Sauer and Runolfsson",
+          "amount": 655.11
+        },
+        {
+          "tranId": "0000000519935575",
+          "details": "Purchase at Gaylord, Kuhlman and Reichert",
+          "amount": 164.99
+        },
+        {
+          "tranId": "0000000824152956",
+          "details": "Purchase at Weissnat-Sanford",
+          "amount": 594.77
+        }
+      ],
+      "totalAmount": 1576.97
+    }
+  ]
+}
