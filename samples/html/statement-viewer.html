@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CardDemo Statement Viewer</title>
+<style>
+  :root {
+    --ink: #16202e;
+    --muted: #5d6b7f;
+    --line: #dfe5ee;
+    --brand: #1d4ed8;
+    --brand-dark: #14328f;
+    --bg: #f4f6fa;
+    --credit: #b3261e;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    padding: 32px 16px 64px;
+    background: var(--bg);
+    color: var(--ink);
+    font: 15px/1.5 "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  }
+  .wrap { max-width: 900px; margin: 0 auto; }
+  .toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px 24px;
+    align-items: flex-end;
+    background: #fff;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 16px 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 1px 2px rgba(22, 32, 46, .06);
+  }
+  .field { display: flex; flex-direction: column; gap: 6px; }
+  .field.grow { flex: 1 1 320px; min-width: 260px; }
+  label { font-size: 12px; font-weight: 600; letter-spacing: .04em; text-transform: uppercase; color: var(--muted); }
+  select, input[type=file] {
+    font: inherit;
+    padding: 8px 10px;
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    background: #fff;
+    color: inherit;
+    max-width: 100%;
+  }
+  select { font-variant-numeric: tabular-nums; }
+  .notice {
+    display: none;
+    margin-bottom: 20px;
+    padding: 12px 16px;
+    border: 1px solid #f5d48a;
+    border-left: 4px solid #e0a33a;
+    border-radius: 6px;
+    background: #fff8e8;
+    color: #5c4409;
+    font-size: 14px;
+  }
+  .notice.error { border-color: #f0b4ae; border-left-color: var(--credit); background: #fdeeec; color: #6d1f18; }
+  .notice.show { display: block; }
+  .statement {
+    background: #fff;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 1px 3px rgba(22, 32, 46, .08);
+  }
+  .bank {
+    padding: 20px 28px;
+    background: linear-gradient(135deg, var(--brand-dark), var(--brand));
+    color: #fff;
+  }
+  .bank h1 { margin: 0; font-size: 22px; letter-spacing: .01em; }
+  .bank p { margin: 2px 0 0; font-size: 13px; opacity: .88; }
+  .bank .stmt-title { margin-top: 12px; font-size: 14px; opacity: 1; font-variant-numeric: tabular-nums; }
+  .panels { display: flex; flex-wrap: wrap; gap: 0; border-bottom: 1px solid var(--line); }
+  .panel { flex: 1 1 300px; padding: 20px 28px; }
+  .panel + .panel { border-left: 1px solid var(--line); }
+  h2 { margin: 0 0 10px; font-size: 13px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+  .addr { margin: 0; font-size: 15px; }
+  .addr .name { font-weight: 600; }
+  dl { display: grid; grid-template-columns: auto 1fr; gap: 6px 20px; margin: 0; }
+  dt { color: var(--muted); font-size: 14px; }
+  dd { margin: 0; text-align: right; font-variant-numeric: tabular-nums; }
+  table { width: 100%; border-collapse: collapse; }
+  caption {
+    caption-side: top;
+    padding: 20px 28px 10px;
+    text-align: left;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  th, td { padding: 10px 14px; border-bottom: 1px solid var(--line); text-align: left; }
+  th:first-child, td:first-child { padding-left: 28px; }
+  th:last-child, td:last-child { padding-right: 28px; }
+  thead th { font-size: 12px; letter-spacing: .04em; text-transform: uppercase; color: var(--muted); background: #f8fafd; }
+  .num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .tranid { font-family: ui-monospace, "Cascadia Mono", Menlo, Consolas, monospace; font-size: 13px; color: var(--muted); }
+  .credit { color: var(--credit); }
+  tbody tr:nth-child(even) { background: #fbfcfe; }
+  tfoot td { font-weight: 700; border-bottom: none; border-top: 2px solid var(--ink); }
+  .empty { padding: 24px 28px; color: var(--muted); font-style: italic; }
+  footer.end { padding: 16px 28px; color: var(--muted); font-size: 13px; background: #f8fafd; border-top: 1px solid var(--line); }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="toolbar">
+    <div class="field grow">
+      <label for="account">Account</label>
+      <select id="account"></select>
+    </div>
+    <div class="field">
+      <label for="file">Load a statements.json</label>
+      <input type="file" id="file" accept=".json,application/json">
+    </div>
+  </div>
+
+  <p class="notice" id="notice"></p>
+
+  <div id="statement"></div>
+</div>
+
+<script id="fallback-data" type="application/json">
+{
+  "statements": [
+    {
+      "accountId": "00000000050",
+      "currentBalance": 492.0,
+      "ficoScore": 623,
+      "customer": {
+        "id": "000000050",
+        "name": "Aniya Alba Von",
+        "address": [
+          "1588 Nienow Cape",
+          "Suite 187",
+          "New Aricchester OR USA 04257"
+        ]
+      },
+      "transactions": [
+        {
+          "tranId": "0000000058866561",
+          "details": "Purchase at Blick-Rippin",
+          "amount": 183.88
+        },
+        {
+          "tranId": "0000000329724245",
+          "details": "Purchase at Reichel Group",
+          "amount": 14.0
+        },
+        {
+          "tranId": "0000000475746885",
+          "details": "Purchase at Adams-Watsica",
+          "amount": 967.44
+        },
+        {
+          "tranId": "0000000577826814",
+          "details": "Return item at DuBuque, Wuckert and Mraz",
+          "amount": -47.88
+        },
+        {
+          "tranId": "0000000685488982",
+          "details": "Purchase at Williamson Group",
+          "amount": 94.77
+        },
+        {
+          "tranId": "0000000838587312",
+          "details": "Purchase at Abbott-Gerlach",
+          "amount": 241.66
+        }
+      ],
+      "totalAmount": 1453.87
+    },
+    {
+      "accountId": "00000000027",
+      "currentBalance": 284.0,
+      "ficoScore": 78,
+      "customer": {
+        "id": "000000027",
+        "name": "Ward Henri Jones",
+        "address": [
+          "210 Amaya Turnpike",
+          "Suite 180",
+          "Port Dwight GU USA 07923-8822"
+        ]
+      },
+      "transactions": [
+        {
+          "tranId": "0000000130111733",
+          "details": "Purchase at Rogahn Group",
+          "amount": 777.33
+        },
+        {
+          "tranId": "0000000187573156",
+          "details": "Purchase at Cruickshank and Daughters",
+          "amount": 579.77
+        },
+        {
+          "tranId": "0000000486159054",
+          "details": "Purchase at Christiansen-Jacobi",
+          "amount": 319.88
+        },
+        {
+          "tranId": "0000000802663079",
+          "details": "Purchase at Zulauf-O'Keefe",
+          "amount": 975.11
+        },
+        {
+          "tranId": "0000000903281896",
+          "details": "Purchase at Schmitt, Mills and Yundt",
+          "amount": 932.55
+        },
+        {
+          "tranId": "0000000925687557",
+          "details": "Return item at Zboncak-Franecki",
+          "amount": -372.99
+        }
+      ],
+      "totalAmount": 3211.65
+    },
+    {
+      "accountId": "00000000002",
+      "currentBalance": 158.0,
+      "ficoScore": 268,
+      "customer": {
+        "id": "000000002",
+        "name": "Enrico April Rosenbaum",
+        "address": [
+          "4917 Myrna Flats",
+          "Apt. 453",
+          "West Bernita IN USA 22770"
+        ]
+      },
+      "transactions": [
+        {
+          "tranId": "0000000070754800",
+          "details": "Purchase at Blick, Kris and Gerlach",
+          "amount": 355.11
+        },
+        {
+          "tranId": "0000000274427056",
+          "details": "Return item at Gibson-Maggio",
+          "amount": -763.0
+        },
+        {
+          "tranId": "0000000325686503",
+          "details": "Purchase at Cruickshank-Marvin",
+          "amount": 569.99
+        },
+        {
+          "tranId": "0000000504099546",
+          "details": "Purchase at Jewess, Sauer and Runolfsson",
+          "amount": 655.11
+        },
+        {
+          "tranId": "0000000519935575",
+          "details": "Purchase at Gaylord, Kuhlman and Reichert",
+          "amount": 164.99
+        },
+        {
+          "tranId": "0000000824152956",
+          "details": "Purchase at Weissnat-Sanford",
+          "amount": 594.77
+        }
+      ],
+      "totalAmount": 1576.97
+    }
+  ]
+}
+</script>
+<script>
+(function () {
+  'use strict';
+
+  var BANK = { name: 'Bank of XYZ', street: '410 Terry Ave N', city: 'Seattle WA 99999' };
+  var CANDIDATE_URLS = [
+    '../../app/data/json/statements.json',
+    './statements.json',
+    '../../app/data/json/statements.sample.json'
+  ];
+
+  var selectEl = document.getElementById('account');
+  var fileEl = document.getElementById('file');
+  var noticeEl = document.getElementById('notice');
+  var statementEl = document.getElementById('statement');
+  var statements = [];
+
+  function notice(message, isError) {
+    noticeEl.textContent = message || '';
+    noticeEl.className = 'notice' + (message ? ' show' : '') + (isError ? ' error' : '');
+  }
+
+  function formatAmount(value) {
+    var number = typeof value === 'number' ? value : Number(value);
+    if (!isFinite(number)) return String(value);
+    var negative = number < 0;
+    var digits = Math.abs(number).toFixed(2).split('.');
+    var whole = digits[0].replace(/\B(?=(\d{3})+$)/g, ',');
+    return (negative ? '-' : '') + whole + '.' + digits[1];
+  }
+
+  function el(tag, className, text) {
+    var node = document.createElement(tag);
+    if (className) node.className = className;
+    if (text !== undefined && text !== null) node.textContent = String(text);
+    return node;
+  }
+
+  function amountCell(tag, value) {
+    var cell = el(tag, 'num', formatAmount(value));
+    if (typeof value === 'number' && value < 0) cell.classList.add('credit');
+    return cell;
+  }
+
+  function label(statement) {
+    return statement.accountId + ' \u2014 ' + ((statement.customer && statement.customer.name) || 'Unknown customer');
+  }
+
+  function bankHeader(statement) {
+    var head = el('div', 'bank');
+    head.appendChild(el('h1', null, BANK.name));
+    head.appendChild(el('p', null, BANK.street));
+    head.appendChild(el('p', null, BANK.city));
+    head.appendChild(el('p', 'stmt-title', 'Statement for Account Number: ' + statement.accountId));
+    return head;
+  }
+
+  function customerPanel(statement) {
+    var customer = statement.customer || {};
+    var panel = el('div', 'panel');
+    panel.appendChild(el('h2', null, 'Statement For'));
+    var addr = el('p', 'addr');
+    addr.appendChild(el('span', 'name', customer.name || ''));
+    (customer.address || []).forEach(function (line) {
+      addr.appendChild(document.createElement('br'));
+      addr.appendChild(document.createTextNode(line));
+    });
+    panel.appendChild(addr);
+    return panel;
+  }
+
+  function detailsPanel(statement) {
+    var panel = el('div', 'panel');
+    panel.appendChild(el('h2', null, 'Basic Details'));
+    var list = document.createElement('dl');
+    list.appendChild(el('dt', null, 'Account ID'));
+    list.appendChild(el('dd', null, statement.accountId));
+    list.appendChild(el('dt', null, 'Current Balance'));
+    list.appendChild(amountCell('dd', statement.currentBalance));
+    list.appendChild(el('dt', null, 'FICO Score'));
+    list.appendChild(el('dd', null, statement.ficoScore));
+    panel.appendChild(list);
+    return panel;
+  }
+
+  function transactionTable(statement) {
+    var transactions = statement.transactions || [];
+    var table = document.createElement('table');
+    table.appendChild(el('caption', null, 'Transaction Summary'));
+
+    var headRow = document.createElement('tr');
+    headRow.appendChild(el('th', null, 'Tran ID'));
+    headRow.appendChild(el('th', null, 'Tran Details'));
+    headRow.appendChild(el('th', 'num', 'Amount'));
+    var thead = document.createElement('thead');
+    thead.appendChild(headRow);
+    table.appendChild(thead);
+
+    var tbody = document.createElement('tbody');
+    transactions.forEach(function (tran) {
+      var row = document.createElement('tr');
+      row.appendChild(el('td', 'tranid', tran.tranId));
+      row.appendChild(el('td', null, tran.details));
+      row.appendChild(amountCell('td', tran.amount));
+      tbody.appendChild(row);
+    });
+    if (!transactions.length) {
+      var emptyRow = document.createElement('tr');
+      var emptyCell = el('td', 'empty', 'No transactions');
+      emptyCell.colSpan = 3;
+      emptyRow.appendChild(emptyCell);
+      tbody.appendChild(emptyRow);
+    }
+    table.appendChild(tbody);
+
+    var totalRow = document.createElement('tr');
+    var totalLabel = el('td', null, 'Total');
+    totalLabel.colSpan = 2;
+    totalRow.appendChild(totalLabel);
+    totalRow.appendChild(amountCell('td', transactions.length ? statement.totalAmount : 0));
+    var tfoot = document.createElement('tfoot');
+    tfoot.appendChild(totalRow);
+    table.appendChild(tfoot);
+
+    return table;
+  }
+
+  function render(statement) {
+    statementEl.textContent = '';
+    if (!statement) {
+      statementEl.appendChild(el('p', 'empty', 'No statements to display.'));
+      return;
+    }
+    var card = el('div', 'statement');
+    card.appendChild(bankHeader(statement));
+    var panels = el('div', 'panels');
+    panels.appendChild(customerPanel(statement));
+    panels.appendChild(detailsPanel(statement));
+    card.appendChild(panels);
+    card.appendChild(transactionTable(statement));
+    card.appendChild(el('footer', 'end', 'End of Statement'));
+    statementEl.appendChild(card);
+  }
+
+  function load(data, sourceNote, isError) {
+    var list = (data && data.statements) || [];
+    statements = list.slice().sort(function (a, b) {
+      return String(a.accountId).localeCompare(String(b.accountId));
+    });
+
+    selectEl.textContent = '';
+    statements.forEach(function (statement, index) {
+      var option = el('option', null, label(statement));
+      option.value = String(index);
+      selectEl.appendChild(option);
+    });
+    selectEl.disabled = !statements.length;
+
+    notice(sourceNote, isError);
+    render(statements[0]);
+  }
+
+  function embedded() {
+    var node = document.getElementById('fallback-data');
+    try {
+      return JSON.parse(node.textContent);
+    } catch (err) {
+      return { statements: [] };
+    }
+  }
+
+  function queryParam(name) {
+    var match = new RegExp('[?&]' + name + '=([^&]*)').exec(window.location.search);
+    return match ? decodeURIComponent(match[1].replace(/\+/g, ' ')) : null;
+  }
+
+  function fetchJson(url) {
+    return fetch(url).then(function (response) {
+      if (!response.ok) throw new Error('HTTP ' + response.status + ' for ' + url);
+      return response.json();
+    });
+  }
+
+  function tryUrls(urls) {
+    if (!urls.length) return Promise.reject(new Error('no statements.json found'));
+    return fetchJson(urls[0]).catch(function () {
+      return tryUrls(urls.slice(1));
+    });
+  }
+
+  selectEl.addEventListener('change', function () {
+    render(statements[Number(selectEl.value)]);
+  });
+
+  fileEl.addEventListener('change', function () {
+    var file = fileEl.files && fileEl.files[0];
+    if (!file) return;
+    var reader = new FileReader();
+    reader.onload = function () {
+      try {
+        load(JSON.parse(String(reader.result)), 'Loaded ' + file.name + ' from your computer.');
+      } catch (err) {
+        notice('Could not parse ' + file.name + ': ' + err.message, true);
+      }
+    };
+    reader.readAsText(file);
+  });
+
+  var override = queryParam('data');
+  var urls = override ? [override].concat(CANDIDATE_URLS) : CANDIDATE_URLS;
+
+  tryUrls(urls).then(function (data) {
+    load(data);
+  }).catch(function () {
+    load(embedded(), 'Showing built-in demo data: statements.json could not be loaded ' +
+      '(browsers block file:// requests). Serve the repo over HTTP, or pick a statements.json file above.');
+  });
+})();
+</script>
+</body>
+</html>
