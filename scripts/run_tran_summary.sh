@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-SCRIPT_DIR="$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)"
+SCRIPT_DIR="$(CDPATH='' cd -- "$(dirname -- "$0")" && pwd)"
 REPO_ROOT="$(dirname "$SCRIPT_DIR")"
 BUILD_DIR="${TMPDIR:-/tmp}/ts-cobol-carddemo-tran-summary-build"
 WORK_DIR="$(mktemp -d "${TMPDIR:-/tmp}/ts-cobol-carddemo-tran-summary.XXXXXX")"
