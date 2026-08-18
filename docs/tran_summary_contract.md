@@ -45,9 +45,10 @@ TRAN_TYPE_CD,TRAN_CAT_CD,TYPE_DESC,CAT_DESC,TRAN_COUNT,TOTAL_AMOUNT
 03,0001,Credit,"Returns, refunds and credits",96,-18422.10
 ```
 
-## Development mock
+## Producer and consumer
 
-`reports/tran_summary.mock.csv` is a temporary, contract-shaped fixture used by
-the dashboard generator until the batch extract lands. The generator must accept
-the CSV path as its first argument, defaulting to `reports/tran_summary.csv`, so
-the mock can be deleted without any code change.
+- Producer: `app/cbl/CBTRN04C.cbl` (job `app/jcl/TRANSUMM.jcl`; local run via
+  `scripts/run_tran_summary.sh`).
+- Consumer: `scripts/gen_dashboard.sh [csv_path] [output_path]`, which takes the
+  CSV path as its first argument defaulting to `reports/tran_summary.csv` and
+  renders `reports/dashboard.html`.

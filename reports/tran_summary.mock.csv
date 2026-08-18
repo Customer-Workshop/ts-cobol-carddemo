@@ -1,9 +1,0 @@
-TRAN_TYPE_CD,TRAN_CAT_CD,TYPE_DESC,CAT_DESC,TRAN_COUNT,TOTAL_AMOUNT
-01,0001,Purchase,Regular Sales Draft,1204,254318.77
-01,0002,Purchase,Regular Cash Advance,318,87211.05
-01,0004,Purchase,ATM Cash Advance,142,31544.60
-02,0001,Payment,"Payment, electronic",640,-98211.34
-03,0001,Credit,"Returns, refunds and credits",96,-18422.10
-04,0001,Authorization,Regular Sales Draft,57,9033.12
-05,0002,Refund,Regular Cash Advance,12,-1450.00
-06,0003,Transfer,Convenience Check Debit,4,275.99
