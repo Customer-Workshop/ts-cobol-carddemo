@@ -119,7 +119,6 @@
           05 WS-DESC-OUT-POS    PIC 9(03) VALUE 0.                              
           05 WS-DESC-OUT-LEN    PIC 9(03) VALUE 0.                              
           05 WS-DESC-COMMA      PIC X VALUE 'N'.                                
-          05 WS-DESC-QUOTE      PIC X VALUE 'N'.                                
           05 WS-DESC-OUT        PIC X(110).                                     
           05 WS-TYPE-FIELD      PIC X(110).                                     
           05 WS-TYPE-FIELD-LEN  PIC 9(03) VALUE 0.                              
@@ -444,14 +443,11 @@
                  MOVE WS-DESC-INDEX TO WS-DESC-TRIM-LEN                         
               END-IF                                                            
            END-PERFORM                                                           
-           MOVE 'N' TO WS-DESC-COMMA WS-DESC-QUOTE                              
+           MOVE 'N' TO WS-DESC-COMMA                                             
            PERFORM VARYING WS-DESC-INDEX FROM 1 BY 1                            
              UNTIL WS-DESC-INDEX > WS-DESC-TRIM-LEN                             
               IF WS-DESC-SOURCE (WS-DESC-INDEX:1) = ','                          
                  MOVE 'Y' TO WS-DESC-COMMA                                      
-              END-IF                                                             
-              IF WS-DESC-SOURCE (WS-DESC-INDEX:1) = '"'                          
-                 MOVE 'Y' TO WS-DESC-QUOTE                                      
               END-IF                                                             
            END-PERFORM                                                           
            MOVE 1 TO WS-DESC-OUT-POS                                            
