@@ -62,3 +62,10 @@ Field values mirror the statement produced by `app/cbl/CBSTM03A.CBL`:
 * Statement order follows the XREFFILE card-number sequence; consumers sort for display instead of relying on it.
 * The DJ-96 ticket contract is the base; `currentBalance` and `ficoScore` are additionally required here so the
   viewer can show the same "Basic Details" block that CBSTM03A renders.
+
+## Known divergence from CBSTM03A output
+
+`CBSTM03A` assembles address line 3 with `STRING ... DELIMITED BY ' '`, which stops at the first space and so
+truncates multi-word city names (`West Bernita IN USA 22770` prints as `West IN USA 22770`). `address[2]` here
+carries the full, untruncated value straight from the customer record.
+
