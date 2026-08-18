@@ -279,10 +279,11 @@
   'use strict';
 
   var BANK = { name: 'Bank of XYZ', street: '410 Terry Ave N', city: 'Seattle WA 99999' };
+  var SAMPLE_URL = '../../app/data/json/statements.sample.json';
   var CANDIDATE_URLS = [
     '../../app/data/json/statements.json',
     './statements.json',
-    '../../app/data/json/statements.sample.json'
+    SAMPLE_URL
   ];
 
   var selectEl = document.getElementById('account');
@@ -459,7 +460,10 @@
 
   function tryUrls(urls) {
     if (!urls.length) return Promise.reject(new Error('no statements.json found'));
-    return fetchJson(urls[0]).catch(function () {
+    var url = urls[0];
+    return fetchJson(url).then(function (data) {
+      return { data: data, url: url };
+    }).catch(function () {
       return tryUrls(urls.slice(1));
     });
   }
@@ -485,8 +489,11 @@
   var override = queryParam('data');
   var urls = override ? [override].concat(CANDIDATE_URLS) : CANDIDATE_URLS;
 
-  tryUrls(urls).then(function (data) {
-    load(data);
+  tryUrls(urls).then(function (result) {
+    load(result.data, result.url === SAMPLE_URL
+      ? 'Showing the contract sample (' + SAMPLE_URL + '): the full statements.json could not be loaded. ' +
+        'Run the CBSTM04C extract to generate it.'
+      : null);
   }).catch(function () {
     load(embedded(), 'Showing built-in demo data: statements.json could not be loaded ' +
       '(browsers block file:// requests). Serve the repo over HTTP, or pick a statements.json file above.');
