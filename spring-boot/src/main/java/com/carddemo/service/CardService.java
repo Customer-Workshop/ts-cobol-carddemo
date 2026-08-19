@@ -8,13 +8,16 @@ import com.carddemo.api.CobolApiException;
 import com.carddemo.api.CobolMessages;
 import com.carddemo.model.Card;
 import com.carddemo.repository.CardRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.YearMonth;
-import java.util.Comparator;
 import java.util.List;
 
 @Service
@@ -32,30 +35,42 @@ public class CardService {
         Long accountId = validateAccount(rawAccountId, false);
         String cardNumber = validateCard(rawCardNumber, false);
         if (page < 0) {
-            throw invalid(CobolMessages.INVALID_OPTION);
+            throw invalid(CobolMessages.CARD_NO_PREVIOUS_PAGES);
         }
-        List<Card> cards = cardRepository.findAll().stream()
-                .filter(card -> accountId == null || accountId.equals(card.getCardAcctId()))
-                .filter(card -> cardNumber == null || cardNumber.equals(card.getCardNumber()))
-                .sorted(Comparator.comparing(Card::getCardNumber))
-                .toList();
-        if ("backward".equalsIgnoreCase(direction)) {
-            cards = cards.reversed();
-        } else if (direction != null && !"forward".equalsIgnoreCase(direction)
+        boolean backward = "backward".equalsIgnoreCase(direction);
+        if (!backward && direction != null && !"forward".equalsIgnoreCase(direction)
                 && !direction.isBlank()) {
-            throw invalid(CobolMessages.INVALID_OPTION);
+            throw invalid(CobolMessages.INVALID_KEY);
         }
-        int from = page * COBOL_PAGE_SIZE;
-        if (from > cards.size()) {
-            throw new CobolApiException(HttpStatus.NOT_FOUND, CobolMessages.CARD_COMBINATION_NOT_FOUND);
+        Pageable pageable = PageRequest.of(page, COBOL_PAGE_SIZE,
+                Sort.by(backward ? Sort.Direction.DESC : Sort.Direction.ASC, "cardNumber"));
+        Page<Card> cards;
+        if (accountId != null && cardNumber != null) {
+            cards = backward
+                    ? cardRepository.findByCardAcctIdAndCardNumberLessThanEqual(
+                            accountId, cardNumber, pageable)
+                    : cardRepository.findByCardAcctIdAndCardNumberGreaterThanEqual(
+                            accountId, cardNumber, pageable);
+        } else if (accountId != null) {
+            cards = cardRepository.findByCardAcctId(accountId, pageable);
+        } else if (cardNumber != null) {
+            cards = backward
+                    ? cardRepository.findByCardNumberLessThanEqual(cardNumber, pageable)
+                    : cardRepository.findByCardNumberGreaterThanEqual(cardNumber, pageable);
+        } else {
+            cards = cardRepository.findAll(pageable);
         }
-        int to = Math.min(from + COBOL_PAGE_SIZE, cards.size());
-        List<CardListRow> rows = cards.subList(from, to).stream()
+        if (cards.isEmpty()) {
+            throw new CobolApiException(HttpStatus.NOT_FOUND,
+                    backward ? CobolMessages.CARD_NO_PREVIOUS_PAGES
+                            : CobolMessages.CARD_NO_MORE_RECORDS);
+        }
+        List<CardListRow> rows = cards.getContent().stream()
                 .map(card -> new CardListRow("S", "U", card.getCardAcctId(), card.getCardNumber(),
                         card.getCardActiveStatus(), "/api/cards/" + card.getCardNumber(),
                         "/api/cards/" + card.getCardNumber()))
                 .toList();
-        return new CardListResponse(page, COBOL_PAGE_SIZE, to < cards.size(), page > 0, rows);
+        return new CardListResponse(page, COBOL_PAGE_SIZE, cards.hasNext(), page > 0, rows);
     }
 
     public CardResponse detail(String rawAccountId, String rawCardNumber) {

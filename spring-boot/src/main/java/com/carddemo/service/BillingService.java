@@ -3,9 +3,11 @@ package com.carddemo.service;
 import com.carddemo.api.*;
 import com.carddemo.model.Account;
 import com.carddemo.model.Card;
+import com.carddemo.model.CardXref;
 import com.carddemo.model.Transaction;
 import com.carddemo.repository.AccountRepository;
 import com.carddemo.repository.CardRepository;
+import com.carddemo.repository.CardXrefRepository;
 import com.carddemo.repository.TransactionRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -13,20 +15,25 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.Comparator;
 
 @Service
 public class BillingService {
     private final AccountRepository accountRepository;
     private final CardRepository cardRepository;
+    private final CardXrefRepository cardXrefRepository;
     private final TransactionRepository transactionRepository;
+    private final TransactionIdGenerator idGenerator;
 
     public BillingService(AccountRepository accountRepository,
                           CardRepository cardRepository,
-                          TransactionRepository transactionRepository) {
+                          CardXrefRepository cardXrefRepository,
+                          TransactionRepository transactionRepository,
+                          TransactionIdGenerator idGenerator) {
         this.accountRepository = accountRepository;
         this.cardRepository = cardRepository;
+        this.cardXrefRepository = cardXrefRepository;
         this.transactionRepository = transactionRepository;
+        this.idGenerator = idGenerator;
     }
 
     @Transactional
@@ -44,11 +51,13 @@ public class BillingService {
         if (!"Y".equalsIgnoreCase(request.confirmation())) {
             throw bad(CobolMessages.BILL_CONFIRM);
         }
-        Card card = cardRepository.findByCardAcctId(accountId).stream().findFirst()
+        CardXref xref = cardXrefRepository.findByXrefAcctId(accountId).stream().findFirst()
+                .orElseThrow(() -> notFound(CobolMessages.TRANSACTION_CARD_NOT_FOUND));
+        Card card = cardRepository.findById(xref.getXrefCardNumber())
                 .orElseThrow(() -> notFound(CobolMessages.TRANSACTION_CARD_NOT_FOUND));
         BigDecimal amount = account.getAcctCurrBal();
         Transaction transaction = new Transaction();
-        transaction.setTranId(nextId());
+        transaction.setTranId(idGenerator.nextId());
         transaction.setTranTypeCode("02");
         transaction.setTranCategoryCode(2);
         transaction.setTranSource("POS TERM");
@@ -64,15 +73,8 @@ public class BillingService {
         transactionRepository.save(transaction);
         account.setAcctCurrBal(account.getAcctCurrBal().subtract(amount));
         accountRepository.save(account);
-        return new BillPaymentResponse(request.accountId(), amount, account.getAcctCurrBal(),
+        return new BillPaymentResponse(accountId, amount, account.getAcctCurrBal(),
                 transaction.getTranId());
-    }
-
-    private String nextId() {
-        return transactionRepository.findAll().stream().map(Transaction::getTranId)
-                .max(Comparator.naturalOrder())
-                .map(id -> "%016d".formatted(Long.parseLong(id) + 1))
-                .orElse("0000000000000001");
     }
 
     private CobolApiException bad(String message) {

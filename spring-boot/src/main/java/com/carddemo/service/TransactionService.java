@@ -14,6 +14,10 @@ import com.carddemo.repository.CardRepository;
 import com.carddemo.repository.TransactionCategoryRepository;
 import com.carddemo.repository.TransactionRepository;
 import com.carddemo.repository.TransactionTypeRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,7 +26,6 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeParseException;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
 
@@ -34,36 +37,50 @@ public class TransactionService {
     private final CardRepository cardRepository;
     private final TransactionTypeRepository typeRepository;
     private final TransactionCategoryRepository categoryRepository;
+    private final TransactionIdGenerator idGenerator;
 
     public TransactionService(TransactionRepository transactionRepository,
                               CardRepository cardRepository,
                               TransactionTypeRepository typeRepository,
-                              TransactionCategoryRepository categoryRepository) {
+                              TransactionCategoryRepository categoryRepository,
+                              TransactionIdGenerator idGenerator) {
         this.transactionRepository = transactionRepository;
         this.cardRepository = cardRepository;
         this.typeRepository = typeRepository;
         this.categoryRepository = categoryRepository;
+        this.idGenerator = idGenerator;
     }
 
     public TransactionListResponse list(String filter, int page, String direction) {
-        if (page < 0) throw bad(CobolMessages.INVALID_OPTION);
+        if (page < 0) throw bad(CobolMessages.TRANSACTION_TOP);
+        boolean backward = "backward".equalsIgnoreCase(direction);
+        if (!backward && direction != null && !direction.isBlank()
+                && !"forward".equalsIgnoreCase(direction)) {
+            throw bad(CobolMessages.INVALID_KEY);
+        }
         if (filter != null && !filter.isBlank()
                 && (!filter.matches("\\d{1,16}") || filter.chars().allMatch(c -> c == '0'))) {
             throw bad(CobolMessages.TRANSACTION_ID_INVALID);
         }
-        List<Transaction> values = transactionRepository.findAll().stream()
-                .filter(t -> filter == null || filter.isBlank() || t.getTranId().equals(
-                        "%016d".formatted(Long.parseLong(filter))))
-                .sorted(Comparator.comparing(Transaction::getTranId))
-                .toList();
-        if ("backward".equalsIgnoreCase(direction)) values = values.reversed();
-        else if (direction != null && !direction.isBlank()
-                && !"forward".equalsIgnoreCase(direction)) throw bad(CobolMessages.INVALID_OPTION);
-        int from = page * COBOL_PAGE_SIZE;
-        if (from > values.size()) throw notFound(CobolMessages.TRANSACTION_NOT_FOUND);
-        int to = Math.min(from + COBOL_PAGE_SIZE, values.size());
-        List<TransactionListRow> rows = values.subList(from, to).stream().map(this::row).toList();
-        return new TransactionListResponse(page, COBOL_PAGE_SIZE, to < values.size(), page > 0, rows);
+        Pageable pageable = PageRequest.of(page, COBOL_PAGE_SIZE,
+                Sort.by(backward ? Sort.Direction.DESC : Sort.Direction.ASC, "tranId"));
+        String start = filter == null || filter.isBlank()
+                ? null
+                : "%016d".formatted(Long.parseLong(filter));
+        Page<Transaction> values;
+        if (start == null) {
+            values = transactionRepository.findAll(pageable);
+        } else if (backward) {
+            values = transactionRepository.findByTranIdLessThanEqual(start, pageable);
+        } else {
+            values = transactionRepository.findByTranIdGreaterThanEqual(start, pageable);
+        }
+        if (values.isEmpty()) {
+            throw notFound(backward ? CobolMessages.TRANSACTION_TOP : CobolMessages.TRANSACTION_BOTTOM);
+        }
+        List<TransactionListRow> rows = values.getContent().stream().map(this::row).toList();
+        return new TransactionListResponse(page, COBOL_PAGE_SIZE, values.hasNext(),
+                page > 0, rows);
     }
 
     public TransactionResponse detail(String transactionId) {
@@ -95,7 +112,7 @@ public class TransactionService {
         if (blank(request.merchantZip())) throw bad(CobolMessages.TRANSACTION_MERCHANT_ZIP_REQUIRED);
         if (!"Y".equalsIgnoreCase(request.confirmation())) throw bad(CobolMessages.TRANSACTION_CONFIRM);
         Transaction value = new Transaction();
-        value.setTranId(nextId());
+        value.setTranId(idGenerator.nextId());
         value.setTranCardNumber(cardNumber);
         value.setTranTypeCode(type);
         value.setTranCategoryCode(categoryNumber);
@@ -130,13 +147,6 @@ public class TransactionService {
             return request.cardNumber();
         }
         throw bad(CobolMessages.TRANSACTION_ACCOUNT_OR_CARD_REQUIRED);
-    }
-
-    private String nextId() {
-        return transactionRepository.findAll().stream().map(Transaction::getTranId)
-                .max(Comparator.naturalOrder())
-                .map(id -> "%016d".formatted(Long.parseLong(id) + 1))
-                .orElse("0000000000000001");
     }
 
     private int parseCategory(String value) {
@@ -187,4 +197,5 @@ public class TransactionService {
     private CobolApiException notFound(String message) {
         return new CobolApiException(HttpStatus.NOT_FOUND, message);
     }
+
 }

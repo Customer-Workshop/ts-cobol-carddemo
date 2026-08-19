@@ -8,6 +8,16 @@ public final class CobolMessages {
     public static final String USER_VERIFY_FAILED = "Unable to verify the User ...";
     public static final String USER_EXISTS = "User ID already exist...";
     public static final String USER_TYPE_INVALID = "User Type must be A or U...";
+    public static final String FIRST_NAME_REQUIRED = "First Name can NOT be empty...";
+    public static final String LAST_NAME_REQUIRED = "Last Name can NOT be empty...";
+    public static final String USER_ID_REQUIRED_EDIT = "User ID can NOT be empty...";
+    public static final String PASSWORD_REQUIRED_EDIT = "Password can NOT be empty...";
+    public static final String USER_TYPE_REQUIRED = "User Type can NOT be empty...";
+    public static final String USER_ID_NOT_FOUND = "User ID NOT found...";
+    public static final String USER_ADD_FAILED = "Unable to Add User...";
+    public static final String USER_UPDATE_FAILED = "Unable to Update User...";
+    public static final String USER_DELETE_CONFIRM =
+        "Press PF5 key to delete this user ...";
     public static final String REPORT_TYPE_REQUIRED = "Select a report type to print report...";
     public static final String REPORT_START_INVALID = "Start Date - Not a valid date...";
     public static final String REPORT_END_INVALID = "End Date - Not a valid date...";
@@ -16,6 +26,15 @@ public final class CobolMessages {
     public static final String BILL_CONFIRM = "Confirm to make a bill payment...";
     public static final String ACCOUNT_NOT_FOUND = "Account ID NOT found...";
     public static final String INVALID_OPTION = "Please enter a valid option number...";
+    public static final String INVALID_KEY = "Invalid key pressed...";
+    public static final String TRANSACTION_BOTTOM =
+        "You have reached the bottom of the page...";
+    public static final String TRANSACTION_TOP =
+        "You have reached the top of the page...";
+    public static final String CARD_NO_MORE_RECORDS = "NO MORE RECORDS TO SHOW";
+    public static final String CARD_NO_PREVIOUS_PAGES = "NO PREVIOUS PAGES TO DISPLAY";
+    public static final String USER_BOTTOM = "NO MORE PAGES TO DISPLAY";
+    public static final String USER_TOP = "NO PREVIOUS PAGES TO DISPLAY";
     public static final String ADMIN_ONLY = "No access - Admin Only option... ";
     public static final String ACCOUNT_FILTER_INVALID =
         "Account Filter must  be a non-zero 11 digit number";
