@@ -3,7 +3,6 @@ package com.carddemo.api;
 import com.carddemo.service.CardService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -33,18 +32,10 @@ public class CardController {
         return service.detail(accountId, cardNumber);
     }
 
-    @PostMapping("/update")
-    public CardResponse update(@RequestBody CardUpdateRequest request) {
-        return service.update(request);
-    }
-
     @PutMapping("/{cardNumber}")
     public CardResponse update(@PathVariable String cardNumber,
+                               @RequestParam String accountId,
                                @RequestBody CardUpdateRequest request) {
-        return service.update(new CardUpdateRequest(request.accountId(), cardNumber,
-                request.embossedName(), request.activeStatus(), request.expiryMonth(),
-                request.expiryYear(), request.originalEmbossedName(),
-                request.originalActiveStatus(), request.originalExpiryMonth(),
-                request.originalExpiryYear()));
+        return service.update(accountId, cardNumber, request);
     }
 }

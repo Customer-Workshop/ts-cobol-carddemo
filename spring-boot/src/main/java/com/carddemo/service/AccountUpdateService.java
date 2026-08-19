@@ -15,8 +15,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
-import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 
 @Service
 public class AccountUpdateService {
@@ -36,28 +36,21 @@ public class AccountUpdateService {
     }
 
     @Transactional
-    public AccountViewResponse update(AccountUpdateRequest request) {
-        long accountId = validateAccount(request.accountId());
+    public AccountViewResponse update(String rawAccountId, AccountUpdateRequest request) {
+        long accountId = validateAccount(rawAccountId);
         Account account = accountRepository.findById(accountId).orElseThrow(
-                () -> new CobolApiException(HttpStatus.NOT_FOUND,
-                        CobolMessages.accountNotFound("%011d".formatted(accountId))));
+                () -> notFound(CobolMessages.accountNotFound("%011d".formatted(accountId))));
         CardXref xref = cardXrefRepository.findByXrefAcctId(accountId).stream().findFirst()
-                .orElseThrow(() -> new CobolApiException(HttpStatus.NOT_FOUND,
-                        CobolMessages.xrefNotFound("%011d".formatted(accountId))));
+                .orElseThrow(() -> notFound(CobolMessages.xrefNotFound("%011d".formatted(accountId))));
         Customer customer = customerRepository.findById(xref.getXrefCustId()).orElseThrow(
-                () -> new CobolApiException(HttpStatus.NOT_FOUND,
-                        CobolMessages.customerNotFound(String.valueOf(xref.getXrefCustId()))));
+                () -> notFound(CobolMessages.customerNotFound(String.valueOf(xref.getXrefCustId()))));
 
         validate(request);
-        if (request.customerId() != null && !request.customerId().equals(customer.getCustId())) {
-            throw bad("Customer Id must match the associated customer.");
+        AccountUpdateRequest.AccountSnapshot original = request.original();
+        if (original == null || !complete(original)) {
+            throw bad(CobolMessages.SNAPSHOT_REQUIRED);
         }
-        if (request.expectedCurrentBalance() != null
-                && !same(request.expectedCurrentBalance(), account.getAcctCurrBal())) {
-            throw changed();
-        }
-        if (request.expectedFirstName() != null
-                && !sameText(request.expectedFirstName(), customer.getCustFirstName())) {
+        if (!matches(original, account, customer)) {
             throw changed();
         }
         if (sameRequest(request, account, customer)) {
@@ -73,97 +66,153 @@ public class AccountUpdateService {
         account.setAcctReissueDate(request.reissueDate());
         account.setAcctCurrCycCredit(request.currentCycleCredit());
         account.setAcctCurrCycDebit(request.currentCycleDebit());
-        if (request.accountGroup() != null) {
-            account.setAcctGroupId(request.accountGroup().trim());
-        }
+        account.setAcctGroupId(trim(request.accountGroup()));
         accountRepository.save(account);
 
         customer.setCustSsn(Long.parseLong(request.ssn().replace("-", "")));
         customer.setCustDob(request.dateOfBirth());
         customer.setCustFicoCreditScore(request.ficoScore());
-        customer.setCustFirstName(request.firstName().trim());
+        customer.setCustFirstName(trim(request.firstName()));
         customer.setCustMiddleName(blankToNull(request.middleName()));
-        customer.setCustLastName(request.lastName().trim());
-        customer.setCustAddrLine1(request.addressLine1().trim());
+        customer.setCustLastName(trim(request.lastName()));
+        customer.setCustAddrLine1(trim(request.addressLine1()));
         customer.setCustAddrLine2(blankToNull(request.addressLine2()));
-        customer.setCustAddrLine3(request.addressLine3().trim());
-        customer.setCustAddrStateCode(request.stateCode().trim().toUpperCase(Locale.ROOT));
-        customer.setCustAddrZip(request.zip().trim());
-        customer.setCustAddrCountryCode(request.countryCode().trim().toUpperCase(Locale.ROOT));
+        customer.setCustAddrLine3(trim(request.addressLine3()));
+        customer.setCustAddrStateCode(upper(request.stateCode()));
+        customer.setCustAddrZip(trim(request.zip()));
+        customer.setCustAddrCountryCode(upper(request.countryCode()));
         customer.setCustPhoneNum1(normalizePhone(request.phoneNumber1()));
         customer.setCustPhoneNum2(normalizePhone(request.phoneNumber2()));
         customer.setCustGovernmentIssuedId(blankToNull(request.governmentIssuedId()));
-        customer.setCustEftAccountId(request.eftAccountId().trim());
-        customer.setCustPrimaryCardHolderIndicator(normalizeStatus(request.primaryCardHolderIndicator()));
+        customer.setCustEftAccountId(trim(request.eftAccountId()));
+        customer.setCustPrimaryCardHolderIndicator(normalizeStatus(
+                request.primaryCardHolderIndicator()));
         customerRepository.save(customer);
-
-        return accountViewService.view("%d".formatted(accountId));
+        return accountViewService.view(Long.toString(accountId));
     }
 
     private void validate(AccountUpdateRequest request) {
-        requireYesNo("Account Status", request.activeStatus());
+        requireYesNo("Account Status", request.activeStatus(), CobolMessages.ACCOUNT_STATUS_INVALID);
         requireMoney("Credit Limit", request.creditLimit());
         requireMoney("Cash Credit Limit", request.cashCreditLimit());
         requireMoney("Current Balance", request.currentBalance());
         requireMoney("Current Cycle Credit Limit", request.currentCycleCredit());
         requireMoney("Current Cycle Debit Limit", request.currentCycleDebit());
-        if (request.openDate() == null) throw required("Open Date");
-        if (request.expirationDate() == null) throw required("Expiry Date");
-        if (request.reissueDate() == null) throw required("Reissue Date");
-        if (request.dateOfBirth() == null) throw required("Date of Birth");
+        requireDate("Open Date", request.openDate());
+        requireDate("Expiry Date", request.expirationDate());
+        requireDate("Reissue Date", request.reissueDate());
+        requireDate("Date of Birth", request.dateOfBirth());
         if (request.ficoScore() == null || request.ficoScore() < 300 || request.ficoScore() > 850) {
-            throw bad("FICO Score is not valid");
+            throw bad(CobolMessages.FICO_INVALID);
         }
         requireAlpha("First Name", request.firstName(), true);
         requireAlpha("Middle Name", request.middleName(), false);
         requireAlpha("Last Name", request.lastName(), true);
         requireRequired("Address Line 1", request.addressLine1());
         requireAlpha("State", request.stateCode(), true);
-        if (!request.stateCode().trim().matches("[A-Za-z]{2}")) {
-            throw bad("State is not valid");
-        }
         requireNumeric("Zip", request.zip(), true);
-        if (!request.zip().trim().matches("\\d{5}")) throw bad("Zip is not valid");
         requireAlpha("City", request.addressLine3(), true);
         requireAlpha("Country", request.countryCode(), true);
-        validatePhone("Phone Number 1", request.phoneNumber1());
-        validatePhone("Phone Number 2", request.phoneNumber2());
+        requirePhone("Phone Number 1", request.phoneNumber1(), 1);
+        requirePhone("Phone Number 2", request.phoneNumber2(), 2);
         requireNumeric("EFT Account Id", request.eftAccountId(), true);
-        if (request.eftAccountId().trim().matches("0+")) throw bad("EFT Account Id must not be zero.");
-        requireYesNo("Primary Card Holder", request.primaryCardHolderIndicator());
+        requireYesNo("Primary Card Holder", request.primaryCardHolderIndicator(),
+                CobolMessages.PRIMARY_CARD_HOLDER_INVALID);
         if (request.ssn() == null || !request.ssn().replace("-", "").matches("\\d{9}")) {
-            throw bad("SSN must be a 9 digit number");
+            throw bad(CobolMessages.SSN_INVALID);
         }
     }
 
+    private boolean matches(AccountUpdateRequest.AccountSnapshot s, Account a, Customer c) {
+        return same(s.activeStatus(), a.getAcctActiveStatus())
+                && same(s.currentBalance(), a.getAcctCurrBal())
+                && same(s.creditLimit(), a.getAcctCreditLimit())
+                && same(s.cashCreditLimit(), a.getAcctCashCreditLimit())
+                && same(s.openDate(), a.getAcctOpenDate())
+                && same(s.expirationDate(), a.getAcctExpirationDate())
+                && same(s.reissueDate(), a.getAcctReissueDate())
+                && same(s.currentCycleCredit(), a.getAcctCurrCycCredit())
+                && same(s.currentCycleDebit(), a.getAcctCurrCycDebit())
+                && sameLower(s.accountGroup(), a.getAcctGroupId())
+                && same(s.customerId(), c.getCustId())
+                && same(Long.parseLong(s.ssn().replace("-", "")), c.getCustSsn())
+                && same(s.dateOfBirth(), c.getCustDob())
+                && same(s.ficoScore(), c.getCustFicoCreditScore())
+                && sameUpper(s.firstName(), c.getCustFirstName())
+                && sameUpper(s.middleName(), c.getCustMiddleName())
+                && sameUpper(s.lastName(), c.getCustLastName())
+                && sameUpper(s.addressLine1(), c.getCustAddrLine1())
+                && sameUpper(s.addressLine2(), c.getCustAddrLine2())
+                && sameUpper(s.addressLine3(), c.getCustAddrLine3())
+                && sameUpper(s.stateCode(), c.getCustAddrStateCode())
+                && same(s.zip(), c.getCustAddrZip())
+                && sameUpper(s.countryCode(), c.getCustAddrCountryCode())
+                && same(s.phoneNumber1(), c.getCustPhoneNum1())
+                && same(s.phoneNumber2(), c.getCustPhoneNum2())
+                && sameUpper(s.governmentIssuedId(), c.getCustGovernmentIssuedId())
+                && same(s.eftAccountId(), c.getCustEftAccountId())
+                && same(s.primaryCardHolderIndicator(), c.getCustPrimaryCardHolderIndicator());
+    }
+
+    private boolean complete(AccountUpdateRequest.AccountSnapshot s) {
+        return s.activeStatus() != null && s.currentBalance() != null
+                && s.creditLimit() != null && s.cashCreditLimit() != null
+                && s.openDate() != null && s.expirationDate() != null && s.reissueDate() != null
+                && s.currentCycleCredit() != null && s.currentCycleDebit() != null
+                && s.accountGroup() != null && s.customerId() != null && s.ssn() != null
+                && s.dateOfBirth() != null && s.ficoScore() != null && s.firstName() != null
+                && s.middleName() != null && s.lastName() != null && s.addressLine1() != null
+                && s.addressLine2() != null && s.addressLine3() != null && s.stateCode() != null
+                && s.zip() != null && s.countryCode() != null && s.phoneNumber1() != null
+                && s.phoneNumber2() != null && s.governmentIssuedId() != null
+                && s.eftAccountId() != null && s.primaryCardHolderIndicator() != null;
+    }
+
     private boolean sameRequest(AccountUpdateRequest r, Account a, Customer c) {
-        return sameText(r.activeStatus(), a.getAcctActiveStatus())
-                && same(r.currentBalance(), a.getAcctCurrBal())
-                && same(r.creditLimit(), a.getAcctCreditLimit())
-                && same(r.cashCreditLimit(), a.getAcctCashCreditLimit())
-                && same(r.openDate(), a.getAcctOpenDate())
-                && same(r.expirationDate(), a.getAcctExpirationDate())
-                && same(r.reissueDate(), a.getAcctReissueDate())
-                && same(r.currentCycleCredit(), a.getAcctCurrCycCredit())
-                && same(r.currentCycleDebit(), a.getAcctCurrCycDebit())
-                && sameText(r.accountGroup(), a.getAcctGroupId())
-                && same(Long.parseLong(r.ssn().replace("-", "")), c.getCustSsn())
-                && same(r.dateOfBirth(), c.getCustDob())
-                && same(r.ficoScore(), c.getCustFicoCreditScore())
-                && sameText(r.firstName(), c.getCustFirstName())
-                && sameText(r.middleName(), c.getCustMiddleName())
-                && sameText(r.lastName(), c.getCustLastName())
-                && sameText(r.addressLine1(), c.getCustAddrLine1())
-                && sameText(r.addressLine2(), c.getCustAddrLine2())
-                && sameText(r.addressLine3(), c.getCustAddrLine3())
-                && sameText(r.stateCode(), c.getCustAddrStateCode())
-                && sameText(r.zip(), c.getCustAddrZip())
-                && sameText(r.countryCode(), c.getCustAddrCountryCode())
-                && sameText(normalizePhone(r.phoneNumber1()), c.getCustPhoneNum1())
-                && sameText(normalizePhone(r.phoneNumber2()), c.getCustPhoneNum2())
-                && sameText(r.governmentIssuedId(), c.getCustGovernmentIssuedId())
-                && sameText(r.eftAccountId(), c.getCustEftAccountId())
-                && sameText(r.primaryCardHolderIndicator(), c.getCustPrimaryCardHolderIndicator());
+        AccountUpdateRequest.AccountSnapshot current = new AccountUpdateRequest.AccountSnapshot(
+                a.getAcctActiveStatus(), a.getAcctCurrBal(), a.getAcctCreditLimit(),
+                a.getAcctCashCreditLimit(), a.getAcctOpenDate(), a.getAcctExpirationDate(),
+                a.getAcctReissueDate(), a.getAcctCurrCycCredit(), a.getAcctCurrCycDebit(),
+                a.getAcctGroupId(), c.getCustId(), formatSsn(c.getCustSsn()), c.getCustDob(),
+                c.getCustFicoCreditScore(), c.getCustFirstName(), c.getCustMiddleName(),
+                c.getCustLastName(), c.getCustAddrLine1(), c.getCustAddrLine2(),
+                c.getCustAddrLine3(), c.getCustAddrStateCode(), c.getCustAddrZip(),
+                c.getCustAddrCountryCode(), c.getCustPhoneNum1(), c.getCustPhoneNum2(),
+                c.getCustGovernmentIssuedId(), c.getCustEftAccountId(),
+                c.getCustPrimaryCardHolderIndicator());
+        return matchesRequest(r, current);
+    }
+
+    private boolean matchesRequest(AccountUpdateRequest r,
+                                   AccountUpdateRequest.AccountSnapshot c) {
+        return same(r.activeStatus(), c.activeStatus())
+                && same(r.currentBalance(), c.currentBalance())
+                && same(r.creditLimit(), c.creditLimit())
+                && same(r.cashCreditLimit(), c.cashCreditLimit())
+                && same(r.openDate(), c.openDate())
+                && same(r.expirationDate(), c.expirationDate())
+                && same(r.reissueDate(), c.reissueDate())
+                && same(r.currentCycleCredit(), c.currentCycleCredit())
+                && same(r.currentCycleDebit(), c.currentCycleDebit())
+                && same(r.accountGroup(), c.accountGroup())
+                && same(r.customerId(), c.customerId())
+                && same(r.ssn(), c.ssn())
+                && same(r.dateOfBirth(), c.dateOfBirth())
+                && same(r.ficoScore(), c.ficoScore())
+                && same(r.firstName(), c.firstName())
+                && same(r.middleName(), c.middleName())
+                && same(r.lastName(), c.lastName())
+                && same(r.addressLine1(), c.addressLine1())
+                && same(r.addressLine2(), c.addressLine2())
+                && same(r.addressLine3(), c.addressLine3())
+                && same(r.stateCode(), c.stateCode())
+                && same(r.zip(), c.zip())
+                && same(r.countryCode(), c.countryCode())
+                && same(normalizePhone(r.phoneNumber1()), c.phoneNumber1())
+                && same(normalizePhone(r.phoneNumber2()), c.phoneNumber2())
+                && same(r.governmentIssuedId(), c.governmentIssuedId())
+                && same(r.eftAccountId(), c.eftAccountId())
+                && same(r.primaryCardHolderIndicator(), c.primaryCardHolderIndicator());
     }
 
     private long validateAccount(String raw) {
@@ -173,13 +222,17 @@ public class AccountUpdateService {
         return Long.parseLong(raw);
     }
 
-    private void requireYesNo(String field, String value) {
+    private void requireYesNo(String field, String value, String invalidMessage) {
         if (value == null || value.isBlank()) throw required(field);
-        String v = value.trim().toUpperCase(Locale.ROOT);
-        if (!v.equals("Y") && !v.equals("N")) throw bad(field + " must be Y or N.");
+        String normalized = value.trim().toUpperCase(Locale.ROOT);
+        if (!normalized.equals("Y") && !normalized.equals("N")) throw bad(invalidMessage);
     }
 
     private void requireMoney(String field, BigDecimal value) {
+        if (value == null) throw required(field);
+    }
+
+    private void requireDate(String field, Object value) {
         if (value == null) throw required(field);
     }
 
@@ -190,24 +243,24 @@ public class AccountUpdateService {
     private void requireAlpha(String field, String value, boolean required) {
         if (value == null || value.isBlank()) {
             if (required) throw required(field);
-            return;
+        } else if (!value.trim().matches("[A-Za-z ]+")) {
+            throw bad(CobolMessages.fieldAlpha(field));
         }
-        if (!value.trim().matches("[A-Za-z ]+")) throw bad(field + " can have alphabets only.");
     }
 
     private void requireNumeric(String field, String value, boolean required) {
         if (value == null || value.isBlank()) {
             if (required) throw required(field);
-            return;
+        } else if (!value.trim().matches("\\d+")) {
+            throw bad(CobolMessages.fieldNumeric(field));
         }
-        if (!value.trim().matches("\\d+")) throw bad(field + " must be all numeric.");
     }
 
-    private void validatePhone(String field, String value) {
-        if (value == null || value.isBlank()) return;
+    private void requirePhone(String field, String value, int number) {
+        if (value == null || value.isBlank()) throw required(field + " area code");
         String digits = value.replaceAll("\\D", "");
         if (!digits.matches("\\d{10}") || digits.startsWith("000")) {
-            throw bad(field + ": Phone number must be a 10 digit number.");
+            throw bad(CobolMessages.phoneInvalid(field, number));
         }
     }
 
@@ -215,7 +268,8 @@ public class AccountUpdateService {
         if (value == null || value.isBlank()) return null;
         String digits = value.replaceAll("\\D", "");
         return digits.length() == 10
-                ? "(%s)%s-%s".formatted(digits.substring(0, 3), digits.substring(3, 6), digits.substring(6))
+                ? "(%s)%s-%s".formatted(digits.substring(0, 3), digits.substring(3, 6),
+                digits.substring(6))
                 : value.trim();
     }
 
@@ -223,16 +277,32 @@ public class AccountUpdateService {
         return value.trim().toUpperCase(Locale.ROOT);
     }
 
+    private String formatSsn(Long ssn) {
+        return "%09d".formatted(ssn);
+    }
+
+    private String trim(String value) {
+        return value == null ? null : value.trim();
+    }
+
+    private String upper(String value) {
+        return value == null ? null : value.trim().toUpperCase(Locale.ROOT);
+    }
+
     private String blankToNull(String value) {
         return value == null || value.isBlank() ? null : value.trim();
     }
 
     private boolean same(Object left, Object right) {
-        return left == null ? right == null : left.equals(right);
+        return Objects.equals(left, right);
     }
 
-    private boolean sameText(String left, String right) {
-        return left == null ? right == null : left.trim().equalsIgnoreCase(right == null ? "" : right.trim());
+    private boolean sameUpper(String left, String right) {
+        return Objects.equals(upper(left), upper(right));
+    }
+
+    private boolean sameLower(String left, String right) {
+        return left == null ? right == null : left.trim().equalsIgnoreCase(right == null ? null : right.trim());
     }
 
     private CobolApiException required(String field) {
@@ -245,5 +315,9 @@ public class AccountUpdateService {
 
     private CobolApiException bad(String message) {
         return new CobolApiException(HttpStatus.BAD_REQUEST, message);
+    }
+
+    private CobolApiException notFound(String message) {
+        return new CobolApiException(HttpStatus.NOT_FOUND, message);
     }
 }

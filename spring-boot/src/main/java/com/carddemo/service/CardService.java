@@ -82,9 +82,10 @@ public class CardService {
     }
 
     @Transactional
-    public CardResponse update(CardUpdateRequest request) {
-        Long accountId = validateAccount(request.accountId(), true);
-        String cardNumber = validateCard(request.cardNumber(), true);
+    public CardResponse update(String rawAccountId, String rawCardNumber,
+                               CardUpdateRequest request) {
+        Long accountId = validateAccount(rawAccountId, true);
+        String cardNumber = validateCard(rawCardNumber, true);
         Card card = cardRepository.findById(cardNumber).orElseThrow(
                 () -> new CobolApiException(HttpStatus.NOT_FOUND,
                         CobolMessages.CARD_COMBINATION_NOT_FOUND));
@@ -97,20 +98,22 @@ public class CardService {
         requireExpiryMonth(request.expiryMonth());
         requireExpiryYear(request.expiryYear());
 
-        if (request.originalEmbossedName() != null
-                && !same(request.originalEmbossedName(), card.getCardEmbossedName())) {
+        CardUpdateRequest.CardSnapshot original = request.original();
+        if (original == null || original.embossedName() == null
+                || original.activeStatus() == null || original.expiryMonth() == null
+                || original.expiryYear() == null) {
+            throw new CobolApiException(HttpStatus.BAD_REQUEST, CobolMessages.SNAPSHOT_REQUIRED);
+        }
+        if (!same(original.embossedName(), card.getCardEmbossedName())) {
             throw changed();
         }
-        if (request.originalActiveStatus() != null
-                && !same(request.originalActiveStatus(), card.getCardActiveStatus())) {
+        if (!same(original.activeStatus(), card.getCardActiveStatus())) {
             throw changed();
         }
-        if (request.originalExpiryMonth() != null
-                && !request.originalExpiryMonth().equals(card.getCardExpirationDate().getMonthValue())) {
+        if (!original.expiryMonth().equals(card.getCardExpirationDate().getMonthValue())) {
             throw changed();
         }
-        if (request.originalExpiryYear() != null
-                && !request.originalExpiryYear().equals(card.getCardExpirationDate().getYear())) {
+        if (!original.expiryYear().equals(card.getCardExpirationDate().getYear())) {
             throw changed();
         }
         if (same(request.embossedName(), card.getCardEmbossedName())
@@ -132,7 +135,8 @@ public class CardService {
     }
 
     private CardResponse response(Card card) {
-        return new CardResponse(card.getCardNumber(), card.getCardAcctId(), card.getCardCvvCode(),
+        return new CardResponse(card.getCardNumber(), card.getCardAcctId(),
+                card.getCardCvvCode() == null ? null : "%03d".formatted(card.getCardCvvCode()),
                 card.getCardEmbossedName(), card.getCardExpirationDate(), card.getCardActiveStatus());
     }
 
@@ -195,7 +199,7 @@ public class CardService {
     }
 
     private boolean same(String left, String right) {
-        return left == null ? right == null : left.trim().equalsIgnoreCase(right == null ? null : right.trim());
+        return left == null ? right == null : left.trim().equals(right == null ? null : right.trim());
     }
 
     private CobolApiException changed() {
