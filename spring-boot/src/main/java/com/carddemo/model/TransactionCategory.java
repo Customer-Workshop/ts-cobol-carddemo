@@ -19,8 +19,8 @@ public class TransactionCategory {
 
     @Embeddable
     public static class Id implements Serializable {
-        private String tranTypeCode;
-        private Integer tranCategoryCode;
+        @jakarta.persistence.Column(length = 2, nullable = false) private String tranTypeCode;
+        @jakarta.persistence.Column(nullable = false) private Integer tranCategoryCode;
         public String getTranTypeCode() { return tranTypeCode; }
         public void setTranTypeCode(String value) { tranTypeCode = value; }
         public Integer getTranCategoryCode() { return tranCategoryCode; }

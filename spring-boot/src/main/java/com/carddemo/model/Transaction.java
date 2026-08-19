@@ -10,17 +10,17 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "transactions")
 public class Transaction {
-    @Id private String tranId;
-    private String tranTypeCode;
+    @Id @Column(length = 16, nullable = false) private String tranId;
+    @Column(length = 2) private String tranTypeCode;
     private Integer tranCategoryCode;
-    private String tranSource;
-    private String tranDescription;
+    @Column(length = 10) private String tranSource;
+    @Column(length = 100) private String tranDescription;
     @Column(precision = 19, scale = 2) private BigDecimal tranAmount;
     private Long tranMerchantId;
-    private String tranMerchantName;
-    private String tranMerchantCity;
-    private String tranMerchantZip;
-    private String tranCardNumber;
+    @Column(length = 50) private String tranMerchantName;
+    @Column(length = 50) private String tranMerchantCity;
+    @Column(length = 10) private String tranMerchantZip;
+    @Column(length = 16) private String tranCardNumber;
     private LocalDateTime tranOriginTimestamp;
     private LocalDateTime tranProcessTimestamp;
 

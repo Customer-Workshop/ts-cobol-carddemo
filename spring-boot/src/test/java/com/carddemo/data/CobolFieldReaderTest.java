@@ -12,11 +12,11 @@ class CobolFieldReaderTest {
 
     @Test
     void parsesPositiveAndNegativeOverpunchValues() {
-        assertEquals(new BigDecimal("19400.00"),
+        assertEquals(new BigDecimal("194.00"),
                 CobolFieldReader.signedDecimal("00000001940{", 2));
-        assertEquals(new BigDecimal("1235.00"),
+        assertEquals(new BigDecimal("12.35"),
                 CobolFieldReader.signedDecimal("0000000123E", 2));
-        assertEquals(new BigDecimal("-1236.00"),
+        assertEquals(new BigDecimal("-12.36"),
                 CobolFieldReader.signedDecimal("0000000123O", 2));
         assertEquals(new BigDecimal("-0.00"),
                 CobolFieldReader.signedDecimal("0000000000}", 2));
@@ -35,6 +35,14 @@ class CobolFieldReaderTest {
         assertThrows(IllegalArgumentException.class,
                 () -> CobolFieldReader.unsignedLong("00000X0042", 0, 10));
         assertThrows(IllegalArgumentException.class,
+                () -> CobolFieldReader.unsignedLong("          ", 0, 10));
+        assertThrows(IllegalArgumentException.class,
                 () -> CobolFieldReader.signedDecimal("00000000X0A", 2));
+    }
+
+    @Test
+    void splitsNewlineFreeFixedWidthRecords() {
+        assertEquals(java.util.List.of("ABC", "DEF"),
+                CobolFieldReader.splitRecords("ABCDEF", 3));
     }
 }

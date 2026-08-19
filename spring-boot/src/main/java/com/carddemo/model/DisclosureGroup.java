@@ -22,9 +22,9 @@ public class DisclosureGroup {
 
     @Embeddable
     public static class Id implements Serializable {
-        private String acctGroupId;
-        private String tranTypeCode;
-        private Integer tranCategoryCode;
+        @jakarta.persistence.Column(length = 10, nullable = false) private String acctGroupId;
+        @jakarta.persistence.Column(length = 2, nullable = false) private String tranTypeCode;
+        @jakarta.persistence.Column(nullable = false) private Integer tranCategoryCode;
         public String getAcctGroupId() { return acctGroupId; }
         public void setAcctGroupId(String value) { acctGroupId = value; }
         public String getTranTypeCode() { return tranTypeCode; }

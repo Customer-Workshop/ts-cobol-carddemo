@@ -1,7 +1,10 @@
 package com.carddemo.data;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.math.RoundingMode;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Reads the display-format COBOL fields used by the CardDemo ASCII exports.
@@ -16,15 +19,45 @@ public final class CobolFieldReader {
         return value.isBlank() ? null : value;
     }
 
-    public static long unsignedLong(String record, int offset, int length) {
+    public static Long optionalUnsignedLong(String record, int offset, int length) {
         String value = text(record, offset, length);
         if (value == null) {
-            return 0L;
+            return null;
         }
         if (!value.matches("\\d+")) {
             throw new IllegalArgumentException("Invalid unsigned COBOL number: " + value);
         }
         return Long.parseLong(value);
+    }
+
+    public static long unsignedLong(String record, int offset, int length) {
+        Long value = optionalUnsignedLong(record, offset, length);
+        if (value == null) {
+            throw new IllegalArgumentException("Blank unsigned COBOL number");
+        }
+        return value;
+    }
+
+    public static long requiredUnsignedLong(String record, int offset, int length,
+                                            String sourceName, int recordNumber) {
+        String value = text(record, offset, length);
+        if (value == null) {
+            throw invalidRequiredNumber(sourceName, recordNumber, "blank");
+        }
+        if (!value.matches("\\d+")) {
+            throw invalidRequiredNumber(sourceName, recordNumber, "invalid value '" + value + "'");
+        }
+        return Long.parseLong(value);
+    }
+
+    public static String requiredText(String record, int offset, int length,
+                                      String sourceName, int recordNumber) {
+        String value = text(record, offset, length);
+        if (value == null) {
+            throw new IllegalArgumentException("Missing required text field in " + sourceName
+                    + " record " + recordNumber);
+        }
+        return value;
     }
 
     public static BigDecimal signedDecimal(String record, int offset, int digits, int scale) {
@@ -58,8 +91,32 @@ public final class CobolFieldReader {
             throw new IllegalArgumentException("Invalid signed COBOL number: " + value);
         }
         String digits = trimmed.substring(0, trimmed.length() - 1) + lastDigit;
-        BigDecimal result = new BigDecimal(digits).setScale(scale, RoundingMode.UNNECESSARY);
+        BigDecimal result = new BigDecimal(new BigInteger(digits), scale);
         return sign < 0 ? result.negate() : result;
+    }
+
+    public static List<String> splitRecords(String contents, int recordLength) {
+        if (contents == null || recordLength <= 0) {
+            throw new IllegalArgumentException("Contents and record length must be valid");
+        }
+        if (contents.indexOf('\n') < 0 && contents.indexOf('\r') < 0) {
+            if (contents.length() % recordLength != 0) {
+                throw new IllegalArgumentException("Fixed-width content length " + contents.length()
+                        + " is not a multiple of record length " + recordLength);
+            }
+            List<String> records = new ArrayList<>();
+            for (int offset = 0; offset < contents.length(); offset += recordLength) {
+                records.add(contents.substring(offset, offset + recordLength));
+            }
+            return records;
+        }
+        return contents.lines().toList();
+    }
+
+    private static IllegalArgumentException invalidRequiredNumber(
+            String sourceName, int recordNumber, String reason) {
+        return new IllegalArgumentException("Required numeric field in " + sourceName
+                + " record " + recordNumber + " is " + reason);
     }
 
     private static String field(String record, int offset, int length) {

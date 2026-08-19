@@ -32,7 +32,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.Charset;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -50,6 +49,9 @@ public class DataSeeder implements CommandLineRunner {
             DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSSSSS");
 
     private final String dataDir;
+    private final String usrsecCharset;
+    private final boolean acctdataGroupIdInZipSlot;
+    private final boolean force;
     private final ResourceLoader resourceLoader;
     private final AccountRepository accountRepository;
     private final CustomerRepository customerRepository;
@@ -76,6 +78,10 @@ public class DataSeeder implements CommandLineRunner {
             TransactionCategoryBalanceRepository transactionCategoryBalanceRepository,
             SecurityUserRepository securityUserRepository) {
         this.dataDir = environment.getProperty("carddemo.seed.data-dir", "../app/data");
+        this.usrsecCharset = environment.getProperty("carddemo.seed.usrsec-charset", "IBM037");
+        this.acctdataGroupIdInZipSlot = environment.getProperty(
+                "carddemo.seed.acctdata-group-id-in-zip-slot", Boolean.class, true);
+        this.force = environment.getProperty("carddemo.seed.force", Boolean.class, false);
         this.resourceLoader = resourceLoader;
         this.accountRepository = accountRepository;
         this.customerRepository = customerRepository;
@@ -92,6 +98,10 @@ public class DataSeeder implements CommandLineRunner {
     @Override
     @Transactional
     public void run(String... args) throws Exception {
+        if (!force && accountRepository.count() > 0) {
+            log.info("Skipping CardDemo data seed because account data is already present");
+            return;
+        }
         accountRepository.deleteAllInBatch();
         customerRepository.deleteAllInBatch();
         cardRepository.deleteAllInBatch();
@@ -103,15 +113,24 @@ public class DataSeeder implements CommandLineRunner {
         transactionCategoryBalanceRepository.deleteAllInBatch();
         securityUserRepository.deleteAllInBatch();
 
-        List<Account> accounts = parseAccounts(readLines("ASCII/acctdata.txt"));
-        List<Customer> customers = parseCustomers(readLines("ASCII/custdata.txt"));
-        List<Card> cards = parseCards(readLines("ASCII/carddata.txt"));
-        List<CardXref> cardXrefs = parseCardXrefs(readLines("ASCII/cardxref.txt"));
-        List<Transaction> transactions = parseTransactions(readLines("ASCII/dailytran.txt"));
-        List<DisclosureGroup> disclosureGroups = parseDisclosureGroups(readLines("ASCII/discgrp.txt"));
-        List<TransactionCategoryBalance> balances = parseBalances(readLines("ASCII/tcatbal.txt"));
-        List<TransactionCategory> categories = parseCategories(readLines("ASCII/trancatg.txt"));
-        List<TransactionType> types = parseTypes(readLines("ASCII/trantype.txt"));
+        List<String> accountsData = readLines("ASCII/acctdata.txt", 300);
+        List<String> customersData = readLines("ASCII/custdata.txt", 500);
+        List<String> cardsData = readLines("ASCII/carddata.txt", 150);
+        List<String> cardXrefsData = readLines("ASCII/cardxref.txt", 50);
+        List<String> transactionsData = readLines("ASCII/dailytran.txt", 350);
+        List<String> disclosureGroupsData = readLines("ASCII/discgrp.txt", 50);
+        List<String> balancesData = readLines("ASCII/tcatbal.txt", 50);
+        List<String> categoriesData = readLines("ASCII/trancatg.txt", 60);
+        List<String> typesData = readLines("ASCII/trantype.txt", 60);
+        List<Account> accounts = parseAccounts(accountsData, "acctdata.txt");
+        List<Customer> customers = parseCustomers(customersData, "custdata.txt");
+        List<Card> cards = parseCards(cardsData, "carddata.txt");
+        List<CardXref> cardXrefs = parseCardXrefs(cardXrefsData, "cardxref.txt");
+        List<Transaction> transactions = parseTransactions(transactionsData, "dailytran.txt");
+        List<DisclosureGroup> disclosureGroups = parseDisclosureGroups(disclosureGroupsData, "discgrp.txt");
+        List<TransactionCategoryBalance> balances = parseBalances(balancesData, "tcatbal.txt");
+        List<TransactionCategory> categories = parseCategories(categoriesData, "trancatg.txt");
+        List<TransactionType> types = parseTypes(typesData, "trantype.txt");
         List<SecurityUser> users = parseUsers(readBytes("EBCDIC/AWS.M2.CARDDEMO.USRSEC.PS"));
 
         accountRepository.saveAll(accounts);
@@ -131,10 +150,10 @@ public class DataSeeder implements CommandLineRunner {
                 disclosureGroups.size(), balances.size(), categories.size(), types.size(), users.size());
     }
 
-    private List<String> readLines(String relativePath) throws IOException {
+    private List<String> readLines(String relativePath, int recordLength) throws IOException {
         try (InputStream input = open(relativePath)) {
-            return new String(input.readAllBytes(), java.nio.charset.StandardCharsets.UTF_8)
-                    .lines().toList();
+            return CobolFieldReader.splitRecords(
+                    new String(input.readAllBytes(), java.nio.charset.StandardCharsets.UTF_8), recordLength);
         }
     }
 
@@ -157,11 +176,13 @@ public class DataSeeder implements CommandLineRunner {
         return resource.getInputStream();
     }
 
-    private List<Account> parseAccounts(List<String> lines) {
+    private List<Account> parseAccounts(List<String> lines, String sourceName) {
         List<Account> result = new ArrayList<>();
-        for (String line : lines) {
+        for (int i = 0; i < lines.size(); i++) {
+            String line = lines.get(i);
+            int recordNumber = i + 1;
             Account value = new Account();
-            value.setAcctId(CobolFieldReader.unsignedLong(line, 0, 11));
+            value.setAcctId(CobolFieldReader.requiredUnsignedLong(line, 0, 11, sourceName, recordNumber));
             value.setAcctActiveStatus(CobolFieldReader.text(line, 11, 1));
             value.setAcctCurrBal(CobolFieldReader.signedDecimal(line, 12, 10, 2));
             value.setAcctCreditLimit(CobolFieldReader.signedDecimal(line, 24, 10, 2));
@@ -173,7 +194,9 @@ public class DataSeeder implements CommandLineRunner {
             value.setAcctCurrCycDebit(CobolFieldReader.signedDecimal(line, 90, 10, 2));
             String accountZip = CobolFieldReader.text(line, 102, 10);
             String accountGroup = CobolFieldReader.text(line, 112, 10);
-            if (accountGroup == null && accountZip != null && accountZip.matches("[A-Z].*")) {
+            if (acctdataGroupIdInZipSlot) {
+                // The supplied acctdata generator writes ACCT-GROUP-ID at offset 102
+                // (the copybook's ZIP slot); false preserves strict copybook offsets.
                 accountGroup = accountZip;
                 accountZip = null;
             }
@@ -184,11 +207,13 @@ public class DataSeeder implements CommandLineRunner {
         return result;
     }
 
-    private List<Customer> parseCustomers(List<String> lines) {
+    private List<Customer> parseCustomers(List<String> lines, String sourceName) {
         List<Customer> result = new ArrayList<>();
-        for (String line : lines) {
+        for (int i = 0; i < lines.size(); i++) {
+            String line = lines.get(i);
+            int recordNumber = i + 1;
             Customer value = new Customer();
-            value.setCustId(CobolFieldReader.unsignedLong(line, 0, 9));
+            value.setCustId(CobolFieldReader.requiredUnsignedLong(line, 0, 9, sourceName, recordNumber));
             value.setCustFirstName(CobolFieldReader.text(line, 9, 25));
             value.setCustMiddleName(CobolFieldReader.text(line, 34, 25));
             value.setCustLastName(CobolFieldReader.text(line, 59, 25));
@@ -200,24 +225,28 @@ public class DataSeeder implements CommandLineRunner {
             value.setCustAddrZip(CobolFieldReader.text(line, 239, 10));
             value.setCustPhoneNum1(CobolFieldReader.text(line, 249, 15));
             value.setCustPhoneNum2(CobolFieldReader.text(line, 264, 15));
-            value.setCustSsn(CobolFieldReader.unsignedLong(line, 279, 9));
+            value.setCustSsn(CobolFieldReader.optionalUnsignedLong(line, 279, 9));
             value.setCustGovernmentIssuedId(CobolFieldReader.text(line, 288, 20));
             value.setCustDob(date(line, 308, 10));
             value.setCustEftAccountId(CobolFieldReader.text(line, 318, 10));
             value.setCustPrimaryCardHolderIndicator(CobolFieldReader.text(line, 328, 1));
-            value.setCustFicoCreditScore((int) CobolFieldReader.unsignedLong(line, 329, 3));
+            Long fico = CobolFieldReader.optionalUnsignedLong(line, 329, 3);
+            value.setCustFicoCreditScore(fico == null ? null : fico.intValue());
             result.add(value);
         }
         return result;
     }
 
-    private List<Card> parseCards(List<String> lines) {
+    private List<Card> parseCards(List<String> lines, String sourceName) {
         List<Card> result = new ArrayList<>();
-        for (String line : lines) {
+        for (int i = 0; i < lines.size(); i++) {
+            String line = lines.get(i);
+            int recordNumber = i + 1;
             Card value = new Card();
-            value.setCardNumber(CobolFieldReader.text(line, 0, 16));
-            value.setCardAcctId(CobolFieldReader.unsignedLong(line, 16, 11));
-            value.setCardCvvCode((int) CobolFieldReader.unsignedLong(line, 27, 3));
+            value.setCardNumber(CobolFieldReader.requiredText(line, 0, 16, sourceName, recordNumber));
+            value.setCardAcctId(CobolFieldReader.optionalUnsignedLong(line, 16, 11));
+            Long cvv = CobolFieldReader.optionalUnsignedLong(line, 27, 3);
+            value.setCardCvvCode(cvv == null ? null : cvv.intValue());
             value.setCardEmbossedName(CobolFieldReader.text(line, 30, 50));
             value.setCardExpirationDate(date(line, 80, 10));
             value.setCardActiveStatus(CobolFieldReader.text(line, 90, 1));
@@ -226,29 +255,34 @@ public class DataSeeder implements CommandLineRunner {
         return result;
     }
 
-    private List<CardXref> parseCardXrefs(List<String> lines) {
+    private List<CardXref> parseCardXrefs(List<String> lines, String sourceName) {
         List<CardXref> result = new ArrayList<>();
-        for (String line : lines) {
+        for (int i = 0; i < lines.size(); i++) {
+            String line = lines.get(i);
+            int recordNumber = i + 1;
             CardXref value = new CardXref();
-            value.setXrefCardNumber(CobolFieldReader.text(line, 0, 16));
-            value.setXrefCustId(CobolFieldReader.unsignedLong(line, 16, 9));
-            value.setXrefAcctId(CobolFieldReader.unsignedLong(line, 25, 11));
+            value.setXrefCardNumber(CobolFieldReader.requiredText(line, 0, 16, sourceName, recordNumber));
+            value.setXrefCustId(CobolFieldReader.optionalUnsignedLong(line, 16, 9));
+            value.setXrefAcctId(CobolFieldReader.optionalUnsignedLong(line, 25, 11));
             result.add(value);
         }
         return result;
     }
 
-    private List<Transaction> parseTransactions(List<String> lines) {
+    private List<Transaction> parseTransactions(List<String> lines, String sourceName) {
         List<Transaction> result = new ArrayList<>();
-        for (String line : lines) {
+        for (int i = 0; i < lines.size(); i++) {
+            String line = lines.get(i);
+            int recordNumber = i + 1;
             Transaction value = new Transaction();
-            value.setTranId(CobolFieldReader.text(line, 0, 16));
+            value.setTranId(CobolFieldReader.requiredText(line, 0, 16, sourceName, recordNumber));
             value.setTranTypeCode(CobolFieldReader.text(line, 16, 2));
-            value.setTranCategoryCode((int) CobolFieldReader.unsignedLong(line, 18, 4));
+            value.setTranCategoryCode((int) CobolFieldReader.requiredUnsignedLong(
+                    line, 18, 4, sourceName, recordNumber));
             value.setTranSource(CobolFieldReader.text(line, 22, 10));
             value.setTranDescription(CobolFieldReader.text(line, 32, 100));
             value.setTranAmount(CobolFieldReader.signedDecimal(line, 132, 9, 2));
-            value.setTranMerchantId(CobolFieldReader.unsignedLong(line, 143, 9));
+            value.setTranMerchantId(CobolFieldReader.optionalUnsignedLong(line, 143, 9));
             value.setTranMerchantName(CobolFieldReader.text(line, 152, 50));
             value.setTranMerchantCity(CobolFieldReader.text(line, 202, 50));
             value.setTranMerchantZip(CobolFieldReader.text(line, 252, 10));
@@ -260,14 +294,16 @@ public class DataSeeder implements CommandLineRunner {
         return result;
     }
 
-    private List<DisclosureGroup> parseDisclosureGroups(List<String> lines) {
+    private List<DisclosureGroup> parseDisclosureGroups(List<String> lines, String sourceName) {
         List<DisclosureGroup> result = new ArrayList<>();
-        for (String line : lines) {
+        for (int i = 0; i < lines.size(); i++) {
+            String line = lines.get(i);
+            int recordNumber = i + 1;
             DisclosureGroup value = new DisclosureGroup();
             DisclosureGroup.Id id = new DisclosureGroup.Id();
-            id.setAcctGroupId(CobolFieldReader.text(line, 0, 10));
-            id.setTranTypeCode(CobolFieldReader.text(line, 10, 2));
-            id.setTranCategoryCode((int) CobolFieldReader.unsignedLong(line, 12, 4));
+            id.setAcctGroupId(CobolFieldReader.requiredText(line, 0, 10, sourceName, recordNumber));
+            id.setTranTypeCode(CobolFieldReader.requiredText(line, 10, 2, sourceName, recordNumber));
+            id.setTranCategoryCode((int) CobolFieldReader.requiredUnsignedLong(line, 12, 4, sourceName, recordNumber));
             value.setId(id);
             value.setInterestRate(CobolFieldReader.signedDecimal(line, 16, 4, 2));
             result.add(value);
@@ -275,14 +311,16 @@ public class DataSeeder implements CommandLineRunner {
         return result;
     }
 
-    private List<TransactionCategoryBalance> parseBalances(List<String> lines) {
+    private List<TransactionCategoryBalance> parseBalances(List<String> lines, String sourceName) {
         List<TransactionCategoryBalance> result = new ArrayList<>();
-        for (String line : lines) {
+        for (int i = 0; i < lines.size(); i++) {
+            String line = lines.get(i);
+            int recordNumber = i + 1;
             TransactionCategoryBalance value = new TransactionCategoryBalance();
             TransactionCategoryBalance.Id id = new TransactionCategoryBalance.Id();
-            id.setAcctId(CobolFieldReader.unsignedLong(line, 0, 11));
-            id.setTypeCode(CobolFieldReader.text(line, 11, 2));
-            id.setCategoryCode((int) CobolFieldReader.unsignedLong(line, 13, 4));
+            id.setAcctId(CobolFieldReader.requiredUnsignedLong(line, 0, 11, sourceName, recordNumber));
+            id.setTypeCode(CobolFieldReader.requiredText(line, 11, 2, sourceName, recordNumber));
+            id.setCategoryCode((int) CobolFieldReader.requiredUnsignedLong(line, 13, 4, sourceName, recordNumber));
             value.setId(id);
             value.setBalance(CobolFieldReader.signedDecimal(line, 17, 9, 2));
             result.add(value);
@@ -290,13 +328,15 @@ public class DataSeeder implements CommandLineRunner {
         return result;
     }
 
-    private List<TransactionCategory> parseCategories(List<String> lines) {
+    private List<TransactionCategory> parseCategories(List<String> lines, String sourceName) {
         List<TransactionCategory> result = new ArrayList<>();
-        for (String line : lines) {
+        for (int i = 0; i < lines.size(); i++) {
+            String line = lines.get(i);
+            int recordNumber = i + 1;
             TransactionCategory value = new TransactionCategory();
             TransactionCategory.Id id = new TransactionCategory.Id();
-            id.setTranTypeCode(CobolFieldReader.text(line, 0, 2));
-            id.setTranCategoryCode((int) CobolFieldReader.unsignedLong(line, 2, 4));
+            id.setTranTypeCode(CobolFieldReader.requiredText(line, 0, 2, sourceName, recordNumber));
+            id.setTranCategoryCode((int) CobolFieldReader.requiredUnsignedLong(line, 2, 4, sourceName, recordNumber));
             value.setId(id);
             value.setDescription(CobolFieldReader.text(line, 6, 50));
             result.add(value);
@@ -304,11 +344,13 @@ public class DataSeeder implements CommandLineRunner {
         return result;
     }
 
-    private List<TransactionType> parseTypes(List<String> lines) {
+    private List<TransactionType> parseTypes(List<String> lines, String sourceName) {
         List<TransactionType> result = new ArrayList<>();
-        for (String line : lines) {
+        for (int i = 0; i < lines.size(); i++) {
+            String line = lines.get(i);
+            int recordNumber = i + 1;
             TransactionType value = new TransactionType();
-            value.setTranType(CobolFieldReader.text(line, 0, 2));
+            value.setTranType(CobolFieldReader.requiredText(line, 0, 2, sourceName, recordNumber));
             value.setDescription(CobolFieldReader.text(line, 2, 50));
             result.add(value);
         }
@@ -316,9 +358,7 @@ public class DataSeeder implements CommandLineRunner {
     }
 
     private List<SecurityUser> parseUsers(byte[] bytes) {
-        String text = isAsciiFixture(bytes)
-                ? new String(bytes, java.nio.charset.StandardCharsets.UTF_8)
-                : new String(bytes, Charset.forName("IBM037"));
+        String text = new String(bytes, Charset.forName(usrsecCharset));
         List<SecurityUser> result = new ArrayList<>();
         for (int offset = 0; offset < text.length(); offset += 80) {
             int end = Math.min(text.length(), offset + 80);
@@ -327,7 +367,7 @@ public class DataSeeder implements CommandLineRunner {
                 line += " ".repeat(80 - line.length());
             }
             SecurityUser value = new SecurityUser();
-            value.setUserId(CobolFieldReader.text(line, 0, 8));
+            value.setUserId(CobolFieldReader.requiredText(line, 0, 8, "USRSEC", offset / 80 + 1));
             value.setFirstName(CobolFieldReader.text(line, 8, 20));
             value.setLastName(CobolFieldReader.text(line, 28, 20));
             value.setPassword(CobolFieldReader.text(line, 48, 8));
@@ -335,16 +375,6 @@ public class DataSeeder implements CommandLineRunner {
             result.add(value);
         }
         return result;
-    }
-
-    private boolean isAsciiFixture(byte[] bytes) {
-        for (byte value : bytes) {
-            int unsigned = value & 0xff;
-            if (unsigned != '\r' && unsigned != '\n' && (unsigned < 0x20 || unsigned > 0x7e)) {
-                return false;
-            }
-        }
-        return true;
     }
 
     private LocalDate date(String line, int offset, int length) {

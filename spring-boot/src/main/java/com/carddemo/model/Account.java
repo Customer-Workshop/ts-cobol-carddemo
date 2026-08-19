@@ -10,8 +10,8 @@ import java.time.LocalDate;
 @Entity
 @Table(name = "accounts")
 public class Account {
-    @Id private Long acctId;
-    private String acctActiveStatus;
+    @Id @Column(nullable = false) private Long acctId;
+    @Column(length = 1, nullable = false) private String acctActiveStatus;
     @Column(precision = 19, scale = 2) private BigDecimal acctCurrBal;
     @Column(precision = 19, scale = 2) private BigDecimal acctCreditLimit;
     @Column(precision = 19, scale = 2) private BigDecimal acctCashCreditLimit;
@@ -20,8 +20,8 @@ public class Account {
     private LocalDate acctReissueDate;
     @Column(precision = 19, scale = 2) private BigDecimal acctCurrCycCredit;
     @Column(precision = 19, scale = 2) private BigDecimal acctCurrCycDebit;
-    private String acctAddrZip;
-    private String acctGroupId;
+    @Column(length = 10) private String acctAddrZip;
+    @Column(length = 10) private String acctGroupId;
 
     public Long getAcctId() { return acctId; }
     public void setAcctId(Long value) { acctId = value; }

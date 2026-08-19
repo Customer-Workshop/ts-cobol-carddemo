@@ -3,28 +3,29 @@ package com.carddemo.model;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.persistence.Column;
 import java.time.LocalDate;
 
 @Entity
 @Table(name = "customers")
 public class Customer {
-    @Id private Long custId;
-    private String custFirstName;
-    private String custMiddleName;
-    private String custLastName;
-    private String custAddrLine1;
-    private String custAddrLine2;
-    private String custAddrLine3;
-    private String custAddrStateCode;
-    private String custAddrCountryCode;
-    private String custAddrZip;
-    private String custPhoneNum1;
-    private String custPhoneNum2;
+    @Id @Column(nullable = false) private Long custId;
+    @Column(length = 25) private String custFirstName;
+    @Column(length = 25) private String custMiddleName;
+    @Column(length = 25) private String custLastName;
+    @Column(length = 50) private String custAddrLine1;
+    @Column(length = 50) private String custAddrLine2;
+    @Column(length = 50) private String custAddrLine3;
+    @Column(length = 2) private String custAddrStateCode;
+    @Column(length = 3) private String custAddrCountryCode;
+    @Column(length = 10) private String custAddrZip;
+    @Column(length = 15) private String custPhoneNum1;
+    @Column(length = 15) private String custPhoneNum2;
     private Long custSsn;
-    private String custGovernmentIssuedId;
+    @Column(length = 20) private String custGovernmentIssuedId;
     private LocalDate custDob;
-    private String custEftAccountId;
-    private String custPrimaryCardHolderIndicator;
+    @Column(length = 10) private String custEftAccountId;
+    @Column(length = 1) private String custPrimaryCardHolderIndicator;
     private Integer custFicoCreditScore;
 
     public Long getCustId() { return custId; }

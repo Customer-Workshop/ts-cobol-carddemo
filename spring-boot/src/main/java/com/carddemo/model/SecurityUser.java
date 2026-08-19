@@ -3,15 +3,16 @@ package com.carddemo.model;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.persistence.Column;
 
 @Entity
 @Table(name = "security_users")
 public class SecurityUser {
-    @Id private String userId;
-    private String firstName;
-    private String lastName;
-    private String password;
-    private String userType;
+    @Id @Column(length = 8, nullable = false) private String userId;
+    @Column(length = 20, nullable = false) private String firstName;
+    @Column(length = 20, nullable = false) private String lastName;
+    @Column(length = 8, nullable = false) private String password;
+    @Column(length = 1, nullable = false) private String userType;
 
     public String getUserId() { return userId; }
     public void setUserId(String value) { userId = value; }

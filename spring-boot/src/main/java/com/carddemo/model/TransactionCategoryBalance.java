@@ -21,9 +21,9 @@ public class TransactionCategoryBalance {
 
     @Embeddable
     public static class Id implements Serializable {
-        private Long acctId;
-        private String typeCode;
-        private Integer categoryCode;
+        @jakarta.persistence.Column(nullable = false) private Long acctId;
+        @jakarta.persistence.Column(length = 2, nullable = false) private String typeCode;
+        @jakarta.persistence.Column(nullable = false) private Integer categoryCode;
         public Long getAcctId() { return acctId; }
         public void setAcctId(Long value) { acctId = value; }
         public String getTypeCode() { return typeCode; }

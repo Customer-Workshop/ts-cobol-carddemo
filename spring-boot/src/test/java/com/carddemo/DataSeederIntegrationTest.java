@@ -53,7 +53,11 @@ class DataSeederIntegrationTest {
         assertEquals(1, securityUserRepository.count());
 
         Account account = accountRepository.findById(1L).orElseThrow();
-        assertEquals(new BigDecimal("19400.00"), account.getAcctCurrBal());
+        assertEquals(new BigDecimal("194.00"), account.getAcctCurrBal());
+        assertEquals(new BigDecimal("15.00"),
+                disclosureGroupRepository.findAll().getFirst().getInterestRate());
+        assertEquals(new BigDecimal("-1234.00"),
+                transactionCategoryBalanceRepository.findAll().getFirst().getBalance());
         SecurityUser user = securityUserRepository.findById("ADMIN001").orElseThrow();
         assertEquals("A", user.getUserType());
     }
