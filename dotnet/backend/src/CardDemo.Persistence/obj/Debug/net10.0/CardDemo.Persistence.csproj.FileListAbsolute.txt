@@ -1,0 +1,17 @@
+/home/ubuntu/repos/aws-mainframe-modernization-carddemo/dotnet/backend/src/CardDemo.Persistence/bin/Debug/net10.0/CardDemo.Persistence.deps.json
+/home/ubuntu/repos/aws-mainframe-modernization-carddemo/dotnet/backend/src/CardDemo.Persistence/bin/Debug/net10.0/CardDemo.Persistence.dll
+/home/ubuntu/repos/aws-mainframe-modernization-carddemo/dotnet/backend/src/CardDemo.Persistence/bin/Debug/net10.0/CardDemo.Persistence.pdb
+/home/ubuntu/repos/aws-mainframe-modernization-carddemo/dotnet/backend/src/CardDemo.Persistence/bin/Debug/net10.0/CardDemo.Domain.dll
+/home/ubuntu/repos/aws-mainframe-modernization-carddemo/dotnet/backend/src/CardDemo.Persistence/bin/Debug/net10.0/CardDemo.Legacy.Decoders.dll
+/home/ubuntu/repos/aws-mainframe-modernization-carddemo/dotnet/backend/src/CardDemo.Persistence/bin/Debug/net10.0/CardDemo.Domain.pdb
+/home/ubuntu/repos/aws-mainframe-modernization-carddemo/dotnet/backend/src/CardDemo.Persistence/bin/Debug/net10.0/CardDemo.Legacy.Decoders.pdb
+/home/ubuntu/repos/aws-mainframe-modernization-carddemo/dotnet/backend/src/CardDemo.Persistence/obj/Debug/net10.0/CardDemo.Persistence.csproj.AssemblyReference.cache
+/home/ubuntu/repos/aws-mainframe-modernization-carddemo/dotnet/backend/src/CardDemo.Persistence/obj/Debug/net10.0/CardDemo.Persistence.GeneratedMSBuildEditorConfig.editorconfig
+/home/ubuntu/repos/aws-mainframe-modernization-carddemo/dotnet/backend/src/CardDemo.Persistence/obj/Debug/net10.0/CardDemo.Persistence.AssemblyInfoInputs.cache
+/home/ubuntu/repos/aws-mainframe-modernization-carddemo/dotnet/backend/src/CardDemo.Persistence/obj/Debug/net10.0/CardDemo.Persistence.AssemblyInfo.cs
+/home/ubuntu/repos/aws-mainframe-modernization-carddemo/dotnet/backend/src/CardDemo.Persistence/obj/Debug/net10.0/CardDemo.Persistence.csproj.CoreCompileInputs.cache
+/home/ubuntu/repos/aws-mainframe-modernization-carddemo/dotnet/backend/src/CardDemo.Persistence/obj/Debug/net10.0/CardDemo.8C0B63B1.Up2Date
+/home/ubuntu/repos/aws-mainframe-modernization-carddemo/dotnet/backend/src/CardDemo.Persistence/obj/Debug/net10.0/CardDemo.Persistence.dll
+/home/ubuntu/repos/aws-mainframe-modernization-carddemo/dotnet/backend/src/CardDemo.Persistence/obj/Debug/net10.0/refint/CardDemo.Persistence.dll
+/home/ubuntu/repos/aws-mainframe-modernization-carddemo/dotnet/backend/src/CardDemo.Persistence/obj/Debug/net10.0/CardDemo.Persistence.pdb
+/home/ubuntu/repos/aws-mainframe-modernization-carddemo/dotnet/backend/src/CardDemo.Persistence/obj/Debug/net10.0/ref/CardDemo.Persistence.dll

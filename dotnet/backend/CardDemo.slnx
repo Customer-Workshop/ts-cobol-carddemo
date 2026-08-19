@@ -1,0 +1,12 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/CardDemo.Batch/CardDemo.Batch.csproj" />
+    <Project Path="src/CardDemo.Domain/CardDemo.Domain.csproj" />
+    <Project Path="src/CardDemo.Legacy.Decoders/CardDemo.Legacy.Decoders.csproj" />
+    <Project Path="src/CardDemo.Persistence/CardDemo.Persistence.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/CardDemo.Legacy.Decoders.Tests/CardDemo.Legacy.Decoders.Tests.csproj" />
+    <Project Path="tests/CardDemo.Parity.Tests/CardDemo.Parity.Tests.csproj" />
+  </Folder>
+</Solution>

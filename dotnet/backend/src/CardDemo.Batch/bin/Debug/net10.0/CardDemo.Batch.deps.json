@@ -1,0 +1,73 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v10.0",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v10.0": {
+      "CardDemo.Batch/1.0.0": {
+        "dependencies": {
+          "CardDemo.Legacy.Decoders": "1.0.0",
+          "CardDemo.Persistence": "1.0.0"
+        },
+        "runtime": {
+          "CardDemo.Batch.dll": {}
+        }
+      },
+      "CardDemo.Domain/1.0.0": {
+        "runtime": {
+          "CardDemo.Domain.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.0.0"
+          }
+        }
+      },
+      "CardDemo.Legacy.Decoders/1.0.0": {
+        "dependencies": {
+          "CardDemo.Domain": "1.0.0"
+        },
+        "runtime": {
+          "CardDemo.Legacy.Decoders.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.0.0"
+          }
+        }
+      },
+      "CardDemo.Persistence/1.0.0": {
+        "dependencies": {
+          "CardDemo.Domain": "1.0.0",
+          "CardDemo.Legacy.Decoders": "1.0.0"
+        },
+        "runtime": {
+          "CardDemo.Persistence.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.0.0"
+          }
+        }
+      }
+    }
+  },
+  "libraries": {
+    "CardDemo.Batch/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "CardDemo.Domain/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "CardDemo.Legacy.Decoders/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "CardDemo.Persistence/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    }
+  }
+}

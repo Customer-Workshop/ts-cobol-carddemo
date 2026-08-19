@@ -1,0 +1,11 @@
+/home/ubuntu/repos/aws-mainframe-modernization-carddemo/dotnet/backend/src/CardDemo.Domain/bin/Debug/net10.0/CardDemo.Domain.deps.json
+/home/ubuntu/repos/aws-mainframe-modernization-carddemo/dotnet/backend/src/CardDemo.Domain/bin/Debug/net10.0/CardDemo.Domain.dll
+/home/ubuntu/repos/aws-mainframe-modernization-carddemo/dotnet/backend/src/CardDemo.Domain/bin/Debug/net10.0/CardDemo.Domain.pdb
+/home/ubuntu/repos/aws-mainframe-modernization-carddemo/dotnet/backend/src/CardDemo.Domain/obj/Debug/net10.0/CardDemo.Domain.GeneratedMSBuildEditorConfig.editorconfig
+/home/ubuntu/repos/aws-mainframe-modernization-carddemo/dotnet/backend/src/CardDemo.Domain/obj/Debug/net10.0/CardDemo.Domain.AssemblyInfoInputs.cache
+/home/ubuntu/repos/aws-mainframe-modernization-carddemo/dotnet/backend/src/CardDemo.Domain/obj/Debug/net10.0/CardDemo.Domain.AssemblyInfo.cs
+/home/ubuntu/repos/aws-mainframe-modernization-carddemo/dotnet/backend/src/CardDemo.Domain/obj/Debug/net10.0/CardDemo.Domain.csproj.CoreCompileInputs.cache
+/home/ubuntu/repos/aws-mainframe-modernization-carddemo/dotnet/backend/src/CardDemo.Domain/obj/Debug/net10.0/CardDemo.Domain.dll
+/home/ubuntu/repos/aws-mainframe-modernization-carddemo/dotnet/backend/src/CardDemo.Domain/obj/Debug/net10.0/refint/CardDemo.Domain.dll
+/home/ubuntu/repos/aws-mainframe-modernization-carddemo/dotnet/backend/src/CardDemo.Domain/obj/Debug/net10.0/CardDemo.Domain.pdb
+/home/ubuntu/repos/aws-mainframe-modernization-carddemo/dotnet/backend/src/CardDemo.Domain/obj/Debug/net10.0/ref/CardDemo.Domain.dll

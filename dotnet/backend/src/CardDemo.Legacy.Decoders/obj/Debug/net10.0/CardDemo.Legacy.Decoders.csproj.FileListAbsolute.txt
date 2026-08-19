@@ -1,0 +1,15 @@
+/home/ubuntu/repos/aws-mainframe-modernization-carddemo/dotnet/backend/src/CardDemo.Legacy.Decoders/bin/Debug/net10.0/CardDemo.Legacy.Decoders.deps.json
+/home/ubuntu/repos/aws-mainframe-modernization-carddemo/dotnet/backend/src/CardDemo.Legacy.Decoders/bin/Debug/net10.0/CardDemo.Legacy.Decoders.dll
+/home/ubuntu/repos/aws-mainframe-modernization-carddemo/dotnet/backend/src/CardDemo.Legacy.Decoders/bin/Debug/net10.0/CardDemo.Legacy.Decoders.pdb
+/home/ubuntu/repos/aws-mainframe-modernization-carddemo/dotnet/backend/src/CardDemo.Legacy.Decoders/bin/Debug/net10.0/CardDemo.Domain.dll
+/home/ubuntu/repos/aws-mainframe-modernization-carddemo/dotnet/backend/src/CardDemo.Legacy.Decoders/bin/Debug/net10.0/CardDemo.Domain.pdb
+/home/ubuntu/repos/aws-mainframe-modernization-carddemo/dotnet/backend/src/CardDemo.Legacy.Decoders/obj/Debug/net10.0/CardDemo.Legacy.Decoders.csproj.AssemblyReference.cache
+/home/ubuntu/repos/aws-mainframe-modernization-carddemo/dotnet/backend/src/CardDemo.Legacy.Decoders/obj/Debug/net10.0/CardDemo.Legacy.Decoders.GeneratedMSBuildEditorConfig.editorconfig
+/home/ubuntu/repos/aws-mainframe-modernization-carddemo/dotnet/backend/src/CardDemo.Legacy.Decoders/obj/Debug/net10.0/CardDemo.Legacy.Decoders.AssemblyInfoInputs.cache
+/home/ubuntu/repos/aws-mainframe-modernization-carddemo/dotnet/backend/src/CardDemo.Legacy.Decoders/obj/Debug/net10.0/CardDemo.Legacy.Decoders.AssemblyInfo.cs
+/home/ubuntu/repos/aws-mainframe-modernization-carddemo/dotnet/backend/src/CardDemo.Legacy.Decoders/obj/Debug/net10.0/CardDemo.Legacy.Decoders.csproj.CoreCompileInputs.cache
+/home/ubuntu/repos/aws-mainframe-modernization-carddemo/dotnet/backend/src/CardDemo.Legacy.Decoders/obj/Debug/net10.0/CardDemo.F1625190.Up2Date
+/home/ubuntu/repos/aws-mainframe-modernization-carddemo/dotnet/backend/src/CardDemo.Legacy.Decoders/obj/Debug/net10.0/CardDemo.Legacy.Decoders.dll
+/home/ubuntu/repos/aws-mainframe-modernization-carddemo/dotnet/backend/src/CardDemo.Legacy.Decoders/obj/Debug/net10.0/refint/CardDemo.Legacy.Decoders.dll
+/home/ubuntu/repos/aws-mainframe-modernization-carddemo/dotnet/backend/src/CardDemo.Legacy.Decoders/obj/Debug/net10.0/CardDemo.Legacy.Decoders.pdb
+/home/ubuntu/repos/aws-mainframe-modernization-carddemo/dotnet/backend/src/CardDemo.Legacy.Decoders/obj/Debug/net10.0/ref/CardDemo.Legacy.Decoders.dll
