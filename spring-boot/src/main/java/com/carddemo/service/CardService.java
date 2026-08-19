@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.time.YearMonth;
 import java.util.Comparator;
 import java.util.List;
 
@@ -120,8 +121,12 @@ public class CardService {
         }
         card.setCardEmbossedName(request.embossedName().trim());
         card.setCardActiveStatus(active);
-        card.setCardExpirationDate(LocalDate.of(request.expiryYear(), request.expiryMonth(),
-                card.getCardExpirationDate().getDayOfMonth()));
+        YearMonth expiry = YearMonth.of(request.expiryYear(), request.expiryMonth());
+        LocalDate existingExpiry = card.getCardExpirationDate();
+        int day = existingExpiry == null
+                ? 1
+                : Math.min(existingExpiry.getDayOfMonth(), expiry.lengthOfMonth());
+        card.setCardExpirationDate(expiry.atDay(day));
         cardRepository.save(card);
         return response(card);
     }
