@@ -1,5 +1,5 @@
 package com.carddemo.api;
 
 public record ReportAcceptedResponse(String reportName, String startDate, String endDate,
-                                     String status) {
+                                     String status, Long jobExecutionId) {
 }
