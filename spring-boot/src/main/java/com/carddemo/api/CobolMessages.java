@@ -9,7 +9,34 @@ public final class CobolMessages {
     public static final String INVALID_OPTION = "Please enter a valid option number...";
     public static final String ADMIN_ONLY = "No access - Admin Only option... ";
     public static final String ACCOUNT_FILTER_INVALID =
-            "Account Filter must  be a non-zero 11 digit number";
+        "Account Filter must  be a non-zero 11 digit number";
+    public static final String CARD_FILTER_INVALID =
+        "CARD ID FILTER,IF SUPPLIED MUST BE A 16 DIGIT NUMBER";
+    public static final String CARD_ACCOUNT_FILTER_INVALID =
+        "ACCOUNT FILTER,IF SUPPLIED MUST BE A 11 DIGIT NUMBER";
+    public static final String CARD_ACCOUNT_NOT_FOUND =
+        "Did not find this account in cards database";
+    public static final String CARD_COMBINATION_NOT_FOUND =
+        "Did not find cards for this search condition";
+    public static final String CARD_NAME_REQUIRED = "Card name not provided";
+    public static final String CARD_NAME_ALPHA = "Card name can only contain alphabets and spaces";
+    public static final String CARD_STATUS_INVALID = "Card Active Status must be Y or N";
+    public static final String CARD_EXPIRY_MONTH_INVALID =
+        "Card expiry month must be between 1 and 12";
+    public static final String CARD_EXPIRY_YEAR_INVALID = "Invalid card expiry year";
+    public static final String NO_CHANGES_DETECTED =
+        "No change detected with respect to values fetched.";
+    public static final String RECORD_CHANGED =
+        "Record changed by some one else. Please review";
+    public static final String UPDATE_FAILED = "Update of record failed";
+    public static final String ACCOUNT_NUMBER_INVALID =
+        "Account number must be a non zero 11 digit number";
+    public static final String ACCOUNT_STATUS_INVALID = "Account Active Status must be Y or N";
+    public static final String FIELD_REQUIRED_SUFFIX = " must be supplied.";
+    public static final String FIELD_NOT_VALID_SUFFIX = " is not valid";
+    public static final String FIELD_ALPHA_SUFFIX = " can have alphabets only.";
+    public static final String FIELD_ALPHANUM_SUFFIX =
+        " can have numbers or alphabets only.";
 
     private CobolMessages() {
     }

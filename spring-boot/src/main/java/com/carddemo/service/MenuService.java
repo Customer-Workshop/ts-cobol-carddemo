@@ -10,6 +10,7 @@ import com.carddemo.model.SecurityUser;
 import com.carddemo.repository.SecurityUserRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,9 +18,19 @@ import java.util.List;
 @Service
 public class MenuService {
     private final SecurityUserRepository userRepository;
+    private final List<MenuOption> mainOptions;
+    private final List<MenuOption> adminOptions;
 
+    @Autowired
     public MenuService(SecurityUserRepository userRepository) {
+        this(userRepository, MAIN, ADMIN);
+    }
+
+    MenuService(SecurityUserRepository userRepository, List<MenuOption> mainOptions,
+                List<MenuOption> adminOptions) {
         this.userRepository = userRepository;
+        this.mainOptions = mainOptions;
+        this.adminOptions = adminOptions;
     }
 
     private static final List<MenuOption> MAIN = List.of(
@@ -44,15 +55,15 @@ public class MenuService {
             option(6, "Transaction Type Maintenance (Db2)", "COTRTUPC", "/api/programs/COTRTUPC", "A", false));
 
     public MenuResponse mainMenu(Authentication authentication) {
-        return new MenuResponse("COMEN01C", authorize(MAIN, authentication));
+        return new MenuResponse("COMEN01C", authorize(mainOptions, authentication));
     }
 
     public MenuResponse adminMenu() {
-        return new MenuResponse("COADM01C", ADMIN);
+        return new MenuResponse("COADM01C", adminOptions);
     }
 
     public MenuSelectionResponse selectMain(MenuSelectRequest request, Authentication authentication) {
-        MenuOption option = select(request.option(), MAIN);
+        MenuOption option = select(request.option(), mainOptions);
         requireAccess(option, authentication);
         return selection(option);
     }
