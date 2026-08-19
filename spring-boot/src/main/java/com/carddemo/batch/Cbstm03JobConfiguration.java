@@ -21,6 +21,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.transaction.PlatformTransactionManager;
 
 import java.util.Map;
+import java.util.LinkedHashMap;
 
 @Configuration
 public class Cbstm03JobConfiguration {
@@ -33,9 +34,11 @@ public class Cbstm03JobConfiguration {
     @Bean
     @StepScope
     public RepositoryItemReader<CardXref> cbstm03Reader(CardXrefRepository xrefs) {
+        Map<String, Sort.Direction> sorts = new LinkedHashMap<>();
+        sorts.put("xrefCardNumber", Sort.Direction.ASC);
         return new RepositoryItemReaderBuilder<CardXref>()
                 .name("cbstm03Reader").repository(xrefs).methodName("findAll")
-                .pageSize(20).sorts(Map.of("xrefCardNumber", Sort.Direction.ASC)).build();
+                .pageSize(20).sorts(sorts).build();
     }
 
     @Bean

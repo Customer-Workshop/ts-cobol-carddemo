@@ -226,6 +226,36 @@ class ApiIntegrationTest {
                 .andExpect(jsonPath("$.userId").value("NEWUSER1"));
     }
 
+    @Test
+    void adminCreatedPasswordsUseSignonNormalization() throws Exception {
+        MockHttpSession admin = signon("ADMIN001", "PASSWORD", "/api/admin/menu");
+        mockMvc.perform(post("/api/admin/users").session(admin)
+                        .contentType(MediaType.APPLICATION_JSON).content("""
+                                {"userId":"lower01","firstName":"Lower","lastName":"Case",
+                                 "password":"lowerpas","userType":"U"}
+                                """))
+                .andExpect(status().isOk());
+        mockMvc.perform(post("/api/auth/signoff").session(admin))
+                .andExpect(status().isOk());
+
+        signon("LOWER01", "lowerpas", "/api/menu");
+    }
+
+    @Test
+    void h2ConsoleIsNotUnauthenticatedByDefault() throws Exception {
+        mockMvc.perform(get("/h2-console/"))
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    void invalidReportJobLaunchIsReturnedAsBadRequest() throws Exception {
+        MockHttpSession admin = signon("ADMIN001", "PASSWORD", "/api/admin/menu");
+        mockMvc.perform(post("/api/admin/jobs/cbtrn03Job").session(admin))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message").value(
+                        "cbtrn03Job requires non-blank startDate and endDate parameters"));
+    }
+
     private ObjectNode cardUpdate(JsonNode detail) {
         ObjectNode request = objectMapper.createObjectNode();
         String expirationDate = detail.get("expirationDate").asText();

@@ -7,6 +7,7 @@ import org.springframework.batch.core.launch.support.RunIdIncrementer;
 import org.springframework.batch.core.repository.JobRepository;
 import org.springframework.batch.core.step.builder.StepBuilder;
 import org.springframework.batch.item.ItemProcessor;
+import org.springframework.batch.item.ItemStreamReader;
 import org.springframework.batch.item.file.FlatFileItemReader;
 import org.springframework.batch.item.file.FlatFileItemWriter;
 import org.springframework.batch.item.file.builder.FlatFileItemReaderBuilder;
@@ -31,16 +32,23 @@ public class Cbtrn01JobConfiguration {
 
     @Bean
     @StepScope
-    public FlatFileItemReader<DailyTransactionRecord> cbtrn01Reader(
+    public FlatFileItemReader<String> cbtrn01LinesReader(
             @Value("#{jobParameters['dailyFile']}") String file,
             @Value("${carddemo.seed.data-dir:../app/data}") String dataDirectory) {
         Path path = file == null || file.isBlank()
                 ? Path.of(dataDirectory, "ASCII", "dailytran.txt") : Path.of(file);
-        return new FlatFileItemReaderBuilder<DailyTransactionRecord>()
+        return new FlatFileItemReaderBuilder<String>()
                 .name("cbtrn01Reader").resource(new FileSystemResource(path))
-                .lineMapper((line, lineNumber) -> line.isBlank() ? null
-                        : DailyTransactionRecord.parse(BatchFileSupport.pad(line, 350)))
+                .lineMapper((line, lineNumber) -> line)
                 .build();
+    }
+
+    @Bean
+    @StepScope
+    public ItemStreamReader<DailyTransactionRecord> cbtrn01Reader(
+            @org.springframework.beans.factory.annotation.Qualifier("cbtrn01LinesReader")
+            FlatFileItemReader<String> lines) {
+        return new DailyTransactionReader(lines);
     }
 
     @Bean
@@ -62,7 +70,7 @@ public class Cbtrn01JobConfiguration {
 
     @Bean
     public Step cbtrn01Step(JobRepository repository, PlatformTransactionManager transactionManager,
-                            FlatFileItemReader<DailyTransactionRecord> cbtrn01Reader,
+                            ItemStreamReader<DailyTransactionRecord> cbtrn01Reader,
                             ItemProcessor<DailyTransactionRecord, String> cbtrn01Processor,
                             FlatFileItemWriter<String> cbtrn01Writer) {
         return new StepBuilder("cbtrn01Step", repository)

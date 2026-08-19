@@ -106,6 +106,8 @@ curl -b cookies.txt -X POST \
   navigation are not applicable to JSON REST.
 * USRSEC plaintext-compatible handling is retained for legacy fixture
   compatibility only. CSRF is disabled for the JSON API.
+* The H2 console is disabled by default; if enabled for local diagnostics, it
+  is restricted to admin sessions and should never be exposed beyond localhost.
 * `COCRDUPC` edits expiry month/year; the existing day is preserved where
   possible and clamped when the new month is shorter.
 * `CBSTM03B` is mapped to repository readers for keyed customer/account and

@@ -3,6 +3,8 @@ package com.carddemo.batch;
 import com.carddemo.model.Transaction;
 import com.carddemo.repository.TransactionRepository;
 import org.springframework.batch.core.Job;
+import org.springframework.batch.core.JobParameters;
+import org.springframework.batch.core.JobParametersInvalidException;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.batch.core.job.builder.JobBuilder;
@@ -23,6 +25,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.transaction.PlatformTransactionManager;
 
 import java.time.LocalDateTime;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 @Configuration
@@ -30,7 +33,8 @@ public class Cbtrn03JobConfiguration {
     @Bean
     public Job cbtrn03Job(JobRepository repository, Step cbtrn03Step) {
         return new JobBuilder("cbtrn03Job", repository)
-                .incrementer(new RunIdIncrementer()).start(cbtrn03Step).build();
+                .incrementer(new RunIdIncrementer()).start(cbtrn03Step)
+                .validator(this::validateParameters).build();
     }
 
     @Bean
@@ -39,14 +43,33 @@ public class Cbtrn03JobConfiguration {
             TransactionRepository transactions,
             @Value("#{jobParameters['startDate']}") String start,
             @Value("#{jobParameters['endDate']}") String end) {
+        Map<String, Sort.Direction> sorts = new LinkedHashMap<>();
+        sorts.put("tranCardNumber", Sort.Direction.ASC);
+        sorts.put("tranId", Sort.Direction.ASC);
         return new RepositoryItemReaderBuilder<Transaction>()
                 .name("cbtrn03Reader").repository(transactions)
                 .methodName("findByTranProcessTimestampBetween")
                 .arguments(LocalDateTime.parse(start + "T00:00:00"),
                         LocalDateTime.parse(end + "T23:59:59.999999999"))
                 .pageSize(20)
-                .sorts(Map.of("tranCardNumber", Sort.Direction.ASC, "tranId", Sort.Direction.ASC))
+                .sorts(sorts)
                 .build();
+    }
+
+    private void validateParameters(JobParameters parameters) throws JobParametersInvalidException {
+        String start = parameters == null ? null : parameters.getString("startDate");
+        String end = parameters == null ? null : parameters.getString("endDate");
+        if (start == null || start.isBlank() || end == null || end.isBlank()) {
+            throw new JobParametersInvalidException(
+                    "cbtrn03Job requires non-blank startDate and endDate parameters");
+        }
+        try {
+            LocalDateTime.parse(start + "T00:00:00");
+            LocalDateTime.parse(end + "T23:59:59.999999999");
+        } catch (RuntimeException exception) {
+            throw new JobParametersInvalidException(
+                    "cbtrn03Job startDate and endDate must be ISO-8601 dates");
+        }
     }
 
     @Bean

@@ -17,6 +17,10 @@ public class TransactionIdGenerator {
         if (last == null) {
             return "0000000000000001";
         }
-        return "%016d".formatted(Long.parseLong(last.getTranId()) + 1);
+        return nextIdAfter(last.getTranId());
+    }
+
+    public String nextIdAfter(String currentId) {
+        return "%016d".formatted(Long.parseLong(currentId) + 1);
     }
 }

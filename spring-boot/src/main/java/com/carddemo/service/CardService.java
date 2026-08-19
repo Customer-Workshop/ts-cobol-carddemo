@@ -112,6 +112,7 @@ public class CardService {
         String active = requireStatus(request.activeStatus());
         requireExpiryMonth(request.expiryMonth());
         requireExpiryYear(request.expiryYear());
+        LocalDate existingExpiry = card.getCardExpirationDate();
 
         CardUpdateRequest.CardSnapshot original = request.original();
         if (original == null || original.embossedName() == null
@@ -125,22 +126,24 @@ public class CardService {
         if (!same(original.activeStatus(), card.getCardActiveStatus())) {
             throw changed();
         }
-        if (!original.expiryMonth().equals(card.getCardExpirationDate().getMonthValue())) {
+        if (existingExpiry == null
+                || !original.expiryMonth().equals(existingExpiry.getMonthValue())) {
             throw changed();
         }
-        if (!original.expiryYear().equals(card.getCardExpirationDate().getYear())) {
+        if (existingExpiry == null
+                || !original.expiryYear().equals(existingExpiry.getYear())) {
             throw changed();
         }
         if (same(request.embossedName(), card.getCardEmbossedName())
                 && same(active, card.getCardActiveStatus())
-                && request.expiryMonth().equals(card.getCardExpirationDate().getMonthValue())
-                && request.expiryYear().equals(card.getCardExpirationDate().getYear())) {
+                && existingExpiry != null
+                && request.expiryMonth().equals(existingExpiry.getMonthValue())
+                && request.expiryYear().equals(existingExpiry.getYear())) {
             throw new CobolApiException(HttpStatus.BAD_REQUEST, CobolMessages.NO_CHANGES_DETECTED);
         }
         card.setCardEmbossedName(request.embossedName().trim());
         card.setCardActiveStatus(active);
         YearMonth expiry = YearMonth.of(request.expiryYear(), request.expiryMonth());
-        LocalDate existingExpiry = card.getCardExpirationDate();
         int day = existingExpiry == null
                 ? 1
                 : Math.min(existingExpiry.getDayOfMonth(), expiry.lengthOfMonth());

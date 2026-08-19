@@ -69,7 +69,7 @@ public class MenuService {
     }
 
     public MenuSelectionResponse selectAdmin(MenuSelectRequest request) {
-        return selection(select(request.option(), ADMIN));
+        return selection(select(request.option(), adminOptions));
     }
 
     private MenuOption select(String rawOption, List<MenuOption> menu) {

@@ -118,6 +118,7 @@ public class BatchJobService {
         List<Transaction> interestTransactions = new ArrayList<>();
         Card card = xrefs.findByXrefAcctId(account.getAcctId()).stream().findFirst()
                 .flatMap(xref -> cards.findById(xref.getXrefCardNumber())).orElse(null);
+        String nextInterestId = card == null ? null : ids.nextId();
         for (TransactionCategoryBalance balance : group) {
             DisclosureGroup disclosure = disclosure(account, balance);
             if (disclosure == null) {
@@ -129,7 +130,8 @@ public class BatchJobService {
             total = total.add(interest);
             if (card != null) {
                 Transaction transaction = new Transaction();
-                transaction.setTranId(ids.nextId());
+                transaction.setTranId(nextInterestId);
+                nextInterestId = ids.nextIdAfter(nextInterestId);
                 transaction.setTranTypeCode("01");
                 transaction.setTranCategoryCode(5);
                 transaction.setTranSource("System");

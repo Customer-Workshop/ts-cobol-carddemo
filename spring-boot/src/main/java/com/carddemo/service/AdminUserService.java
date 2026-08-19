@@ -75,7 +75,7 @@ public class AdminUserService {
         user.setUserId(id);
         user.setFirstName(request.firstName().trim());
         user.setLastName(request.lastName().trim());
-        user.setPassword(request.password().trim());
+        user.setPassword(request.password().trim().toUpperCase(Locale.ROOT));
         String type = trim(request.userType()).toUpperCase(Locale.ROOT);
         if (!type.equals("A") && !type.equals("U")) throw bad(CobolMessages.USER_TYPE_INVALID);
         user.setUserType(type);

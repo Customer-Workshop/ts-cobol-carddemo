@@ -42,6 +42,7 @@ public class CbimportJobConfiguration {
     }
 
     @Bean
+    @StepScope
     public ItemProcessor<String, String> cbimportProcessor(BatchJobService service) {
         return new ItemProcessor<>() {
             private long record;

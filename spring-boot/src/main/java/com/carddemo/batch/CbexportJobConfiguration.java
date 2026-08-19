@@ -28,6 +28,7 @@ import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.transaction.PlatformTransactionManager;
 
 import java.util.List;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 @Configuration
@@ -80,6 +81,7 @@ public class CbexportJobConfiguration {
     }
 
     @Bean
+    @StepScope
     public ItemProcessor<Object, String> cbexportProcessor(BatchJobService service) {
         return new ItemProcessor<>() {
             private long sequence;
@@ -114,8 +116,10 @@ public class CbexportJobConfiguration {
 
     private static RepositoryItemReader<Object> repositoryReader(
             String name, PagingAndSortingRepository<?, ?> repository, String sort) {
+        Map<String, Sort.Direction> sorts = new LinkedHashMap<>();
+        sorts.put(sort, Sort.Direction.ASC);
         return new RepositoryItemReaderBuilder<Object>()
                 .name(name).repository(repository).methodName("findAll")
-                .pageSize(50).sorts(Map.of(sort, Sort.Direction.ASC)).build();
+                .pageSize(50).sorts(sorts).build();
     }
 }

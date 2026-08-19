@@ -35,4 +35,17 @@ class MenuServiceTest {
 
         assertEquals("No access - Admin Only option... ", exception.getMessage());
     }
+
+    @Test
+    void adminSelectionUsesInjectedOptions() {
+        SecurityUserRepository repository = mock(SecurityUserRepository.class);
+        MenuOption configured = new MenuOption(1, "Configured admin task", "CUSTOMADM",
+                "/api/custom-admin", "A", true, true);
+        MenuService service = new MenuService(repository, List.of(), List.of(configured));
+
+        var selection = service.selectAdmin(new MenuSelectRequest("1"));
+
+        assertEquals("CUSTOMADM", selection.program());
+        assertEquals("/api/custom-admin", selection.endpoint());
+    }
 }

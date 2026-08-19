@@ -21,6 +21,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.data.domain.Sort;
 import org.springframework.transaction.PlatformTransactionManager;
 
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 @Configuration
@@ -35,12 +36,14 @@ public class Cbact04JobConfiguration {
     @StepScope
     public RepositoryItemReader<TransactionCategoryBalance> cbact04BalanceReader(
             TransactionCategoryBalanceRepository balances) {
+        Map<String, Sort.Direction> sorts = new LinkedHashMap<>();
+        sorts.put("id.acctId", Sort.Direction.ASC);
+        sorts.put("id.typeCode", Sort.Direction.ASC);
+        sorts.put("id.categoryCode", Sort.Direction.ASC);
         return new RepositoryItemReaderBuilder<TransactionCategoryBalance>()
                 .name("cbact04BalanceReader").repository(balances)
                 .methodName("findAll").pageSize(20)
-                .sorts(Map.of("id.acctId", Sort.Direction.ASC,
-                        "id.typeCode", Sort.Direction.ASC,
-                        "id.categoryCode", Sort.Direction.ASC))
+                .sorts(sorts)
                 .build();
     }
 

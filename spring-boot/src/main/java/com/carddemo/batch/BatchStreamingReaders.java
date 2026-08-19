@@ -4,10 +4,49 @@ import com.carddemo.model.Account;
 import com.carddemo.model.TransactionCategoryBalance;
 import com.carddemo.repository.AccountRepository;
 import org.springframework.batch.item.ExecutionContext;
+import org.springframework.batch.item.file.FlatFileItemReader;
 import org.springframework.batch.item.ItemStreamReader;
 
 import java.util.ArrayList;
 import java.util.List;
+
+class DailyTransactionReader implements ItemStreamReader<DailyTransactionRecord> {
+    private final FlatFileItemReader<String> delegate;
+
+    DailyTransactionReader(FlatFileItemReader<String> delegate) {
+        this.delegate = delegate;
+    }
+
+    @Override
+    public DailyTransactionRecord read() throws Exception {
+        String line;
+        while ((line = delegate.read()) != null) {
+            if (!line.isBlank()) {
+                return DailyTransactionRecord.parse(BatchFileSupport.pad(line, 350));
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public void open(ExecutionContext context) {
+        try {
+            delegate.open(context);
+        } catch (Exception exception) {
+            throw new IllegalStateException(exception);
+        }
+    }
+
+    @Override
+    public void update(ExecutionContext context) {
+        delegate.update(context);
+    }
+
+    @Override
+    public void close() {
+        delegate.close();
+    }
+}
 
 class RepositorySequenceReader implements ItemStreamReader<Object> {
     private final List<ItemStreamReader<?>> readers;

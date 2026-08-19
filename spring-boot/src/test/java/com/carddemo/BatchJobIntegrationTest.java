@@ -1,6 +1,12 @@
 package com.carddemo;
 
+import com.carddemo.model.Account;
+import com.carddemo.model.DisclosureGroup;
+import com.carddemo.model.TransactionCategoryBalance;
 import com.carddemo.repository.AccountRepository;
+import com.carddemo.repository.CardXrefRepository;
+import com.carddemo.repository.DisclosureGroupRepository;
+import com.carddemo.repository.TransactionCategoryBalanceRepository;
 import com.carddemo.repository.TransactionRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -16,9 +22,11 @@ import org.springframework.test.context.TestPropertySource;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.math.BigDecimal;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest
@@ -40,6 +48,15 @@ class BatchJobIntegrationTest {
 
     @Autowired
     private TransactionRepository transactions;
+
+    @Autowired
+    private TransactionCategoryBalanceRepository balances;
+
+    @Autowired
+    private CardXrefRepository xrefs;
+
+    @Autowired
+    private DisclosureGroupRepository disclosures;
 
     @BeforeEach
     void cleanOutput() throws Exception {
@@ -95,6 +112,110 @@ class BatchJobIntegrationTest {
         assertTrue(accounts.findById(1L).orElseThrow().getAcctCurrBal().compareTo(
                 java.math.BigDecimal.ZERO) > 0);
         assertTrue(Files.size(output.resolve("EXPORT.DATA")) % 501 == 0);
+    }
+
+    @Test
+    void dailyReadersContinueAfterBlankLine() throws Exception {
+        String record = validDailyRecord("0000000000000001");
+        String second = validDailyRecord("0000000000000002");
+        Path daily = Path.of("target/test-batch-output/mid-file-blank.txt");
+        Files.writeString(daily, record + System.lineSeparator() + System.lineSeparator()
+                + second + System.lineSeparator());
+
+        launch("cbtrn02Job", params("dailyFile", daily.toString()));
+
+        assertNotNull(transactions.findById("0000000000000001").orElseThrow()
+                .getTranProcessTimestamp());
+        assertNotNull(transactions.findById("0000000000000002").orElseThrow()
+                .getTranProcessTimestamp());
+    }
+
+    @Test
+    void interestWritesDistinctTransactionPerEligibleCategory() throws Exception {
+        Account targetAccount = accounts.findById(1L).orElseThrow();
+        TransactionCategoryBalance extraBalance = new TransactionCategoryBalance();
+        TransactionCategoryBalance.Id extraBalanceId = new TransactionCategoryBalance.Id();
+        extraBalanceId.setAcctId(targetAccount.getAcctId());
+        extraBalanceId.setTypeCode("01");
+        extraBalanceId.setCategoryCode(2);
+        extraBalance.setId(extraBalanceId);
+        extraBalance.setBalance(new BigDecimal("100.00"));
+        balances.save(extraBalance);
+        saveDisclosure("DEFAULT", "01", 2);
+
+        TransactionCategoryBalance thirdBalance = new TransactionCategoryBalance();
+        TransactionCategoryBalance.Id thirdBalanceId = new TransactionCategoryBalance.Id();
+        thirdBalanceId.setAcctId(targetAccount.getAcctId());
+        thirdBalanceId.setTypeCode("01");
+        thirdBalanceId.setCategoryCode(3);
+        thirdBalance.setId(thirdBalanceId);
+        thirdBalance.setBalance(new BigDecimal("100.00"));
+        balances.save(thirdBalance);
+        saveDisclosure("DEFAULT", "01", 3);
+
+        long before = transactions.findAll().stream()
+                .filter(transaction -> "System".equals(transaction.getTranSource())
+                        && Integer.valueOf(5).equals(transaction.getTranCategoryCode()))
+                .count();
+        long expected = balances.findAll().stream().filter(balance -> {
+            Account balanceAccount = accounts.findById(balance.getId().getAcctId()).orElse(null);
+            if (balanceAccount == null || xrefs.findByXrefAcctId(balanceAccount.getAcctId()).isEmpty()) {
+                return false;
+            }
+            DisclosureGroup.Id specific = new DisclosureGroup.Id();
+            specific.setAcctGroupId(balanceAccount.getAcctGroupId());
+            specific.setTranTypeCode(balance.getId().getTypeCode());
+            specific.setTranCategoryCode(balance.getId().getCategoryCode());
+            if (disclosures.existsById(specific)) {
+                return true;
+            }
+            DisclosureGroup.Id fallback = new DisclosureGroup.Id();
+            fallback.setAcctGroupId("DEFAULT");
+            fallback.setTranTypeCode(balance.getId().getTypeCode());
+            fallback.setTranCategoryCode(balance.getId().getCategoryCode());
+            return disclosures.existsById(fallback);
+        }).count();
+
+        launch("cbact04Job", params("run", "interest-" + System.nanoTime()));
+
+        var interest = transactions.findAll().stream()
+                .filter(transaction -> "System".equals(transaction.getTranSource())
+                        && Integer.valueOf(5).equals(transaction.getTranCategoryCode()))
+                .toList();
+        assertTrue(expected > 1);
+        assertEquals(expected, interest.size() - before);
+        assertEquals(interest.size(), interest.stream().map(
+                transaction -> transaction.getTranId()).distinct().count());
+    }
+
+    @Test
+    void reportJobRejectsMissingDateParametersClearly() {
+        jobs.setJob(jobBeans.get("cbtrn03Job"));
+        var exception = org.junit.jupiter.api.Assertions.assertThrows(
+                org.springframework.batch.core.JobParametersInvalidException.class,
+                () -> jobs.launchJob(new JobParametersBuilder().addLong(
+                        "run", System.nanoTime()).toJobParameters()));
+        assertTrue(exception.getMessage().contains("requires non-blank startDate and endDate"));
+    }
+
+    private String validDailyRecord(String id) throws Exception {
+        String record = Files.readString(Path.of("src/test/resources/seed/ASCII/dailytran.txt"));
+        StringBuilder value = new StringBuilder(record);
+        while (value.length() < 350) value.append(' ');
+        value.replace(0, 16, id);
+        value.replace(262, 278, "1111222233334444");
+        return value.toString();
+    }
+
+    private void saveDisclosure(String group, String type, int category) {
+        DisclosureGroup disclosure = new DisclosureGroup();
+        DisclosureGroup.Id id = new DisclosureGroup.Id();
+        id.setAcctGroupId(group);
+        id.setTranTypeCode(type);
+        id.setTranCategoryCode(category);
+        disclosure.setId(id);
+        disclosure.setInterestRate(new BigDecimal("12.00"));
+        disclosures.save(disclosure);
     }
 
     private void launch(String name, JobParameters parameters) throws Exception {
