@@ -5,18 +5,18 @@ BMS, copybooks, and data under `app/` are not modified.
 
 ## Prerequisites, build, and run
 
-Use Java 21 and Maven 3.9+. The default shell JDK in this repository is Java
-8; both compilation and `mvn spring-boot:run` require a Java 21 JDK.
+Requires a Java 21 JDK and Maven 3.9+. Note that `/usr/bin/java` on the
+mainframe demo image is Java 8, so if `java -version` reports 1.8, point
+`JAVA_HOME` at a Java 21 JDK before building.
 
 ```bash
 cd spring-boot
 mvn -q clean verify
-mvn -q package
-/usr/lib/jvm/java-21-openjdk-amd64/bin/java \
-  -jar target/carddemo-spring-boot-0.1.0-SNAPSHOT.jar \
-  --carddemo.seed.data-dir=../app/data \
-  --carddemo.seed.force=true
+mvn -q spring-boot:run   # or: mvn -q package && java -jar target/carddemo-spring-boot-0.1.0-SNAPSHOT.jar
 ```
+
+Seed location and behavior are overridable on the command line, e.g.
+`--carddemo.seed.data-dir=../app/data --carddemo.seed.force=true`.
 
 `spring.batch.job.enabled=false`; jobs are launched explicitly.
 
