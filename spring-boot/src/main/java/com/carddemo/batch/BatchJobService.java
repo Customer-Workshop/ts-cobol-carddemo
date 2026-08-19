@@ -11,392 +11,337 @@ import com.carddemo.model.TransactionCategoryBalance;
 import com.carddemo.repository.*;
 import com.carddemo.service.TransactionIdGenerator;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.batch.core.JobParameters;
-import org.springframework.batch.core.StepContribution;
-import org.springframework.batch.core.scope.context.ChunkContext;
-import org.springframework.batch.core.step.tasklet.Tasklet;
-import org.springframework.batch.repeat.RepeatStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
-import java.io.IOException;
 import java.math.BigDecimal;
-import java.nio.file.Files;
+import java.math.RoundingMode;
 import java.nio.file.Path;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class BatchJobService {
-    private final AccountRepository accountRepository;
-    private final CardRepository cardRepository;
-    private final CardXrefRepository xrefRepository;
-    private final CustomerRepository customerRepository;
-    private final TransactionRepository transactionRepository;
-    private final TransactionCategoryBalanceRepository balanceRepository;
-    private final DisclosureGroupRepository disclosureRepository;
-    private final TransactionTypeRepository typeRepository;
-    private final TransactionCategoryRepository categoryRepository;
-    private final TransactionIdGenerator idGenerator;
-    private final Path defaultDailyFile;
+    private final AccountRepository accounts;
+    private final CardRepository cards;
+    private final CardXrefRepository xrefs;
+    private final CustomerRepository customers;
+    private final TransactionRepository transactions;
+    private final TransactionCategoryBalanceRepository balances;
+    private final DisclosureGroupRepository disclosures;
+    private final TransactionTypeRepository types;
+    private final TransactionCategoryRepository categories;
+    private final TransactionIdGenerator ids;
     private final Path outputDirectory;
 
-    public BatchJobService(
-            AccountRepository accountRepository, CardRepository cardRepository,
-            CardXrefRepository xrefRepository, CustomerRepository customerRepository,
-            TransactionRepository transactionRepository,
-            TransactionCategoryBalanceRepository balanceRepository,
-            DisclosureGroupRepository disclosureRepository,
-            TransactionTypeRepository typeRepository,
-            TransactionCategoryRepository categoryRepository,
-            TransactionIdGenerator idGenerator,
-            @Value("${carddemo.seed.data-dir:../app/data}") String dataDirectory,
-            @Value("${carddemo.batch.output-dir:target/carddemo-batch}") String outputDirectory) {
-        this.accountRepository = accountRepository;
-        this.cardRepository = cardRepository;
-        this.xrefRepository = xrefRepository;
-        this.customerRepository = customerRepository;
-        this.transactionRepository = transactionRepository;
-        this.balanceRepository = balanceRepository;
-        this.disclosureRepository = disclosureRepository;
-        this.typeRepository = typeRepository;
-        this.categoryRepository = categoryRepository;
-        this.idGenerator = idGenerator;
-        this.defaultDailyFile = Path.of(dataDirectory, "ASCII", "dailytran.txt");
+    public BatchJobService(AccountRepository accounts, CardRepository cards,
+                           CardXrefRepository xrefs, CustomerRepository customers,
+                           TransactionRepository transactions,
+                           TransactionCategoryBalanceRepository balances,
+                           DisclosureGroupRepository disclosures,
+                           TransactionTypeRepository types,
+                           TransactionCategoryRepository categories,
+                           TransactionIdGenerator ids,
+                           @Value("${carddemo.batch.output-dir:target/carddemo-batch}") String outputDirectory) {
+        this.accounts = accounts;
+        this.cards = cards;
+        this.xrefs = xrefs;
+        this.customers = customers;
+        this.transactions = transactions;
+        this.balances = balances;
+        this.disclosures = disclosures;
+        this.types = types;
+        this.categories = categories;
+        this.ids = ids;
         this.outputDirectory = Path.of(outputDirectory);
     }
 
-    public Tasklet validateDailyTransactions() {
-        return (contribution, context) -> {
-            List<String> errors = new ArrayList<>();
-            for (DailyTransactionRecord record : daily(context.getStepContext().getJobParameters())) {
-                Optional<CardXref> xref = xrefRepository.findById(record.cardNumber());
-                if (xref.isEmpty()) {
-                    errors.add("CARD NUMBER " + record.cardNumber() + " " + record.id());
-                } else if (accountRepository.findById(xref.get().getXrefAcctId()).isEmpty()) {
-                    errors.add("ACCOUNT " + xref.get().getXrefAcctId() + " NOT FOUND");
-                }
-            }
-            write("cbtrn01-validation.txt", errors);
-            return RepeatStatus.FINISHED;
-        };
+    public String validateDaily(DailyTransactionRecord record) {
+        Optional<CardXref> xref = xrefs.findById(record.cardNumber());
+        if (xref.isEmpty()) {
+            return "CARD NUMBER " + record.cardNumber() + " COULD NOT BE VERIFIED. "
+                    + "SKIPPING TRANSACTION ID-" + record.id();
+        }
+        if (accounts.findById(xref.get().getXrefAcctId()).isEmpty()) {
+            return "ACCOUNT " + xref.get().getXrefAcctId() + " NOT FOUND";
+        }
+        return null;
     }
 
-    @Transactional
-    public Tasklet postDailyTransactions() {
-        return (contribution, context) -> {
-            List<String> rejects = new ArrayList<>();
-            for (DailyTransactionRecord record : daily(context.getStepContext().getJobParameters())) {
-                Validation failure = validate(record);
-                if (failure != null) {
-                    rejects.add(BatchFileSupport.pad(record.raw(), 350)
-                            + BatchFileSupport.pad("%04d%s".formatted(
-                                    failure.reason(), failure.description()), 80));
-                    continue;
-                }
-                CardXref xref = xrefRepository.findById(record.cardNumber()).orElseThrow();
-                Account account = accountRepository.findById(xref.getXrefAcctId()).orElseThrow();
-                TransactionCategoryBalance.Id balanceId = new TransactionCategoryBalance.Id();
-                balanceId.setAcctId(account.getAcctId());
-                balanceId.setTypeCode(record.typeCode());
-                balanceId.setCategoryCode(record.categoryCode());
-                TransactionCategoryBalance balance = balanceRepository.findById(balanceId)
-                        .orElseGet(() -> {
-                            TransactionCategoryBalance created = new TransactionCategoryBalance();
-                            created.setId(balanceId);
-                            created.setBalance(BigDecimal.ZERO);
-                            return created;
-                        });
-                balance.setBalance(zero(balance.getBalance()).add(record.amount()));
-                balanceRepository.save(balance);
-                account.setAcctCurrBal(zero(account.getAcctCurrBal()).add(record.amount()));
-                if (record.amount().signum() >= 0) {
-                    account.setAcctCurrCycCredit(zero(account.getAcctCurrCycCredit())
-                            .add(record.amount()));
-                } else {
-                    account.setAcctCurrCycDebit(zero(account.getAcctCurrCycDebit())
-                            .add(record.amount()));
-                }
-                accountRepository.save(account);
-                transactionRepository.save(toTransaction(record));
-            }
-            write("cbtrn02-rejects.txt", rejects);
-            return RepeatStatus.FINISHED;
-        };
+    public PostResult postDaily(DailyTransactionRecord record) {
+        Validation failure = validate(record);
+        if (failure != null) {
+            return new PostResult(BatchFileSupport.pad(record.raw(), 350)
+                    + BatchFileSupport.pad("%04d%s".formatted(failure.reason(), failure.description()), 80),
+                    null);
+        }
+        CardXref xref = xrefs.findById(record.cardNumber()).orElseThrow();
+        Account account = accounts.findById(xref.getXrefAcctId()).orElseThrow();
+        TransactionCategoryBalance.Id key = new TransactionCategoryBalance.Id();
+        key.setAcctId(account.getAcctId());
+        key.setTypeCode(record.typeCode());
+        key.setCategoryCode(record.categoryCode());
+        TransactionCategoryBalance balance = balances.findById(key).orElseGet(() -> {
+            TransactionCategoryBalance value = new TransactionCategoryBalance();
+            value.setId(key);
+            value.setBalance(BigDecimal.ZERO);
+            return value;
+        });
+        balance.setBalance(zero(balance.getBalance()).add(record.amount()));
+        balances.save(balance);
+        account.setAcctCurrBal(zero(account.getAcctCurrBal()).add(record.amount()));
+        if (record.amount().signum() >= 0) {
+            account.setAcctCurrCycCredit(zero(account.getAcctCurrCycCredit()).add(record.amount()));
+        } else {
+            account.setAcctCurrCycDebit(zero(account.getAcctCurrCycDebit()).add(record.amount()));
+        }
+        accounts.save(account);
+        transactions.save(toTransaction(record));
+        return new PostResult(null, record);
     }
 
-    public Tasklet transactionReport() {
-        return (contribution, context) -> {
-            Map<String, Object> parameters = context.getStepContext().getJobParameters();
-            LocalDate start = LocalDate.parse(stringParameter(parameters, "startDate"));
-            LocalDate end = LocalDate.parse(stringParameter(parameters, "endDate"));
-            List<Transaction> transactions = transactionRepository
-                    .findByTranProcessTimestampBetweenOrderByTranProcessTimestampAscTranIdAsc(
-                            start.atStartOfDay(), end.plusDays(1).atStartOfDay().minusNanos(1));
-            StringBuilder output = new StringBuilder("TRANSACTION DETAIL REPORT\n");
-            BigDecimal grand = BigDecimal.ZERO;
-            Long currentAccount = null;
-            BigDecimal accountTotal = BigDecimal.ZERO;
-            for (Transaction transaction : transactions) {
-                CardXref xref = xrefRepository.findById(transaction.getTranCardNumber()).orElse(null);
-                Long account = xref == null ? null : xref.getXrefAcctId();
-                if (currentAccount != null && !currentAccount.equals(account)) {
-                    output.append("ACCOUNT TOTAL: ").append(accountTotal).append('\n');
-                    accountTotal = BigDecimal.ZERO;
-                }
-                currentAccount = account;
-                String type = typeRepository.findById(transaction.getTranTypeCode())
-                        .map(value -> value.getDescription()).orElse("");
-                TransactionCategory.Id key = new TransactionCategory.Id();
-                key.setTranTypeCode(transaction.getTranTypeCode());
-                key.setTranCategoryCode(transaction.getTranCategoryCode());
-                String category = categoryRepository.findById(key)
-                        .map(value -> value.getDescription()).orElse("");
-                output.append(transaction.getTranId()).append('|').append(account).append('|')
-                        .append(type).append('|').append(category).append('|')
-                        .append(transaction.getTranAmount()).append('\n');
-                accountTotal = accountTotal.add(zero(transaction.getTranAmount()));
-                grand = grand.add(zero(transaction.getTranAmount()));
-            }
-            if (currentAccount != null) {
-                output.append("ACCOUNT TOTAL: ").append(accountTotal).append('\n');
-            }
-            output.append("GRAND TOTAL: ").append(grand).append('\n');
-            write("cbtrn03-report.txt", output.toString());
-            return RepeatStatus.FINISHED;
-        };
+    public ReportLine reportLine(Transaction transaction) {
+        CardXref xref = xrefs.findById(transaction.getTranCardNumber()).orElse(null);
+        Long account = xref == null ? null : xref.getXrefAcctId();
+        String type = types.findById(transaction.getTranTypeCode())
+                .map(value -> value.getDescription()).orElse("");
+        TransactionCategory.Id key = new TransactionCategory.Id();
+        key.setTranTypeCode(transaction.getTranTypeCode());
+        key.setTranCategoryCode(transaction.getTranCategoryCode());
+        String category = categories.findById(key).map(value -> value.getDescription()).orElse("");
+        return new ReportLine(transaction, account, type, category);
     }
 
-    @Transactional
-    public Tasklet interestCalculation() {
-        return (contribution, context) -> {
-            for (TransactionCategoryBalance balance : balanceRepository.findAll()) {
-                Account account = accountRepository.findById(balance.getId().getAcctId()).orElse(null);
-                if (account == null) {
-                    continue;
-                }
-                DisclosureGroup.Id key = new DisclosureGroup.Id();
-                key.setAcctGroupId(account.getAcctGroupId());
-                key.setTranTypeCode(balance.getId().getTypeCode());
-                key.setTranCategoryCode(balance.getId().getCategoryCode());
-                DisclosureGroup disclosure = disclosureRepository.findById(key).orElseGet(() -> {
-                    DisclosureGroup.Id fallback = new DisclosureGroup.Id();
-                    fallback.setAcctGroupId("DEFAULT");
-                    fallback.setTranTypeCode(balance.getId().getTypeCode());
-                    fallback.setTranCategoryCode(balance.getId().getCategoryCode());
-                    return disclosureRepository.findById(fallback).orElse(null);
-                });
-                if (disclosure == null) {
-                    continue;
-                }
-                BigDecimal interest = zero(balance.getBalance())
-                        .multiply(zero(disclosure.getInterestRate()))
-                        .divide(BigDecimal.valueOf(1200), 2, java.math.RoundingMode.HALF_UP);
-                account.setAcctCurrBal(zero(account.getAcctCurrBal()).add(interest));
-                account.setAcctCurrCycCredit(BigDecimal.ZERO);
-                account.setAcctCurrCycDebit(BigDecimal.ZERO);
-                accountRepository.save(account);
-                Card card = xrefRepository.findByXrefAcctId(account.getAcctId()).stream()
-                        .findFirst().flatMap(xref -> cardRepository.findById(xref.getXrefCardNumber()))
-                        .orElse(null);
-                if (card != null) {
-                    Transaction transaction = new Transaction();
-                    transaction.setTranId(idGenerator.nextId());
-                    transaction.setTranTypeCode("01");
-                    transaction.setTranCategoryCode(5);
-                    transaction.setTranSource("System");
-                    transaction.setTranDescription("Int. for a/c " + account.getAcctId());
-                    transaction.setTranAmount(interest);
-                    transaction.setTranMerchantId(0L);
-                    transaction.setTranCardNumber(card.getCardNumber());
-                    transaction.setTranOriginTimestamp(LocalDateTime.now());
-                    transaction.setTranProcessTimestamp(transaction.getTranOriginTimestamp());
-                    transactionRepository.save(transaction);
-                }
+    public InterestWork calculateInterest(Account account, List<TransactionCategoryBalance> group) {
+        BigDecimal total = BigDecimal.ZERO;
+        List<Transaction> interestTransactions = new ArrayList<>();
+        Card card = xrefs.findByXrefAcctId(account.getAcctId()).stream().findFirst()
+                .flatMap(xref -> cards.findById(xref.getXrefCardNumber())).orElse(null);
+        for (TransactionCategoryBalance balance : group) {
+            DisclosureGroup disclosure = disclosure(account, balance);
+            if (disclosure == null) {
+                continue;
             }
-            return RepeatStatus.FINISHED;
-        };
+            BigDecimal interest = zero(balance.getBalance())
+                    .multiply(zero(disclosure.getInterestRate()))
+                    .divide(BigDecimal.valueOf(1200), 2, RoundingMode.HALF_UP);
+            total = total.add(interest);
+            if (card != null) {
+                Transaction transaction = new Transaction();
+                transaction.setTranId(ids.nextId());
+                transaction.setTranTypeCode("01");
+                transaction.setTranCategoryCode(5);
+                transaction.setTranSource("System");
+                transaction.setTranDescription("Int. for a/c " + account.getAcctId());
+                transaction.setTranAmount(interest);
+                transaction.setTranMerchantId(0L);
+                transaction.setTranMerchantName("");
+                transaction.setTranMerchantCity("");
+                transaction.setTranMerchantZip("");
+                transaction.setTranCardNumber(card.getCardNumber());
+                transaction.setTranOriginTimestamp(LocalDateTime.now());
+                transaction.setTranProcessTimestamp(transaction.getTranOriginTimestamp());
+                interestTransactions.add(transaction);
+            }
+        }
+        return new InterestWork(account, total, interestTransactions);
     }
 
-    public Tasklet statements() {
-        return (contribution, context) -> {
-            StringBuilder plain = new StringBuilder();
-            StringBuilder html = new StringBuilder("""
-                    <!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><title>HTML Table Layout</title></head><body style="margin:0px;">
-                    """);
-            for (CardXref xref : xrefRepository.findAll().stream()
-                    .sorted(Comparator.comparing(CardXref::getXrefCardNumber)).toList()) {
-                Account account = accountRepository.findById(xref.getXrefAcctId()).orElse(null);
-                Customer customer = customerRepository.findById(xref.getXrefCustId()).orElse(null);
-                if (account == null || customer == null) continue;
-                List<Transaction> transactions = transactionRepository
-                        .findByTranCardNumberOrderByTranIdAsc(xref.getXrefCardNumber());
-                plain.append("Account ID         : ").append(account.getAcctId()).append('\n')
-                        .append("Current Balance    : ").append(account.getAcctCurrBal()).append('\n')
-                        .append("FICO Score         : ").append(customer.getCustFicoCreditScore()).append('\n')
-                        .append("TRANSACTION SUMMARY\nTran ID|Tran Details|Tran Amount\n");
-                html.append("<h2>Account ID: ").append(account.getAcctId())
-                        .append("</h2><table><tr><th>Tran ID</th><th>Tran Details</th><th>Tran Amount</th></tr>");
-                BigDecimal total = BigDecimal.ZERO;
-                for (Transaction transaction : transactions) {
-                    plain.append(transaction.getTranId()).append('|')
-                            .append(transaction.getTranDescription()).append('|')
-                            .append(transaction.getTranAmount()).append('\n');
-                    html.append("<tr><td>").append(transaction.getTranId()).append("</td><td>")
-                            .append(transaction.getTranDescription()).append("</td><td>")
-                            .append(transaction.getTranAmount()).append("</td></tr>");
-                    total = total.add(zero(transaction.getTranAmount()));
-                }
-                plain.append("Total EXP: ").append(total).append('\n')
-                        .append("END OF STATEMENT\n");
-                html.append("</table><p>Total EXP: ").append(total)
-                        .append("</p><hr/>");
-            }
-            html.append("</body></html>");
-            write("STATEMNT.PS", plain.toString());
-            write("STATEMNT.HTML", html.toString());
-            return RepeatStatus.FINISHED;
-        };
+    public void writeInterest(InterestWork work) {
+        Account account = work.account();
+        account.setAcctCurrBal(zero(account.getAcctCurrBal()).add(work.totalInterest()));
+        account.setAcctCurrCycCredit(BigDecimal.ZERO);
+        account.setAcctCurrCycDebit(BigDecimal.ZERO);
+        accounts.save(account);
+        transactions.saveAll(work.transactions());
     }
 
-    public Tasklet exportData() {
-        return (contribution, context) -> {
-            List<String> records = new ArrayList<>();
-            customerRepository.findAll().forEach(value -> records.add(exportRecord("C",
-                    value.getCustId(), value.getCustFirstName(), value.getCustMiddleName(),
-                    value.getCustLastName(), value.getCustAddrLine1(), value.getCustAddrLine2(),
-                    value.getCustAddrLine3(), value.getCustAddrStateCode(),
-                    value.getCustAddrCountryCode(), value.getCustAddrZip(), value.getCustPhoneNum1(),
-                    value.getCustPhoneNum2(), value.getCustSsn(), value.getCustGovernmentIssuedId(),
-                    value.getCustDob(), value.getCustEftAccountId(),
-                    value.getCustPrimaryCardHolderIndicator(), value.getCustFicoCreditScore())));
-            accountRepository.findAll().forEach(value -> records.add(exportRecord("A",
-                    value.getAcctId(), value.getAcctActiveStatus(), value.getAcctCurrBal(),
-                    value.getAcctCreditLimit(), value.getAcctCashCreditLimit(), value.getAcctOpenDate(),
-                    value.getAcctExpirationDate(), value.getAcctReissueDate(),
-                    value.getAcctCurrCycCredit(), value.getAcctCurrCycDebit(),
-                    value.getAcctAddrZip(), value.getAcctGroupId())));
-            cardRepository.findAll().forEach(value -> records.add(exportRecord("D",
-                    value.getCardNumber(), value.getCardAcctId(), value.getCardCvvCode(),
-                    value.getCardEmbossedName(), value.getCardExpirationDate(),
-                    value.getCardActiveStatus())));
-            xrefRepository.findAll().forEach(value -> records.add(exportRecord("X",
-                    value.getXrefCardNumber(), value.getXrefCustId(), value.getXrefAcctId())));
-            transactionRepository.findAll().forEach(value -> records.add(exportRecord("T",
-                    value.getTranId(), value.getTranTypeCode(), value.getTranCategoryCode(),
-                    value.getTranSource(), value.getTranDescription(), value.getTranAmount(),
-                    value.getTranMerchantId(), value.getTranMerchantName(), value.getTranMerchantCity(),
-                    value.getTranMerchantZip(), value.getTranCardNumber(),
-                    value.getTranOriginTimestamp(), value.getTranProcessTimestamp())));
-            write("EXPORT.DATA", records);
-            return RepeatStatus.FINISHED;
-        };
+    public CardStatement statementFor(CardXref xref) {
+        Card card = cards.findById(xref.getXrefCardNumber()).orElse(null);
+        Account account = accounts.findById(xref.getXrefAcctId()).orElse(null);
+        Customer customer = account == null ? null : customers.findById(xref.getXrefCustId()).orElse(null);
+        List<Transaction> tx = transactions.findByTranCardNumberOrderByTranIdAsc(
+                xref.getXrefCardNumber());
+        return new CardStatement(card, account, customer, tx);
     }
 
-    @Transactional
-    public Tasklet importData() {
-        return (contribution, context) -> {
-            Path file = Path.of(stringParameter(context.getStepContext().getJobParameters(),
-                    "inputFile", outputDirectory.resolve("EXPORT.DATA").toString()));
-            if (!Files.exists(file)) return RepeatStatus.FINISHED;
-            for (String line : Files.readAllLines(file)) {
-                String[] fields = line.trim().split("\\|", -1);
-                if (fields.length < 4) continue;
-                switch (fields[0]) {
-                    case "C" -> {
-                        Customer customer = new Customer();
-                        customer.setCustId(Long.valueOf(fields[1]));
-                        customer.setCustFirstName(empty(fields[2]));
-                        customer.setCustMiddleName(empty(fields[3]));
-                        customer.setCustLastName(empty(fields[4]));
-                        customer.setCustAddrLine1(empty(fields[5]));
-                        customer.setCustAddrLine2(empty(fields[6]));
-                        customer.setCustAddrLine3(empty(fields[7]));
-                        customer.setCustAddrStateCode(empty(fields[8]));
-                        customer.setCustAddrCountryCode(empty(fields[9]));
-                        customer.setCustAddrZip(empty(fields[10]));
-                        customer.setCustPhoneNum1(empty(fields[11]));
-                        customer.setCustPhoneNum2(empty(fields[12]));
-                        customer.setCustSsn(number(fields[13], Long.class));
-                        customer.setCustGovernmentIssuedId(empty(fields[14]));
-                        customer.setCustDob(date(fields[15]));
-                        customer.setCustEftAccountId(empty(fields[16]));
-                        customer.setCustPrimaryCardHolderIndicator(empty(fields[17]));
-                        customer.setCustFicoCreditScore(number(fields[18], Integer.class));
-                        customerRepository.save(customer);
-                    }
-                    case "A" -> {
-                        Account account = new Account();
-                        account.setAcctId(Long.valueOf(fields[1]));
-                        account.setAcctActiveStatus(empty(fields[2]));
-                        account.setAcctCurrBal(decimal(fields[3]));
-                        account.setAcctCreditLimit(decimal(fields[4]));
-                        account.setAcctCashCreditLimit(decimal(fields[5]));
-                        account.setAcctOpenDate(date(fields[6]));
-                        account.setAcctExpirationDate(date(fields[7]));
-                        account.setAcctReissueDate(date(fields[8]));
-                        account.setAcctCurrCycCredit(decimal(fields[9]));
-                        account.setAcctCurrCycDebit(decimal(fields[10]));
-                        account.setAcctAddrZip(empty(fields[11]));
-                        account.setAcctGroupId(empty(fields[12]));
-                        accountRepository.save(account);
-                    }
-                    case "D" -> {
-                        Card card = new Card();
-                        card.setCardNumber(fields[1]);
-                        card.setCardAcctId(Long.valueOf(fields[2]));
-                        card.setCardCvvCode(number(fields[3], Integer.class));
-                        card.setCardEmbossedName(empty(fields[4]));
-                        card.setCardExpirationDate(date(fields[5]));
-                        card.setCardActiveStatus(empty(fields[6]));
-                        cardRepository.save(card);
-                    }
-                    case "X" -> {
-                        CardXref xref = new CardXref();
-                        xref.setXrefCardNumber(fields[1]);
-                        xref.setXrefCustId(Long.valueOf(fields[2]));
-                        xref.setXrefAcctId(Long.valueOf(fields[3]));
-                        xrefRepository.save(xref);
-                    }
-                    case "T" -> {
-                        Transaction transaction = new Transaction();
-                        transaction.setTranId(fields[1]);
-                        transaction.setTranTypeCode(empty(fields[2]));
-                        transaction.setTranCategoryCode(number(fields[3], Integer.class));
-                        transaction.setTranSource(empty(fields[4]));
-                        transaction.setTranDescription(empty(fields[5]));
-                        transaction.setTranAmount(decimal(fields[6]));
-                        transaction.setTranMerchantId(number(fields[7], Long.class));
-                        transaction.setTranMerchantName(empty(fields[8]));
-                        transaction.setTranMerchantCity(empty(fields[9]));
-                        transaction.setTranMerchantZip(empty(fields[10]));
-                        transaction.setTranCardNumber(empty(fields[11]));
-                        transaction.setTranOriginTimestamp(timestamp(fields[12]));
-                        transaction.setTranProcessTimestamp(timestamp(fields[13]));
-                        transactionRepository.save(transaction);
-                    }
-                    default -> {
-                    }
+    public String statementPlain(CardStatement statement) {
+        if (statement.account() == null || statement.customer() == null) return "";
+        StringBuilder out = new StringBuilder();
+        out.append("Bank of XYZ\n")
+                .append("410 Terry Ave N\n")
+                .append("Seattle WA 99999\n")
+                .append("Account ID         : ").append(statement.account().getAcctId()).append('\n')
+                .append("Customer Name      : ").append(statement.customer().getCustFirstName()).append(' ')
+                .append(statement.customer().getCustLastName()).append('\n')
+                .append("Address            : ").append(statement.customer().getCustAddrLine1()).append('\n')
+                .append("                   ").append(statement.customer().getCustAddrLine2()).append('\n')
+                .append("                   ").append(statement.customer().getCustAddrLine3()).append('\n')
+                .append("Current Balance    : ").append(statement.account().getAcctCurrBal()).append('\n')
+                .append("FICO Score         : ").append(statement.customer().getCustFicoCreditScore()).append('\n')
+                .append("-".repeat(80)).append('\n')
+                .append("                   TRANSACTION SUMMARY\n")
+                .append("-".repeat(80)).append('\n')
+                .append("Tran ID         Tran Details                                      Tran Amount\n");
+        BigDecimal total = BigDecimal.ZERO;
+        for (Transaction tx : statement.transactions()) {
+            out.append("%-16s %-50s $%10.2f%n".formatted(tx.getTranId(),
+                    trim(tx.getTranDescription(), 50), zero(tx.getTranAmount())));
+            total = total.add(zero(tx.getTranAmount()));
+        }
+        return out.append("Total EXP: ").append(total).append('\n')
+                .append("********************************END OF STATEMENT********************************\n")
+                .toString();
+    }
+
+    public String statementHtml(CardStatement statement) {
+        StringBuilder out = new StringBuilder("""
+                <!DOCTYPE html>
+                <html lang="en">
+                <head>
+                <meta charset="utf-8">
+                <title>HTML Table Layout</title>
+                </head>
+                <body style="margin:0px;">
+                <table  align="center" frame="box" style="width:70%; font:12px Segoe UI,sans-serif;">
+                """);
+        out.append("<tr><td colspan=\"3\"><h3>Statement for Account Number: ")
+                .append(statement.account() == null ? "" : statement.account().getAcctId())
+                .append("</h3></td></tr>");
+        if (statement.customer() != null) {
+            out.append("<tr><td colspan=\"3\"><p style=\"font-size:16px\">")
+                    .append(statement.customer().getCustFirstName()).append(' ')
+                    .append(statement.customer().getCustLastName()).append("</p></td></tr>");
+        }
+        out.append("<tr><td colspan=\"3\"><p style=\"font-size:16px\">Transaction Summary</p></td></tr>")
+                .append("<tr><td>Tran ID</td><td>Tran Details</td><td>Amount</td></tr>");
+        BigDecimal total = BigDecimal.ZERO;
+        for (Transaction tx : statement.transactions()) {
+            out.append("<tr><td>").append(tx.getTranId()).append("</td><td>")
+                    .append(tx.getTranDescription()).append("</td><td>")
+                    .append(zero(tx.getTranAmount())).append("</td></tr>");
+            total = total.add(zero(tx.getTranAmount()));
+        }
+        return out.append("<tr><td colspan=\"3\">Total EXP: ").append(total)
+                .append("</td></tr><tr><td colspan=\"3\"><h3>End of Statement</h3></td></tr>")
+                .append("</table></body></html>\n").toString();
+    }
+
+    public String exportRecord(Object value, long sequence) {
+        if (value instanceof Customer customer) {
+            return export("C", customer.getCustId(), customer.getCustFirstName(),
+                    customer.getCustMiddleName(), customer.getCustLastName(),
+                    customer.getCustAddrLine1(), customer.getCustAddrLine2(), customer.getCustAddrLine3(),
+                    customer.getCustAddrStateCode(), customer.getCustAddrCountryCode(), customer.getCustAddrZip(),
+                    customer.getCustPhoneNum1(), customer.getCustPhoneNum2(), customer.getCustSsn(),
+                    customer.getCustGovernmentIssuedId(), customer.getCustDob(), customer.getCustEftAccountId(),
+                    customer.getCustPrimaryCardHolderIndicator(), customer.getCustFicoCreditScore(), sequence);
+        }
+        if (value instanceof Account account) {
+            return export("A", account.getAcctId(), account.getAcctActiveStatus(), account.getAcctCurrBal(),
+                    account.getAcctCreditLimit(), account.getAcctCashCreditLimit(), account.getAcctOpenDate(),
+                    account.getAcctExpirationDate(), account.getAcctReissueDate(), account.getAcctCurrCycCredit(),
+                    account.getAcctCurrCycDebit(), account.getAcctAddrZip(), account.getAcctGroupId(), sequence);
+        }
+        if (value instanceof CardXref xref) {
+            return export("X", xref.getXrefCardNumber(), xref.getXrefCustId(), xref.getXrefAcctId(), sequence);
+        }
+        if (value instanceof Transaction transaction) {
+            return export("T", transaction.getTranId(), transaction.getTranTypeCode(),
+                    transaction.getTranCategoryCode(), transaction.getTranSource(), transaction.getTranDescription(),
+                    transaction.getTranAmount(), transaction.getTranMerchantId(), transaction.getTranMerchantName(),
+                    transaction.getTranMerchantCity(), transaction.getTranMerchantZip(), transaction.getTranCardNumber(),
+                    transaction.getTranOriginTimestamp(), transaction.getTranProcessTimestamp(), sequence);
+        }
+        if (value instanceof Card card) {
+            return export("D", card.getCardNumber(), card.getCardAcctId(), card.getCardCvvCode(),
+                    card.getCardEmbossedName(), card.getCardExpirationDate(), card.getCardActiveStatus(), sequence);
+        }
+        throw new IllegalArgumentException("Unsupported export value " + value.getClass().getName());
+    }
+
+    public ImportResult importRecord(String line, long recordNumber) {
+        try {
+            if (line.length() < 500) return new ImportResult(recordNumber, "RECORD IS SHORTER THAN 500 CHARACTERS");
+            String type = line.substring(0, 1);
+            String data = line.substring(45, 500);
+            switch (type) {
+                case "C" -> {
+                    Customer value = new Customer();
+                    int p = 0; value.setCustId(Long.parseLong(part(data, p, 9))); p += 9;
+                    value.setCustFirstName(part(data, p, 25)); p += 25; value.setCustMiddleName(part(data, p, 25)); p += 25;
+                    value.setCustLastName(part(data, p, 25)); p += 25; value.setCustAddrLine1(part(data, p, 50)); p += 50;
+                    value.setCustAddrLine2(part(data, p, 50)); p += 50; value.setCustAddrLine3(part(data, p, 50)); p += 50;
+                    value.setCustAddrStateCode(part(data, p, 2)); p += 2; value.setCustAddrCountryCode(part(data, p, 3)); p += 3;
+                    value.setCustAddrZip(part(data, p, 10)); p += 10; value.setCustPhoneNum1(part(data, p, 15)); p += 15;
+                    value.setCustPhoneNum2(part(data, p, 15)); p += 15; value.setCustSsn(Long.parseLong(part(data, p, 9))); p += 9;
+                    value.setCustGovernmentIssuedId(part(data, p, 20)); p += 20; value.setCustDob(java.time.LocalDate.parse(part(data, p, 10))); p += 10;
+                    value.setCustEftAccountId(part(data, p, 10)); p += 10; value.setCustPrimaryCardHolderIndicator(part(data, p, 1)); p++;
+                    value.setCustFicoCreditScore(Integer.parseInt(part(data, p, 3))); customers.save(value);
                 }
+                case "A" -> {
+                    Account value = new Account(); int p = 0; value.setAcctId(Long.parseLong(part(data, p, 11))); p += 11;
+                    value.setAcctActiveStatus(part(data, p, 1)); p++; value.setAcctCurrBal(decimalText(part(data, p, 12))); p += 12;
+                    value.setAcctCreditLimit(decimalText(part(data, p, 12))); p += 12; value.setAcctCashCreditLimit(decimalText(part(data, p, 12))); p += 12;
+                    value.setAcctOpenDate(java.time.LocalDate.parse(part(data, p, 10))); p += 10;
+                    value.setAcctExpirationDate(java.time.LocalDate.parse(part(data, p, 10))); p += 10;
+                    value.setAcctReissueDate(java.time.LocalDate.parse(part(data, p, 10))); p += 10;
+                    value.setAcctCurrCycCredit(decimalText(part(data, p, 12))); p += 12; value.setAcctCurrCycDebit(decimalText(part(data, p, 12))); p += 12;
+                    value.setAcctAddrZip(part(data, p, 10)); p += 10; value.setAcctGroupId(part(data, p, 10)); accounts.save(value);
+                }
+                case "X" -> {
+                    CardXref value = new CardXref(); value.setXrefCardNumber(part(data, 0, 16));
+                    value.setXrefCustId(Long.parseLong(part(data, 16, 9))); value.setXrefAcctId(Long.parseLong(part(data, 25, 11)));
+                    xrefs.save(value);
+                }
+                case "T" -> {
+                    Transaction value = new Transaction(); int p = 0; value.setTranId(part(data, p, 16)); p += 16;
+                    value.setTranTypeCode(part(data, p, 2)); p += 2; value.setTranCategoryCode(Integer.parseInt(part(data, p, 4))); p += 4;
+                    value.setTranSource(part(data, p, 10)); p += 10; value.setTranDescription(part(data, p, 100)); p += 100;
+                    value.setTranAmount(decimalText(part(data, p, 11))); p += 11; value.setTranMerchantId(Long.parseLong(part(data, p, 9))); p += 9;
+                    value.setTranMerchantName(part(data, p, 50)); p += 50; value.setTranMerchantCity(part(data, p, 50)); p += 50;
+                    value.setTranMerchantZip(part(data, p, 10)); p += 10; value.setTranCardNumber(part(data, p, 16)); p += 16;
+                    value.setTranOriginTimestamp(parseTimestamp(part(data, p, 26))); p += 26;
+                    value.setTranProcessTimestamp(parseTimestamp(part(data, p, 26)));
+                    transactions.save(value);
+                }
+                case "D" -> {
+                    Card value = new Card(); value.setCardNumber(part(data, 0, 16)); value.setCardAcctId(Long.parseLong(part(data, 16, 11)));
+                    value.setCardCvvCode(Integer.parseInt(part(data, 27, 3))); value.setCardEmbossedName(part(data, 30, 50));
+                    value.setCardExpirationDate(java.time.LocalDate.parse(part(data, 80, 10))); value.setCardActiveStatus(part(data, 90, 1)); cards.save(value);
+                }
+                default -> { return new ImportResult(recordNumber, "UNKNOWN RECORD TYPE " + type); }
             }
-            write("CBIMPORT.errors", List.of());
-            return RepeatStatus.FINISHED;
-        };
+            return new ImportResult(recordNumber, null);
+        } catch (RuntimeException exception) {
+            return new ImportResult(recordNumber, "INVALID " + exception.getMessage());
+        }
+    }
+
+    public Path output(String name) {
+        return outputDirectory.resolve(name);
+    }
+
+    private DisclosureGroup disclosure(Account account, TransactionCategoryBalance balance) {
+        DisclosureGroup.Id key = new DisclosureGroup.Id();
+        key.setAcctGroupId(account.getAcctGroupId()); key.setTranTypeCode(balance.getId().getTypeCode());
+        key.setTranCategoryCode(balance.getId().getCategoryCode());
+        return disclosures.findById(key).orElseGet(() -> {
+            DisclosureGroup.Id fallback = new DisclosureGroup.Id();
+            fallback.setAcctGroupId("DEFAULT"); fallback.setTranTypeCode(balance.getId().getTypeCode());
+            fallback.setTranCategoryCode(balance.getId().getCategoryCode());
+            return disclosures.findById(fallback).orElse(null);
+        });
     }
 
     private Validation validate(DailyTransactionRecord record) {
-        CardXref xref = xrefRepository.findById(record.cardNumber()).orElse(null);
+        CardXref xref = xrefs.findById(record.cardNumber()).orElse(null);
         if (xref == null) return new Validation(100, "INVALID CARD NUMBER FOUND");
-        Account account = accountRepository.findById(xref.getXrefAcctId()).orElse(null);
+        Account account = accounts.findById(xref.getXrefAcctId()).orElse(null);
         if (account == null) return new Validation(101, "ACCOUNT RECORD NOT FOUND");
-        BigDecimal current = zero(account.getAcctCurrCycCredit())
-                .subtract(zero(account.getAcctCurrCycDebit())).add(record.amount());
+        BigDecimal current = zero(account.getAcctCurrCycCredit()).subtract(zero(account.getAcctCurrCycDebit()))
+                .add(record.amount());
         if (zero(account.getAcctCreditLimit()).compareTo(current) < 0) {
             return new Validation(102, "OVERLIMIT TRANSACTION");
         }
@@ -408,95 +353,57 @@ public class BatchJobService {
     }
 
     private Transaction toTransaction(DailyTransactionRecord record) {
-        Transaction value = new Transaction();
-        value.setTranId(record.id());
-        value.setTranTypeCode(record.typeCode());
-        value.setTranCategoryCode(record.categoryCode());
-        value.setTranSource(record.source());
-        value.setTranDescription(record.description());
-        value.setTranAmount(record.amount());
-        value.setTranMerchantId(record.merchantId());
-        value.setTranMerchantName(record.merchantName());
-        value.setTranMerchantCity(record.merchantCity());
-        value.setTranMerchantZip(record.merchantZip());
-        value.setTranCardNumber(record.cardNumber());
-        value.setTranOriginTimestamp(record.originTimestamp());
-        value.setTranProcessTimestamp(LocalDateTime.now());
-        return value;
+        Transaction value = new Transaction(); value.setTranId(record.id()); value.setTranTypeCode(record.typeCode());
+        value.setTranCategoryCode(record.categoryCode()); value.setTranSource(record.source());
+        value.setTranDescription(record.description()); value.setTranAmount(record.amount());
+        value.setTranMerchantId(record.merchantId()); value.setTranMerchantName(record.merchantName());
+        value.setTranMerchantCity(record.merchantCity()); value.setTranMerchantZip(record.merchantZip());
+        value.setTranCardNumber(record.cardNumber()); value.setTranOriginTimestamp(record.originTimestamp());
+        value.setTranProcessTimestamp(LocalDateTime.now()); return value;
     }
 
-    private List<DailyTransactionRecord> daily(Map<String, Object> parameters) throws IOException {
-        String file = stringParameter(parameters, "dailyFile", defaultDailyFile.toString());
-        return BatchFileSupport.dailyTransactions(Path.of(file));
+    private static String export(String type, Object... fields) {
+        long sequence = ((Number) fields[fields.length - 1]).longValue();
+        Object[] values = java.util.Arrays.copyOf(fields, fields.length - 1);
+        int[] widths = switch (type) {
+            case "C" -> new int[]{9,25,25,25,50,50,50,2,3,10,15,15,9,20,10,10,1,3};
+            case "A" -> new int[]{11,1,12,12,12,10,10,10,12,12,10,10};
+            case "X" -> new int[]{16,9,11};
+            case "T" -> new int[]{16,2,4,10,100,11,9,50,50,10,16,26,26};
+            case "D" -> new int[]{16,11,3,50,10,1};
+            default -> throw new IllegalArgumentException("Unsupported export type " + type);
+        };
+        StringBuilder data = new StringBuilder();
+        for (int i = 0; i < widths.length; i++) data.append(fixed(values[i], widths[i]));
+        return fixed(type, 1) + fixed(LocalDateTime.now().toString().replace('T', ' '), 26)
+                + "%09d".formatted(sequence) + fixed("0001", 4) + fixed("NORTH", 5)
+                + BatchFileSupport.pad(data.toString(), 455);
     }
+    private static String fixed(Object value, int width) {
+        String text = value == null ? "" : value.toString();
+        if (text.length() > width) return text.substring(0, width);
+        return text + " ".repeat(width - text.length());
+    }
+    private static String part(String value, int start, int width) {
+        return value.substring(start, start + width).trim();
+    }
+    private static BigDecimal decimalText(String value) { return value.isBlank() ? null : new BigDecimal(value); }
+    private static LocalDateTime parseTimestamp(String value) {
+        return value.isBlank() ? null : LocalDateTime.parse(value.replace(' ', 'T').substring(0, 19));
+    }
+    private static String empty(String[] fields, int index) { return index >= fields.length || fields[index].isEmpty() ? null : fields[index]; }
+    private static BigDecimal decimal(String[] f, int i) { return empty(f, i) == null ? null : new BigDecimal(f[i]); }
+    private static Long longValue(String[] f, int i) { return empty(f, i) == null ? null : Long.valueOf(f[i]); }
+    private static Integer intValue(String[] f, int i) { return empty(f, i) == null ? null : Integer.valueOf(f[i]); }
+    private static java.time.LocalDate date(String[] f, int i) { return empty(f, i) == null ? null : java.time.LocalDate.parse(f[i]); }
+    private static LocalDateTime timestamp(String[] f, int i) { return empty(f, i) == null ? null : LocalDateTime.parse(f[i]); }
+    private static BigDecimal zero(BigDecimal value) { return value == null ? BigDecimal.ZERO : value; }
+    private static String trim(String value, int width) { String text = value == null ? "" : value; return text.length() <= width ? text : text.substring(0, width); }
 
-    private String stringParameter(Map<String, Object> parameters, String key) {
-        return stringParameter(parameters, key, null);
-    }
-
-    private String stringParameter(Map<String, Object> parameters, String key, String fallback) {
-        Object value = parameters.get(key);
-        return value == null ? fallback : value.toString();
-    }
-
-    private String stringParameter(JobParameters parameters, String key) {
-        return parameters.getString(key);
-    }
-
-    private String stringParameter(JobParameters parameters, String key, String fallback) {
-        String value = parameters.getString(key);
-        return value == null ? fallback : value;
-    }
-
-    private void write(String name, List<String> lines) throws IOException {
-        write(name, String.join(System.lineSeparator(), lines)
-                + (lines.isEmpty() ? "" : System.lineSeparator()));
-    }
-
-    private void write(String name, String content) throws IOException {
-        Files.createDirectories(outputDirectory);
-        Files.writeString(outputDirectory.resolve(name), content);
-    }
-
-    private static BigDecimal zero(BigDecimal value) {
-        return value == null ? BigDecimal.ZERO : value;
-    }
-
-    private static String exportRecord(String type, Object... fields) {
-        StringBuilder record = new StringBuilder(type);
-        for (Object field : fields) {
-            record.append('|').append(field == null ? "" : field);
-        }
-        return BatchFileSupport.pad(record.toString(), 500);
-    }
-
-    private static String empty(String value) {
-        return value == null || value.isEmpty() ? null : value;
-    }
-
-    private static BigDecimal decimal(String value) {
-        return value == null || value.isEmpty() ? null : new BigDecimal(value);
-    }
-
-    private static LocalDate date(String value) {
-        return value == null || value.isEmpty() ? null : LocalDate.parse(value);
-    }
-
-    private static LocalDateTime timestamp(String value) {
-        return value == null || value.isEmpty() ? null : LocalDateTime.parse(value);
-    }
-
-    @SuppressWarnings("unchecked")
-    private static <T> T number(String value, Class<T> type) {
-        if (value == null || value.isEmpty()) {
-            return null;
-        }
-        if (type == Long.class) {
-            return (T) Long.valueOf(value);
-        }
-        return (T) Integer.valueOf(value);
-    }
-
-    private record Validation(int reason, String description) {
-    }
+    public record PostResult(String reject, DailyTransactionRecord posted) {}
+    public record ReportLine(Transaction transaction, Long accountId, String type, String category) {}
+    public record InterestWork(Account account, BigDecimal totalInterest, List<Transaction> transactions) {}
+    public record CardStatement(Card card, Account account, Customer customer, List<Transaction> transactions) {}
+    public record ImportResult(long recordNumber, String error) {}
+    private record Validation(int reason, String description) {}
 }

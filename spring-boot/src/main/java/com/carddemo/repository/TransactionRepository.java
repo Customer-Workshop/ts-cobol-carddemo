@@ -10,6 +10,6 @@ public interface TransactionRepository extends JpaRepository<Transaction, String
     Page<Transaction> findByTranIdGreaterThanEqual(String tranId, Pageable pageable);
     Page<Transaction> findByTranIdLessThanEqual(String tranId, Pageable pageable);
     Transaction findTopByOrderByTranIdDesc();
-    List<Transaction> findByTranProcessTimestampBetweenOrderByTranProcessTimestampAscTranIdAsc(
-            LocalDateTime start, LocalDateTime end);
+    Page<Transaction> findByTranProcessTimestampBetween(
+            LocalDateTime start, LocalDateTime end, Pageable pageable);
 }

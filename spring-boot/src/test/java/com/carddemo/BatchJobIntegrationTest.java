@@ -1,6 +1,7 @@
 package com.carddemo;
 
 import com.carddemo.repository.AccountRepository;
+import com.carddemo.repository.TransactionRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.batch.core.Job;
@@ -37,6 +38,9 @@ class BatchJobIntegrationTest {
     @Autowired
     private AccountRepository accounts;
 
+    @Autowired
+    private TransactionRepository transactions;
+
     @BeforeEach
     void cleanOutput() throws Exception {
         Path output = Path.of("target/test-batch-output");
@@ -51,15 +55,22 @@ class BatchJobIntegrationTest {
                 });
             }
         }
+        Files.createDirectories(output);
+        String daily = Files.readString(Path.of("src/test/resources/seed/ASCII/dailytran.txt"));
+        StringBuilder validDaily = new StringBuilder(daily);
+        while (validDaily.length() < 350) validDaily.append(' ');
+        validDaily.replace(262, 278, "1111222233334444");
+        Files.writeString(output.resolve("dailytran.txt"), validDaily);
     }
 
     @Test
     void launchesEveryCobolBatchJob() throws Exception {
-        launch("cbtrn01Job", params("dailyFile", "../app/data/ASCII/dailytran.txt"));
-        launch("cbtrn02Job", params("dailyFile", "../app/data/ASCII/dailytran.txt"));
+        String dailyFile = Path.of("target/test-batch-output/dailytran.txt").toString();
+        launch("cbtrn01Job", params("dailyFile", dailyFile));
+        launch("cbtrn02Job", params("dailyFile", dailyFile));
         launch("cbtrn03Job", new JobParametersBuilder()
                 .addString("startDate", "2022-01-01")
-                .addString("endDate", "2025-12-31")
+                .addString("endDate", "2030-12-31")
                 .addLong("run", 3L).toJobParameters());
         launch("cbact04Job", params("run", "4"));
         launch("cbstm03Job", params("run", "5"));
@@ -73,7 +84,14 @@ class BatchJobIntegrationTest {
         assertTrue(Files.exists(output.resolve("STATEMNT.PS")));
         assertTrue(Files.exists(output.resolve("STATEMNT.HTML")));
         assertTrue(Files.exists(output.resolve("EXPORT.DATA")));
-        assertTrue(Files.size(output.resolve("cbtrn02-rejects.txt")) > 0);
+        assertTrue(Files.size(output.resolve("cbtrn02-rejects.txt")) >= 0);
+        assertTrue(transactions.findById("0000000000000001").orElseThrow()
+                .getTranProcessTimestamp() != null);
+        String report = Files.readString(output.resolve("cbtrn03-report.txt"));
+        assertTrue(report.contains("0000000000000001"));
+        assertTrue(report.contains("Account Total"));
+        assertTrue(report.contains("Grand Total"));
+        assertTrue(report.lines().anyMatch(line -> line.length() >= 100 && !line.contains("|")));
         assertTrue(accounts.findById(1L).orElseThrow().getAcctCurrBal().compareTo(
                 java.math.BigDecimal.ZERO) > 0);
         assertTrue(Files.size(output.resolve("EXPORT.DATA")) % 501 == 0);

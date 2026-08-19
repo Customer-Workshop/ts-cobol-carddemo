@@ -4,6 +4,8 @@ import com.carddemo.data.CobolFieldReader;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public record DailyTransactionRecord(
         String id, String typeCode, int categoryCode, String source, String description,
@@ -26,15 +28,27 @@ public record DailyTransactionRecord(
                 CobolFieldReader.text(raw, 202, 50),
                 CobolFieldReader.text(raw, 252, 10),
                 CobolFieldReader.requiredText(raw, 262, 16, "dailytran", 0),
-                parseTimestamp(origin),
+                parseTimestamp(origin, raw),
                 parseTimestamp(process),
                 raw);
     }
 
     private static LocalDateTime parseTimestamp(String value) {
+        return parseTimestamp(value, value);
+    }
+
+    private static LocalDateTime parseTimestamp(String value, String source) {
         if (value == null || value.length() < 19) {
             return null;
         }
-        return LocalDateTime.parse(value.substring(0, 19).replace(' ', 'T'));
+        try {
+            return LocalDateTime.parse(value.substring(0, 19).replace(' ', 'T'));
+        } catch (RuntimeException ignored) {
+            Matcher matcher = Pattern.compile("(\\d{4}-\\d{2}-\\d{2})[ T](\\d{2}:\\d{2}:\\d{2})")
+                    .matcher(source);
+            return matcher.find()
+                    ? LocalDateTime.parse(matcher.group(1) + "T" + matcher.group(2))
+                    : null;
+        }
     }
 }
