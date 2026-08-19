@@ -8,7 +8,7 @@ PR open (+ link) / merged.
 | --- | --- | --- | --- | --- |
 | 0 | Shared kernel + parity foundation | decoders, primitives, harness | — | PR open (this PR) |
 | 1 | Interest calculation | CBACT04C | wave 0 | in-progress ([session](https://partner-workshops.devinenterprise.com/sessions/97525682603246a38643f6fc12fe38ac)) |
-| 2 | Transaction detail report | CBTRN03C | wave 0 | in-progress ([session](https://partner-workshops.devinenterprise.com/sessions/7450a7f57248458987d53d0cf6a5d0e5)) |
+| 2 | Transaction detail report | CBTRN03C | wave 0 | PR open ([#86](https://github.com/Cognition-Partner-Workshops/ts-cobol-carddemo/pull/86), [session](https://partner-workshops.devinenterprise.com/sessions/7450a7f57248458987d53d0cf6a5d0e5)) |
 | 3 | Transaction posting | CBTRN02C | wave 0 | pending |
 | 4 | Daily transaction verify | CBTRN01C | wave 0 | pending |
 | 5 | Sequential file readers | CBACT02C, CBACT03C, CBCUS01C | wave 0 | pending |
