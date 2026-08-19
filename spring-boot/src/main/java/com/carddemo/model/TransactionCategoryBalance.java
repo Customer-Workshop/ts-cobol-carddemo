@@ -4,6 +4,7 @@ import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Embeddable;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
+import jakarta.persistence.Column;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Objects;
@@ -12,7 +13,7 @@ import java.util.Objects;
 @Table(name = "transaction_category_balances")
 public class TransactionCategoryBalance {
     @EmbeddedId private Id id;
-    private BigDecimal balance;
+    @Column(precision = 19, scale = 2) private BigDecimal balance;
     public Id getId() { return id; }
     public void setId(Id value) { id = value; }
     public BigDecimal getBalance() { return balance; }

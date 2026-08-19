@@ -3,6 +3,7 @@ package com.carddemo.model;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.persistence.Column;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
@@ -11,14 +12,14 @@ import java.time.LocalDate;
 public class Account {
     @Id private Long acctId;
     private String acctActiveStatus;
-    private BigDecimal acctCurrBal;
-    private BigDecimal acctCreditLimit;
-    private BigDecimal acctCashCreditLimit;
+    @Column(precision = 19, scale = 2) private BigDecimal acctCurrBal;
+    @Column(precision = 19, scale = 2) private BigDecimal acctCreditLimit;
+    @Column(precision = 19, scale = 2) private BigDecimal acctCashCreditLimit;
     private LocalDate acctOpenDate;
     private LocalDate acctExpirationDate;
     private LocalDate acctReissueDate;
-    private BigDecimal acctCurrCycCredit;
-    private BigDecimal acctCurrCycDebit;
+    @Column(precision = 19, scale = 2) private BigDecimal acctCurrCycCredit;
+    @Column(precision = 19, scale = 2) private BigDecimal acctCurrCycDebit;
     private String acctAddrZip;
     private String acctGroupId;
 

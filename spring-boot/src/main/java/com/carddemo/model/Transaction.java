@@ -3,6 +3,7 @@ package com.carddemo.model;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.persistence.Column;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
@@ -14,7 +15,7 @@ public class Transaction {
     private Integer tranCategoryCode;
     private String tranSource;
     private String tranDescription;
-    private BigDecimal tranAmount;
+    @Column(precision = 19, scale = 2) private BigDecimal tranAmount;
     private Long tranMerchantId;
     private String tranMerchantName;
     private String tranMerchantCity;
