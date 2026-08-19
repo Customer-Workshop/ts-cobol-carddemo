@@ -3,10 +3,13 @@
     <Project Path="src/CardDemo.Batch/CardDemo.Batch.csproj" />
     <Project Path="src/CardDemo.Domain/CardDemo.Domain.csproj" />
     <Project Path="src/CardDemo.Legacy.Decoders/CardDemo.Legacy.Decoders.csproj" />
+    <Project Path="src/CardDemo.Modules.TranReport/CardDemo.Modules.TranReport.csproj" />
+    <Project Path="src/CardDemo.Modules.TranReport.Batch/CardDemo.Modules.TranReport.Batch.csproj" />
     <Project Path="src/CardDemo.Persistence/CardDemo.Persistence.csproj" />
   </Folder>
   <Folder Name="/tests/">
     <Project Path="tests/CardDemo.Legacy.Decoders.Tests/CardDemo.Legacy.Decoders.Tests.csproj" />
+    <Project Path="tests/CardDemo.Modules.TranReport.Tests/CardDemo.Modules.TranReport.Tests.csproj" />
     <Project Path="tests/CardDemo.Parity.Tests/CardDemo.Parity.Tests.csproj" />
   </Folder>
 </Solution>

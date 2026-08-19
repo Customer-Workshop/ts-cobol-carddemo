@@ -1,0 +1,15 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <ProjectReference Include="..\CardDemo.Domain\CardDemo.Domain.csproj" />
+    <ProjectReference Include="..\CardDemo.Legacy.Decoders\CardDemo.Legacy.Decoders.csproj" />
+    <ProjectReference Include="..\CardDemo.Persistence\CardDemo.Persistence.csproj" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+</Project>
