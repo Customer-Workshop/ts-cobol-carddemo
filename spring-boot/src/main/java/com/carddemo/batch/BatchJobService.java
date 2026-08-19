@@ -268,16 +268,32 @@ public class BatchJobService {
     public Tasklet exportData() {
         return (contribution, context) -> {
             List<String> records = new ArrayList<>();
-            customerRepository.findAll().forEach(value -> records.add(exportRecord("C", value.getCustId(),
-                    value.getCustFirstName(), value.getCustLastName())));
-            accountRepository.findAll().forEach(value -> records.add(exportRecord("A", value.getAcctId(),
-                    value.getAcctActiveStatus(), value.getAcctCurrBal())));
-            cardRepository.findAll().forEach(value -> records.add(exportRecord("D", value.getCardNumber(),
-                    value.getCardAcctId(), value.getCardActiveStatus())));
-            xrefRepository.findAll().forEach(value -> records.add(exportRecord("X", value.getXrefCardNumber(),
-                    value.getXrefCustId(), value.getXrefAcctId())));
-            transactionRepository.findAll().forEach(value -> records.add(exportRecord("T", value.getTranId(),
-                    value.getTranCardNumber(), value.getTranAmount())));
+            customerRepository.findAll().forEach(value -> records.add(exportRecord("C",
+                    value.getCustId(), value.getCustFirstName(), value.getCustMiddleName(),
+                    value.getCustLastName(), value.getCustAddrLine1(), value.getCustAddrLine2(),
+                    value.getCustAddrLine3(), value.getCustAddrStateCode(),
+                    value.getCustAddrCountryCode(), value.getCustAddrZip(), value.getCustPhoneNum1(),
+                    value.getCustPhoneNum2(), value.getCustSsn(), value.getCustGovernmentIssuedId(),
+                    value.getCustDob(), value.getCustEftAccountId(),
+                    value.getCustPrimaryCardHolderIndicator(), value.getCustFicoCreditScore())));
+            accountRepository.findAll().forEach(value -> records.add(exportRecord("A",
+                    value.getAcctId(), value.getAcctActiveStatus(), value.getAcctCurrBal(),
+                    value.getAcctCreditLimit(), value.getAcctCashCreditLimit(), value.getAcctOpenDate(),
+                    value.getAcctExpirationDate(), value.getAcctReissueDate(),
+                    value.getAcctCurrCycCredit(), value.getAcctCurrCycDebit(),
+                    value.getAcctAddrZip(), value.getAcctGroupId())));
+            cardRepository.findAll().forEach(value -> records.add(exportRecord("D",
+                    value.getCardNumber(), value.getCardAcctId(), value.getCardCvvCode(),
+                    value.getCardEmbossedName(), value.getCardExpirationDate(),
+                    value.getCardActiveStatus())));
+            xrefRepository.findAll().forEach(value -> records.add(exportRecord("X",
+                    value.getXrefCardNumber(), value.getXrefCustId(), value.getXrefAcctId())));
+            transactionRepository.findAll().forEach(value -> records.add(exportRecord("T",
+                    value.getTranId(), value.getTranTypeCode(), value.getTranCategoryCode(),
+                    value.getTranSource(), value.getTranDescription(), value.getTranAmount(),
+                    value.getTranMerchantId(), value.getTranMerchantName(), value.getTranMerchantCity(),
+                    value.getTranMerchantZip(), value.getTranCardNumber(),
+                    value.getTranOriginTimestamp(), value.getTranProcessTimestamp())));
             write("EXPORT.DATA", records);
             return RepeatStatus.FINISHED;
         };
@@ -296,22 +312,49 @@ public class BatchJobService {
                     case "C" -> {
                         Customer customer = new Customer();
                         customer.setCustId(Long.valueOf(fields[1]));
-                        customer.setCustFirstName(fields[2]);
-                        customer.setCustLastName(fields[3]);
+                        customer.setCustFirstName(empty(fields[2]));
+                        customer.setCustMiddleName(empty(fields[3]));
+                        customer.setCustLastName(empty(fields[4]));
+                        customer.setCustAddrLine1(empty(fields[5]));
+                        customer.setCustAddrLine2(empty(fields[6]));
+                        customer.setCustAddrLine3(empty(fields[7]));
+                        customer.setCustAddrStateCode(empty(fields[8]));
+                        customer.setCustAddrCountryCode(empty(fields[9]));
+                        customer.setCustAddrZip(empty(fields[10]));
+                        customer.setCustPhoneNum1(empty(fields[11]));
+                        customer.setCustPhoneNum2(empty(fields[12]));
+                        customer.setCustSsn(number(fields[13], Long.class));
+                        customer.setCustGovernmentIssuedId(empty(fields[14]));
+                        customer.setCustDob(date(fields[15]));
+                        customer.setCustEftAccountId(empty(fields[16]));
+                        customer.setCustPrimaryCardHolderIndicator(empty(fields[17]));
+                        customer.setCustFicoCreditScore(number(fields[18], Integer.class));
                         customerRepository.save(customer);
                     }
                     case "A" -> {
                         Account account = new Account();
                         account.setAcctId(Long.valueOf(fields[1]));
-                        account.setAcctActiveStatus(fields[2]);
-                        account.setAcctCurrBal(new BigDecimal(fields[3]));
+                        account.setAcctActiveStatus(empty(fields[2]));
+                        account.setAcctCurrBal(decimal(fields[3]));
+                        account.setAcctCreditLimit(decimal(fields[4]));
+                        account.setAcctCashCreditLimit(decimal(fields[5]));
+                        account.setAcctOpenDate(date(fields[6]));
+                        account.setAcctExpirationDate(date(fields[7]));
+                        account.setAcctReissueDate(date(fields[8]));
+                        account.setAcctCurrCycCredit(decimal(fields[9]));
+                        account.setAcctCurrCycDebit(decimal(fields[10]));
+                        account.setAcctAddrZip(empty(fields[11]));
+                        account.setAcctGroupId(empty(fields[12]));
                         accountRepository.save(account);
                     }
                     case "D" -> {
                         Card card = new Card();
                         card.setCardNumber(fields[1]);
                         card.setCardAcctId(Long.valueOf(fields[2]));
-                        card.setCardActiveStatus(fields[3]);
+                        card.setCardCvvCode(number(fields[3], Integer.class));
+                        card.setCardEmbossedName(empty(fields[4]));
+                        card.setCardExpirationDate(date(fields[5]));
+                        card.setCardActiveStatus(empty(fields[6]));
                         cardRepository.save(card);
                     }
                     case "X" -> {
@@ -324,8 +367,18 @@ public class BatchJobService {
                     case "T" -> {
                         Transaction transaction = new Transaction();
                         transaction.setTranId(fields[1]);
-                        transaction.setTranCardNumber(fields[2]);
-                        transaction.setTranAmount(new BigDecimal(fields[3]));
+                        transaction.setTranTypeCode(empty(fields[2]));
+                        transaction.setTranCategoryCode(number(fields[3], Integer.class));
+                        transaction.setTranSource(empty(fields[4]));
+                        transaction.setTranDescription(empty(fields[5]));
+                        transaction.setTranAmount(decimal(fields[6]));
+                        transaction.setTranMerchantId(number(fields[7], Long.class));
+                        transaction.setTranMerchantName(empty(fields[8]));
+                        transaction.setTranMerchantCity(empty(fields[9]));
+                        transaction.setTranMerchantZip(empty(fields[10]));
+                        transaction.setTranCardNumber(empty(fields[11]));
+                        transaction.setTranOriginTimestamp(timestamp(fields[12]));
+                        transaction.setTranProcessTimestamp(timestamp(fields[13]));
                         transactionRepository.save(transaction);
                     }
                     default -> {
@@ -409,8 +462,39 @@ public class BatchJobService {
         return value == null ? BigDecimal.ZERO : value;
     }
 
-    private static String exportRecord(String type, Object id, Object first, Object second) {
-        return BatchFileSupport.pad(type + "|" + id + "|" + first + "|" + second, 500);
+    private static String exportRecord(String type, Object... fields) {
+        StringBuilder record = new StringBuilder(type);
+        for (Object field : fields) {
+            record.append('|').append(field == null ? "" : field);
+        }
+        return BatchFileSupport.pad(record.toString(), 500);
+    }
+
+    private static String empty(String value) {
+        return value == null || value.isEmpty() ? null : value;
+    }
+
+    private static BigDecimal decimal(String value) {
+        return value == null || value.isEmpty() ? null : new BigDecimal(value);
+    }
+
+    private static LocalDate date(String value) {
+        return value == null || value.isEmpty() ? null : LocalDate.parse(value);
+    }
+
+    private static LocalDateTime timestamp(String value) {
+        return value == null || value.isEmpty() ? null : LocalDateTime.parse(value);
+    }
+
+    @SuppressWarnings("unchecked")
+    private static <T> T number(String value, Class<T> type) {
+        if (value == null || value.isEmpty()) {
+            return null;
+        }
+        if (type == Long.class) {
+            return (T) Long.valueOf(value);
+        }
+        return (T) Integer.valueOf(value);
     }
 
     private record Validation(int reason, String description) {
