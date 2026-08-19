@@ -90,9 +90,8 @@ class ApiIntegrationTest {
                 .andExpect(jsonPath("$.currentBalance").value(194.00))
                 .andExpect(jsonPath("$.ssn").value("123-45-6789"));
         mockMvc.perform(get("/api/accounts/1").session(session))
-                .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.message").value(
-                        "Account Filter must  be a non-zero 11 digit number"));
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.accountId").value(1));
         mockMvc.perform(get("/api/accounts/00000000002").session(session))
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.message").value(containsString("Cross ref file")));

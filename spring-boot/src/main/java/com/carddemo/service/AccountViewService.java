@@ -28,19 +28,20 @@ public class AccountViewService {
     }
 
     public AccountViewResponse view(String rawAccountId) {
-        if (rawAccountId == null || !rawAccountId.matches("\\d{11}")
+        if (rawAccountId == null || !rawAccountId.matches("\\d{1,11}")
                 || rawAccountId.chars().allMatch(character -> character == '0')) {
             throw new CobolApiException(HttpStatus.BAD_REQUEST, CobolMessages.ACCOUNT_FILTER_INVALID);
         }
         Long accountId = Long.parseLong(rawAccountId);
+        String normalizedAccountId = "%011d".formatted(accountId);
         List<CardXref> xrefs = cardXrefRepository.findByXrefAcctId(accountId);
         if (xrefs.isEmpty()) {
-            throw new CobolApiException(HttpStatus.NOT_FOUND, CobolMessages.xrefNotFound(rawAccountId));
+            throw new CobolApiException(HttpStatus.NOT_FOUND, CobolMessages.xrefNotFound(normalizedAccountId));
         }
         CardXref xref = xrefs.getFirst();
         Account account = accountRepository.findById(accountId)
                 .orElseThrow(() -> new CobolApiException(HttpStatus.NOT_FOUND,
-                        CobolMessages.accountNotFound(rawAccountId)));
+                        CobolMessages.accountNotFound(normalizedAccountId)));
         Customer customer = customerRepository.findById(xref.getXrefCustId())
                 .orElseThrow(() -> new CobolApiException(HttpStatus.NOT_FOUND,
                         CobolMessages.customerNotFound(String.valueOf(xref.getXrefCustId()))));
