@@ -1,5 +1,6 @@
 package com.carddemo.batch;
 
+import com.carddemo.api.CobolMessages;
 import com.carddemo.api.CobolApiException;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.JobExecution;
@@ -25,7 +26,8 @@ public class BatchJobLauncherService {
     public JobExecution launch(String jobName, Map<String, String> values) {
         Job job = jobs.get(jobName);
         if (job == null) {
-            throw new IllegalArgumentException("Unknown batch job: " + jobName);
+            throw new CobolApiException(HttpStatus.BAD_REQUEST,
+                    CobolMessages.unknownBatchJob(jobName));
         }
         JobParametersBuilder builder = new JobParametersBuilder()
                 .addLong("run.id", System.nanoTime());

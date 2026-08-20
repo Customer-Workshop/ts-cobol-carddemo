@@ -14,6 +14,10 @@ public final class CobolMessages {
     public static final String PASSWORD_REQUIRED_EDIT = "Password can NOT be empty...";
     public static final String USER_TYPE_REQUIRED = "User Type can NOT be empty...";
     public static final String USER_ID_NOT_FOUND = "User ID NOT found...";
+    public static final String USER_ID_TOO_LONG = "User ID must not exceed 8 characters...";
+    public static final String PASSWORD_TOO_LONG = "Password must not exceed 8 characters...";
+    public static final String FIRST_NAME_TOO_LONG = "First Name must not exceed 20 characters...";
+    public static final String LAST_NAME_TOO_LONG = "Last Name must not exceed 20 characters...";
     public static final String USER_ADD_FAILED = "Unable to Add User...";
     public static final String USER_UPDATE_FAILED = "Unable to Update User...";
     public static final String USER_DELETE_CONFIRM =
@@ -136,5 +140,9 @@ public final class CobolMessages {
 
     public static String reportConfirm(String report) {
         return "Please confirm to print the " + report + " report...";
+    }
+
+    public static String unknownBatchJob(String jobName) {
+        return "Unknown batch job: " + jobName;
     }
 }

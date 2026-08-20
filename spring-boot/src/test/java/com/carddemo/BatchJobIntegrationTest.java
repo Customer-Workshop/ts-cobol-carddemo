@@ -1,7 +1,10 @@
 package com.carddemo;
 
+import com.carddemo.batch.BatchJobService;
 import com.carddemo.model.Account;
 import com.carddemo.model.DisclosureGroup;
+import com.carddemo.model.Customer;
+import com.carddemo.model.Transaction;
 import com.carddemo.model.TransactionCategoryBalance;
 import com.carddemo.repository.AccountRepository;
 import com.carddemo.repository.CardXrefRepository;
@@ -23,10 +26,13 @@ import org.springframework.test.context.TestPropertySource;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest
@@ -57,6 +63,9 @@ class BatchJobIntegrationTest {
 
     @Autowired
     private DisclosureGroupRepository disclosures;
+
+    @Autowired
+    private BatchJobService service;
 
     @BeforeEach
     void cleanOutput() throws Exception {
@@ -196,6 +205,54 @@ class BatchJobIntegrationTest {
                 () -> jobs.launchJob(new JobParametersBuilder().addLong(
                         "run", System.nanoTime()).toJobParameters()));
         assertTrue(exception.getMessage().contains("requires non-blank startDate and endDate"));
+    }
+
+    @Test
+    void exportImportRoundTripsWholeMinuteTimestamps() {
+        Transaction transaction = new Transaction();
+        transaction.setTranId("8888888888888888");
+        transaction.setTranTypeCode("01");
+        transaction.setTranCategoryCode(1);
+        transaction.setTranSource("POS TERM");
+        transaction.setTranDescription("Whole minute");
+        transaction.setTranAmount(new BigDecimal("12.34"));
+        transaction.setTranMerchantId(123L);
+        transaction.setTranMerchantName("Merchant");
+        transaction.setTranMerchantCity("Boston");
+        transaction.setTranMerchantZip("02108");
+        transaction.setTranCardNumber("1111222233334444");
+        LocalDateTime timestamp = LocalDateTime.of(2026, 8, 20, 0, 0);
+        transaction.setTranOriginTimestamp(timestamp);
+        transaction.setTranProcessTimestamp(timestamp);
+
+        String exported = service.exportRecord(transaction, 451);
+        assertEquals(500, exported.length());
+        assertNull(service.importRecord(exported, 451).error());
+
+        Transaction imported = transactions.findById(transaction.getTranId()).orElseThrow();
+        assertEquals(timestamp, imported.getTranOriginTimestamp());
+        assertEquals(timestamp, imported.getTranProcessTimestamp());
+    }
+
+    @Test
+    void statementHtmlEscapesFreeTextFields() {
+        Account account = new Account();
+        account.setAcctId(1L);
+        Customer customer = new Customer();
+        customer.setCustFirstName("<First>");
+        customer.setCustLastName("\"Last\"");
+        Transaction transaction = new Transaction();
+        transaction.setTranId("1<&");
+        transaction.setTranDescription("<script>alert('x')</script>");
+        transaction.setTranAmount(new BigDecimal("1.00"));
+
+        String html = service.statementHtml(new BatchJobService.CardStatement(
+                null, account, customer, List.of(transaction)));
+
+        assertTrue(html.contains("&lt;First&gt; &quot;Last&quot;"));
+        assertTrue(html.contains("1&lt;&amp;"));
+        assertTrue(html.contains("&lt;script&gt;alert(&#39;x&#39;)&lt;/script&gt;"));
+        assertTrue(!html.contains("<script>alert('x')</script>"));
     }
 
     private String validDailyRecord(String id) throws Exception {

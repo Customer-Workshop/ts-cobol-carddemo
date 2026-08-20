@@ -1,6 +1,7 @@
 package com.carddemo;
 
 import com.carddemo.model.SecurityUser;
+import com.carddemo.repository.CustomerRepository;
 import com.carddemo.repository.SecurityUserRepository;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -31,6 +32,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class ApiIntegrationTest {
     @Autowired private MockMvc mockMvc;
     @Autowired private SecurityUserRepository userRepository;
+    @Autowired private CustomerRepository customerRepository;
     @Autowired private ObjectMapper objectMapper;
 
     @BeforeEach
@@ -158,6 +160,29 @@ class ApiIntegrationTest {
     }
 
     @Test
+    void accountSnapshotMoneyComparisonIgnoresScale() throws Exception {
+        MockHttpSession session = signon("ADMIN001", "PASSWORD", "/api/admin/menu");
+        var customer = customerRepository.findById(1L).orElseThrow();
+        customer.setCustAddrLine2("Apt 2");
+        customer.setCustAddrLine3("Boston");
+        customer.setCustPhoneNum2("(212)555-0101");
+        customerRepository.save(customer);
+        JsonNode view = objectMapper.readTree(mockMvc.perform(
+                        get("/api/accounts/1").session(session))
+                .andExpect(status().isOk()).andReturn().getResponse().getContentAsString());
+        ObjectNode request = accountUpdate(view);
+        ObjectNode original = (ObjectNode) request.get("original");
+        original.put("currentBalance", "194.0");
+        request.put("phoneNumber2", "2125550101");
+        request.put("ficoScore", 801);
+        mockMvc.perform(put("/api/accounts/1").session(session)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsBytes(request)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.ficoScore").value(801));
+    }
+
+    @Test
     void updateProgramsRequireCompleteOriginalSnapshots() throws Exception {
         MockHttpSession session = signon("ADMIN001", "PASSWORD", "/api/admin/menu");
         mockMvc.perform(put("/api/cards/1111222233334444").param("accountId", "1")
@@ -254,6 +279,92 @@ class ApiIntegrationTest {
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.message").value(
                         "cbtrn03Job requires non-blank startDate and endDate parameters"));
+    }
+
+    @Test
+    void invalidRoutesAndJobNamesUseClientErrors() throws Exception {
+        MockHttpSession admin = signon("ADMIN001", "PASSWORD", "/api/admin/menu");
+        mockMvc.perform(post("/api/billing/pay").session(admin))
+                .andExpect(status().isNotFound());
+        mockMvc.perform(put("/api/billing/payments").session(admin))
+                .andExpect(status().isMethodNotAllowed());
+        mockMvc.perform(post("/api/admin/jobs/notAJob").session(admin))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message").value("Unknown batch job: notAJob"));
+    }
+
+    @Test
+    void customReportRejectsNullEndDateLikeBlankEndDate() throws Exception {
+        MockHttpSession admin = signon("ADMIN001", "PASSWORD", "/api/admin/menu");
+        mockMvc.perform(post("/api/reports").session(admin)
+                        .contentType(MediaType.APPLICATION_JSON).content("""
+                                {"reportName":"Custom","startDate":"2024-01-01",
+                                 "endDate":null,"confirmation":"Y"}
+                                """))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message").value("End Date - Not a valid date..."));
+    }
+
+    @Test
+    void adminUserWidthsAreValidatedBeforePersistence() throws Exception {
+        MockHttpSession admin = signon("ADMIN001", "PASSWORD", "/api/admin/menu");
+        mockMvc.perform(post("/api/admin/users").session(admin)
+                        .contentType(MediaType.APPLICATION_JSON).content("""
+                                {"userId":"TOOLONG99","firstName":"First","lastName":"Last",
+                                 "password":"PASSWORD","userType":"U"}
+                                """))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message").value(
+                        "User ID must not exceed 8 characters..."));
+        mockMvc.perform(post("/api/admin/users").session(admin)
+                        .contentType(MediaType.APPLICATION_JSON).content("""
+                                {"userId":"WIDTH001","firstName":"ABCDEFGHIJKLMNOPQRSTU","lastName":"Last",
+                                 "password":"PASSWORD","userType":"U"}
+                                """))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message").value(
+                        "First Name must not exceed 20 characters..."));
+        mockMvc.perform(post("/api/admin/users").session(admin)
+                        .contentType(MediaType.APPLICATION_JSON).content("""
+                                {"userId":"WIDTH002","firstName":"First","lastName":"ABCDEFGHIJKLMNOPQRSTU",
+                                 "password":"PASSWORD","userType":"U"}
+                                """))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message").value(
+                        "Last Name must not exceed 20 characters..."));
+        mockMvc.perform(post("/api/admin/users").session(admin)
+                        .contentType(MediaType.APPLICATION_JSON).content("""
+                                {"userId":"WIDTH003","firstName":"First","lastName":"Last",
+                                 "password":"PASSWORD9","userType":"U"}
+                                """))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message").value(
+                        "Password must not exceed 8 characters..."));
+        mockMvc.perform(put("/api/admin/users/ADMIN001").session(admin)
+                        .contentType(MediaType.APPLICATION_JSON).content("""
+                                {"userId":"ADMIN001","firstName":"MARGARET","lastName":"GOLD",
+                                 "password":"PASSWORD9","userType":"A"}
+                                """))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message").value(
+                        "Password must not exceed 8 characters..."));
+    }
+
+    @Test
+    void defaultMenusExposeImplementedEndpoints() throws Exception {
+        MockHttpSession admin = signon("ADMIN001", "PASSWORD", "/api/admin/menu");
+        mockMvc.perform(get("/api/menu").session(admin))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.options[1].endpoint").value("/api/accounts/{accountId}"))
+                .andExpect(jsonPath("$.options[1].implemented").value(true))
+                .andExpect(jsonPath("$.options[9].endpoint").value("/api/billing/payments"))
+                .andExpect(jsonPath("$.options[9].implemented").value(true))
+                .andExpect(jsonPath("$.options[10].implemented").value(false));
+        mockMvc.perform(get("/api/admin/menu").session(admin))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.options[0].endpoint").value("/api/admin/users"))
+                .andExpect(jsonPath("$.options[0].implemented").value(true))
+                .andExpect(jsonPath("$.options[5].implemented").value(false));
     }
 
     private ObjectNode cardUpdate(JsonNode detail) {

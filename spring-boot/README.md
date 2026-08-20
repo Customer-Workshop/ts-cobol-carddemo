@@ -5,9 +5,9 @@ BMS, copybooks, and data under `app/` are not modified.
 
 ## Prerequisites, build, and run
 
-Requires a Java 21 JDK and Maven 3.9+. Note that `/usr/bin/java` on the
-mainframe demo image is Java 8, so if `java -version` reports 1.8, point
-`JAVA_HOME` at a Java 21 JDK before building.
+Requires a Java 21 JDK and Maven 3.9+. Use
+`JAVA_HOME=/usr/lib/jvm/java-21-openjdk-amd64` (or another Java 21 JDK) for
+both Maven and packaged execution.
 
 ```bash
 cd spring-boot
@@ -60,7 +60,7 @@ seeded USRSEC fixture; these are not production credentials.
 | `GET /api/transactions` | `COTRN00C` |
 | `GET /api/transactions/{transactionId}` | `COTRN01C` |
 | `POST /api/transactions` | `COTRN02C` |
-| `POST /api/billing/pay` | `COBIL00C` |
+| `POST /api/billing/payments` | `COBIL00C` |
 | `POST /api/reports` | `CORPT00C` |
 | `GET /api/admin/users` | `COUSR00C` |
 | `POST /api/admin/users` | `COUSR01C` |
@@ -119,3 +119,6 @@ curl -b cookies.txt -X POST \
   Interest groups category balances by account, so balance and cycle reset
   occur once at the control break.
 * CICS/BMS-only display and abend behavior is not exposed as REST responses.
+* Statement HTML escapes customer, transaction, and merchant text supplied by
+  free-text input; this is a safety behavior and is not byte-identical to the
+  CBSTM03B output.

@@ -52,8 +52,8 @@ public class ReportService {
     }
 
     private LocalDate parse(String value, String message) {
+        if (value == null || value.isBlank()) throw bad(message);
         try {
-            if (value == null || value.isBlank()) throw new DateTimeParseException("", value, 0);
             return LocalDate.parse(value);
         } catch (DateTimeParseException exception) {
             throw bad(message);

@@ -35,22 +35,22 @@ public class MenuService {
 
     private static final List<MenuOption> MAIN = List.of(
             option(1, "Account View", "COACTVWC", "/api/accounts/{acctId}", "U", true),
-            option(2, "Account Update", "COACTUPC", "/api/programs/COACTUPC", "U", false),
-            option(3, "Credit Card List", "COCRDLIC", "/api/programs/COCRDLIC", "U", false),
-            option(4, "Credit Card View", "COCRDSLC", "/api/programs/COCRDSLC", "U", false),
-            option(5, "Credit Card Update", "COCRDUPC", "/api/programs/COCRDUPC", "U", false),
-            option(6, "Transaction List", "COTRN00C", "/api/programs/COTRN00C", "U", false),
-            option(7, "Transaction View", "COTRN01C", "/api/programs/COTRN01C", "U", false),
-            option(8, "Transaction Add", "COTRN02C", "/api/programs/COTRN02C", "U", false),
-            option(9, "Transaction Reports", "CORPT00C", "/api/programs/CORPT00C", "U", false),
-            option(10, "Bill Payment", "COBIL00C", "/api/programs/COBIL00C", "U", false),
+            option(2, "Account Update", "COACTUPC", "/api/accounts/{accountId}", "U", true),
+            option(3, "Credit Card List", "COCRDLIC", "/api/cards", "U", true),
+            option(4, "Credit Card View", "COCRDSLC", "/api/cards/{cardNumber}", "U", true),
+            option(5, "Credit Card Update", "COCRDUPC", "/api/cards/{cardNumber}", "U", true),
+            option(6, "Transaction List", "COTRN00C", "/api/transactions", "U", true),
+            option(7, "Transaction View", "COTRN01C", "/api/transactions/{transactionId}", "U", true),
+            option(8, "Transaction Add", "COTRN02C", "/api/transactions", "U", true),
+            option(9, "Transaction Reports", "CORPT00C", "/api/reports", "U", true),
+            option(10, "Bill Payment", "COBIL00C", "/api/billing/payments", "U", true),
             option(11, "Pending Authorization View", "COPAUS0C", "/api/programs/COPAUS0C", "U", false));
 
     private static final List<MenuOption> ADMIN = List.of(
-            option(1, "User List (Security)", "COUSR00C", "/api/programs/COUSR00C", "A", false),
-            option(2, "User Add (Security)", "COUSR01C", "/api/programs/COUSR01C", "A", false),
-            option(3, "User Update (Security)", "COUSR02C", "/api/programs/COUSR02C", "A", false),
-            option(4, "User Delete (Security)", "COUSR03C", "/api/programs/COUSR03C", "A", false),
+            option(1, "User List (Security)", "COUSR00C", "/api/admin/users", "A", true),
+            option(2, "User Add (Security)", "COUSR01C", "/api/admin/users", "A", true),
+            option(3, "User Update (Security)", "COUSR02C", "/api/admin/users/{userId}", "A", true),
+            option(4, "User Delete (Security)", "COUSR03C", "/api/admin/users/{userId}", "A", true),
             option(5, "Transaction Type List/Update (Db2)", "COTRTLIC", "/api/programs/COTRTLIC", "A", false),
             option(6, "Transaction Type Maintenance (Db2)", "COTRTUPC", "/api/programs/COTRTUPC", "A", false));
 
@@ -91,9 +91,7 @@ public class MenuService {
     private MenuSelectionResponse selection(MenuOption option) {
         String message = option.implemented()
                 ? null
-                : ("COPAUS0C".equals(option.program())
-                ? CobolMessages.optionNotInstalled(option.name())
-                : CobolMessages.optionComingSoon(option.name()));
+                : CobolMessages.optionNotInstalled(option.name());
         return new MenuSelectionResponse(option.number(), option.name(), option.program(),
                 option.endpoint(), option.implemented(), message);
     }

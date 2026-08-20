@@ -294,6 +294,9 @@ public class AccountUpdateService {
     }
 
     private boolean same(Object left, Object right) {
+        if (left instanceof BigDecimal leftDecimal && right instanceof BigDecimal rightDecimal) {
+            return leftDecimal.compareTo(rightDecimal) == 0;
+        }
         return Objects.equals(left, right);
     }
 

@@ -17,12 +17,15 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.nio.file.Path;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 @Service
 public class BatchJobService {
+    private static final DateTimeFormatter EXPORT_TIMESTAMP_FORMAT =
+            DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSSSSS");
     private final AccountRepository accounts;
     private final CardRepository cards;
     private final CardXrefRepository xrefs;
@@ -209,20 +212,23 @@ public class BatchJobService {
                 <table  align="center" frame="box" style="width:70%; font:12px Segoe UI,sans-serif;">
                 """);
         out.append("<tr><td colspan=\"3\"><h3>Statement for Account Number: ")
-                .append(statement.account() == null ? "" : statement.account().getAcctId())
+                .append(escapeHtml(statement.account() == null ? "" :
+                        String.valueOf(statement.account().getAcctId())))
                 .append("</h3></td></tr>");
         if (statement.customer() != null) {
             out.append("<tr><td colspan=\"3\"><p style=\"font-size:16px\">")
-                    .append(statement.customer().getCustFirstName()).append(' ')
-                    .append(statement.customer().getCustLastName()).append("</p></td></tr>");
+                    .append(escapeHtml(statement.customer().getCustFirstName())).append(' ')
+                    .append(escapeHtml(statement.customer().getCustLastName()))
+                    .append("</p></td></tr>");
         }
         out.append("<tr><td colspan=\"3\"><p style=\"font-size:16px\">Transaction Summary</p></td></tr>")
                 .append("<tr><td>Tran ID</td><td>Tran Details</td><td>Amount</td></tr>");
         BigDecimal total = BigDecimal.ZERO;
         for (Transaction tx : statement.transactions()) {
-            out.append("<tr><td>").append(tx.getTranId()).append("</td><td>")
-                    .append(tx.getTranDescription()).append("</td><td>")
-                    .append(zero(tx.getTranAmount())).append("</td></tr>");
+            out.append("<tr><td>").append(escapeHtml(tx.getTranId())).append("</td><td>")
+                    .append(escapeHtml(tx.getTranDescription())).append("</td><td>")
+                    .append(escapeHtml(String.valueOf(zero(tx.getTranAmount()))))
+                    .append("</td></tr>");
             total = total.add(zero(tx.getTranAmount()));
         }
         return out.append("<tr><td colspan=\"3\">Total EXP: ").append(total)
@@ -377,12 +383,14 @@ public class BatchJobService {
         };
         StringBuilder data = new StringBuilder();
         for (int i = 0; i < widths.length; i++) data.append(fixed(values[i], widths[i]));
-        return fixed(type, 1) + fixed(LocalDateTime.now().toString().replace('T', ' '), 26)
+        return fixed(type, 1) + fixed(formatExportTimestamp(LocalDateTime.now()), 26)
                 + "%09d".formatted(sequence) + fixed("0001", 4) + fixed("NORTH", 5)
                 + BatchFileSupport.pad(data.toString(), 455);
     }
     private static String fixed(Object value, int width) {
-        String text = value == null ? "" : value.toString();
+        String text = value instanceof LocalDateTime timestamp
+                ? formatExportTimestamp(timestamp)
+                : value == null ? "" : value.toString();
         if (text.length() > width) return text.substring(0, width);
         return text + " ".repeat(width - text.length());
     }
@@ -391,7 +399,17 @@ public class BatchJobService {
     }
     private static BigDecimal decimalText(String value) { return value.isBlank() ? null : new BigDecimal(value); }
     private static LocalDateTime parseTimestamp(String value) {
-        return value.isBlank() ? null : LocalDateTime.parse(value.replace(' ', 'T').substring(0, 19));
+        return value.isBlank() ? null
+                : LocalDateTime.parse(value.trim(), EXPORT_TIMESTAMP_FORMAT);
+    }
+    private static String formatExportTimestamp(LocalDateTime value) {
+        return EXPORT_TIMESTAMP_FORMAT.format(value);
+    }
+    private static String escapeHtml(String value) {
+        if (value == null) return "";
+        return value.replace("&", "&amp;").replace("<", "&lt;")
+                .replace(">", "&gt;").replace("\"", "&quot;")
+                .replace("'", "&#39;");
     }
     private static String empty(String[] fields, int index) { return index >= fields.length || fields[index].isEmpty() ? null : fields[index]; }
     private static BigDecimal decimal(String[] f, int i) { return empty(f, i) == null ? null : new BigDecimal(f[i]); }

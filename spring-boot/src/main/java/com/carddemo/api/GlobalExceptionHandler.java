@@ -7,6 +7,9 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
+import org.springframework.web.servlet.NoHandlerFoundException;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 import java.time.Instant;
 
@@ -22,6 +25,17 @@ public class GlobalExceptionHandler {
     ResponseEntity<ErrorResponse> handleValidation(MethodArgumentNotValidException exception) {
         FieldError error = exception.getBindingResult().getFieldErrors().stream().findFirst().orElse(null);
         return response(HttpStatus.BAD_REQUEST, error == null ? "Invalid request" : error.getDefaultMessage());
+    }
+
+    @ExceptionHandler({NoHandlerFoundException.class, NoResourceFoundException.class})
+    ResponseEntity<ErrorResponse> handleNotFound(Exception exception, HttpServletRequest request) {
+        return response(HttpStatus.NOT_FOUND, "Resource not found");
+    }
+
+    @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
+    ResponseEntity<ErrorResponse> handleMethodNotSupported(
+            HttpRequestMethodNotSupportedException exception) {
+        return response(HttpStatus.METHOD_NOT_ALLOWED, "Request method not supported");
     }
 
     @ExceptionHandler(Exception.class)

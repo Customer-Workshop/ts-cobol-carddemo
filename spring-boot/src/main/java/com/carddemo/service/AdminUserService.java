@@ -72,6 +72,10 @@ public class AdminUserService {
         if (blank(request.userId())) throw bad(CobolMessages.USER_ID_REQUIRED_EDIT);
         if (blank(request.password())) throw bad(CobolMessages.PASSWORD_REQUIRED_EDIT);
         if (blank(request.userType())) throw bad(CobolMessages.USER_TYPE_REQUIRED);
+        validateLength(request.userId(), 8, CobolMessages.USER_ID_TOO_LONG);
+        validateLength(request.firstName(), 20, CobolMessages.FIRST_NAME_TOO_LONG);
+        validateLength(request.lastName(), 20, CobolMessages.LAST_NAME_TOO_LONG);
+        validateLength(request.password(), 8, CobolMessages.PASSWORD_TOO_LONG);
         user.setUserId(id);
         user.setFirstName(request.firstName().trim());
         user.setLastName(request.lastName().trim());
@@ -83,7 +87,9 @@ public class AdminUserService {
 
     private String normalizeId(String value) {
         if (value == null || value.isBlank()) throw bad(CobolMessages.USER_ID_REQUIRED);
-        return value.trim().toUpperCase(Locale.ROOT);
+        String normalized = value.trim();
+        validateLength(normalized, 8, CobolMessages.USER_ID_TOO_LONG);
+        return normalized.toUpperCase(Locale.ROOT);
     }
 
     private String trim(String value) {
@@ -92,6 +98,10 @@ public class AdminUserService {
 
     private boolean blank(String value) {
         return value == null || value.isBlank();
+    }
+
+    private void validateLength(String value, int max, String message) {
+        if (value.trim().length() > max) throw bad(message);
     }
 
     private AdminUserResponse response(SecurityUser user) {
