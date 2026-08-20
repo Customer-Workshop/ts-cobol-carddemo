@@ -140,6 +140,22 @@ class BatchJobIntegrationTest {
     }
 
     @Test
+    void expirationFailureOverwritesEarlierOverlimitFailure() throws Exception {
+        String record = validDailyRecord("0000000000000003");
+        StringBuilder value = new StringBuilder(record);
+        value.replace(132, 143, "0000300000{");
+        value.replace(278, 304, "2026-08-20 00:00:00.000000");
+        Path daily = Path.of("target/test-batch-output/overlimit-expired.txt");
+        Files.writeString(daily, value);
+
+        launch("cbtrn02Job", params("dailyFile", daily.toString()));
+
+        String rejects = Files.readString(Path.of("target/test-batch-output/cbtrn02-rejects.txt"));
+        assertTrue(rejects.contains("0103TRANSACTION RECEIVED AFTER ACCT EXPIRATION"));
+        assertTrue(!rejects.contains("0102OVERLIMIT TRANSACTION"));
+    }
+
+    @Test
     void interestWritesDistinctTransactionPerEligibleCategory() throws Exception {
         Account targetAccount = accounts.findById(1L).orElseThrow();
         TransactionCategoryBalance extraBalance = new TransactionCategoryBalance();

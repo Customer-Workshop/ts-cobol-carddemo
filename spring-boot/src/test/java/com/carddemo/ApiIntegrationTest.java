@@ -1,6 +1,7 @@
 package com.carddemo;
 
 import com.carddemo.model.SecurityUser;
+import com.carddemo.repository.CardRepository;
 import com.carddemo.repository.CustomerRepository;
 import com.carddemo.repository.SecurityUserRepository;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -32,6 +33,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class ApiIntegrationTest {
     @Autowired private MockMvc mockMvc;
     @Autowired private SecurityUserRepository userRepository;
+    @Autowired private CardRepository cardRepository;
     @Autowired private CustomerRepository customerRepository;
     @Autowired private ObjectMapper objectMapper;
 
@@ -365,6 +367,24 @@ class ApiIntegrationTest {
                 .andExpect(jsonPath("$.options[0].endpoint").value("/api/admin/users"))
                 .andExpect(jsonPath("$.options[0].implemented").value(true))
                 .andExpect(jsonPath("$.options[5].implemented").value(false));
+    }
+
+    @Test
+    void cardWithNullExpiryCanBeUpdated() throws Exception {
+        MockHttpSession admin = signon("ADMIN001", "PASSWORD", "/api/admin/menu");
+        var card = cardRepository.findById("1111222233334444").orElseThrow();
+        card.setCardExpirationDate(null);
+        cardRepository.saveAndFlush(card);
+
+        mockMvc.perform(put("/api/cards/1111222233334444").param("accountId", "1")
+                        .session(admin).contentType(MediaType.APPLICATION_JSON).content("""
+                                {"embossedName":"Ada Byron Updated","activeStatus":"Y",
+                                 "expiryMonth":1,"expiryYear":2026,
+                                 "original":{"embossedName":"Ada Byron","activeStatus":"Y",
+                                            "expiryMonth":1,"expiryYear":2025}}
+                                """))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.expirationDate").value("2026-01-01"));
     }
 
     private ObjectNode cardUpdate(JsonNode detail) {

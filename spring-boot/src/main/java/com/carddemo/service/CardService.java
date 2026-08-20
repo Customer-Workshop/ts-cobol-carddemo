@@ -126,12 +126,12 @@ public class CardService {
         if (!same(original.activeStatus(), card.getCardActiveStatus())) {
             throw changed();
         }
-        if (existingExpiry == null
-                || !original.expiryMonth().equals(existingExpiry.getMonthValue())) {
+        if (existingExpiry != null
+                && !original.expiryMonth().equals(existingExpiry.getMonthValue())) {
             throw changed();
         }
-        if (existingExpiry == null
-                || !original.expiryYear().equals(existingExpiry.getYear())) {
+        if (existingExpiry != null
+                && !original.expiryYear().equals(existingExpiry.getYear())) {
             throw changed();
         }
         if (same(request.embossedName(), card.getCardEmbossedName())

@@ -48,8 +48,7 @@ public class SecurityConfig {
                         .authenticationEntryPoint(jsonEntryPoint(objectMapper))
                         .accessDeniedHandler(jsonDeniedHandler(objectMapper)))
                 .formLogin(AbstractHttpConfigurer::disable)
-                .httpBasic(AbstractHttpConfigurer::disable)
-                .headers(headers -> headers.frameOptions(frame -> frame.sameOrigin()));
+                .httpBasic(AbstractHttpConfigurer::disable);
         return http.build();
     }
 

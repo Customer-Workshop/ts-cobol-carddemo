@@ -2,6 +2,7 @@ package com.carddemo;
 
 import com.carddemo.model.Account;
 import com.carddemo.model.SecurityUser;
+import com.carddemo.data.DataSeeder;
 import com.carddemo.repository.AccountRepository;
 import com.carddemo.repository.CardRepository;
 import com.carddemo.repository.CardXrefRepository;
@@ -15,6 +16,7 @@ import com.carddemo.repository.TransactionTypeRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.TestPropertySource;
 
 import java.math.BigDecimal;
@@ -38,6 +40,7 @@ class DataSeederIntegrationTest {
     @Autowired private TransactionCategoryRepository transactionCategoryRepository;
     @Autowired private TransactionCategoryBalanceRepository transactionCategoryBalanceRepository;
     @Autowired private SecurityUserRepository securityUserRepository;
+    @Autowired private DataSeeder dataSeeder;
 
     @Test
     void seedsFixtureAndPreservesValues() {
@@ -60,5 +63,23 @@ class DataSeederIntegrationTest {
                 transactionCategoryBalanceRepository.findAll().getFirst().getBalance());
         SecurityUser user = securityUserRepository.findById("ADMIN001").orElseThrow();
         assertEquals("A", user.getUserType());
+    }
+
+    @Test
+    @DirtiesContext
+    void unforcedSeedPreservesExistingNonAccountRows() throws Exception {
+        SecurityUser existing = new SecurityUser();
+        existing.setUserId("KEEP001");
+        existing.setFirstName("Keep");
+        existing.setLastName("Me");
+        existing.setPassword("PASSWORD");
+        existing.setUserType("U");
+        securityUserRepository.save(existing);
+        accountRepository.deleteAllInBatch();
+
+        dataSeeder.run();
+
+        assertEquals(1, accountRepository.count());
+        assertEquals("Keep", securityUserRepository.findById("KEEP001").orElseThrow().getFirstName());
     }
 }

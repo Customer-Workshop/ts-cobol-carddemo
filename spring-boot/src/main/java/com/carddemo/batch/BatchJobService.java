@@ -350,14 +350,18 @@ public class BatchJobService {
         if (account == null) return new Validation(101, "ACCOUNT RECORD NOT FOUND");
         BigDecimal current = zero(account.getAcctCurrCycCredit()).subtract(zero(account.getAcctCurrCycDebit()))
                 .add(record.amount());
+        int reason = 0;
+        String description = null;
         if (zero(account.getAcctCreditLimit()).compareTo(current) < 0) {
-            return new Validation(102, "OVERLIMIT TRANSACTION");
+            reason = 102;
+            description = "OVERLIMIT TRANSACTION";
         }
         if (account.getAcctExpirationDate() != null && record.originTimestamp() != null
                 && account.getAcctExpirationDate().isBefore(record.originTimestamp().toLocalDate())) {
-            return new Validation(103, "TRANSACTION RECEIVED AFTER ACCT EXPIRATION");
+            reason = 103;
+            description = "TRANSACTION RECEIVED AFTER ACCT EXPIRATION";
         }
-        return null;
+        return reason == 0 ? null : new Validation(reason, description);
     }
 
     private Transaction toTransaction(DailyTransactionRecord record) {

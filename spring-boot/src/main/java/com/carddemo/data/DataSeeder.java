@@ -98,20 +98,24 @@ public class DataSeeder implements CommandLineRunner {
     @Override
     @Transactional
     public void run(String... args) throws Exception {
-        if (!force && accountRepository.count() > 0) {
-            log.info("Skipping CardDemo data seed because account data is already present");
-            return;
+        if (!force) {
+            if (accountRepository.count() > 0) {
+                log.info("Skipping CardDemo data seed because account data is already present");
+                return;
+            }
+            log.info("Seeding CardDemo data without deleting existing records because force is disabled");
+        } else {
+            accountRepository.deleteAllInBatch();
+            customerRepository.deleteAllInBatch();
+            cardRepository.deleteAllInBatch();
+            cardXrefRepository.deleteAllInBatch();
+            transactionRepository.deleteAllInBatch();
+            disclosureGroupRepository.deleteAllInBatch();
+            transactionTypeRepository.deleteAllInBatch();
+            transactionCategoryRepository.deleteAllInBatch();
+            transactionCategoryBalanceRepository.deleteAllInBatch();
+            securityUserRepository.deleteAllInBatch();
         }
-        accountRepository.deleteAllInBatch();
-        customerRepository.deleteAllInBatch();
-        cardRepository.deleteAllInBatch();
-        cardXrefRepository.deleteAllInBatch();
-        transactionRepository.deleteAllInBatch();
-        disclosureGroupRepository.deleteAllInBatch();
-        transactionTypeRepository.deleteAllInBatch();
-        transactionCategoryRepository.deleteAllInBatch();
-        transactionCategoryBalanceRepository.deleteAllInBatch();
-        securityUserRepository.deleteAllInBatch();
 
         List<String> accountsData = readLines("ASCII/acctdata.txt", 300);
         List<String> customersData = readLines("ASCII/custdata.txt", 500);
