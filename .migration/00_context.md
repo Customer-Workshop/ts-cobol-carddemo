@@ -1,6 +1,6 @@
 # 00_context — CardDemo migration engagement
 
-Status: STOP A CONFIRMED 2026-08-20 (dhrov.subramanian): C#/.NET 8 + ASP.NET Core, Angular 17+,
+Status: STOP A CONFIRMED 2026-08-20 (the project owner): C#/.NET 8 + ASP.NET Core, Angular 17+,
 PostgreSQL, single-repo topology.
 
 ## Modules in scope

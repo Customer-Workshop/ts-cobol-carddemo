@@ -1,6 +1,6 @@
 # CardDemo Target State (CORE + per-surface profiles)
 
-Status: **CONFIRMED at STOP A (2026-08-20)** by dhrov.subramanian:
+Status: **CONFIRMED at STOP A (2026-08-20)** by the project owner:
 **C# / .NET 8 + ASP.NET Core** (all surfaces), **Angular 17+** UI, **PostgreSQL** data target,
 **single-repo topology** (backend/frontend as subdirectories of `ts-cobol-carddemo`).
 Fields below are marked **CONFIRMED** (user-selected at STOP A), **FACT** (cited from source), or
