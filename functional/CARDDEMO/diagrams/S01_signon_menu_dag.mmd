@@ -1,0 +1,24 @@
+flowchart BT
+  subgraph W1["Wave 1 — seams (leaf)"]
+    USRSEC["USRSEC VSAM KSDS read seam\n(user security repository)\nCOSGN00C.cbl:211-219"]
+    SESS["Session/COMMAREA state seam\nCOCOM01Y.cpy:19-44"]
+    RT["Route tables\nCOMEN02Y.cpy / COADM02Y.cpy"]
+  end
+  subgraph W2["Wave 2 — sign-on"]
+    SGN["COSGN00C (CC00)\nsign-on screen COSGN0A"]
+  end
+  subgraph W3["Wave 3 — menus / dispatch shell"]
+    MEN["COMEN01C (CM00)\nmain menu COMEN1A, 11 routes"]
+    ADM["COADM01C (CA00)\nadmin menu COADM1A, 6 routes"]
+  end
+  SGN --> USRSEC
+  SGN --> SESS
+  MEN --> SESS
+  MEN --> RT
+  ADM --> SESS
+  ADM --> RT
+  SGN -- "XCTL admin\nCOSGN00C.cbl:231" --> ADM
+  SGN -- "XCTL user\nCOSGN00C.cbl:236" --> MEN
+  MEN -. "XCTL to 11 route pgms (B5, other streams)\nCOMEN01C.cbl:156,185" .-> OUT1["S-02..S-11, S-19"]
+  ADM -. "XCTL to 6 route pgms (B5, other streams)\nCOADM01C.cbl:146" .-> OUT2["S-12, S-21"]
+  OUT1 -. "return XCTL CDEMO-TO-PROGRAM (inbound)" .-> MEN

@@ -4,7 +4,7 @@ Schema: | Stream | Type | Entry point | Status (not started / analyzed / planned
 
 | Stream | Type | Entry point | Status | Last update | Notes |
 |---|---|---|---|---|---|
-| S-01 Sign-on + menu shell | ONLINE | CC00/CM00/CA00 | not started | 2026-08-20 | shared shell; recommended first |
+| S-01 Sign-on + menu shell | ONLINE | CC00/CM00/CA00 | analyzed | 2026-08-20 | chosen at STOP B; analysis: functional/CARDDEMO/S01_SignonMenu_analysis.md; boundaries S01-B1..B6 |
 | S-02 Account View | ONLINE | CAVW | not started | 2026-08-20 | |
 | S-03 Account Update | ONLINE | CAUP | not started | 2026-08-20 | |
 | S-04 Card List | ONLINE | CCLI | not started | 2026-08-20 | |
