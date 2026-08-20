@@ -22,6 +22,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
@@ -385,6 +386,17 @@ class ApiIntegrationTest {
                                 """))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.expirationDate").value("2026-01-01"));
+    }
+
+    @Test
+    void apiUsesDenyFrameHeaderByDefault() throws Exception {
+        mockMvc.perform(post("/api/auth/signon")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                {"userId":"ADMIN001","password":"PASSWORD"}
+                                """))
+                .andExpect(status().isOk())
+                .andExpect(header().string("X-Frame-Options", "DENY"));
     }
 
     private ObjectNode cardUpdate(JsonNode detail) {
