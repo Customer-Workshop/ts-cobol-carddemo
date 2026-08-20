@@ -1,6 +1,7 @@
 # 00_context — CardDemo migration engagement
 
-Status: DRAFT — awaiting STOP A confirmation (topology + target state undecided).
+Status: STOP A CONFIRMED 2026-08-20 (dhrov.subramanian): C#/.NET 8 + ASP.NET Core, Angular 17+,
+PostgreSQL, single-repo topology.
 
 ## Modules in scope
 - **CARDDEMO** core module (`app/`): 31 COBOL programs (`app/cbl`), 17 BMS maps, 38 JCL members,
@@ -8,13 +9,13 @@ Status: DRAFT — awaiting STOP A confirmation (topology + target state undecide
 - Optional extensions (scope TBD at STOP B): `app/app-authorization-ims-db2-mq`,
   `app/app-transaction-type-db2`, `app/app-vsam-mq`.
 
-## Repository topology (PROPOSED — confirm at STOP A)
+## Repository topology (CONFIRMED at STOP A)
 | Role | Repo | Base branch | Evidence / note |
 |---|---|---|---|
 | SOURCE | Cognition-Partner-Workshops/ts-cobol-carddemo | main | COBOL/copybooks/JCL/BMS/CSD/scheduler under `app/` (FACT) |
-| DOCS | Cognition-Partner-Workshops/ts-cobol-carddemo | main | `functional/CARDDEMO/**` + `.migration/**` (PROPOSED: co-locate) |
-| BACKEND | TBD — options: new repo (e.g. ts-cobol-carddemo-java) OR subdirectory in this repo | TBD | no `pom.xml`/backend exists on main (verified) |
-| FRONTEND | TBD — only if a UI is chosen at STOP A | TBD | no `angular.json`/frontend exists on main (verified) |
+| DOCS | Cognition-Partner-Workshops/ts-cobol-carddemo | main | `functional/CARDDEMO/**` + `.migration/**` (CONFIRMED: co-locate) |
+| BACKEND | same repo, `backend/` subdirectory (.NET 8 solution `backend/CardDemo.sln`) | main | CONFIRMED at STOP A; to be scaffolded in Phase 0 |
+| FRONTEND | same repo, `frontend/` subdirectory (Angular 17+) | main | CONFIRMED at STOP A; to be scaffolded in Phase 0 |
 
 Look-alike risk noted: `~/repos/ts-cobol-acas-java` exists locally but belongs to the ACAS
 engagement, NOT CardDemo. Do not route CardDemo artifacts there.
