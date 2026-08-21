@@ -1,3 +1,4 @@
+using CardDemo.Application.Auth;
 using CardDemo.Application.Menu;
 using CardDemo.Application.Sessions;
 using CardDemo.Application.Users;
@@ -16,6 +17,7 @@ builder.Services.AddDbContext<CardDemoDbContext>(options =>
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddSingleton<IPasswordHashingService, IdentityPasswordHashingService>();
 builder.Services.AddScoped<UsrsecImportService>();
+builder.Services.AddScoped<SignInService>();
 builder.Services.AddSingleton<IJwtTokenIssuer, JwtTokenIssuer>();
 builder.Services.Configure<JwtOptions>(builder.Configuration.GetSection(JwtOptions.SectionName));
 builder.Services.Configure<MenuRouteRegistryOptions>(builder.Configuration.GetSection(MenuRouteRegistryOptions.SectionName));

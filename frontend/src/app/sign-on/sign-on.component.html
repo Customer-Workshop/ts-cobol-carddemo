@@ -1,0 +1,29 @@
+@if (exited) {
+  <div class="farewell" data-testid="farewell-message">{{ farewellMessage }}</div>
+} @else {
+  <mat-card class="sign-on-card">
+    <mat-card-header>
+      <mat-card-title>Sign-on</mat-card-title>
+      <mat-card-subtitle>Type your User ID and Password, then press ENTER</mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content>
+      <form (ngSubmit)="submit()">
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>User ID</mat-label>
+          <input matInput name="userId" [(ngModel)]="userId" maxlength="8" autocomplete="username" data-testid="user-id-input" />
+        </mat-form-field>
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Password</mat-label>
+          <input matInput type="password" name="password" [(ngModel)]="password" maxlength="8" autocomplete="current-password" data-testid="password-input" />
+        </mat-form-field>
+        @if (errorMessage) {
+          <div class="error-message" role="alert" data-testid="error-message">{{ errorMessage }}</div>
+        }
+        <div class="actions">
+          <button mat-flat-button color="primary" type="submit" data-testid="sign-in-button">Sign In</button>
+          <button mat-stroked-button type="button" (click)="exit()" data-testid="exit-button">Exit</button>
+        </div>
+      </form>
+    </mat-card-content>
+  </mat-card>
+}
