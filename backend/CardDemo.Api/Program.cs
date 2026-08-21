@@ -1,10 +1,14 @@
+using System.Text;
 using CardDemo.Application.Auth;
 using CardDemo.Application.Menu;
 using CardDemo.Application.Sessions;
 using CardDemo.Application.Users;
 using CardDemo.Infrastructure.Persistence;
 using CardDemo.Infrastructure.Security;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,6 +25,27 @@ builder.Services.AddScoped<SignInService>();
 builder.Services.AddSingleton<IJwtTokenIssuer, JwtTokenIssuer>();
 builder.Services.Configure<JwtOptions>(builder.Configuration.GetSection(JwtOptions.SectionName));
 builder.Services.Configure<MenuRouteRegistryOptions>(builder.Configuration.GetSection(MenuRouteRegistryOptions.SectionName));
+builder.Services.AddScoped(sp => sp.GetRequiredService<IOptions<MenuRouteRegistryOptions>>().Value);
+builder.Services.AddScoped<MenuService>();
+
+var jwtOptions = builder.Configuration.GetSection(JwtOptions.SectionName).Get<JwtOptions>() ?? new JwtOptions();
+builder.Services
+    .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        options.MapInboundClaims = false;
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidIssuer = jwtOptions.Issuer,
+            ValidateAudience = true,
+            ValidAudience = jwtOptions.Audience,
+            ValidateIssuerSigningKey = true,
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtOptions.SigningKey)),
+            ValidateLifetime = true
+        };
+    });
+builder.Services.AddAuthorization();
 
 var app = builder.Build();
 
@@ -40,6 +65,9 @@ if (app.Environment.IsDevelopment())
         app.Logger.LogInformation("USRSEC seed import: {Count} users upserted from {Path}", count, usrsecSeedPath);
     }
 }
+
+app.UseAuthentication();
+app.UseAuthorization();
 
 app.MapControllers();
 app.MapGet("/api/v1/health", () => Results.Ok(new { status = "ok" }));

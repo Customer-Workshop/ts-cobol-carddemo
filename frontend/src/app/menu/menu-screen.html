@@ -1,0 +1,34 @@
+<mat-card class="menu-card">
+  <mat-card-header>
+    <mat-card-title>{{ title }}</mat-card-title>
+    <mat-card-subtitle>Type an option number, then press ENTER</mat-card-subtitle>
+  </mat-card-header>
+  <mat-card-content>
+    <ol class="menu-options" data-testid="menu-options">
+      @for (option of options; track option.id) {
+        <li data-testid="menu-option">{{ option.id }}. {{ option.name }}</li>
+      }
+    </ol>
+    <form (ngSubmit)="submit()">
+      <mat-form-field appearance="outline" class="option-field">
+        <mat-label>Option</mat-label>
+        <input matInput name="option" [(ngModel)]="option" maxlength="2" data-testid="option-input" />
+      </mat-form-field>
+      @if (message) {
+        <div
+          class="message"
+          [class.error-message]="messageSeverity === 'error'"
+          [class.info-message]="messageSeverity === 'info'"
+          role="alert"
+          data-testid="menu-message"
+        >
+          {{ message }}
+        </div>
+      }
+      <div class="actions">
+        <button mat-flat-button color="primary" type="submit" data-testid="select-button">Enter</button>
+        <button mat-stroked-button type="button" (click)="exit()" data-testid="exit-button">Exit (PF3)</button>
+      </div>
+    </form>
+  </mat-card-content>
+</mat-card>

@@ -10,4 +10,13 @@ public sealed record MenuRouteOption
     public string Name { get; init; } = string.Empty;
     public string ProgramKey { get; init; } = string.Empty;
     public bool Enabled { get; init; }
+
+    /// <summary>CDEMO-MENU-OPT-USRTYPE = 'A' gate (FR-S01-12); all shipped catalogue rows are 'U'.</summary>
+    public bool AdminOnly { get; init; }
+
+    /// <summary>COPAUS0C availability probe (seam S01-B2): disabled entry surfaces as "not installed" instead of "coming soon".</summary>
+    public bool NotInstalledWhenDisabled { get; init; }
+
+    /// <summary>Angular route the option navigates to once its owning stream migrates (seam S01-B1); empty while unmigrated.</summary>
+    public string Route { get; init; } = string.Empty;
 }

@@ -1,0 +1,36 @@
+.menu-card {
+  max-width: 480px;
+  margin: 48px auto;
+}
+
+.menu-options {
+  list-style: none;
+  padding: 0 0 8px;
+
+  li {
+    font-family: monospace;
+    line-height: 1.6;
+  }
+}
+
+.option-field {
+  width: 120px;
+  display: block;
+}
+
+.message {
+  margin-bottom: 12px;
+}
+
+.error-message {
+  color: #b00020;
+}
+
+.info-message {
+  color: #1b5e20;
+}
+
+.actions {
+  display: flex;
+  gap: 12px;
+}
