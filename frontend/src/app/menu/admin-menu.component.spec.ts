@@ -4,6 +4,7 @@ import { HttpTestingController, provideHttpClientTesting } from '@angular/common
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
 import { Router } from '@angular/router';
 import { AdminMenuComponent } from './admin-menu.component';
+import { MSG_INVALID_KEY } from '../shared/invalid-key';
 
 const ADMIN_MENU_RESPONSE = {
   menu: 'admin',
@@ -107,6 +108,23 @@ describe('AdminMenuComponent', () => {
     sessionStorage.setItem('carddemo.token', 't');
 
     (fixture.nativeElement as HTMLElement).querySelector<HTMLButtonElement>('[data-testid="exit-button"]')?.click();
+
+    expect(sessionStorage.getItem('carddemo.token')).toBeNull();
+    expect(router.navigateByUrl).toHaveBeenCalledWith('/signin');
+  });
+
+  it('shows the invalid-key message for an unmapped function key (FR-S01-20)', () => {
+    window.dispatchEvent(new KeyboardEvent('keydown', { key: 'F12' }));
+    fixture.detectChanges();
+
+    expect(messageText()).toBe(MSG_INVALID_KEY);
+    expect(router.navigateByUrl).not.toHaveBeenCalled();
+  });
+
+  it('returns to the sign-on screen on F3 like PF3 (FR-S01-16)', () => {
+    sessionStorage.setItem('carddemo.token', 't');
+
+    window.dispatchEvent(new KeyboardEvent('keydown', { key: 'F3' }));
 
     expect(sessionStorage.getItem('carddemo.token')).toBeNull();
     expect(router.navigateByUrl).toHaveBeenCalledWith('/signin');

@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, HostListener, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
@@ -7,6 +7,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { AuthService } from '../auth/auth.service';
+import { MSG_INVALID_KEY, classifyAidKey } from '../shared/invalid-key';
 
 export const MSG_ENTER_USER_ID = 'Please enter User ID ...';
 export const MSG_ENTER_PASSWORD = 'Please enter Password ...';
@@ -16,7 +17,8 @@ export const MSG_THANK_YOU = 'Thank you for using CardDemo application...';
 /**
  * Sign-on screen, equivalent of BMS map COSGN0A (app/bms/COSGN00.bms):
  * User ID X(8), dark Password X(8), 80-char error message area,
- * ENTER submits, Exit is the PF3 equivalent (farewell message).
+ * ENTER submits, Exit / F3 is the PF3 equivalent (farewell message);
+ * any other function key is an unmapped AID (FR-S01-20).
  */
 @Component({
   selector: 'app-sign-on',
@@ -57,5 +59,19 @@ export class SignOnComponent {
 
   exit(): void {
     this.exited = true;
+  }
+
+  @HostListener('window:keydown', ['$event'])
+  onKeydown(event: KeyboardEvent): void {
+    const action = classifyAidKey(event);
+    if (!action || this.exited) {
+      return;
+    }
+    event.preventDefault();
+    if (action === 'exit') {
+      this.exit();
+    } else {
+      this.errorMessage = MSG_INVALID_KEY;
+    }
   }
 }

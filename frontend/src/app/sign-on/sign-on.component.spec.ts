@@ -4,6 +4,7 @@ import { HttpTestingController, provideHttpClientTesting } from '@angular/common
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
 import { Router } from '@angular/router';
 import { SignOnComponent, MSG_ENTER_PASSWORD, MSG_ENTER_USER_ID, MSG_THANK_YOU } from './sign-on.component';
+import { MSG_INVALID_KEY } from '../shared/invalid-key';
 
 describe('SignOnComponent', () => {
   let fixture: ComponentFixture<SignOnComponent>;
@@ -115,5 +116,21 @@ describe('SignOnComponent', () => {
     const farewell = (fixture.nativeElement as HTMLElement).querySelector('[data-testid="farewell-message"]');
     expect(farewell?.textContent?.trim()).toBe(MSG_THANK_YOU);
     expect((fixture.nativeElement as HTMLElement).querySelector('form')).toBeNull();
+  });
+
+  it('shows the invalid-key message for an unmapped function key (FR-S01-20)', () => {
+    window.dispatchEvent(new KeyboardEvent('keydown', { key: 'F5' }));
+    fixture.detectChanges();
+
+    expect(errorText()).toBe(MSG_INVALID_KEY);
+    httpMock.expectNone('/api/v1/auth/signin');
+  });
+
+  it('shows the farewell message on F3 like PF3 (FR-S01-08)', () => {
+    window.dispatchEvent(new KeyboardEvent('keydown', { key: 'F3' }));
+    fixture.detectChanges();
+
+    const farewell = (fixture.nativeElement as HTMLElement).querySelector('[data-testid="farewell-message"]');
+    expect(farewell?.textContent?.trim()).toBe(MSG_THANK_YOU);
   });
 });

@@ -101,6 +101,10 @@ FR-S01-01..09 → COSGN00C → cites §4 → tests TBD (assigned in migration pl
 FR-S01-10..16,20 → COMEN01C (16,20 also COADM01C) → cites §4 → TBD.
 FR-S01-17..19 → COADM01C → cites §4 → TBD.
 
+**FR-S01-20 target disposition (audit F-1 remediation):** the 3270 AID set maps to web keyboard function keys. F3 triggers the Exit action (PF3 parity); any other F1–F12 key shows `Invalid key pressed. Please see below...` (CSMSG01Y.cpy:20-21) and the screen state is preserved. Implemented in `frontend/src/app/shared/invalid-key.ts` and window keydown handlers of the sign-on, main-menu, and admin-menu components; covered by component specs tagged FR-S01-20. Non-function keys (letters, digits, navigation) are ordinary web input and are out of AID scope.
+
+**Documented text generalizations (audit F-2/F-3):** the target emits the full option name in coming-soon/not-installed messages (e.g. `This option Account View is coming soon ...`), where COBOL's `STRING ... DELIMITED BY SPACE` (COMEN01C.cbl:172-176) would emit only the first word, and COADM01C's name-suppressed green `This option is not installed ...` (COADM01C.cbl:150-157) is unified with the registry's coming-soon semantics. Both source paths are unreachable in the shipped catalogues (no DUMMY entries); the generalization is the deliberate S01-B1 route-registry idiom. USRSEC seeding parses the DUSRSECJ.jcl in-stream records (same records as app/data/ASCII; the parser supports both carriers).
+
 ## 10. Program index
 | Program | Role | Requirements | Program FR doc |
 |---|---|---|---|

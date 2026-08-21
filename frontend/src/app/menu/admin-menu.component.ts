@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, HostListener, OnInit, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
@@ -7,11 +7,13 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { AuthService } from '../auth/auth.service';
 import { MenuOption, MenuService } from './menu.service';
+import { MSG_INVALID_KEY, classifyAidKey } from '../shared/invalid-key';
 
 /**
  * Admin menu screen, equivalent of BMS map COADM1A (app/bms/COADM01.bms):
  * 6 numbered option rows from the route registry, 2-char option field,
- * 80-char message area, ENTER selects, Exit is the PF3 equivalent (FR-S01-16..19).
+ * 80-char message area, ENTER selects, Exit / F3 is the PF3 equivalent (FR-S01-16..19);
+ * any other function key is an unmapped AID (FR-S01-20).
  * Route is guarded by the JWT userType 'A' claim (adminGuard).
  */
 @Component({
@@ -52,5 +54,20 @@ export class AdminMenuComponent implements OnInit {
   exit(): void {
     this.authService.signOut();
     this.router.navigateByUrl('/signin');
+  }
+
+  @HostListener('window:keydown', ['$event'])
+  onKeydown(event: KeyboardEvent): void {
+    const action = classifyAidKey(event);
+    if (!action) {
+      return;
+    }
+    event.preventDefault();
+    if (action === 'exit') {
+      this.exit();
+    } else {
+      this.message = MSG_INVALID_KEY;
+      this.messageSeverity = 'error';
+    }
   }
 }

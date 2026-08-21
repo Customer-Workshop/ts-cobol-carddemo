@@ -4,6 +4,7 @@ import { HttpTestingController, provideHttpClientTesting } from '@angular/common
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
 import { Router } from '@angular/router';
 import { MainMenuComponent } from './main-menu.component';
+import { MSG_INVALID_KEY } from '../shared/invalid-key';
 
 const MAIN_MENU_RESPONSE = {
   menu: 'main',
@@ -151,5 +152,22 @@ describe('MainMenuComponent', () => {
   it('limits the option input to 2 characters like the BMS map', () => {
     const input = (fixture.nativeElement as HTMLElement).querySelector('[data-testid="option-input"]');
     expect(input?.getAttribute('maxlength')).toBe('2');
+  });
+
+  it('shows the invalid-key message for an unmapped function key (FR-S01-20)', () => {
+    window.dispatchEvent(new KeyboardEvent('keydown', { key: 'F7' }));
+    fixture.detectChanges();
+
+    expect(messageText()).toBe(MSG_INVALID_KEY);
+    expect(router.navigateByUrl).not.toHaveBeenCalled();
+  });
+
+  it('returns to the sign-on screen on F3 like PF3 (FR-S01-16)', () => {
+    sessionStorage.setItem('carddemo.token', 't');
+
+    window.dispatchEvent(new KeyboardEvent('keydown', { key: 'F3' }));
+
+    expect(sessionStorage.getItem('carddemo.token')).toBeNull();
+    expect(router.navigateByUrl).toHaveBeenCalledWith('/signin');
   });
 });
