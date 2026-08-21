@@ -102,11 +102,11 @@ FR-S01-10..16,20 → COMEN01C (16,20 also COADM01C) → cites §4 → TBD.
 FR-S01-17..19 → COADM01C → cites §4 → TBD.
 
 ## 10. Program index
-| Program | Role | Requirements |
-|---|---|---|
-| COSGN00C | sign-on entry/validate | FR-S01-01..09, 20 |
-| COMEN01C | main-menu dispatch | FR-S01-10..16, 20 |
-| COADM01C | admin-menu dispatch | FR-S01-16..20 |
+| Program | Role | Requirements | Program FR doc |
+|---|---|---|---|
+| COSGN00C | sign-on entry/validate | FR-S01-01..09, 20 | [programs/COSGN00C_functional_requirement.md](programs/COSGN00C_functional_requirement.md) |
+| COMEN01C | main-menu dispatch | FR-S01-10..16, 20 | [programs/COMEN01C_functional_requirement.md](programs/COMEN01C_functional_requirement.md) |
+| COADM01C | admin-menu dispatch | FR-S01-16..20 | [programs/COADM01C_functional_requirement.md](programs/COADM01C_functional_requirement.md) |
 
 ## 11. Open questions and assumptions
 1. **Password handling**: source compares clear-text (`COSGN00C.cbl:223`); target will store hashed passwords — behavioral deviation (equivalent outcomes, different storage) to confirm at STOP C.
