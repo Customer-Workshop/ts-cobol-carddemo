@@ -4,7 +4,7 @@ Schema: | Stream | Type | Entry point | Status (not started / analyzed / planned
 
 | Stream | Type | Entry point | Status | Last update | Notes |
 |---|---|---|---|---|---|
-| S-01 Sign-on + menu shell | ONLINE | CC00/CM00/CA00 | planned | 2026-08-20 | STOP C approved (incl. hashed-password deviation); FR + plan + program FRs in functional/CARDDEMO/; boundaries S01-B1..B6 DECIDED |
+| S-01 Sign-on + menu shell | ONLINE | CC00/CM00/CA00 | in wave 1 | 2026-08-21 | STOP C approved (incl. hashed-password deviation); FR + plan + program FRs in functional/CARDDEMO/; boundaries S01-B1..B6 DECIDED. Wave 1 landed: users table + EF migration, IUserRepository, idempotent USRSEC seed import (10 users, hashed), SessionContext/JWT plumbing, menu route-registry config; parity tests green |
 | S-02 Account View | ONLINE | CAVW | not started | 2026-08-20 | |
 | S-03 Account Update | ONLINE | CAUP | not started | 2026-08-20 | |
 | S-04 Card List | ONLINE | CCLI | not started | 2026-08-20 | |
