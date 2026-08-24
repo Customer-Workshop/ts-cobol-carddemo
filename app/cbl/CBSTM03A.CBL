@@ -151,7 +151,8 @@
              88  HTML-L02 VALUE '<html lang="en">'.
              88  HTML-L03 VALUE '<head>'.
              88  HTML-L04 VALUE '<meta charset="utf-8">'.
-             88  HTML-L05 VALUE '<title>HTML Table Layout</title>'.
+             88  HTML-L05
+              VALUE '<title>CardDemo - Account Statement</title>'.
              88  HTML-L06 VALUE '</head>'.
              88  HTML-L07 VALUE '<body style="margin:0px;">'.
              88  HTML-L08 VALUE '<table  align="center" frame="box" styl
@@ -175,24 +176,24 @@
       -              'background-color:#f2f2f2;">'.
              88  HTML-L30-42
                           VALUE '<td colspan="3" style="padding:0px 5px;
-      -              'background-color:#33FFD1; text-align:center;">'.
+      -              'background-color:#FFCC80; text-align:center;">'.
              88  HTML-L31
                VALUE '<p style="font-size:16px">Basic Details</p>'.
              88  HTML-L43
               VALUE '<p style="font-size:16px">Transaction Summary</p>'.
              88  HTML-L47
                VALUE '<td style="width:25%; padding:0px 5px; background-
-      -              'color:#33FF5E; text-align:left;">'.
+      -              'color:#FFE0B3; text-align:left;">'.
              88  HTML-L48
                VALUE '<p style="font-size:16px">Tran ID</p>'.
              88  HTML-L50
                VALUE '<td style="width:55%; padding:0px 5px; background-
-      -              'color:#33FF5E; text-align:left;">'.
+      -              'color:#FFE0B3; text-align:left;">'.
              88  HTML-L51
                VALUE '<p style="font-size:16px">Tran Details</p>'.
              88  HTML-L53
                VALUE '<td style="width:20%; padding:0px 5px; background-
-      -              'color:#33FF5E; text-align:right;">'.
+      -              'color:#FFE0B3; text-align:right;">'.
              88  HTML-L54
                VALUE '<p style="font-size:16px">Amount</p>'.
              88  HTML-L58
