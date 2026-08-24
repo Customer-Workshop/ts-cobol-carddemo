@@ -1,0 +1,68 @@
+{
+  "generatedAt": "2026-08-24T00:00:00Z",
+  "statements": [
+    {
+      "accountId": "00000000001",
+      "customer": {
+        "name": "John Q Public",
+        "address": [
+          "123 Main Street",
+          "Apt 4B",
+          "Springfield",
+          "IL USA 62701"
+        ]
+      },
+      "currentBalance": 1250.75,
+      "creditLimit": 5000.00,
+      "transactions": [
+        {
+          "tranId": "TX00000000000001",
+          "typeCode": "01",
+          "categoryCode": "0001",
+          "description": "GROCERY STORE PURCHASE",
+          "amount": 84.23
+        },
+        {
+          "tranId": "TX00000000000002",
+          "typeCode": "01",
+          "categoryCode": "0003",
+          "description": "GAS STATION",
+          "amount": 45.10
+        },
+        {
+          "tranId": "TX00000000000003",
+          "typeCode": "02",
+          "categoryCode": "0005",
+          "description": "ONLINE PAYMENT - THANK YOU",
+          "amount": -200.00
+        }
+      ],
+      "totalDebits": 129.33,
+      "totalCredits": 200.00
+    },
+    {
+      "accountId": "00000000002",
+      "customer": {
+        "name": "Jane Doe",
+        "address": [
+          "9 Elm Avenue",
+          "Metropolis",
+          "NY USA 10001"
+        ]
+      },
+      "currentBalance": -35.50,
+      "creditLimit": 12000.00,
+      "transactions": [
+        {
+          "tranId": "TX00000000000004",
+          "typeCode": "01",
+          "categoryCode": "0002",
+          "description": "RESTAURANT",
+          "amount": 62.40
+        }
+      ],
+      "totalDebits": 62.40,
+      "totalCredits": 0.00
+    }
+  ]
+}

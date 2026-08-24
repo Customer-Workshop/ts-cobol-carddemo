@@ -1,0 +1,110 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://github.com/Cognition-Partner-Workshops/ts-cobol-carddemo/app/data/json/statements.schema.json",
+  "title": "CardDemo Account Statements Extract (DJ-102)",
+  "description": "Shared contract between the CBSTM04C COBOL batch JSON extract and the statement viewer. Locked for DJ-102: do not change. Amounts are signed decimals in dollars (converted from COMP-3/zoned-decimal, no overpunch characters).",
+  "type": "object",
+  "required": ["generatedAt", "statements"],
+  "additionalProperties": false,
+  "properties": {
+    "generatedAt": {
+      "type": "string",
+      "description": "ISO-8601 timestamp of when the extract was produced, e.g. 2026-08-24T09:00:00Z"
+    },
+    "statements": {
+      "type": "array",
+      "items": { "$ref": "#/definitions/statement" }
+    }
+  },
+  "definitions": {
+    "statement": {
+      "type": "object",
+      "required": [
+        "accountId",
+        "customer",
+        "currentBalance",
+        "creditLimit",
+        "transactions",
+        "totalDebits",
+        "totalCredits"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "accountId": {
+          "type": "string",
+          "description": "ACCT-ID (PIC 9(11)), zero-padded, 11 characters",
+          "pattern": "^[0-9]{11}$"
+        },
+        "customer": {
+          "type": "object",
+          "required": ["name", "address"],
+          "additionalProperties": false,
+          "properties": {
+            "name": {
+              "type": "string",
+              "description": "CUST-FIRST-NAME + CUST-MIDDLE-NAME + CUST-LAST-NAME, single-space separated, trailing blanks trimmed, empty middle name omitted"
+            },
+            "address": {
+              "type": "array",
+              "description": "Address lines in order: CUST-ADDR-LINE-1, CUST-ADDR-LINE-2, CUST-ADDR-LINE-3, then 'STATE COUNTRY ZIP' (CUST-ADDR-STATE-CD, CUST-ADDR-COUNTRY-CD, CUST-ADDR-ZIP). Blank lines are omitted.",
+              "items": { "type": "string" },
+              "minItems": 1
+            }
+          }
+        },
+        "currentBalance": {
+          "type": "number",
+          "description": "ACCT-CURR-BAL (PIC S9(10)V99) in dollars, signed, 2 decimal places"
+        },
+        "creditLimit": {
+          "type": "number",
+          "description": "ACCT-CREDIT-LIMIT (PIC S9(10)V99) in dollars, signed, 2 decimal places"
+        },
+        "transactions": {
+          "type": "array",
+          "description": "All transactions for the account's card(s), in transaction file order",
+          "items": { "$ref": "#/definitions/transaction" }
+        },
+        "totalDebits": {
+          "type": "number",
+          "description": "Sum of all positive transaction amounts (charges) for the statement, >= 0, 2 decimal places",
+          "minimum": 0
+        },
+        "totalCredits": {
+          "type": "number",
+          "description": "Absolute value of the sum of all negative transaction amounts (payments/credits) for the statement, >= 0, 2 decimal places",
+          "minimum": 0
+        }
+      }
+    },
+    "transaction": {
+      "type": "object",
+      "required": ["tranId", "typeCode", "categoryCode", "description", "amount"],
+      "additionalProperties": false,
+      "properties": {
+        "tranId": {
+          "type": "string",
+          "description": "TRAN-ID (PIC X(16)), trailing blanks trimmed"
+        },
+        "typeCode": {
+          "type": "string",
+          "description": "TRAN-TYPE-CD (PIC X(02))",
+          "pattern": "^.{2}$"
+        },
+        "categoryCode": {
+          "type": "string",
+          "description": "TRAN-CAT-CD (PIC 9(04)), zero-padded, 4 characters",
+          "pattern": "^[0-9]{4}$"
+        },
+        "description": {
+          "type": "string",
+          "description": "TRAN-DESC (PIC X(100)), trailing blanks trimmed"
+        },
+        "amount": {
+          "type": "number",
+          "description": "TRAN-AMT (PIC S9(09)V99) in dollars, signed (positive = debit/charge, negative = credit/payment), 2 decimal places"
+        }
+      }
+    }
+  }
+}
