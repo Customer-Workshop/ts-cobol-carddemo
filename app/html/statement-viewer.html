@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CardDemo Statement Viewer</title>
+<style>
+  :root {
+    --header: #5b5bb8;
+    --accent: #ffaf33;
+    --section: #2fd6b0;
+    --table-head: #33d65e;
+    --row-alt: #f5f6f8;
+    --debit: #b3261e;
+    --credit: #1b7f3a;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font: 14px/1.5 "Segoe UI", system-ui, sans-serif;
+    background: #eef0f4;
+    color: #1f2430;
+  }
+  .wrap { max-width: 960px; margin: 0 auto; padding: 24px 16px 48px; }
+  header.masthead {
+    background: var(--header);
+    color: #fff;
+    border-radius: 10px 10px 0 0;
+    padding: 18px 24px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+  }
+  header.masthead h1 { margin: 0; font-size: 20px; font-weight: 600; }
+  header.masthead .bank { text-align: right; font-size: 12px; opacity: .9; }
+  header.masthead .bank strong { display: block; font-size: 14px; }
+  .selector {
+    background: var(--accent);
+    padding: 12px 24px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .selector label { font-weight: 600; }
+  .selector select {
+    font: inherit;
+    padding: 6px 10px;
+    border-radius: 6px;
+    border: 1px solid #c98a1b;
+    background: #fff;
+    min-width: 260px;
+  }
+  .card {
+    background: #fff;
+    border-radius: 0 0 10px 10px;
+    box-shadow: 0 2px 8px rgba(20,25,40,.08);
+    overflow: hidden;
+  }
+  .panel { padding: 18px 24px; }
+  .panel h2 {
+    margin: 0 0 10px;
+    font-size: 15px;
+    text-transform: uppercase;
+    letter-spacing: .06em;
+    color: #14655a;
+    border-bottom: 3px solid var(--section);
+    display: inline-block;
+    padding-bottom: 2px;
+  }
+  .details-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 16px;
+  }
+  .kv { background: var(--row-alt); border-radius: 8px; padding: 12px 14px; }
+  .kv .k { font-size: 12px; text-transform: uppercase; letter-spacing: .05em; color: #667; }
+  .kv .v { font-size: 18px; font-weight: 600; margin-top: 2px; }
+  .kv .v.neg { color: var(--debit); }
+  address { font-style: normal; white-space: pre-line; }
+  table { width: 100%; border-collapse: collapse; }
+  thead th {
+    background: var(--table-head);
+    text-align: left;
+    padding: 8px 12px;
+    cursor: pointer;
+    user-select: none;
+    white-space: nowrap;
+  }
+  thead th.num { text-align: right; }
+  thead th .arrow { font-size: 11px; margin-left: 4px; }
+  tbody td { padding: 7px 12px; border-bottom: 1px solid #e3e6ec; }
+  tbody tr:nth-child(even) { background: var(--row-alt); }
+  td.num { text-align: right; font-variant-numeric: tabular-nums; }
+  td.num.debit { color: var(--debit); }
+  td.num.credit { color: var(--credit); }
+  tfoot td { padding: 10px 12px; font-weight: 600; background: #f0f2f6; }
+  .totals {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin-top: 14px;
+  }
+  .totals .kv { flex: 1 1 180px; }
+  footer.end {
+    background: var(--header);
+    color: #fff;
+    text-align: center;
+    padding: 10px;
+    font-size: 13px;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+  }
+  .meta { text-align: right; color: #667; font-size: 12px; padding: 8px 24px 0; }
+  .error {
+    background: #fdecea;
+    color: #8a1f16;
+    border: 1px solid #f2b8b2;
+    border-radius: 8px;
+    padding: 16px 20px;
+    margin-top: 16px;
+  }
+  code { background: #eef0f4; padding: 1px 5px; border-radius: 4px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="masthead">
+    <h1>Account Statement</h1>
+    <div class="bank"><strong>Bank of XYZ</strong>410 Terry Ave N<br>Seattle WA 99999</div>
+  </header>
+  <div class="selector">
+    <label for="account-select">Account</label>
+    <select id="account-select" aria-label="Select account"></select>
+  </div>
+  <div class="card">
+    <div class="meta" id="generated-at"></div>
+    <section class="panel">
+      <h2>Customer</h2>
+      <div class="details-grid">
+        <div class="kv"><div class="k">Name</div><div class="v" id="cust-name"></div></div>
+        <div class="kv"><div class="k">Address</div><address id="cust-address"></address></div>
+      </div>
+    </section>
+    <section class="panel">
+      <h2>Basic Details</h2>
+      <div class="details-grid">
+        <div class="kv"><div class="k">Account ID</div><div class="v" id="acct-id"></div></div>
+        <div class="kv"><div class="k">Current Balance</div><div class="v" id="curr-bal"></div></div>
+        <div class="kv"><div class="k">Credit Limit</div><div class="v" id="credit-limit"></div></div>
+      </div>
+    </section>
+    <section class="panel">
+      <h2>Transaction Summary</h2>
+      <table id="tran-table">
+        <thead>
+          <tr>
+            <th data-key="tranId">Tran ID<span class="arrow"></span></th>
+            <th data-key="typeCode">Type<span class="arrow"></span></th>
+            <th data-key="categoryCode">Category<span class="arrow"></span></th>
+            <th data-key="description">Description<span class="arrow"></span></th>
+            <th data-key="amount" class="num">Amount<span class="arrow"></span></th>
+          </tr>
+        </thead>
+        <tbody id="tran-body"></tbody>
+      </table>
+      <div class="totals">
+        <div class="kv"><div class="k">Total Debits</div><div class="v" id="total-debits"></div></div>
+        <div class="kv"><div class="k">Total Credits</div><div class="v" id="total-credits"></div></div>
+        <div class="kv"><div class="k">Transactions</div><div class="v" id="tran-count"></div></div>
+      </div>
+    </section>
+    <footer class="end">End of Statement</footer>
+  </div>
+  <div id="error" class="error" hidden></div>
+</div>
+
+<script>
+"use strict";
+
+// Single swappable data source: the JSON extract produced by CBSTM04C
+// (app/jcl/CREASTMJ.jcl / scripts/run_statement_json.sh).
+const DATA_URL = "../data/json/statements.json";
+
+const fmtMoney = (n) =>
+  n.toLocaleString("en-US", { style: "currency", currency: "USD" });
+
+const state = { statements: [], current: 0, sortKey: null, sortDir: 1 };
+
+function el(id) { return document.getElementById(id); }
+
+function showError(msg) {
+  const box = el("error");
+  box.hidden = false;
+  box.innerHTML = msg;
+}
+
+function renderAccountOptions() {
+  const sel = el("account-select");
+  sel.innerHTML = "";
+  state.statements.forEach((s, i) => {
+    const opt = document.createElement("option");
+    opt.value = i;
+    opt.textContent = `${s.accountId} — ${s.customer.name}`;
+    sel.appendChild(opt);
+  });
+  sel.value = state.current;
+}
+
+function sortedTransactions(stmt) {
+  const txns = stmt.transactions.slice();
+  const { sortKey, sortDir } = state;
+  if (!sortKey) return txns;
+  txns.sort((a, b) => {
+    const va = a[sortKey], vb = b[sortKey];
+    const cmp = typeof va === "number" ? va - vb : String(va).localeCompare(String(vb));
+    return cmp * sortDir;
+  });
+  return txns;
+}
+
+function renderStatement() {
+  const stmt = state.statements[state.current];
+  if (!stmt) return;
+  el("cust-name").textContent = stmt.customer.name;
+  el("cust-address").textContent = stmt.customer.address.join("\n");
+  el("acct-id").textContent = stmt.accountId;
+  const bal = el("curr-bal");
+  bal.textContent = fmtMoney(stmt.currentBalance);
+  bal.classList.toggle("neg", stmt.currentBalance < 0);
+  el("credit-limit").textContent = fmtMoney(stmt.creditLimit);
+  el("total-debits").textContent = fmtMoney(stmt.totalDebits);
+  el("total-credits").textContent = fmtMoney(stmt.totalCredits);
+  el("tran-count").textContent = stmt.transactions.length;
+
+  const tbody = el("tran-body");
+  tbody.innerHTML = "";
+  for (const t of sortedTransactions(stmt)) {
+    const tr = document.createElement("tr");
+    const cells = [
+      ["tranId", t.tranId],
+      ["typeCode", t.typeCode],
+      ["categoryCode", t.categoryCode],
+      ["description", t.description],
+    ];
+    for (const [, val] of cells) {
+      const td = document.createElement("td");
+      td.textContent = val;
+      tr.appendChild(td);
+    }
+    const amt = document.createElement("td");
+    amt.className = "num " + (t.amount < 0 ? "credit" : "debit");
+    amt.textContent = fmtMoney(t.amount);
+    tr.appendChild(amt);
+    tbody.appendChild(tr);
+  }
+
+  document.querySelectorAll("thead th").forEach((th) => {
+    const arrow = th.querySelector(".arrow");
+    arrow.textContent =
+      th.dataset.key === state.sortKey ? (state.sortDir > 0 ? "\u25B2" : "\u25BC") : "";
+  });
+}
+
+el("account-select").addEventListener("change", (e) => {
+  state.current = Number(e.target.value);
+  state.sortKey = null;
+  renderStatement();
+});
+
+document.querySelectorAll("thead th").forEach((th) => {
+  th.addEventListener("click", () => {
+    const key = th.dataset.key;
+    if (state.sortKey === key) state.sortDir *= -1;
+    else { state.sortKey = key; state.sortDir = 1; }
+    renderStatement();
+  });
+});
+
+fetch(DATA_URL)
+  .then((r) => {
+    if (!r.ok) throw new Error(`HTTP ${r.status} loading ${DATA_URL}`);
+    return r.json();
+  })
+  .then((data) => {
+    state.statements = data.statements;
+    el("generated-at").textContent = `Generated at ${data.generatedAt}`;
+    if (!state.statements.length) throw new Error("No statements in extract");
+    renderAccountOptions();
+    renderStatement();
+  })
+  .catch((err) => {
+    showError(
+      `Could not load <code>${DATA_URL}</code> (${err.message}). ` +
+      `Generate it with <code>scripts/run_statement_json.sh</code> and serve this page ` +
+      `over HTTP, e.g. <code>python3 -m http.server</code> from the <code>app/</code> directory.`
+    );
+  });
+</script>
+</body>
+</html>
