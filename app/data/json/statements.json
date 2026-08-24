@@ -1,0 +1,1254 @@
+{
+  "generatedAt": "2026-08-24T09:09:08Z",
+  "statements": [
+    {
+      "accountId": "00000000050",
+      "customer": {
+        "name": "Aniya Alba Von",
+        "address": [
+          "1588 Nienow Cape",
+          "Suite 187",
+          "New Aricchester",
+          "OR USA 04257"
+        ]
+      },
+      "currentBalance":          492.00,
+      "creditLimit":         6169.00,
+      "transactions": [
+        { "tranId": "0000000058866561", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Blick-Rippin", "amount":          183.88 }
+        ,{ "tranId": "0000000329724245", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Reichel Group", "amount":           14.00 }
+        ,{ "tranId": "0000000475746885", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Adams-Watsica", "amount":          967.44 }
+        ,{ "tranId": "0000000577826814", "typeCode": "03", "categoryCode": "0001", "description": "Return item at DuBuque, Wuckert and Mraz", "amount":          -47.88 }
+        ,{ "tranId": "0000000685488982", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Williamson Group", "amount":           94.77 }
+        ,{ "tranId": "0000000838587312", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Abbott-Gerlach", "amount":          241.66 }
+      ],
+      "totalDebits":         1501.75,
+      "totalCredits":           47.88
+    }
+    ,
+    {
+      "accountId": "00000000027",
+      "customer": {
+        "name": "Ward Henri Jones",
+        "address": [
+          "210 Amaya Turnpike",
+          "Suite 180",
+          "Port Dwight",
+          "GU USA 07923-8822"
+        ]
+      },
+      "currentBalance":          284.00,
+      "creditLimit":         5572.00,
+      "transactions": [
+        { "tranId": "0000000130111733", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Rogahn Group", "amount":          777.33 }
+        ,{ "tranId": "0000000187573156", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Cruickshank and Daughters", "amount":          579.77 }
+        ,{ "tranId": "0000000486159054", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Christiansen-Jacobi", "amount":          319.88 }
+        ,{ "tranId": "0000000802663079", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Zulauf-O'Keefe", "amount":          975.11 }
+        ,{ "tranId": "0000000903281896", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Schmitt, Mills and Yundt", "amount":          932.55 }
+        ,{ "tranId": "0000000925687557", "typeCode": "03", "categoryCode": "0001", "description": "Return item at Zboncak-Franecki", "amount":         -372.99 }
+      ],
+      "totalDebits":         3584.64,
+      "totalCredits":          372.99
+    }
+    ,
+    {
+      "accountId": "00000000002",
+      "customer": {
+        "name": "Enrico April Rosenbaum",
+        "address": [
+          "4917 Myrna Flats",
+          "Apt. 453",
+          "West Bernita",
+          "IN USA 22770"
+        ]
+      },
+      "currentBalance":          158.00,
+      "creditLimit":         6130.00,
+      "transactions": [
+        { "tranId": "0000000070754800", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Blick, Kris and Gerlach", "amount":          355.11 }
+        ,{ "tranId": "0000000274427056", "typeCode": "03", "categoryCode": "0001", "description": "Return item at Gibson-Maggio", "amount":         -763.00 }
+        ,{ "tranId": "0000000325686503", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Cruickshank-Marvin", "amount":          569.99 }
+        ,{ "tranId": "0000000504099546", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Jewess, Sauer and Runolfsson", "amount":          655.11 }
+        ,{ "tranId": "0000000519935575", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Gaylord, Kuhlman and Reichert", "amount":          164.99 }
+        ,{ "tranId": "0000000824152956", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Weissnat-Sanford", "amount":          594.77 }
+      ],
+      "totalDebits":         2339.97,
+      "totalCredits":          763.00
+    }
+    ,
+    {
+      "accountId": "00000000020",
+      "customer": {
+        "name": "Carter Oren Veum",
+        "address": [
+          "5845 Allison Valleys",
+          "Suite 934",
+          "Mitchellmouth",
+          "MH USA 72362"
+        ]
+      },
+      "currentBalance":          369.00,
+      "creditLimit":         3767.00,
+      "transactions": [
+        { "tranId": "0000000001774260", "typeCode": "03", "categoryCode": "0001", "description": "Return item at Nitzsche, Nicolas and Lowe", "amount":         -919.00 }
+        ,{ "tranId": "0000000099965527", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Jaskolski-Rolfson", "amount":          555.22 }
+        ,{ "tranId": "0000000366513257", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Klein, Buckridge and Johnson", "amount":          965.55 }
+        ,{ "tranId": "0000000767314476", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Renner Inc", "amount":          273.11 }
+        ,{ "tranId": "0000000900382063", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Bechtelar Group", "amount":           86.00 }
+        ,{ "tranId": "0000000957695517", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Schoen-Marvin", "amount":          573.22 }
+      ],
+      "totalDebits":         2453.10,
+      "totalCredits":          919.00
+    }
+    ,
+    {
+      "accountId": "00000000012",
+      "customer": {
+        "name": "Maci Alan Robel",
+        "address": [
+          "80501 Isac Cliffs",
+          "Suite 623",
+          "Predovicton",
+          "MN USA 78861"
+        ]
+      },
+      "currentBalance":          176.00,
+      "creditLimit":         4636.00,
+      "transactions": [
+        { "tranId": "0000000263926805", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Batz-Gaylord", "amount":          210.33 }
+        ,{ "tranId": "0000000429557611", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Pagac, Funk and Kiehn", "amount":          545.66 }
+        ,{ "tranId": "0000000462765346", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Marquardt, Ward and Brekke", "amount":          587.11 }
+        ,{ "tranId": "0000000606716618", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Barton, Schmidt and Hodkiewicz", "amount":          715.66 }
+        ,{ "tranId": "0000000717135758", "typeCode": "03", "categoryCode": "0001", "description": "Return item at Crona, Veum and D'Amore", "amount":         -762.44 }
+        ,{ "tranId": "0000000882360848", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Tromp-Kuhlman", "amount":          298.33 }
+      ],
+      "totalDebits":         2357.09,
+      "totalCredits":          762.44
+    }
+    ,
+    {
+      "accountId": "00000000044",
+      "customer": {
+        "name": "Irving Kiera Emard",
+        "address": [
+          "978 Fatima Stream",
+          "Apt. 110",
+          "Lake King",
+          "ID USA 05704-0501"
+        ]
+      },
+      "currentBalance":          263.00,
+      "creditLimit":         6899.00,
+      "transactions": [
+        { "tranId": "0000000054727064", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at McDermott, Lockman and Weimann", "amount":          303.11 }
+        ,{ "tranId": "0000000132831571", "typeCode": "03", "categoryCode": "0001", "description": "Return item at Boehm-Sanford", "amount":         -215.33 }
+        ,{ "tranId": "0000000400022505", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Klocko LLC", "amount":          385.44 }
+        ,{ "tranId": "0000000500479019", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Hilpert, Purdy and Kilback", "amount":          654.99 }
+        ,{ "tranId": "0000000628524597", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Wiegand-Weimann", "amount":          269.22 }
+        ,{ "tranId": "0000000874953803", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at McLaughlin-Blick", "amount":          399.44 }
+      ],
+      "totalDebits":         2012.20,
+      "totalCredits":          215.33
+    }
+    ,
+    {
+      "accountId": "00000000037",
+      "customer": {
+        "name": "Shany Darby Walker",
+        "address": [
+          "91196 Heaney Turnpike",
+          "Suite 814",
+          "Lubowitzberg",
+          "NV USA 11857-8177"
+        ]
+      },
+      "currentBalance":            7.00,
+      "creditLimit":          446.00,
+      "transactions": [
+        { "tranId": "0000000040455859", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Brekke, Bradtke and Weimann", "amount":          715.44 }
+        ,{ "tranId": "0000000614267358", "typeCode": "03", "categoryCode": "0001", "description": "Return item at Gibson-Abbott", "amount":         -132.88 }
+        ,{ "tranId": "0000000767081090", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Bergnaum, Effertz and Wilkinson", "amount":          671.11 }
+        ,{ "tranId": "0000000767308626", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Shields, DuBuque and Wyman", "amount":          856.44 }
+        ,{ "tranId": "0000000961186055", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Bartell-Fadel", "amount":          548.33 }
+        ,{ "tranId": "0000000992103545", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Dickens, Bartoletti and Ferry", "amount":          635.99 }
+      ],
+      "totalDebits":         3427.31,
+      "totalCredits":          132.88
+    }
+    ,
+    {
+      "accountId": "00000000035",
+      "customer": {
+        "name": "Angelica Damaris Dach",
+        "address": [
+          "396 Pearl Loop",
+          "Suite 383",
+          "Pfefferhaven",
+          "LA USA 46142"
+        ]
+      },
+      "currentBalance":          166.00,
+      "creditLimit":         1947.00,
+      "transactions": [
+        { "tranId": "0000000415671623", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Kshlerin, Schulist and Oberbrunner", "amount":            0.99 }
+        ,{ "tranId": "0000000544248006", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Mann Inc", "amount":          659.44 }
+        ,{ "tranId": "0000000598262041", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Terry-Rohan", "amount":           39.55 }
+        ,{ "tranId": "0000000621178666", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Orn-Dach", "amount":          639.22 }
+        ,{ "tranId": "0000000747646163", "typeCode": "03", "categoryCode": "0001", "description": "Return item at Watsica LLC", "amount":         -499.99 }
+        ,{ "tranId": "0000000889986293", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Littel-Jacobson", "amount":          973.11 }
+      ],
+      "totalDebits":         2312.31,
+      "totalCredits":          499.99
+    }
+    ,
+    {
+      "accountId": "00000000039",
+      "customer": {
+        "name": "Aliyah Horace Berge",
+        "address": [
+          "5761 Pasquale Trail",
+          "Apt. 616",
+          "New Sabryna",
+          "IA USA 74267"
+        ]
+      },
+      "currentBalance":          843.00,
+      "creditLimit":         9750.00,
+      "transactions": [
+        { "tranId": "0000000061394789", "typeCode": "03", "categoryCode": "0001", "description": "Return item at Heaney-Raynor", "amount":          -70.99 }
+        ,{ "tranId": "0000000152467982", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Kreiger and Sons", "amount":          168.33 }
+        ,{ "tranId": "0000000191360674", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Wyman, Breitenberg and Gusikowski", "amount":          848.33 }
+        ,{ "tranId": "0000000198494663", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Dietrich-Ledner", "amount":          385.77 }
+        ,{ "tranId": "0000000576344938", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Smith and Sons", "amount":          425.11 }
+        ,{ "tranId": "0000000956474921", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Gottlieb, Turner and Ruecker", "amount":          223.33 }
+      ],
+      "totalDebits":         2050.87,
+      "totalCredits":           70.99
+    }
+    ,
+    {
+      "accountId": "00000000024",
+      "customer": {
+        "name": "Stefanie Verla Dickinson",
+        "address": [
+          "6367 Stracke River",
+          "Apt. 444",
+          "East Otho",
+          "KS USA 15414"
+        ]
+      },
+      "currentBalance":          400.00,
+      "creditLimit":         5174.00,
+      "transactions": [
+        { "tranId": "0000000341634875", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Medhurst, Bogisich and Schmeler", "amount":          997.88 }
+        ,{ "tranId": "0000000400762013", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Will-Murazik", "amount":          617.00 }
+        ,{ "tranId": "0000000482016448", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Becker Group", "amount":          310.00 }
+        ,{ "tranId": "0000000496711357", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Koepp-Wiegand", "amount":          161.99 }
+        ,{ "tranId": "0000000703553020", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Gleason-Streich", "amount":           77.00 }
+        ,{ "tranId": "0000000812607213", "typeCode": "03", "categoryCode": "0001", "description": "Return item at Volkman-Goodwin", "amount":         -641.77 }
+      ],
+      "totalDebits":         2163.87,
+      "totalCredits":          641.77
+    }
+    ,
+    {
+      "accountId": "00000000006",
+      "customer": {
+        "name": "Ignacio Emery Douglas",
+        "address": [
+          "3963 Yasmin Port",
+          "Suite 756",
+          "Port Josephstad",
+          "VI USA 46713-5148"
+        ]
+      },
+      "currentBalance":          218.00,
+      "creditLimit":         3584.00,
+      "transactions": [
+        { "tranId": "0000000142315472", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Kutch-Farrell", "amount":          843.66 }
+        ,{ "tranId": "0000000202886897", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Ryan-Homenick", "amount":          175.88 }
+        ,{ "tranId": "0000000397282953", "typeCode": "03", "categoryCode": "0001", "description": "Return item at Ankunding Group", "amount":         -396.22 }
+        ,{ "tranId": "0000000647754915", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Gerlach-Jaskolski", "amount":          718.55 }
+        ,{ "tranId": "0000000803014982", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Effertz-Abbott", "amount":           53.55 }
+        ,{ "tranId": "0000000898285002", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Gislason-Price", "amount":          958.77 }
+      ],
+      "totalDebits":         2750.41,
+      "totalCredits":          396.22
+    }
+    ,
+    {
+      "accountId": "00000000022",
+      "customer": {
+        "name": "Allene Icie Brown",
+        "address": [
+          "4467 Donnie Crossroad",
+          "Apt. 437",
+          "Anabelton",
+          "MD USA 01993-9116"
+        ]
+      },
+      "currentBalance":           55.00,
+      "creditLimit":         8599.00,
+      "transactions": [
+        { "tranId": "0000000043636099", "typeCode": "03", "categoryCode": "0001", "description": "Return item at Nader-Bayer", "amount":         -945.66 }
+        ,{ "tranId": "0000000115716061", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Bednar, Marvin and Kozey", "amount":          401.22 }
+        ,{ "tranId": "0000000246312084", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Weimann-Graham", "amount":          848.77 }
+        ,{ "tranId": "0000000606140907", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Yost-Schaefer", "amount":          598.33 }
+        ,{ "tranId": "0000000869383367", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Thompson-Streich", "amount":          768.88 }
+        ,{ "tranId": "0000000942960329", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Bartoletti, Lehner and Johnston", "amount":          711.66 }
+      ],
+      "totalDebits":         3328.86,
+      "totalCredits":          945.66
+    }
+    ,
+    {
+      "accountId": "00000000004",
+      "customer": {
+        "name": "Delbert Kaia Parisian",
+        "address": [
+          "638 Blanda Gateway",
+          "Apt. 076",
+          "Lake Virginie",
+          "MI USA 39035-0455"
+        ]
+      },
+      "currentBalance":           40.00,
+      "creditLimit":         3503.00,
+      "transactions": [
+        { "tranId": "0000000450622695", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Schmitt, Kohler and Skiles", "amount":           28.33 }
+        ,{ "tranId": "0000000458331136", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Howe, Rippin and Watsica", "amount":          437.11 }
+        ,{ "tranId": "0000000600564499", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Schmeler, Crooks and Barton", "amount":          736.33 }
+        ,{ "tranId": "0000000841555701", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Kub, Gislason and Haraann", "amount":          281.55 }
+        ,{ "tranId": "0000000865987685", "typeCode": "03", "categoryCode": "0001", "description": "Return item at Kovacek-Beatty", "amount":         -322.99 }
+        ,{ "tranId": "0000000899241176", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Beier, Larson and Schultz", "amount":          462.33 }
+      ],
+      "totalDebits":         1945.65,
+      "totalCredits":          322.99
+    }
+    ,
+    {
+      "accountId": "00000000010",
+      "customer": {
+        "name": "Maybell Creola Mann",
+        "address": [
+          "77933 Adah Dale",
+          "Suite 343",
+          "Andersonfurt",
+          "CT USA 44803-4279"
+        ]
+      },
+      "currentBalance":          159.00,
+      "creditLimit":         5401.00,
+      "transactions": [
+        { "tranId": "0000000025430891", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Beatty-Hessel", "amount":           94.33 }
+        ,{ "tranId": "0000000272698228", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Schultz-Morissette", "amount":          457.55 }
+        ,{ "tranId": "0000000498857207", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Friesen, Murphy and Beier", "amount":          293.44 }
+        ,{ "tranId": "0000000550089732", "typeCode": "03", "categoryCode": "0001", "description": "Return item at Sanford-Gleichner", "amount":         -537.44 }
+        ,{ "tranId": "0000000858238426", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Thiel Group", "amount":           80.66 }
+        ,{ "tranId": "0000000996722787", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Kilback LLC", "amount":          603.22 }
+      ],
+      "totalDebits":         1529.20,
+      "totalCredits":          537.44
+    }
+    ,
+    {
+      "accountId": "00000000041",
+      "customer": {
+        "name": "Lucinda Kiana Dach",
+        "address": [
+          "3220 Yolanda Corner",
+          "Suite 649",
+          "East Harmonystad",
+          "VT USA 72971-7481"
+        ]
+      },
+      "currentBalance":          375.00,
+      "creditLimit":         6721.00,
+      "transactions": [
+        { "tranId": "0000000030755266", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Ratke LLC", "amount":          829.55 }
+        ,{ "tranId": "0000000033688127", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Schinner-Steuber", "amount":          958.99 }
+        ,{ "tranId": "0000000204143988", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Buckridge-Stiedemann", "amount":           76.33 }
+        ,{ "tranId": "0000000402032668", "typeCode": "03", "categoryCode": "0001", "description": "Return item at Torphy, Collins and Witting", "amount":         -756.66 }
+        ,{ "tranId": "0000000946277676", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Kemmer, Wyman and Ondricka", "amount":          220.00 }
+        ,{ "tranId": "0000000957864065", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Prohaska-Douglas", "amount":          314.66 }
+      ],
+      "totalDebits":         2399.53,
+      "totalCredits":          756.66
+    }
+    ,
+    {
+      "accountId": "00000000019",
+      "customer": {
+        "name": "Hadley Sigrid Hamill",
+        "address": [
+          "6273 Ondricka Meadows",
+          "Apt. 130",
+          "New Arturoshire",
+          "RI USA 48161"
+        ]
+      },
+      "currentBalance":          480.00,
+      "creditLimit":         6986.00,
+      "transactions": [
+        { "tranId": "0000000407178785", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Cole-Wyman", "amount":          949.77 }
+        ,{ "tranId": "0000000445507761", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Rice, Luettgen and Aufderhar", "amount":          129.33 }
+        ,{ "tranId": "0000000446945803", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Yost and Daughters", "amount":          241.22 }
+        ,{ "tranId": "0000000606830191", "typeCode": "03", "categoryCode": "0001", "description": "Return item at Bogisich-O'Connell", "amount":          -71.66 }
+        ,{ "tranId": "0000000700096853", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Pollich Group", "amount":          329.99 }
+        ,{ "tranId": "0000000762269241", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Kuvalis Group", "amount":          988.88 }
+      ],
+      "totalDebits":         2639.19,
+      "totalCredits":           71.66
+    }
+    ,
+    {
+      "accountId": "00000000003",
+      "customer": {
+        "name": "Larry Cody Homenick",
+        "address": [
+          "362 Esta Parks",
+          "Apt. 390",
+          "New Gladys",
+          "GA USA 19852-6716"
+        ]
+      },
+      "currentBalance":          147.00,
+      "creditLimit":         4909.00,
+      "transactions": [
+        { "tranId": "0000000085824369", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Pollich-Mosciski", "amount":          999.77 }
+        ,{ "tranId": "0000000375247552", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Guann Group", "amount":          115.11 }
+        ,{ "tranId": "0000000540260014", "typeCode": "03", "categoryCode": "0001", "description": "Return item at McCullough-Gottlieb", "amount":         -880.22 }
+        ,{ "tranId": "0000000641694180", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Schumm-Reinger", "amount":          554.22 }
+        ,{ "tranId": "0000000784621975", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Kunde-Howe", "amount":          227.22 }
+        ,{ "tranId": "0000000961714986", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at West and Sons", "amount":          694.55 }
+      ],
+      "totalDebits":         2590.87,
+      "totalCredits":          880.22
+    }
+    ,
+    {
+      "accountId": "00000000013",
+      "customer": {
+        "name": "Mariane Oma Fadel",
+        "address": [
+          "2689 Derick Mission",
+          "Suite 055",
+          "Bruenfurt",
+          "OR USA 02322"
+        ]
+      },
+      "currentBalance":           41.00,
+      "creditLimit":         7542.00,
+      "transactions": [
+        { "tranId": "0000000016259484", "typeCode": "03", "categoryCode": "0001", "description": "Return item at Sipes Inc", "amount":          -56.77 }
+        ,{ "tranId": "0000000201032783", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Heidenreich-Feil", "amount":          326.44 }
+        ,{ "tranId": "0000000547488622", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Reichert, Kemmer and Funk", "amount":          403.66 }
+        ,{ "tranId": "0000000840146978", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Gutkowski-Bayer", "amount":          702.22 }
+        ,{ "tranId": "0000000909315074", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Abbott and Sons", "amount":          759.22 }
+        ,{ "tranId": "0000000926624843", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Schowalter, Pagac and Welch", "amount":          684.33 }
+      ],
+      "totalDebits":         2875.87,
+      "totalCredits":           56.77
+    }
+    ,
+    {
+      "accountId": "00000000034",
+      "customer": {
+        "name": "Faustino Jess Schmidt",
+        "address": [
+          "44132 Michel Square",
+          "Suite 007",
+          "South Margarettaburgh",
+          "ME USA 49544-2869"
+        ]
+      },
+      "currentBalance":          253.00,
+      "creditLimit":         3642.00,
+      "transactions": [
+        { "tranId": "0000000202217428", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Simonis and Sons", "amount":          299.33 }
+        ,{ "tranId": "0000000392772234", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Williamson LLC", "amount":          351.66 }
+        ,{ "tranId": "0000000482116790", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Erdman-Cartwright", "amount":          820.11 }
+        ,{ "tranId": "0000000676149118", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Sauer-Ruecker", "amount":          697.44 }
+        ,{ "tranId": "0000000772421231", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Pfeffer, Rogahn and Hessel", "amount":          405.33 }
+        ,{ "tranId": "0000000838796166", "typeCode": "03", "categoryCode": "0001", "description": "Return item at Bauch-Crooks", "amount":         -457.55 }
+      ],
+      "totalDebits":         2573.87,
+      "totalCredits":          457.55
+    }
+    ,
+    {
+      "accountId": "00000000036",
+      "customer": {
+        "name": "Toney Emerald Gerhold",
+        "address": [
+          "35943 Raleigh Harbor",
+          "Apt. 116",
+          "Lake Derekburgh",
+          "AL USA 10932-0480"
+        ]
+      },
+      "currentBalance":          110.00,
+      "creditLimit":         3328.00,
+      "transactions": [
+        { "tranId": "0000000054288996", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Cremin and Sons", "amount":          502.66 }
+        ,{ "tranId": "0000000253685514", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Von-Schmeler", "amount":          496.33 }
+        ,{ "tranId": "0000000499424514", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Schumm-Stamm", "amount":          952.55 }
+        ,{ "tranId": "0000000734452614", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Stokes-Mueller", "amount":          358.22 }
+        ,{ "tranId": "0000000806255008", "typeCode": "03", "categoryCode": "0001", "description": "Return item at Wisoky, Jacobs and Sanford", "amount":         -439.33 }
+        ,{ "tranId": "0000000873232405", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Bins, Boehm and Casper", "amount":          720.99 }
+      ],
+      "totalDebits":         3030.75,
+      "totalCredits":          439.33
+    }
+    ,
+    {
+      "accountId": "00000000007",
+      "customer": {
+        "name": "Cooper Dennis Mayert",
+        "address": [
+          "6490 Zakary Locks",
+          "Apt. 765",
+          "Madieport",
+          "AL USA 34206-2974"
+        ]
+      },
+      "currentBalance":          193.00,
+      "creditLimit":         2065.00,
+      "transactions": [
+        { "tranId": "0000000000683580", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Abshire-Lowe", "amount":          504.77 }
+        ,{ "tranId": "0000000380632461", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Beahan, Little and Sanford", "amount":          428.33 }
+        ,{ "tranId": "0000000500885895", "typeCode": "03", "categoryCode": "0001", "description": "Return item at Klein-Stark", "amount":         -579.88 }
+        ,{ "tranId": "0000000502617711", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Klocko LLC", "amount":          955.11 }
+        ,{ "tranId": "0000000781512834", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Koch-Pouros", "amount":          319.00 }
+        ,{ "tranId": "0000000821287727", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Russel LLC", "amount":           34.99 }
+      ],
+      "totalDebits":         2242.20,
+      "totalCredits":          579.88
+    }
+    ,
+    {
+      "accountId": "00000000021",
+      "customer": {
+        "name": "Jerrold Adolphus Maggio",
+        "address": [
+          "401 Haylie Crest",
+          "Apt. 320",
+          "North Myrnaton",
+          "CA USA 72407"
+        ]
+      },
+      "currentBalance":          112.00,
+      "creditLimit":         1264.00,
+      "transactions": [
+        { "tranId": "0000000274596018", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Renner LLC", "amount":           40.00 }
+        ,{ "tranId": "0000000474475283", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Pouros Inc", "amount":          174.66 }
+        ,{ "tranId": "0000000490043047", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Yost-Kertzmann", "amount":          584.88 }
+        ,{ "tranId": "0000000634329004", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Durgan-Nader", "amount":           89.11 }
+        ,{ "tranId": "0000000735823935", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Johnston and Daughters", "amount":          910.11 }
+        ,{ "tranId": "0000000835855923", "typeCode": "03", "categoryCode": "0001", "description": "Return item at Pouros and Sons", "amount":          -41.77 }
+      ],
+      "totalDebits":         1798.76,
+      "totalCredits":           41.77
+    }
+    ,
+    {
+      "accountId": "00000000046",
+      "customer": {
+        "name": "Cindy Kira Cremin",
+        "address": [
+          "494 Lang Avenue",
+          "Apt. 937",
+          "Alexandroview",
+          "PW USA 63082-4520"
+        ]
+      },
+      "currentBalance":          396.00,
+      "creditLimit":         7007.00,
+      "transactions": [
+        { "tranId": "0000000010142252", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Kertzmann-Schoen", "amount":          454.66 }
+        ,{ "tranId": "0000000382018782", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Hackett-Kautzer", "amount":          884.99 }
+        ,{ "tranId": "0000000475609951", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Predovic-Deckow", "amount":          913.88 }
+        ,{ "tranId": "0000000561673599", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Bergnaum and Sons", "amount":          430.55 }
+        ,{ "tranId": "0000000672061881", "typeCode": "03", "categoryCode": "0001", "description": "Return item at Rippin-Gibson", "amount":         -435.00 }
+        ,{ "tranId": "0000000909001545", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Crist Group", "amount":          893.33 }
+      ],
+      "totalDebits":         3577.41,
+      "totalCredits":          435.00
+    }
+    ,
+    {
+      "accountId": "00000000018",
+      "customer": {
+        "name": "Emile Jairo White",
+        "address": [
+          "133 Bergnaum Square",
+          "Apt. 328",
+          "Hansenville",
+          "AP USA 96003-5867"
+        ]
+      },
+      "currentBalance":          144.00,
+      "creditLimit":         2903.00,
+      "transactions": [
+        { "tranId": "0000000137879630", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Wiza-Langworth", "amount":           46.66 }
+        ,{ "tranId": "0000000373973344", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Wehner LLC", "amount":          958.33 }
+        ,{ "tranId": "0000000382291356", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Jacobi and Daughters", "amount":          860.77 }
+        ,{ "tranId": "0000000528007115", "typeCode": "03", "categoryCode": "0001", "description": "Return item at Trantow-Sipes", "amount":         -113.11 }
+        ,{ "tranId": "0000000667157384", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Stamm and Sons", "amount":          952.77 }
+        ,{ "tranId": "0000000822135100", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Larkin, Hills and Becker", "amount":          796.00 }
+      ],
+      "totalDebits":         3614.53,
+      "totalCredits":          113.11
+    }
+    ,
+    {
+      "accountId": "00000000047",
+      "customer": {
+        "name": "Rigoberto Savanna Hoeger",
+        "address": [
+          "00097 Gleichner Spur",
+          "Apt. 932",
+          "Port Aidanborough",
+          "GU USA 31329-6973"
+        ]
+      },
+      "currentBalance":           32.00,
+      "creditLimit":         2338.00,
+      "transactions": [
+        { "tranId": "0000000060921254", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Kihn-Quigley", "amount":          779.33 }
+        ,{ "tranId": "0000000203305494", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Kunze, Koss and Erdman", "amount":          479.22 }
+        ,{ "tranId": "0000000246549911", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Kulas, Reichert and O'Conner", "amount":          339.55 }
+        ,{ "tranId": "0000000307523903", "typeCode": "03", "categoryCode": "0001", "description": "Return item at Hamill, Sawayn and O'Conner", "amount":         -585.44 }
+        ,{ "tranId": "0000000424689871", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Rempel and Daughters", "amount":          648.11 }
+        ,{ "tranId": "0000000781205695", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Beer, Goldner and Armstrong", "amount":          489.66 }
+      ],
+      "totalDebits":         2735.87,
+      "totalCredits":          585.44
+    }
+    ,
+    {
+      "accountId": "00000000042",
+      "customer": {
+        "name": "Heather Ericka Nienow",
+        "address": [
+          "5523 Archibald Club",
+          "Apt. 358",
+          "Reillyland",
+          "FM USA 83589"
+        ]
+      },
+      "currentBalance":          302.00,
+      "creditLimit":         6563.00,
+      "transactions": [
+        { "tranId": "0000000248557079", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Strosin-Fadel", "amount":          905.00 }
+        ,{ "tranId": "0000000283702177", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Bradtke-Considine", "amount":           89.99 }
+        ,{ "tranId": "0000000358543876", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Zulauf Group", "amount":          552.77 }
+        ,{ "tranId": "0000000407637739", "typeCode": "03", "categoryCode": "0001", "description": "Return item at Price LLC", "amount":         -501.44 }
+        ,{ "tranId": "0000000412515011", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Wehner-Ebert", "amount":          214.77 }
+        ,{ "tranId": "0000000974167587", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Moore and Sons", "amount":          402.22 }
+      ],
+      "totalDebits":         2164.75,
+      "totalCredits":          501.44
+    }
+    ,
+    {
+      "accountId": "00000000005",
+      "customer": {
+        "name": "Treva Manley Schowalter",
+        "address": [
+          "5653 Legros Plaza",
+          "Apt. 968",
+          "Alvinaport",
+          "MI USA 02251-1698"
+        ]
+      },
+      "currentBalance":          345.00,
+      "creditLimit":         3819.00,
+      "transactions": [
+        { "tranId": "0000000006292564", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Ernser, Roob and Gleason", "amount":           67.88 }
+        ,{ "tranId": "0000000226849749", "typeCode": "03", "categoryCode": "0001", "description": "Return item at Smith, Cummings and Medhurst", "amount":         -428.99 }
+        ,{ "tranId": "0000000250062442", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Willms, Abshire and Daugherty", "amount":          346.99 }
+        ,{ "tranId": "0000000399296572", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at McGlynn Inc", "amount":          254.77 }
+        ,{ "tranId": "0000000570880433", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Kuvalis-Leffler", "amount":          161.77 }
+        ,{ "tranId": "0000000585883106", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Heathcote Inc", "amount":          435.44 }
+      ],
+      "totalDebits":         1266.85,
+      "totalCredits":          428.99
+    }
+    ,
+    {
+      "accountId": "00000000015",
+      "customer": {
+        "name": "Aubree Elliot Hermann",
+        "address": [
+          "36365 Ledner Drives",
+          "Suite 882",
+          "Port Efrainland",
+          "DE USA 63205-7014"
+        ]
+      },
+      "currentBalance":          489.00,
+      "creditLimit":         8441.00,
+      "transactions": [
+        { "tranId": "0000000072220498", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Graham LLC", "amount":          660.11 }
+        ,{ "tranId": "0000000189414937", "typeCode": "03", "categoryCode": "0001", "description": "Return item at Treutel-Douglas", "amount":         -358.44 }
+        ,{ "tranId": "0000000550860982", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Bogan LLC", "amount":          850.22 }
+        ,{ "tranId": "0000000727152111", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Von, Klein and Cremin", "amount":          983.55 }
+        ,{ "tranId": "0000000796832699", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Schroeder, Bergnaum and Waters", "amount":          803.99 }
+        ,{ "tranId": "0000000973907278", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Klocko-Rice", "amount":          784.11 }
+      ],
+      "totalDebits":         4081.98,
+      "totalCredits":          358.44
+    }
+    ,
+    {
+      "accountId": "00000000048",
+      "customer": {
+        "name": "Lyric Mackenzie Pacocha",
+        "address": [
+          "453 Rosina Mountain",
+          "Apt. 011",
+          "Albertville",
+          "OR USA 83985-4937"
+        ]
+      },
+      "currentBalance":          226.00,
+      "creditLimit":         2306.00,
+      "transactions": [
+        { "tranId": "0000000019065428", "typeCode": "03", "categoryCode": "0001", "description": "Return item at Turcotte Group", "amount":         -535.88 }
+        ,{ "tranId": "0000000263663553", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Wehner, Turcotte and Nikolaus", "amount":          526.11 }
+        ,{ "tranId": "0000000273137276", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Lowe-Blick", "amount":          764.22 }
+        ,{ "tranId": "0000000554096178", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Turner, Dickinson and Grant", "amount":          722.33 }
+        ,{ "tranId": "0000000564257675", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Jast LLC", "amount":          623.11 }
+        ,{ "tranId": "0000000934945079", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Boyle, O'Conner and Gorczany", "amount":          222.44 }
+      ],
+      "totalDebits":         2858.21,
+      "totalCredits":          535.88
+    }
+    ,
+    {
+      "accountId": "00000000030",
+      "customer": {
+        "name": "Layla Dannie Ullrich",
+        "address": [
+          "269 Eleazar Circle",
+          "Apt. 817",
+          "Kutchland",
+          "AK USA 64266"
+        ]
+      },
+      "currentBalance":            2.00,
+      "creditLimit":          120.00,
+      "transactions": [
+        { "tranId": "0000000032979555", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Treutel-Leffler", "amount":           29.44 }
+        ,{ "tranId": "0000000148803688", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Crist Inc", "amount":          203.44 }
+        ,{ "tranId": "0000000220001505", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Schmeler Group", "amount":          929.77 }
+        ,{ "tranId": "0000000238329981", "typeCode": "03", "categoryCode": "0001", "description": "Return item at Effertz, Ortiz and Gusikowski", "amount":         -930.33 }
+        ,{ "tranId": "0000000601496057", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Ortiz-Douglas", "amount":          900.22 }
+        ,{ "tranId": "0000000749066680", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at O'Reilly LLC", "amount":          805.77 }
+      ],
+      "totalDebits":         2868.64,
+      "totalCredits":          930.33
+    }
+    ,
+    {
+      "accountId": "00000000028",
+      "customer": {
+        "name": "Hester Vesta Hane",
+        "address": [
+          "06816 Ursula Meadows",
+          "Suite 605",
+          "South Aurore",
+          "AS USA 77442-7954"
+        ]
+      },
+      "currentBalance":           68.00,
+      "creditLimit":          868.00,
+      "transactions": [
+        { "tranId": "0000000111054243", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Pollich and Sons", "amount":          948.44 }
+        ,{ "tranId": "0000000169879332", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Buckridge, Fisher and Schroeder", "amount":          256.00 }
+        ,{ "tranId": "0000000211219588", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Cummings, Nitzsche and Bosco", "amount":          553.00 }
+        ,{ "tranId": "0000000252891459", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Nitzsche, Feil and Bergstrom", "amount":          944.99 }
+        ,{ "tranId": "0000000379084859", "typeCode": "03", "categoryCode": "0001", "description": "Return item at Lebsack-Treutel", "amount":          -75.22 }
+        ,{ "tranId": "0000000519771423", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Herman, Swift and Nikolaus", "amount":          670.00 }
+      ],
+      "totalDebits":         3372.43,
+      "totalCredits":           75.22
+    }
+    ,
+    {
+      "accountId": "00000000016",
+      "customer": {
+        "name": "Carroll Cicero Bergstrom",
+        "address": [
+          "06988 Thiel Falls",
+          "Suite 148",
+          "Concepcionland",
+          "VT USA 84390"
+        ]
+      },
+      "currentBalance":          733.00,
+      "creditLimit":         8922.00,
+      "transactions": [
+        { "tranId": "0000000174748684", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at McLaughlin-Reichel", "amount":           19.99 }
+        ,{ "tranId": "0000000194189303", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Dickinson and Sons", "amount":           59.33 }
+        ,{ "tranId": "0000000498548061", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Bernier and Daughters", "amount":          209.00 }
+        ,{ "tranId": "0000000652713581", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Pagac-Hackett", "amount":          633.55 }
+        ,{ "tranId": "0000000669905307", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Schneider and Daughters", "amount":          425.00 }
+        ,{ "tranId": "0000000855260493", "typeCode": "03", "categoryCode": "0001", "description": "Return item at Cassin, Huel and Conroy", "amount":         -270.99 }
+      ],
+      "totalDebits":         1346.87,
+      "totalCredits":          270.99
+    }
+    ,
+    {
+      "accountId": "00000000033",
+      "customer": {
+        "name": "Bernice Norbert Herman",
+        "address": [
+          "877 Kassandra Ranch",
+          "Suite 956",
+          "Haleyport",
+          "AR USA 19113-4329"
+        ]
+      },
+      "currentBalance":          410.00,
+      "creditLimit":         6404.00,
+      "transactions": [
+        { "tranId": "0000000109506921", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Will, Frami and Lynch", "amount":          769.55 }
+        ,{ "tranId": "0000000241121967", "typeCode": "03", "categoryCode": "0001", "description": "Return item at Kulas and Daughters", "amount":         -445.55 }
+        ,{ "tranId": "0000000416848414", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Medhurst-Feeney", "amount":          995.22 }
+        ,{ "tranId": "0000000434343718", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Vandervort-McClure", "amount":          793.22 }
+        ,{ "tranId": "0000000540034453", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Baumbach-Mohr", "amount":          202.44 }
+        ,{ "tranId": "0000000635121182", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Douglas and Daughters", "amount":          629.55 }
+      ],
+      "totalDebits":         3389.98,
+      "totalCredits":          445.55
+    }
+    ,
+    {
+      "accountId": "00000000031",
+      "customer": {
+        "name": "Lucious Otto O'Connell",
+        "address": [
+          "919 Swift Valleys",
+          "Suite 548",
+          "Hermanborough",
+          "MS USA 56133-5636"
+        ]
+      },
+      "currentBalance":           31.00,
+      "creditLimit":         1140.00,
+      "transactions": [
+        { "tranId": "0000000220745261", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Swaniawski, Torphy and Bruen", "amount":          495.66 }
+        ,{ "tranId": "0000000793409700", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Douglas Inc", "amount":          168.66 }
+        ,{ "tranId": "0000000828072981", "typeCode": "03", "categoryCode": "0001", "description": "Return item at Hayes Inc", "amount":         -362.22 }
+        ,{ "tranId": "0000000885437581", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Marquardt-Deckow", "amount":          818.00 }
+        ,{ "tranId": "0000000887771179", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Jakubowski and Sons", "amount":          242.22 }
+        ,{ "tranId": "0000000910081354", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Gerlach Group", "amount":          130.11 }
+      ],
+      "totalDebits":         1854.65,
+      "totalCredits":          362.22
+    }
+    ,
+    {
+      "accountId": "00000000043",
+      "customer": {
+        "name": "Britney Jermain Waters",
+        "address": [
+          "97765 Bernhard Fort",
+          "Apt. 666",
+          "South Marisaview",
+          "OK USA 10050-7980"
+        ]
+      },
+      "currentBalance":          610.00,
+      "creditLimit":         6168.00,
+      "transactions": [
+        { "tranId": "0000000192039153", "typeCode": "03", "categoryCode": "0001", "description": "Return item at Smith-Upton", "amount":         -243.00 }
+        ,{ "tranId": "0000000298806396", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Powlowski-Greenholt", "amount":          936.22 }
+        ,{ "tranId": "0000000420768809", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Bartell-Rempel", "amount":          674.99 }
+        ,{ "tranId": "0000000588642606", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Marks and Daughters", "amount":          568.88 }
+        ,{ "tranId": "0000000643758597", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Bins Inc", "amount":          744.22 }
+        ,{ "tranId": "0000000749493129", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Pollich-Kuhn", "amount":           13.88 }
+      ],
+      "totalDebits":         2938.19,
+      "totalCredits":          243.00
+    }
+    ,
+    {
+      "accountId": "00000000032",
+      "customer": {
+        "name": "Stephany Meda Fisher",
+        "address": [
+          "63452 Kenny Streets",
+          "Apt. 116",
+          "Predovicburgh",
+          "AK USA 85943-7605"
+        ]
+      },
+      "currentBalance":           30.00,
+      "creditLimit":         1175.00,
+      "transactions": [
+        { "tranId": "0000000028097268", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Wolf, Cruickshank and Bode", "amount":          250.22 }
+        ,{ "tranId": "0000000051205286", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Goodwin, Von and Krajcik", "amount":          649.33 }
+        ,{ "tranId": "0000000107748365", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Waelchi and Daughters", "amount":          274.00 }
+        ,{ "tranId": "0000000277916619", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Champlin and Sons", "amount":          996.88 }
+        ,{ "tranId": "0000000338128146", "typeCode": "03", "categoryCode": "0001", "description": "Return item at Terry-Mertz", "amount":         -742.99 }
+        ,{ "tranId": "0000000508429766", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Kassulke, Reynolds and Runolfsson", "amount":          534.11 }
+      ],
+      "totalDebits":         2704.54,
+      "totalCredits":          742.99
+    }
+    ,
+    {
+      "accountId": "00000000029",
+      "customer": {
+        "name": "Rickie Otho Daugherty",
+        "address": [
+          "676 Funk Curve",
+          "Apt. 375",
+          "Hayesstad",
+          "NH USA 01226"
+        ]
+      },
+      "currentBalance":          339.00,
+      "creditLimit":         5511.00,
+      "transactions": [
+        { "tranId": "0000000139910093", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Harris, Johnston and Harris", "amount":          570.66 }
+        ,{ "tranId": "0000000184933166", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Walker LLC", "amount":          989.77 }
+        ,{ "tranId": "0000000357518499", "typeCode": "03", "categoryCode": "0001", "description": "Return item at Willms-Beier", "amount":         -852.33 }
+        ,{ "tranId": "0000000522130011", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at D'Amore, Conroy and Wilkinson", "amount":          699.44 }
+        ,{ "tranId": "0000000601274842", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Yost, Hoppe and Heathcote", "amount":          744.11 }
+        ,{ "tranId": "0000000603071214", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Schinner-Feeney", "amount":          166.99 }
+      ],
+      "totalDebits":         3170.97,
+      "totalCredits":          852.33
+    }
+    ,
+    {
+      "accountId": "00000000045",
+      "customer": {
+        "name": "Dixie Norris Beier",
+        "address": [
+          "441 Levi Prairie",
+          "Suite 749",
+          "Abbottshire",
+          "NV USA 09048"
+        ]
+      },
+      "currentBalance":          186.00,
+      "creditLimit":         2719.00,
+      "transactions": [
+        { "tranId": "0000000010229018", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Gislason-Medhurst", "amount":          849.99 }
+        ,{ "tranId": "0000000109340521", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Runte and Sons", "amount":          840.55 }
+        ,{ "tranId": "0000000312054308", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Bogan LLC", "amount":          717.00 }
+        ,{ "tranId": "0000000378710702", "typeCode": "03", "categoryCode": "0001", "description": "Return item at Wilderman, Koepp and Ledner", "amount":         -344.77 }
+        ,{ "tranId": "0000000523110055", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Purdy-King", "amount":          736.88 }
+        ,{ "tranId": "0000000575834812", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Ritchie and Sons", "amount":          689.88 }
+      ],
+      "totalDebits":         3834.30,
+      "totalCredits":          344.77
+    }
+    ,
+    {
+      "accountId": "00000000011",
+      "customer": {
+        "name": "Hayden Ressie Pfannerstill",
+        "address": [
+          "14895 Everette Ridges",
+          "Apt. 443",
+          "Julianneburgh",
+          "WA USA 24984"
+        ]
+      },
+      "currentBalance":          212.00,
+      "creditLimit":         4998.00,
+      "transactions": [
+        { "tranId": "0000000196728331", "typeCode": "03", "categoryCode": "0001", "description": "Return item at Hane and Sons", "amount":         -744.77 }
+        ,{ "tranId": "0000000232640164", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Blick LLC", "amount":          160.99 }
+        ,{ "tranId": "0000000361866674", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Mayer and Daughters", "amount":          446.00 }
+        ,{ "tranId": "0000000577165878", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Macejkovic-Mohr", "amount":          621.22 }
+        ,{ "tranId": "0000000673250360", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Ebert-Gleason", "amount":          191.00 }
+        ,{ "tranId": "0000000751696292", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Smith, Hansen and Waelchi", "amount":          653.55 }
+      ],
+      "totalDebits":         2072.76,
+      "totalCredits":          744.77
+    }
+    ,
+    {
+      "accountId": "00000000038",
+      "customer": {
+        "name": "Angela Ceasar Ankunding",
+        "address": [
+          "65482 Zoila Skyway",
+          "Apt. 054",
+          "East Malachi",
+          "VA USA 63928-0008"
+        ]
+      },
+      "currentBalance":          612.00,
+      "creditLimit":         6505.00,
+      "transactions": [
+        { "tranId": "0000000246307558", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Jacobi and Sons", "amount":          816.77 }
+        ,{ "tranId": "0000000253579636", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at D'Amore-Batz", "amount":          257.55 }
+        ,{ "tranId": "0000000265935610", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Morar-Cartwright", "amount":          461.99 }
+        ,{ "tranId": "0000000298764221", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Zboncak, Kohler and Ziemann", "amount":          706.11 }
+        ,{ "tranId": "0000000312439873", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Rowe and Daughters", "amount":          745.33 }
+        ,{ "tranId": "0000000627601011", "typeCode": "03", "categoryCode": "0001", "description": "Return item at Stokes Inc", "amount":         -538.22 }
+      ],
+      "totalDebits":         2987.75,
+      "totalCredits":          538.22
+    }
+    ,
+    {
+      "accountId": "00000000026",
+      "customer": {
+        "name": "Marjory Damien Stracke",
+        "address": [
+          "30161 Bogan Canyon",
+          "Suite 916",
+          "Walshberg",
+          "IL USA 59945"
+        ]
+      },
+      "currentBalance":           46.00,
+      "creditLimit":         2181.00,
+      "transactions": [
+        { "tranId": "0000000009101861", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Guann LLC", "amount":          281.77 }
+        ,{ "tranId": "0000000017874199", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Legros Group", "amount":          373.66 }
+        ,{ "tranId": "0000000160469204", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Greenfelder-Larson", "amount":          864.44 }
+        ,{ "tranId": "0000000183226769", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Conroy and Daughters", "amount":          907.55 }
+        ,{ "tranId": "0000000329446511", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Ernser, Ward and Lehner", "amount":          667.55 }
+        ,{ "tranId": "0000000539225404", "typeCode": "03", "categoryCode": "0001", "description": "Return item at Hamill, Blick and Kling", "amount":         -372.00 }
+      ],
+      "totalDebits":         3094.97,
+      "totalCredits":          372.00
+    }
+    ,
+    {
+      "accountId": "00000000023",
+      "customer": {
+        "name": "Johnson Blanca Ruecker",
+        "address": [
+          "2433 Jacobi Forks",
+          "Apt. 845",
+          "Hendersonbury",
+          "KS USA 78239-9466"
+        ]
+      },
+      "currentBalance":          104.00,
+      "creditLimit":         3377.00,
+      "transactions": [
+        { "tranId": "0000000313527007", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Ebert-Grimes", "amount":          948.22 }
+        ,{ "tranId": "0000000435144487", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Pacocha, Goyette and Leuschke", "amount":          408.88 }
+        ,{ "tranId": "0000000618712102", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Hahn-Lueilwitz", "amount":           21.11 }
+        ,{ "tranId": "0000000768119840", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Towne, Hickle and Orn", "amount":           65.44 }
+        ,{ "tranId": "0000000943918566", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Walker, Mohr and Wyman", "amount":          437.77 }
+        ,{ "tranId": "0000000971342087", "typeCode": "03", "categoryCode": "0001", "description": "Return item at Johnston Inc", "amount":         -835.44 }
+      ],
+      "totalDebits":         1881.42,
+      "totalCredits":          835.44
+    }
+    ,
+    {
+      "accountId": "00000000049",
+      "customer": {
+        "name": "Immanuel Ellie Bednar",
+        "address": [
+          "5423 Esther Locks",
+          "Apt. 142",
+          "Langoshstad",
+          "GA USA 12288-3495"
+        ]
+      },
+      "currentBalance":          100.00,
+      "creditLimit":         9048.00,
+      "transactions": [
+        { "tranId": "0000000143386237", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Blanda, Nienow and Hilpert", "amount":          559.88 }
+        ,{ "tranId": "0000000292939458", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at O'Hara, Ledner and Runte", "amount":           49.55 }
+        ,{ "tranId": "0000000432231260", "typeCode": "03", "categoryCode": "0001", "description": "Return item at Schuster-Bashirian", "amount":         -962.77 }
+        ,{ "tranId": "0000000778829157", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Renner, Mertz and Ondricka", "amount":          270.55 }
+        ,{ "tranId": "0000000858501945", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Braun, Schulist and Kreiger", "amount":          198.66 }
+        ,{ "tranId": "0000000976770816", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Corkery-Barton", "amount":          917.44 }
+      ],
+      "totalDebits":         1996.08,
+      "totalCredits":          962.77
+    }
+    ,
+    {
+      "accountId": "00000000014",
+      "customer": {
+        "name": "Chelsea Ignacio Marks",
+        "address": [
+          "747 Dino Lodge",
+          "Apt. 850",
+          "West Chase",
+          "RI USA 12914-8465"
+        ]
+      },
+      "currentBalance":           15.00,
+      "creditLimit":         2254.00,
+      "transactions": [
+        { "tranId": "0000000173069364", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Runte-Schmidt", "amount":          985.33 }
+        ,{ "tranId": "0000000341155503", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Parker-Erdman", "amount":          990.88 }
+        ,{ "tranId": "0000000549364593", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Waters, Considine and Borer", "amount":          195.44 }
+        ,{ "tranId": "0000000672573296", "typeCode": "03", "categoryCode": "0001", "description": "Return item at Veum-Treutel", "amount":         -710.66 }
+        ,{ "tranId": "0000000742447110", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Hauck Inc", "amount":          746.77 }
+        ,{ "tranId": "0000000929059536", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Glover, Block and Huel", "amount":          920.11 }
+      ],
+      "totalDebits":         3838.53,
+      "totalCredits":          710.66
+    }
+    ,
+    {
+      "accountId": "00000000008",
+      "customer": {
+        "name": "Kelsie Jordyn Dicki",
+        "address": [
+          "0925 Welch Streets",
+          "Apt. 152",
+          "North Nanniestad",
+          "SC USA 27610"
+        ]
+      },
+      "currentBalance":          605.00,
+      "creditLimit":         6104.00,
+      "transactions": [
+        { "tranId": "0000000084515950", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Bradtke Group", "amount":          325.00 }
+        ,{ "tranId": "0000000095706092", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Swift, Wolf and Goldner", "amount":          482.44 }
+        ,{ "tranId": "0000000218186931", "typeCode": "03", "categoryCode": "0001", "description": "Return item at Reichert and Daughters", "amount":         -835.11 }
+        ,{ "tranId": "0000000312675172", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Hermiston Inc", "amount":          728.77 }
+        ,{ "tranId": "0000000605048564", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Schamberger, O'Reilly and Wintheiser", "amount":           95.99 }
+        ,{ "tranId": "0000000760577632", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Kulas-Hayes", "amount":          735.99 }
+      ],
+      "totalDebits":         2368.19,
+      "totalCredits":          835.11
+    }
+    ,
+    {
+      "accountId": "00000000025",
+      "customer": {
+        "name": "Elliott Fermin Howell",
+        "address": [
+          "9524 McKenzie Lakes",
+          "Suite 245",
+          "West Alexa",
+          "NH USA 75721-7382"
+        ]
+      },
+      "currentBalance":           61.00,
+      "creditLimit":         8194.00,
+      "transactions": [
+        { "tranId": "0000000166444519", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Wyman, Feest and Moen", "amount":          183.22 }
+        ,{ "tranId": "0000000328781772", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Hayes and Daughters", "amount":          859.44 }
+        ,{ "tranId": "0000000498615524", "typeCode": "03", "categoryCode": "0001", "description": "Return item at Powlowski LLC", "amount":         -907.00 }
+        ,{ "tranId": "0000000689276136", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Bins Group", "amount":          192.00 }
+        ,{ "tranId": "0000000770707563", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Leffler-Hilll", "amount":          309.44 }
+        ,{ "tranId": "0000000845039454", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Borer, Farrell and Doyle", "amount":           45.66 }
+      ],
+      "totalDebits":         1589.76,
+      "totalCredits":          907.00
+    }
+    ,
+    {
+      "accountId": "00000000017",
+      "customer": {
+        "name": "Sigrid Angeline Mann",
+        "address": [
+          "95666 Dare Isle",
+          "Suite 286",
+          "New Presley",
+          "FM USA 56181-0584"
+        ]
+      },
+      "currentBalance":           33.00,
+      "creditLimit":          568.00,
+      "transactions": [
+        { "tranId": "0000000108402349", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Lynch-Bode", "amount":          633.00 }
+        ,{ "tranId": "0000000224060323", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Kunze and Sons", "amount":          343.77 }
+        ,{ "tranId": "0000000569807281", "typeCode": "03", "categoryCode": "0001", "description": "Return item at Kiehn, Russel and Schaefer", "amount":         -998.33 }
+        ,{ "tranId": "0000000570013846", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Parker, Pfannerstill and Donnelly", "amount":          352.33 }
+        ,{ "tranId": "0000000741999667", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Corkery, Boehm and Hudson", "amount":          643.44 }
+        ,{ "tranId": "0000000823157599", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Miller, Hudson and Ziemann", "amount":          111.11 }
+      ],
+      "totalDebits":         2083.65,
+      "totalCredits":          998.33
+    }
+    ,
+    {
+      "accountId": "00000000009",
+      "customer": {
+        "name": "Melvin Regan Ondricka",
+        "address": [
+          "87893 Samson Flats",
+          "Apt. 135",
+          "New Braden",
+          "VI USA 21113"
+        ]
+      },
+      "currentBalance":          560.00,
+      "creditLimit":         8201.00,
+      "transactions": [
+        { "tranId": "0000000021711604", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Gleason, Shanahan and Reynolds", "amount":          416.11 }
+        ,{ "tranId": "0000000223138231", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Prohaska, Grant and Hirthe", "amount":          851.33 }
+        ,{ "tranId": "0000000433607101", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at VonRueden Inc", "amount":          851.22 }
+        ,{ "tranId": "0000000497995808", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Beier and Daughters", "amount":          649.00 }
+        ,{ "tranId": "0000000751145919", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Rohan-Jacobson", "amount":          140.00 }
+        ,{ "tranId": "0000000934798061", "typeCode": "03", "categoryCode": "0001", "description": "Return item at Gottlieb, VonRueden and Raynor", "amount":         -260.11 }
+      ],
+      "totalDebits":         2907.66,
+      "totalCredits":          260.11
+    }
+    ,
+    {
+      "accountId": "00000000001",
+      "customer": {
+        "name": "Immanuel Madeline Kessler",
+        "address": [
+          "618 Deshaun Route",
+          "Apt. 802",
+          "Altenwerthshire",
+          "NC USA 12546"
+        ]
+      },
+      "currentBalance":          194.00,
+      "creditLimit":         2020.00,
+      "transactions": [
+        { "tranId": "0000000503557384", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Casper Group", "amount":           81.44 }
+        ,{ "tranId": "0000000532120892", "typeCode": "03", "categoryCode": "0001", "description": "Return item at Frami-Hyatt", "amount":          -70.77 }
+        ,{ "tranId": "0000000555363230", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Metz, Blanda and Homenick", "amount":          484.99 }
+        ,{ "tranId": "0000000624335286", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Crona, Turner and Hane", "amount":          598.44 }
+        ,{ "tranId": "0000000755736377", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Torp-Stark", "amount":          906.44 }
+        ,{ "tranId": "0000000776200014", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Lebsack and Sons", "amount":          985.22 }
+      ],
+      "totalDebits":         3056.53,
+      "totalCredits":           70.77
+    }
+    ,
+    {
+      "accountId": "00000000040",
+      "customer": {
+        "name": "Davon Demond Emmerich",
+        "address": [
+          "23499 Beer Views",
+          "Suite 816",
+          "Erniechester",
+          "TX USA 87156-8689"
+        ]
+      },
+      "currentBalance":           43.00,
+      "creditLimit":         5823.00,
+      "transactions": [
+        { "tranId": "0000000100915314", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Gislason and Daughters", "amount":          356.22 }
+        ,{ "tranId": "0000000573732499", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Ortiz, Langworth and Feeney", "amount":          237.44 }
+        ,{ "tranId": "0000000686167627", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Gibson, Beahan and Reichert", "amount":           81.44 }
+        ,{ "tranId": "0000000731515153", "typeCode": "03", "categoryCode": "0001", "description": "Return item at Gleichner, Mitchell and Schmidt", "amount":          -25.99 }
+        ,{ "tranId": "0000000884070277", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Bayer-O'Reilly", "amount":          194.33 }
+        ,{ "tranId": "0000000982241353", "typeCode": "01", "categoryCode": "0001", "description": "Purchase at Bins, Gorczany and Denesik", "amount":          765.66 }
+      ],
+      "totalDebits":         1635.09,
+      "totalCredits":           25.99
+    }
+  ]
+}
