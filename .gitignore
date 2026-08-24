@@ -4,5 +4,6 @@ sample/*
 mock-data-generator/markers/*
 batch-app/markers/*
 /.idea/
+/build/
 .DS_Store
 **/.DS_Store
