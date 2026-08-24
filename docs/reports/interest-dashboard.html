@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CardDemo — Interest &amp; Fees Dashboard (DJ-106)</title>
+<style>
+  :root { color-scheme: light; }
+  body { margin: 0; padding: 24px; background: #f4f6f8; color: #1c2733;
+         font-family: -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+  h1 { font-size: 22px; margin: 0 0 4px; }
+  h2 { font-size: 16px; margin: 0 0 12px; }
+  .source { color: #5b6b7b; font-size: 12px; margin: 0 0 20px; }
+  .kpis { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 20px; }
+  .kpi { flex: 1 1 180px; background: #fff; border: 1px solid #dbe2e8; border-radius: 6px;
+         padding: 14px 16px; }
+  .kpi-label { font-size: 11px; text-transform: uppercase; letter-spacing: .06em;
+               color: #5b6b7b; margin-bottom: 6px; }
+  .kpi-value { font-size: 22px; font-weight: 600; font-variant-numeric: tabular-nums; }
+  .panel { background: #fff; border: 1px solid #dbe2e8; border-radius: 6px;
+           padding: 16px; margin-bottom: 20px; overflow-x: auto; }
+  table { border-collapse: collapse; width: 100%; font-size: 13px; }
+  th, td { padding: 6px 10px; border-bottom: 1px solid #eceff2; text-align: left; }
+  th { background: #f7f9fb; font-size: 11px; text-transform: uppercase;
+       letter-spacing: .05em; color: #5b6b7b; }
+  td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
+  td.mono { font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace; }
+  .neg { color: #c62828; }
+  .empty { color: #5b6b7b; font-size: 13px; }
+  .chart { width: 100%; height: auto; margin-bottom: 16px; }
+  .bar-label { font-size: 12px; fill: #1c2733; text-anchor: end; }
+  .bar-value { font-size: 12px; fill: #5b6b7b; }
+  code { background: #f0f3f6; padding: 1px 4px; border-radius: 3px; }
+</style>
+</head>
+<body>
+  <main>
+    <h1>Interest &amp; Fees Dashboard</h1>
+    <p class="source">Generated from <code>app/data/reports/interest-summary.csv</code> — CardDemo DJ-106</p>
+    <section class="kpis">
+      <div class="kpi">
+        <div class="kpi-label">Accounts</div>
+        <div class="kpi-value">50</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-label">Total balance</div>
+        <div class="kpi-value">0.00</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-label">Total interest</div>
+        <div class="kpi-value">0.00</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-label">Total fees</div>
+        <div class="kpi-value">0.00</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-label">Weighted avg interest rate</div>
+        <div class="kpi-value">0.00%</div>
+      </div>
+    </section>
+
+    <section class="panel">
+      <h2>Interest by disclosure group</h2>
+      <svg class="chart" viewBox="0 0 880 64" role="img" aria-label="Total interest by disclosure group" xmlns="http://www.w3.org/2000/svg">
+      <text x="142" y="32" class="bar-label">(unknown)</text>
+      <rect x="150" y="16" width="1" height="22" fill="#2f6f4f" rx="2"></rect>
+      <text x="159" y="32" class="bar-value">0.00</text>
+      </svg>
+      <table>
+        <thead>
+          <tr><th>Group</th><th class="num">Accounts</th><th class="num">Balance</th><th class="num">Interest</th><th class="num">Fees</th><th class="num">Avg rate</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>(unknown)</td><td class="num">50</td><td class="num">0.00</td><td class="num">0.00</td><td class="num">0.00</td><td class="num">0.00%</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section class="panel">
+      <h2>Top 20 accounts by interest</h2>
+      <table>
+        <thead>
+          <tr><th>Account</th><th>Group</th><th class="num">Categories</th><th class="num">Balance</th><th class="num">Interest</th><th class="num">Fees</th><th class="num">Avg rate</th></tr>
+        </thead>
+        <tbody>
+          <tr><td class="mono">00000000001</td><td>(unknown)</td><td class="num">1</td><td class="num">0.00</td><td class="num">0.00</td><td class="num">0.00</td><td class="num">0.00%</td></tr>
+          <tr><td class="mono">00000000002</td><td>(unknown)</td><td class="num">1</td><td class="num">0.00</td><td class="num">0.00</td><td class="num">0.00</td><td class="num">0.00%</td></tr>
+          <tr><td class="mono">00000000003</td><td>(unknown)</td><td class="num">1</td><td class="num">0.00</td><td class="num">0.00</td><td class="num">0.00</td><td class="num">0.00%</td></tr>
+          <tr><td class="mono">00000000004</td><td>(unknown)</td><td class="num">1</td><td class="num">0.00</td><td class="num">0.00</td><td class="num">0.00</td><td class="num">0.00%</td></tr>
+          <tr><td class="mono">00000000005</td><td>(unknown)</td><td class="num">1</td><td class="num">0.00</td><td class="num">0.00</td><td class="num">0.00</td><td class="num">0.00%</td></tr>
+          <tr><td class="mono">00000000006</td><td>(unknown)</td><td class="num">1</td><td class="num">0.00</td><td class="num">0.00</td><td class="num">0.00</td><td class="num">0.00%</td></tr>
+          <tr><td class="mono">00000000007</td><td>(unknown)</td><td class="num">1</td><td class="num">0.00</td><td class="num">0.00</td><td class="num">0.00</td><td class="num">0.00%</td></tr>
+          <tr><td class="mono">00000000008</td><td>(unknown)</td><td class="num">1</td><td class="num">0.00</td><td class="num">0.00</td><td class="num">0.00</td><td class="num">0.00%</td></tr>
+          <tr><td class="mono">00000000009</td><td>(unknown)</td><td class="num">1</td><td class="num">0.00</td><td class="num">0.00</td><td class="num">0.00</td><td class="num">0.00%</td></tr>
+          <tr><td class="mono">00000000010</td><td>(unknown)</td><td class="num">1</td><td class="num">0.00</td><td class="num">0.00</td><td class="num">0.00</td><td class="num">0.00%</td></tr>
+          <tr><td class="mono">00000000011</td><td>(unknown)</td><td class="num">1</td><td class="num">0.00</td><td class="num">0.00</td><td class="num">0.00</td><td class="num">0.00%</td></tr>
+          <tr><td class="mono">00000000012</td><td>(unknown)</td><td class="num">1</td><td class="num">0.00</td><td class="num">0.00</td><td class="num">0.00</td><td class="num">0.00%</td></tr>
+          <tr><td class="mono">00000000013</td><td>(unknown)</td><td class="num">1</td><td class="num">0.00</td><td class="num">0.00</td><td class="num">0.00</td><td class="num">0.00%</td></tr>
+          <tr><td class="mono">00000000014</td><td>(unknown)</td><td class="num">1</td><td class="num">0.00</td><td class="num">0.00</td><td class="num">0.00</td><td class="num">0.00%</td></tr>
+          <tr><td class="mono">00000000015</td><td>(unknown)</td><td class="num">1</td><td class="num">0.00</td><td class="num">0.00</td><td class="num">0.00</td><td class="num">0.00%</td></tr>
+          <tr><td class="mono">00000000016</td><td>(unknown)</td><td class="num">1</td><td class="num">0.00</td><td class="num">0.00</td><td class="num">0.00</td><td class="num">0.00%</td></tr>
+          <tr><td class="mono">00000000017</td><td>(unknown)</td><td class="num">1</td><td class="num">0.00</td><td class="num">0.00</td><td class="num">0.00</td><td class="num">0.00%</td></tr>
+          <tr><td class="mono">00000000018</td><td>(unknown)</td><td class="num">1</td><td class="num">0.00</td><td class="num">0.00</td><td class="num">0.00</td><td class="num">0.00%</td></tr>
+          <tr><td class="mono">00000000019</td><td>(unknown)</td><td class="num">1</td><td class="num">0.00</td><td class="num">0.00</td><td class="num">0.00</td><td class="num">0.00%</td></tr>
+          <tr><td class="mono">00000000020</td><td>(unknown)</td><td class="num">1</td><td class="num">0.00</td><td class="num">0.00</td><td class="num">0.00</td><td class="num">0.00%</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section class="panel">
+      <h2>All accounts (50)</h2>
+      <table>
+        <thead>
+          <tr><th>Account</th><th>Group</th><th class="num">Categories</th><th class="num">Balance</th><th class="num">Interest</th><th class="num">Fees</th><th class="num">Avg rate</th></tr>
+        </thead>
+        <tbody>
+          <tr><td class="mono">00000000001</td><td>(unknown)</td><td class="num">1</td><td class="num">0.00</td><td class="num">0.00</td><td class="num">0.00</td><td class="num">0.00%</td></tr>
+          <tr><td class="mono">00000000002</td><td>(unknown)</td><td class="num">1</td><td class="num">0.00</td><td class="num">0.00</td><td class="num">0.00</td><td class="num">0.00%</td></tr>
+          <tr><td class="mono">00000000003</td><td>(unknown)</td><td class="num">1</td><td class="num">0.00</td><td class="num">0.00</td><td class="num">0.00</td><td class="num">0.00%</td></tr>
+          <tr><td class="mono">00000000004</td><td>(unknown)</td><td class="num">1</td><td class="num">0.00</td><td class="num">0.00</td><td class="num">0.00</td><td class="num">0.00%</td></tr>
+          <tr><td class="mono">00000000005</td><td>(unknown)</td><td class="num">1</td><td class="num">0.00</td><td class="num">0.00</td><td class="num">0.00</td><td class="num">0.00%</td></tr>
+          <tr><td class="mono">00000000006</td><td>(unknown)</td><td class="num">1</td><td class="num">0.00</td><td class="num">0.00</td><td class="num">0.00</td><td class="num">0.00%</td></tr>
+          <tr><td class="mono">00000000007</td><td>(unknown)</td><td class="num">1</td><td class="num">0.00</td><td class="num">0.00</td><td class="num">0.00</td><td class="num">0.00%</td></tr>
+          <tr><td class="mono">00000000008</td><td>(unknown)</td><td class="num">1</td><td class="num">0.00</td><td class="num">0.00</td><td class="num">0.00</td><td class="num">0.00%</td></tr>
+          <tr><td class="mono">00000000009</td><td>(unknown)</td><td class="num">1</td><td class="num">0.00</td><td class="num">0.00</td><td class="num">0.00</td><td class="num">0.00%</td></tr>
+          <tr><td class="mono">00000000010</td><td>(unknown)</td><td class="num">1</td><td class="num">0.00</td><td class="num">0.00</td><td class="num">0.00</td><td class="num">0.00%</td></tr>
+          <tr><td class="mono">00000000011</td><td>(unknown)</td><td class="num">1</td><td class="num">0.00</td><td class="num">0.00</td><td class="num">0.00</td><td class="num">0.00%</td></tr>
+          <tr><td class="mono">00000000012</td><td>(unknown)</td><td class="num">1</td><td class="num">0.00</td><td class="num">0.00</td><td class="num">0.00</td><td class="num">0.00%</td></tr>
+          <tr><td class="mono">00000000013</td><td>(unknown)</td><td class="num">1</td><td class="num">0.00</td><td class="num">0.00</td><td class="num">0.00</td><td class="num">0.00%</td></tr>
+          <tr><td class="mono">00000000014</td><td>(unknown)</td><td class="num">1</td><td class="num">0.00</td><td class="num">0.00</td><td class="num">0.00</td><td class="num">0.00%</td></tr>
+          <tr><td class="mono">00000000015</td><td>(unknown)</td><td class="num">1</td><td class="num">0.00</td><td class="num">0.00</td><td class="num">0.00</td><td class="num">0.00%</td></tr>
+          <tr><td class="mono">00000000016</td><td>(unknown)</td><td class="num">1</td><td class="num">0.00</td><td class="num">0.00</td><td class="num">0.00</td><td class="num">0.00%</td></tr>
+          <tr><td class="mono">00000000017</td><td>(unknown)</td><td class="num">1</td><td class="num">0.00</td><td class="num">0.00</td><td class="num">0.00</td><td class="num">0.00%</td></tr>
+          <tr><td class="mono">00000000018</td><td>(unknown)</td><td class="num">1</td><td class="num">0.00</td><td class="num">0.00</td><td class="num">0.00</td><td class="num">0.00%</td></tr>
+          <tr><td class="mono">00000000019</td><td>(unknown)</td><td class="num">1</td><td class="num">0.00</td><td class="num">0.00</td><td class="num">0.00</td><td class="num">0.00%</td></tr>
+          <tr><td class="mono">00000000020</td><td>(unknown)</td><td class="num">1</td><td class="num">0.00</td><td class="num">0.00</td><td class="num">0.00</td><td class="num">0.00%</td></tr>
+          <tr><td class="mono">00000000021</td><td>(unknown)</td><td class="num">1</td><td class="num">0.00</td><td class="num">0.00</td><td class="num">0.00</td><td class="num">0.00%</td></tr>
+          <tr><td class="mono">00000000022</td><td>(unknown)</td><td class="num">1</td><td class="num">0.00</td><td class="num">0.00</td><td class="num">0.00</td><td class="num">0.00%</td></tr>
+          <tr><td class="mono">00000000023</td><td>(unknown)</td><td class="num">1</td><td class="num">0.00</td><td class="num">0.00</td><td class="num">0.00</td><td class="num">0.00%</td></tr>
+          <tr><td class="mono">00000000024</td><td>(unknown)</td><td class="num">1</td><td class="num">0.00</td><td class="num">0.00</td><td class="num">0.00</td><td class="num">0.00%</td></tr>
+          <tr><td class="mono">00000000025</td><td>(unknown)</td><td class="num">1</td><td class="num">0.00</td><td class="num">0.00</td><td class="num">0.00</td><td class="num">0.00%</td></tr>
+          <tr><td class="mono">00000000026</td><td>(unknown)</td><td class="num">1</td><td class="num">0.00</td><td class="num">0.00</td><td class="num">0.00</td><td class="num">0.00%</td></tr>
+          <tr><td class="mono">00000000027</td><td>(unknown)</td><td class="num">1</td><td class="num">0.00</td><td class="num">0.00</td><td class="num">0.00</td><td class="num">0.00%</td></tr>
+          <tr><td class="mono">00000000028</td><td>(unknown)</td><td class="num">1</td><td class="num">0.00</td><td class="num">0.00</td><td class="num">0.00</td><td class="num">0.00%</td></tr>
+          <tr><td class="mono">00000000029</td><td>(unknown)</td><td class="num">1</td><td class="num">0.00</td><td class="num">0.00</td><td class="num">0.00</td><td class="num">0.00%</td></tr>
+          <tr><td class="mono">00000000030</td><td>(unknown)</td><td class="num">1</td><td class="num">0.00</td><td class="num">0.00</td><td class="num">0.00</td><td class="num">0.00%</td></tr>
+          <tr><td class="mono">00000000031</td><td>(unknown)</td><td class="num">1</td><td class="num">0.00</td><td class="num">0.00</td><td class="num">0.00</td><td class="num">0.00%</td></tr>
+          <tr><td class="mono">00000000032</td><td>(unknown)</td><td class="num">1</td><td class="num">0.00</td><td class="num">0.00</td><td class="num">0.00</td><td class="num">0.00%</td></tr>
+          <tr><td class="mono">00000000033</td><td>(unknown)</td><td class="num">1</td><td class="num">0.00</td><td class="num">0.00</td><td class="num">0.00</td><td class="num">0.00%</td></tr>
+          <tr><td class="mono">00000000034</td><td>(unknown)</td><td class="num">1</td><td class="num">0.00</td><td class="num">0.00</td><td class="num">0.00</td><td class="num">0.00%</td></tr>
+          <tr><td class="mono">00000000035</td><td>(unknown)</td><td class="num">1</td><td class="num">0.00</td><td class="num">0.00</td><td class="num">0.00</td><td class="num">0.00%</td></tr>
+          <tr><td class="mono">00000000036</td><td>(unknown)</td><td class="num">1</td><td class="num">0.00</td><td class="num">0.00</td><td class="num">0.00</td><td class="num">0.00%</td></tr>
+          <tr><td class="mono">00000000037</td><td>(unknown)</td><td class="num">1</td><td class="num">0.00</td><td class="num">0.00</td><td class="num">0.00</td><td class="num">0.00%</td></tr>
+          <tr><td class="mono">00000000038</td><td>(unknown)</td><td class="num">1</td><td class="num">0.00</td><td class="num">0.00</td><td class="num">0.00</td><td class="num">0.00%</td></tr>
+          <tr><td class="mono">00000000039</td><td>(unknown)</td><td class="num">1</td><td class="num">0.00</td><td class="num">0.00</td><td class="num">0.00</td><td class="num">0.00%</td></tr>
+          <tr><td class="mono">00000000040</td><td>(unknown)</td><td class="num">1</td><td class="num">0.00</td><td class="num">0.00</td><td class="num">0.00</td><td class="num">0.00%</td></tr>
+          <tr><td class="mono">00000000041</td><td>(unknown)</td><td class="num">1</td><td class="num">0.00</td><td class="num">0.00</td><td class="num">0.00</td><td class="num">0.00%</td></tr>
+          <tr><td class="mono">00000000042</td><td>(unknown)</td><td class="num">1</td><td class="num">0.00</td><td class="num">0.00</td><td class="num">0.00</td><td class="num">0.00%</td></tr>
+          <tr><td class="mono">00000000043</td><td>(unknown)</td><td class="num">1</td><td class="num">0.00</td><td class="num">0.00</td><td class="num">0.00</td><td class="num">0.00%</td></tr>
+          <tr><td class="mono">00000000044</td><td>(unknown)</td><td class="num">1</td><td class="num">0.00</td><td class="num">0.00</td><td class="num">0.00</td><td class="num">0.00%</td></tr>
+          <tr><td class="mono">00000000045</td><td>(unknown)</td><td class="num">1</td><td class="num">0.00</td><td class="num">0.00</td><td class="num">0.00</td><td class="num">0.00%</td></tr>
+          <tr><td class="mono">00000000046</td><td>(unknown)</td><td class="num">1</td><td class="num">0.00</td><td class="num">0.00</td><td class="num">0.00</td><td class="num">0.00%</td></tr>
+          <tr><td class="mono">00000000047</td><td>(unknown)</td><td class="num">1</td><td class="num">0.00</td><td class="num">0.00</td><td class="num">0.00</td><td class="num">0.00%</td></tr>
+          <tr><td class="mono">00000000048</td><td>(unknown)</td><td class="num">1</td><td class="num">0.00</td><td class="num">0.00</td><td class="num">0.00</td><td class="num">0.00%</td></tr>
+          <tr><td class="mono">00000000049</td><td>(unknown)</td><td class="num">1</td><td class="num">0.00</td><td class="num">0.00</td><td class="num">0.00</td><td class="num">0.00%</td></tr>
+          <tr><td class="mono">00000000050</td><td>(unknown)</td><td class="num">1</td><td class="num">0.00</td><td class="num">0.00</td><td class="num">0.00</td><td class="num">0.00%</td></tr>
+        </tbody>
+      </table>
+    </section>
+  </main>
+</body>
+</html>
