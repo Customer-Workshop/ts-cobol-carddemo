@@ -98,10 +98,6 @@
                    AT END MOVE 'Y' TO WS-EOF
                    NOT AT END
                        MOVE IN-ACCT-REC TO OUT-ACCT-REC
-      *                The ASCII fixture carries the group code in the
-      *                legacy ZIP slot; place it in the current layout.
-                       MOVE IN-ACCT-REC(103:10)
-                         TO OUT-ACCT-DATA(102:10)
                        WRITE OUT-ACCT-REC
                        PERFORM 9100-CHECK-OUT
                        ADD 1 TO WS-COUNT

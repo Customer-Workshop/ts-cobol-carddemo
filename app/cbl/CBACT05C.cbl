@@ -125,10 +125,10 @@
        01  WS-AVG-RATE             PIC S9(04)V99 VALUE 0.
 
        01  WS-EDIT-COUNT           PIC ZZZZ9.
-       01  WS-EDIT-BALANCE         PIC -ZZZZZZZZZZ9.99.
-       01  WS-EDIT-INTEREST        PIC -ZZZZZZZZZZ9.99.
-       01  WS-EDIT-FEES            PIC -ZZZZZZZZZZ9.99.
-       01  WS-EDIT-RATE            PIC -ZZZ9.99.
+       01  WS-EDIT-BALANCE         PIC -----------9.99.
+       01  WS-EDIT-INTEREST        PIC -----------9.99.
+       01  WS-EDIT-FEES            PIC -----------9.99.
+       01  WS-EDIT-RATE            PIC ---9.99.
 
        01  WS-ACCT-ID-TEXT         PIC X(11).
        01  WS-GROUP-TEXT           PIC X(20).
@@ -229,7 +229,6 @@
                PERFORM 9999-ABEND-PROGRAM
            END-IF
            MOVE SPACES TO FD-INTRPT-REC
-           MOVE SPACES TO FD-INTRPT-REC
            STRING
              'acct_id,acct_group_id,category_count,total_balance,'
                DELIMITED BY SIZE
@@ -267,6 +266,7 @@
                        PERFORM 1150-RESET-ACCOUNT
                    END-IF
                END-IF
+               PERFORM 1200-GET-INTEREST-RATE
                ADD 1 TO WS-CATEGORY-COUNT
                ADD TRAN-CAT-BAL TO WS-TOTAL-BALANCE
                COMPUTE WS-WEIGHTED-RATE = WS-WEIGHTED-RATE
