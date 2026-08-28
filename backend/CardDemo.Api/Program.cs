@@ -29,6 +29,11 @@ builder.Services.AddScoped(sp => sp.GetRequiredService<IOptions<MenuRouteRegistr
 builder.Services.AddScoped<MenuService>();
 
 var jwtOptions = builder.Configuration.GetSection(JwtOptions.SectionName).Get<JwtOptions>() ?? new JwtOptions();
+if (string.IsNullOrWhiteSpace(jwtOptions.SigningKey) || Encoding.UTF8.GetByteCount(jwtOptions.SigningKey) < 32)
+{
+    throw new InvalidOperationException(
+        "Jwt:SigningKey must be configured with at least 32 bytes (e.g. via the Jwt__SigningKey environment variable).");
+}
 builder.Services
     .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
