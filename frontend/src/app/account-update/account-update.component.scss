@@ -1,0 +1,72 @@
+.account-update-card {
+  max-width: 960px;
+  margin: 48px auto;
+}
+
+.section-title {
+  font-family: monospace;
+  font-weight: bold;
+  margin: 12px 0 4px;
+}
+
+.screen-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 16px;
+  align-items: center;
+  margin-bottom: 6px;
+  font-family: monospace;
+}
+
+.screen-field {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.screen-label {
+  white-space: pre;
+}
+
+.screen-input {
+  font-family: monospace;
+  padding: 2px 4px;
+  border: 1px solid #9e9e9e;
+  border-radius: 2px;
+  background: #fff;
+}
+
+.protected .screen-input {
+  background: #eeeeee;
+  color: #424242;
+  border-color: #e0e0e0;
+}
+
+.invalid-field .screen-input {
+  color: #b00020;
+  border-color: #b00020;
+}
+
+.message {
+  margin: 12px 0;
+  font-family: monospace;
+  min-height: 1.4em;
+}
+
+.error-message {
+  color: #b00020;
+}
+
+.info-message {
+  color: #1b5e20;
+}
+
+.actions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.lit {
+  font-weight: bold;
+}
