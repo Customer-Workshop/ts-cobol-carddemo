@@ -1,3 +1,7 @@
+using CardDemo.Domain.Accounts;
+using CardDemo.Domain.Cards;
+using CardDemo.Domain.Customers;
+using CardDemo.Domain.Transactions;
 using CardDemo.Domain.Users;
 using Microsoft.EntityFrameworkCore;
 
@@ -6,6 +10,15 @@ namespace CardDemo.Infrastructure.Persistence;
 public class CardDemoDbContext(DbContextOptions<CardDemoDbContext> options) : DbContext(options)
 {
     public DbSet<User> Users => Set<User>();
+    public DbSet<Account> Accounts => Set<Account>();
+    public DbSet<Card> Cards => Set<Card>();
+    public DbSet<CardXref> CardXrefs => Set<CardXref>();
+    public DbSet<Customer> Customers => Set<Customer>();
+    public DbSet<Transaction> Transactions => Set<Transaction>();
+    public DbSet<TransactionCategoryBalance> TransactionCategoryBalances => Set<TransactionCategoryBalance>();
+    public DbSet<DisclosureGroup> DisclosureGroups => Set<DisclosureGroup>();
+    public DbSet<TransactionType> TransactionTypes => Set<TransactionType>();
+    public DbSet<TransactionCategory> TransactionCategories => Set<TransactionCategory>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -24,5 +37,7 @@ public class CardDemoDbContext(DbContextOptions<CardDemoDbContext> options) : Db
                     t => t.ToCode().ToString(),
                     s => UserTypeCodes.FromCode(s[0]));
         });
+
+        modelBuilder.ApplyConfigurationsFromAssembly(typeof(CardDemoDbContext).Assembly);
     }
 }
