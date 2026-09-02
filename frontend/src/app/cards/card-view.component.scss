@@ -1,0 +1,73 @@
+.card-view-card {
+  max-width: 640px;
+  margin: 48px auto;
+}
+
+.field-row {
+  display: flex;
+  align-items: baseline;
+  gap: 16px;
+  margin: 0;
+}
+
+.field-label {
+  font-family: monospace;
+  white-space: pre;
+  width: 20ch;
+  flex: none;
+}
+
+.account-field input {
+  width: 11ch;
+}
+
+.card-field input {
+  width: 16ch;
+}
+
+input {
+  font-family: monospace;
+}
+
+.field-error {
+  color: #b00020;
+}
+
+.card-details {
+  margin: 8px 0 16px;
+}
+
+.output {
+  font-family: monospace;
+  min-height: 1.5em;
+  margin: 0;
+}
+
+.name-output {
+  min-width: 50ch;
+  border-bottom: 1px solid currentColor;
+}
+
+.date-separator {
+  margin: 0 8px;
+}
+
+.info-message {
+  font-family: monospace;
+  white-space: pre;
+  min-height: 1.5em;
+  margin-bottom: 8px;
+}
+
+.error-message {
+  font-family: monospace;
+  min-height: 1.5em;
+  margin-bottom: 12px;
+  color: #b00020;
+  font-weight: bold;
+}
+
+.actions {
+  display: flex;
+  gap: 12px;
+}
