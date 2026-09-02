@@ -1,0 +1,109 @@
+<mat-card class="tran-add-card">
+  <mat-card-header>
+    <div class="screen-header" data-testid="screen-header">
+      <span>Tran: {{ transactionCode }}</span>
+      <span>Prog: {{ programName }}</span>
+    </div>
+    <mat-card-title>{{ title }}</mat-card-title>
+    <mat-card-subtitle>Enter Acct # (or Card #) and the transaction details, then press ENTER</mat-card-subtitle>
+  </mat-card-header>
+  <mat-card-content>
+    <form (ngSubmit)="submit()" autocomplete="off">
+      <div class="row">
+        <mat-form-field appearance="outline" class="w-account">
+          <mat-label>Enter Acct #</mat-label>
+          <input matInput name="accountId" [(ngModel)]="screen.accountId" [maxlength]="lengths.accountId" data-testid="account-id-input" />
+        </mat-form-field>
+        <mat-form-field appearance="outline" class="w-card">
+          <mat-label>(or) Card #</mat-label>
+          <input matInput name="cardNumber" [(ngModel)]="screen.cardNumber" [maxlength]="lengths.cardNumber" data-testid="card-number-input" />
+        </mat-form-field>
+      </div>
+
+      <div class="row">
+        <mat-form-field appearance="outline" class="w-xs">
+          <mat-label>Type CD</mat-label>
+          <input matInput name="typeCode" [(ngModel)]="screen.typeCode" [maxlength]="lengths.typeCode" data-testid="type-code-input" />
+        </mat-form-field>
+        <mat-form-field appearance="outline" class="w-xs">
+          <mat-label>Category CD</mat-label>
+          <input matInput name="categoryCode" [(ngModel)]="screen.categoryCode" [maxlength]="lengths.categoryCode" data-testid="category-code-input" />
+        </mat-form-field>
+        <mat-form-field appearance="outline" class="w-sm">
+          <mat-label>Source</mat-label>
+          <input matInput name="source" [(ngModel)]="screen.source" [maxlength]="lengths.source" data-testid="source-input" />
+        </mat-form-field>
+      </div>
+
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Description</mat-label>
+        <input matInput name="description" [(ngModel)]="screen.description" [maxlength]="lengths.description" data-testid="description-input" />
+      </mat-form-field>
+
+      <div class="row">
+        <mat-form-field appearance="outline" class="w-sm">
+          <mat-label>Amount (-99999999.99)</mat-label>
+          <input matInput name="amount" [(ngModel)]="screen.amount" [maxlength]="lengths.amount" data-testid="amount-input" />
+        </mat-form-field>
+        <mat-form-field appearance="outline" class="w-sm">
+          <mat-label>Orig Date (YYYY-MM-DD)</mat-label>
+          <input matInput name="originalDate" [(ngModel)]="screen.originalDate" [maxlength]="lengths.originalDate" data-testid="original-date-input" />
+        </mat-form-field>
+        <mat-form-field appearance="outline" class="w-sm">
+          <mat-label>Proc Date (YYYY-MM-DD)</mat-label>
+          <input matInput name="processedDate" [(ngModel)]="screen.processedDate" [maxlength]="lengths.processedDate" data-testid="processed-date-input" />
+        </mat-form-field>
+      </div>
+
+      <div class="row">
+        <mat-form-field appearance="outline" class="w-sm">
+          <mat-label>Merchant ID</mat-label>
+          <input matInput name="merchantId" [(ngModel)]="screen.merchantId" [maxlength]="lengths.merchantId" data-testid="merchant-id-input" />
+        </mat-form-field>
+        <mat-form-field appearance="outline" class="w-md">
+          <mat-label>Merchant Name</mat-label>
+          <input matInput name="merchantName" [(ngModel)]="screen.merchantName" [maxlength]="lengths.merchantName" data-testid="merchant-name-input" />
+        </mat-form-field>
+      </div>
+
+      <div class="row">
+        <mat-form-field appearance="outline" class="w-md">
+          <mat-label>Merchant City</mat-label>
+          <input matInput name="merchantCity" [(ngModel)]="screen.merchantCity" [maxlength]="lengths.merchantCity" data-testid="merchant-city-input" />
+        </mat-form-field>
+        <mat-form-field appearance="outline" class="w-sm">
+          <mat-label>Merchant Zip</mat-label>
+          <input matInput name="merchantZip" [(ngModel)]="screen.merchantZip" [maxlength]="lengths.merchantZip" data-testid="merchant-zip-input" />
+        </mat-form-field>
+      </div>
+
+      <div class="row confirm-row">
+        <span class="confirm-label">You are about to add this transaction. Please confirm (Y/N)</span>
+        <mat-form-field appearance="outline" class="w-confirm">
+          <mat-label>Y/N</mat-label>
+          <input matInput name="confirmation" [(ngModel)]="screen.confirmation" [maxlength]="lengths.confirmation" data-testid="confirmation-input" />
+        </mat-form-field>
+      </div>
+
+      @if (message) {
+        <div
+          class="message"
+          [class.error-message]="messageSeverity === 'error'"
+          [class.success-message]="messageSeverity === 'success'"
+          role="alert"
+          data-testid="tran-add-message"
+        >
+          {{ message }}
+        </div>
+      }
+
+      <div class="actions">
+        <button mat-flat-button color="primary" type="submit" data-testid="enter-button">Enter</button>
+        <button mat-stroked-button type="button" (click)="exit()" data-testid="exit-button">Back (PF3)</button>
+        <button mat-stroked-button type="button" (click)="clear()" data-testid="clear-button">Clear (PF4)</button>
+        <button mat-stroked-button type="button" (click)="copyLast()" data-testid="copy-last-button">Copy Last-Tran (PF5)</button>
+      </div>
+      <div class="legend" data-testid="key-legend">{{ keyLegend }}</div>
+    </form>
+  </mat-card-content>
+</mat-card>

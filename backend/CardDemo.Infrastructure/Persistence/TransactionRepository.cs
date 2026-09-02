@@ -2,6 +2,7 @@ using CardDemo.Application.Common;
 using CardDemo.Application.Transactions;
 using CardDemo.Domain.Transactions;
 using Microsoft.EntityFrameworkCore;
+using Npgsql;
 
 namespace CardDemo.Infrastructure.Persistence;
 
@@ -44,4 +45,23 @@ public class TransactionRepository(CardDemoDbContext dbContext) : ITransactionRe
             .Where(t => t.CardNumber == cardNumber)
             .OrderBy(t => t.TransactionId)
             .ToListAsync(cancellationToken);
+
+    public Task<Transaction?> GetLastAsync(CancellationToken cancellationToken = default) =>
+        dbContext.Transactions.AsNoTracking()
+            .OrderByDescending(t => t.TransactionId)
+            .FirstOrDefaultAsync(cancellationToken);
+
+    public async Task AddAsync(Transaction transaction, CancellationToken cancellationToken = default)
+    {
+        dbContext.Transactions.Add(transaction);
+        try
+        {
+            await dbContext.SaveChangesAsync(cancellationToken);
+        }
+        catch (DbUpdateException ex) when (ex.InnerException is PostgresException { SqlState: PostgresErrorCodes.UniqueViolation })
+        {
+            dbContext.Entry(transaction).State = EntityState.Detached;
+            throw new DuplicateTransactionIdException(transaction.TransactionId, ex);
+        }
+    }
 }

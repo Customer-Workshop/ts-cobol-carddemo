@@ -1,0 +1,82 @@
+.tran-add-card {
+  max-width: 880px;
+  margin: 32px auto;
+}
+
+.screen-header {
+  display: flex;
+  gap: 24px;
+  width: 100%;
+  font-family: monospace;
+  font-size: 12px;
+  margin-bottom: 4px;
+}
+
+.row {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.full-width {
+  width: 100%;
+}
+
+.w-account {
+  width: 200px;
+}
+
+.w-card {
+  width: 260px;
+}
+
+.w-xs {
+  width: 140px;
+}
+
+.w-sm {
+  width: 220px;
+}
+
+.w-md {
+  width: 320px;
+}
+
+.w-confirm {
+  width: 80px;
+}
+
+.confirm-row {
+  align-items: center;
+}
+
+.confirm-label {
+  font-family: monospace;
+}
+
+.message {
+  margin-bottom: 12px;
+  font-family: monospace;
+  white-space: pre;
+}
+
+.error-message {
+  color: #b00020;
+}
+
+.success-message {
+  color: #1b5e20;
+}
+
+.actions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.legend {
+  margin-top: 12px;
+  font-family: monospace;
+  white-space: pre;
+  color: rgba(0, 0, 0, 0.6);
+}
