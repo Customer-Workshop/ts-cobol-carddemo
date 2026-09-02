@@ -1,6 +1,7 @@
 using System.Text;
 using CardDemo.Application.Accounts;
 using CardDemo.Application.Auth;
+using CardDemo.Application.BillPayment;
 using CardDemo.Application.Cards;
 using CardDemo.Application.Customers;
 using CardDemo.Application.LegacyData;
@@ -39,6 +40,9 @@ builder.Services.Configure<JwtOptions>(builder.Configuration.GetSection(JwtOptio
 builder.Services.Configure<MenuRouteRegistryOptions>(builder.Configuration.GetSection(MenuRouteRegistryOptions.SectionName));
 builder.Services.AddScoped(sp => sp.GetRequiredService<IOptions<MenuRouteRegistryOptions>>().Value);
 builder.Services.AddScoped<MenuService>();
+builder.Services.AddSingleton(TimeProvider.System);
+builder.Services.AddScoped<IBillPaymentRepository, BillPaymentRepository>();
+builder.Services.AddScoped<BillPaymentService>();
 
 var jwtOptions = builder.Configuration.GetSection(JwtOptions.SectionName).Get<JwtOptions>() ?? new JwtOptions();
 if (string.IsNullOrWhiteSpace(jwtOptions.SigningKey) || Encoding.UTF8.GetByteCount(jwtOptions.SigningKey) < 32)
