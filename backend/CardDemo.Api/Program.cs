@@ -47,6 +47,7 @@ builder.Services.AddScoped<AccountUpdateService>();
 builder.Services.AddScoped<CardListService>();
 builder.Services.AddScoped<CardViewService>();
 builder.Services.AddScoped<CardUpdateService>();
+builder.Services.AddScoped<TransactionListService>();
 
 var jwtOptions = builder.Configuration.GetSection(JwtOptions.SectionName).Get<JwtOptions>() ?? new JwtOptions();
 if (string.IsNullOrWhiteSpace(jwtOptions.SigningKey) || Encoding.UTF8.GetByteCount(jwtOptions.SigningKey) < 32)

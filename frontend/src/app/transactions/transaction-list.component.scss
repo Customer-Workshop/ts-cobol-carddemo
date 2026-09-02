@@ -1,0 +1,93 @@
+.tran-list-card {
+  max-width: 760px;
+  margin: 48px auto;
+}
+
+mat-card-subtitle {
+  display: flex;
+  justify-content: space-between;
+  font-family: monospace;
+}
+
+.mono {
+  font-family: monospace;
+}
+
+.search-field {
+  width: 260px;
+  display: block;
+}
+
+.tran-list {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: monospace;
+
+  th {
+    text-align: left;
+    font-weight: normal;
+    color: #1b5e20;
+    padding: 2px 6px;
+    border-bottom: 1px solid #ccc;
+  }
+
+  td {
+    padding: 2px 6px;
+    white-space: pre;
+    line-height: 1.8;
+  }
+
+  .sel {
+    width: 3ch;
+  }
+
+  .tran-id {
+    width: 16ch;
+  }
+
+  .date {
+    width: 8ch;
+  }
+
+  .desc {
+    width: 26ch;
+  }
+
+  .amount {
+    width: 12ch;
+    text-align: right;
+  }
+}
+
+.sel-input {
+  width: 2ch;
+  text-align: center;
+  border: 1px solid #999;
+  padding: 1px 2px;
+}
+
+.instruction {
+  margin: 12px 0 4px;
+  font-family: monospace;
+  color: #1b5e20;
+}
+
+.message {
+  margin-bottom: 12px;
+  min-height: 1.5em;
+  font-family: monospace;
+}
+
+.error-message {
+  color: #b00020;
+}
+
+.info-message {
+  color: #1b5e20;
+}
+
+.actions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
