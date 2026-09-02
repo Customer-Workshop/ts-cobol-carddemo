@@ -1,0 +1,80 @@
+<mat-card class="tran-list-card">
+  <mat-card-header>
+    <mat-card-title>{{ title }}</mat-card-title>
+    <mat-card-subtitle>
+      <span class="ids">Tran: CT00 &nbsp; Prog: COTRN00C</span>
+      <span class="page" data-testid="page-number">Page: {{ pageNumber }}</span>
+    </mat-card-subtitle>
+  </mat-card-header>
+  <mat-card-content>
+    <form (ngSubmit)="submit()">
+      <mat-form-field appearance="outline" class="search-field">
+        <mat-label>Search Tran ID</mat-label>
+        <input
+          matInput
+          name="searchTranId"
+          [(ngModel)]="searchTranId"
+          [maxlength]="tranIdLength"
+          autocomplete="off"
+          class="mono"
+          data-testid="search-input"
+        />
+      </mat-form-field>
+
+      <table class="tran-list" data-testid="tran-list">
+        <thead>
+          <tr>
+            <th class="sel">Sel</th>
+            <th class="tran-id">Transaction ID</th>
+            <th class="date">Date</th>
+            <th class="desc">Description</th>
+            <th class="amount">Amount</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (row of rows; track $index) {
+            <tr data-testid="tran-row">
+              <td class="sel">
+                <input
+                  type="text"
+                  [name]="'sel' + $index"
+                  [(ngModel)]="row.sel"
+                  maxlength="1"
+                  autocomplete="off"
+                  class="sel-input mono"
+                  [attr.aria-label]="'Select row ' + ($index + 1)"
+                  data-testid="sel-input"
+                />
+              </td>
+              <td class="tran-id mono" data-testid="row-tran-id">{{ row.tranId }}</td>
+              <td class="date mono" data-testid="row-date">{{ row.date }}</td>
+              <td class="desc mono" data-testid="row-description">{{ row.description }}</td>
+              <td class="amount mono" data-testid="row-amount">{{ row.amount }}</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+
+      <p class="instruction">Type 'S' to View Transaction details from the list</p>
+
+      @if (message) {
+        <div
+          class="message"
+          [class.error-message]="messageSeverity === 'error'"
+          [class.info-message]="messageSeverity === 'info'"
+          role="alert"
+          data-testid="tran-list-message"
+        >
+          {{ message }}
+        </div>
+      }
+
+      <div class="actions">
+        <button mat-flat-button color="primary" type="submit" data-testid="enter-button">Enter</button>
+        <button mat-stroked-button type="button" (click)="exit()" data-testid="exit-button">Exit (PF3)</button>
+        <button mat-stroked-button type="button" (click)="pageBackward()" data-testid="backward-button">Backward (PF7)</button>
+        <button mat-stroked-button type="button" (click)="pageForward()" data-testid="forward-button">Forward (PF8)</button>
+      </div>
+    </form>
+  </mat-card-content>
+</mat-card>
