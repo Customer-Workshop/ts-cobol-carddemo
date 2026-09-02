@@ -33,6 +33,12 @@ internal sealed class TransactionViewTestRepository : ITransactionRepository
     public Task<IReadOnlyList<Transaction>> ListByCardNumberAsync(string cardNumber, CancellationToken cancellationToken = default) =>
         throw new NotSupportedException();
 
+    public Task<Transaction?> GetLastAsync(CancellationToken cancellationToken = default) =>
+        throw new NotSupportedException();
+
+    public Task AddAsync(Transaction transaction, CancellationToken cancellationToken = default) =>
+        throw new NotSupportedException();
+
     public static Transaction SampleTransaction(string transactionId = "0000000000683580") =>
         new()
         {

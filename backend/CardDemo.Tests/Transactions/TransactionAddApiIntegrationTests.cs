@@ -172,7 +172,7 @@ public class TransactionAddApiIntegrationTests : IClassFixture<PostgresFixture>,
     }
 
     [Fact]
-    public async Task MainMenuOption08_StaysDisabledUntilIntegration()
+    public async Task MainMenuOption08_IsEnabledAfterIntegration()
     {
         var client = CreateClient('U');
 
@@ -181,6 +181,11 @@ public class TransactionAddApiIntegrationTests : IClassFixture<PostgresFixture>,
         var body = await response.Content.ReadFromJsonAsync<JsonElement>();
         var option08 = body.GetProperty("options").EnumerateArray().Single(o => o.GetProperty("id").GetString() == "08");
         option08.GetProperty("name").GetString().Should().Be("Transaction Add");
-        option08.GetProperty("enabled").GetBoolean().Should().BeFalse();
+        option08.GetProperty("enabled").GetBoolean().Should().BeTrue();
+
+        var select = await client.PostAsJsonAsync("/api/v1/menu/select", new { menu = "main", option = "08" });
+        var selected = await select.Content.ReadFromJsonAsync<JsonElement>();
+        selected.GetProperty("outcome").GetString().Should().Be("navigate");
+        selected.GetProperty("target").GetProperty("route").GetString().Should().Be("/transactions/add");
     }
 }

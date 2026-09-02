@@ -323,10 +323,14 @@ public class TransactionListServiceTests
     [Fact]
     public async Task Enter_SelectWithS_WhileCotrn01cDisabled_ReturnsComingSoon()
     {
-        // FR-S07-15 under seam S07-B1 (shipped registry has COTRN01C disabled)
+        // FR-S07-15 under seam S07-B1 (registry with COTRN01C disabled)
+        var registry = new MenuRouteRegistryOptions
+        {
+            Main = [new MenuRouteOption { Id = "07", Name = "Transaction View", ProgramKey = "COTRN01C", Enabled = false }]
+        };
         var state = new TransactionListState(Id(1), Id(10), 1, true);
 
-        var result = await Service(TransactionFixtures.Sequence(25)).ProcessAsync(Enter(selectionFlag: "S", selectedTranId: Id(3), state: state));
+        var result = await Service(TransactionFixtures.Sequence(25), registry).ProcessAsync(Enter(selectionFlag: "S", selectedTranId: Id(3), state: state));
 
         result.Outcome.Should().Be(TransactionListOutcome.ComingSoon);
         result.Message.Should().Be("This option Transaction View is coming soon ...");

@@ -31,7 +31,7 @@ export const routes: Routes = [
   { path: 'transactions/view', component: TransactionViewComponent, canActivate: [authGuard] },
   { path: 'transactions/add', component: TranAddComponent, canActivate: [authGuard] },
   { path: 'bill-payment', component: BillPaymentComponent, canActivate: [authGuard] },
-  // S-12 User Admin (CU00..CU03); admin-only like the COADM01C-reachable source programs.,
+  // S-12 User Admin (CU00..CU03); admin-only like the COADM01C-reachable source programs.
   { path: 'admin/users', component: UserListComponent, canActivate: [adminGuard] },
   { path: 'admin/users/add', component: UserAddComponent, canActivate: [adminGuard] },
   { path: 'admin/users/update', component: UserUpdateComponent, canActivate: [adminGuard] },

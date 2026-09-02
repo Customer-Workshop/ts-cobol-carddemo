@@ -56,8 +56,8 @@ export class CardUpdateComponent implements OnInit {
 
   ngOnInit(): void {
     const params = this.route.snapshot.queryParamMap;
-    const acctId = params.get('acctId');
-    const cardNum = params.get('cardNum');
+    const acctId = params.get('accountId') ?? params.get('acctId');
+    const cardNum = params.get('cardNumber') ?? params.get('cardNum');
     if (acctId && cardNum) {
       this.accountId = acctId;
       this.cardNumber = cardNum;

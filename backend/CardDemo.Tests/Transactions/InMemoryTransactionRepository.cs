@@ -41,6 +41,12 @@ public sealed class InMemoryTransactionRepository(IEnumerable<Transaction> trans
 
     public Task<IReadOnlyList<Transaction>> ListByCardNumberAsync(string cardNumber, CancellationToken cancellationToken = default) =>
         Task.FromResult<IReadOnlyList<Transaction>>(_records.Where(t => t.CardNumber == cardNumber).ToList());
+
+    public Task<Transaction?> GetLastAsync(CancellationToken cancellationToken = default) =>
+        throw new NotSupportedException();
+
+    public Task AddAsync(Transaction transaction, CancellationToken cancellationToken = default) =>
+        throw new NotSupportedException();
 }
 
 /// <summary>RESP other than NORMAL/NOTFND/ENDFILE on every browse call (FR-S07-20).</summary>
@@ -53,6 +59,10 @@ public sealed class FailingTransactionRepository : ITransactionRepository
     public Task<IReadOnlyList<Transaction>> BrowseBackwardAsync(string beforeTransactionId, int pageSize, CancellationToken cancellationToken = default) => throw new InvalidOperationException("TRANSACT unavailable");
 
     public Task<IReadOnlyList<Transaction>> ListByCardNumberAsync(string cardNumber, CancellationToken cancellationToken = default) => throw new InvalidOperationException("TRANSACT unavailable");
+
+    public Task<Transaction?> GetLastAsync(CancellationToken cancellationToken = default) => throw new InvalidOperationException("TRANSACT unavailable");
+
+    public Task AddAsync(Transaction transaction, CancellationToken cancellationToken = default) => throw new InvalidOperationException("TRANSACT unavailable");
 }
 
 public static class TransactionFixtures

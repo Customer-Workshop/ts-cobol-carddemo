@@ -153,9 +153,7 @@ public class CardsApiIntegrationTests(PostgresFixture fixture, WebApplicationFac
             state = first.State,
             selections = new[] { "S", null, null, null, null, null, null }
         });
-        select.Outcome.Should().Be("comingSoon", "COCRDSLC stays disabled in the shipped route registry");
-        select.Message.Should().Be("This option Credit Card View is coming soon ...");
-        select.Severity.Should().Be("info");
-        select.Target.Should().BeEquivalentTo(new TargetPayload("COCRDSLC", string.Empty, first.Rows[0].AccountId, first.Rows[0].CardNumber));
+        select.Outcome.Should().Be("navigate", "COCRDSLC is enabled in the shipped route registry after Batch A");
+        select.Target.Should().BeEquivalentTo(new TargetPayload("COCRDSLC", "/cards/view", first.Rows[0].AccountId, first.Rows[0].CardNumber));
     }
 }

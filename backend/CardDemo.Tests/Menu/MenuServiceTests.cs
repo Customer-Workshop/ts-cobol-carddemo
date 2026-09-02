@@ -126,21 +126,35 @@ public class MenuServiceTests
     [Fact]
     public void DisabledUnmigratedOption_YieldsComingSoonMessage()
     {
-        // FR-S01-15 (DUMMY idiom generalized to unmigrated targets, seam S01-B1)
-        var result = _service.Select(MenuKind.Main, 'U', "1");
+        // FR-S01-15 (DUMMY idiom generalized to unmigrated targets, seam S01-B1); CORPT00C is still off-stream
+        var result = _service.Select(MenuKind.Main, 'U', "9");
 
         result.Outcome.Should().Be(MenuSelectOutcome.ComingSoon);
-        result.Message.Should().Be("This option Account View is coming soon ...");
+        result.Message.Should().Be("This option Transaction Reports is coming soon ...");
         result.Severity.Should().Be(MenuMessageSeverity.Info);
     }
 
     [Fact]
     public void DisabledAdminOption_YieldsComingSoonMessage()
     {
-        var result = _service.Select(MenuKind.Admin, 'A', "1");
+        var result = _service.Select(MenuKind.Admin, 'A', "5");
 
         result.Outcome.Should().Be(MenuSelectOutcome.ComingSoon);
-        result.Message.Should().Be("This option User List (Security) is coming soon ...");
+        result.Message.Should().Be("This option Transaction Type List/Update (Db2) is coming soon ...");
+    }
+
+    [Theory]
+    [InlineData(MenuKind.Main, 'U', "1", "01", "Account View", "COACTVWC", "/accounts/view")]
+    [InlineData(MenuKind.Main, 'U', "3", "03", "Credit Card List", "COCRDLIC", "/cards/list")]
+    [InlineData(MenuKind.Main, 'U', "10", "10", "Bill Payment", "COBIL00C", "/bill-payment")]
+    [InlineData(MenuKind.Admin, 'A', "1", "01", "User List (Security)", "COUSR00C", "/admin/users")]
+    public void ShippedRegistry_MigratedOption_NavigatesToItsRoute(MenuKind kind, char userType, string option, string id, string name, string programKey, string route)
+    {
+        // FR-S01-13/19 over the shipped registry after Batch A
+        var result = _service.Select(kind, userType, option);
+
+        result.Outcome.Should().Be(MenuSelectOutcome.Navigate);
+        result.Target.Should().Be(new MenuNavigationTarget(id, name, programKey, route));
     }
 
     [Fact]
@@ -166,7 +180,7 @@ public class MenuServiceTests
     [Fact]
     public void OptionInput_IsTrimmedLikeTheBmsRightJustifiedField()
     {
-        var result = _service.Select(MenuKind.Main, 'U', " 1 ");
+        var result = _service.Select(MenuKind.Main, 'U', " 9 ");
 
         result.Outcome.Should().Be(MenuSelectOutcome.ComingSoon);
     }

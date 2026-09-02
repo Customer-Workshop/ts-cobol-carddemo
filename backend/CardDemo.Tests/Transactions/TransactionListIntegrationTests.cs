@@ -248,9 +248,9 @@ public class TransactionListIntegrationTests(PostgresFixture fixture) : IClassFi
     }
 
     [Fact]
-    public async Task Api_SelectRow_WhileCotrn01cDisabled_ReturnsComingSoon()
+    public async Task Api_SelectRow_NavigatesToTransactionView()
     {
-        // FR-S07-15 / S07-B1 over HTTP
+        // FR-S07-15 / S07-B1 over HTTP (COTRN01C enabled by Batch A)
         await EnsureSeededAsync();
         using var factory = CreateFactory();
         var client = CreateClient(factory, authenticated: true);
@@ -264,8 +264,9 @@ public class TransactionListIntegrationTests(PostgresFixture fixture) : IClassFi
 
         response.StatusCode.Should().Be(HttpStatusCode.OK);
         using var body = JsonDocument.Parse(await response.Content.ReadAsStringAsync());
-        body.RootElement.GetProperty("outcome").GetString().Should().Be("comingSoon");
-        body.RootElement.GetProperty("message").GetString().Should().Be("This option Transaction View is coming soon ...");
+        body.RootElement.GetProperty("outcome").GetString().Should().Be("navigate");
+        body.RootElement.GetProperty("target").GetProperty("programKey").GetString().Should().Be("COTRN01C");
+        body.RootElement.GetProperty("target").GetProperty("route").GetString().Should().Be("/transactions/view");
         body.RootElement.GetProperty("selectedTranId").GetString().Should().Be(Id(3));
     }
 
