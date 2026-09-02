@@ -1,0 +1,72 @@
+.card-update-card {
+  max-width: 720px;
+  margin: 48px auto;
+}
+
+fieldset {
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  border-radius: 4px;
+  margin: 0 0 16px;
+  padding: 8px 16px 0;
+
+  legend {
+    padding: 0 6px;
+    font-size: 0.85rem;
+    color: rgba(0, 0, 0, 0.6);
+  }
+}
+
+.search-keys,
+.expiry-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+}
+
+.account-field {
+  width: 200px;
+}
+
+.card-field {
+  width: 260px;
+}
+
+.name-field {
+  width: 100%;
+}
+
+.status-field,
+.expiry-field {
+  width: 96px;
+}
+
+.expiry-year-field {
+  width: 120px;
+}
+
+.expiry-label {
+  min-width: 96px;
+  padding-bottom: 20px;
+}
+
+input.field-error {
+  color: #b00020;
+}
+
+.info-message {
+  color: #1b5e20;
+  margin-bottom: 8px;
+  min-height: 1.4em;
+}
+
+.error-message {
+  color: #b00020;
+  margin-bottom: 12px;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}

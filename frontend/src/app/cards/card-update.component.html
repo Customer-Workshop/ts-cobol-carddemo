@@ -1,0 +1,116 @@
+<mat-card class="card-update-card">
+  <mat-card-header>
+    <mat-card-title>{{ title }}</mat-card-title>
+    <mat-card-subtitle>Transaction CCUP</mat-card-subtitle>
+  </mat-card-header>
+  <mat-card-content>
+    <form (ngSubmit)="submit()">
+      <fieldset class="search-keys">
+        <legend>Enter Acct/Card and press ENTER</legend>
+        <mat-form-field appearance="outline" class="account-field">
+          <mat-label>Account Number</mat-label>
+          <input
+            matInput
+            name="accountId"
+            [(ngModel)]="accountId"
+            maxlength="11"
+            [readonly]="!searchEditable"
+            [class.field-error]="isInError('accountId')"
+            data-field="accountId"
+            data-testid="account-input"
+          />
+        </mat-form-field>
+        <mat-form-field appearance="outline" class="card-field">
+          <mat-label>Card Number</mat-label>
+          <input
+            matInput
+            name="cardNumber"
+            [(ngModel)]="cardNumber"
+            maxlength="16"
+            [readonly]="!searchEditable"
+            [class.field-error]="isInError('cardNumber')"
+            data-field="cardNumber"
+            data-testid="card-input"
+          />
+        </mat-form-field>
+      </fieldset>
+
+      <fieldset class="card-details">
+        <legend>Card details</legend>
+        <mat-form-field appearance="outline" class="name-field">
+          <mat-label>Name on card</mat-label>
+          <input
+            matInput
+            name="embossedName"
+            [(ngModel)]="embossedName"
+            maxlength="50"
+            [readonly]="!detailsEditable"
+            [class.field-error]="isInError('embossedName')"
+            data-field="embossedName"
+            data-testid="name-input"
+          />
+        </mat-form-field>
+        <mat-form-field appearance="outline" class="status-field">
+          <mat-label>Card Active Y/N</mat-label>
+          <input
+            matInput
+            name="activeStatus"
+            [(ngModel)]="activeStatus"
+            maxlength="1"
+            [readonly]="!detailsEditable"
+            [class.field-error]="isInError('activeStatus')"
+            data-field="activeStatus"
+            data-testid="status-input"
+          />
+        </mat-form-field>
+        <div class="expiry-row">
+          <span class="expiry-label">Expiry Date</span>
+          <mat-form-field appearance="outline" class="expiry-field">
+            <mat-label>MM</mat-label>
+            <input
+              matInput
+              name="expiryMonth"
+              [(ngModel)]="expiryMonth"
+              maxlength="2"
+              [readonly]="!detailsEditable"
+              [class.field-error]="isInError('expiryMonth')"
+              data-field="expiryMonth"
+              data-testid="month-input"
+            />
+          </mat-form-field>
+          <mat-form-field appearance="outline" class="expiry-year-field">
+            <mat-label>YYYY</mat-label>
+            <input
+              matInput
+              name="expiryYear"
+              [(ngModel)]="expiryYear"
+              maxlength="4"
+              [readonly]="!detailsEditable"
+              [class.field-error]="isInError('expiryYear')"
+              data-field="expiryYear"
+              data-testid="year-input"
+            />
+          </mat-form-field>
+          <mat-form-field appearance="outline" class="expiry-field">
+            <mat-label>DD</mat-label>
+            <input matInput name="expiryDay" [ngModel]="expiryDay" maxlength="2" readonly data-testid="day-input" />
+          </mat-form-field>
+        </div>
+      </fieldset>
+
+      <div class="info-message" data-testid="info-message">{{ infoMessage }}</div>
+      @if (errorMessage) {
+        <div class="error-message" role="alert" data-testid="error-message">{{ errorMessage }}</div>
+      }
+
+      <div class="actions">
+        <button mat-flat-button color="primary" type="submit" data-testid="enter-button">Enter</button>
+        <button mat-stroked-button type="button" (click)="exit()" data-testid="exit-button">Exit (PF3)</button>
+        @if (confirmKeysVisible) {
+          <button mat-flat-button color="accent" type="button" (click)="save()" data-testid="save-button">Save (F5)</button>
+          <button mat-stroked-button type="button" (click)="cancel()" data-testid="cancel-button">Cancel (F12)</button>
+        }
+      </div>
+    </form>
+  </mat-card-content>
+</mat-card>

@@ -32,4 +32,27 @@ public class CardRepository(CardDemoDbContext dbContext) : ICardRepository
         var rows = await query.OrderBy(c => c.CardNumber).Take(pageSize + 1).ToListAsync(cancellationToken);
         return new KeyedPage<Card>(rows.Take(pageSize).ToList(), rows.Count > pageSize);
     }
+
+    public async Task<CardRewriteOutcome> RewriteAsync(
+        string cardNumber,
+        Func<Card, bool> rewrite,
+        CancellationToken cancellationToken = default)
+    {
+        await using var transaction = await dbContext.Database.BeginTransactionAsync(cancellationToken);
+        var card = await dbContext.Cards
+            .FromSqlInterpolated($"SELECT * FROM cards WHERE card_num = {cardNumber} FOR UPDATE")
+            .SingleOrDefaultAsync(cancellationToken);
+        if (card is null)
+        {
+            return CardRewriteOutcome.NotFound;
+        }
+        if (!rewrite(card))
+        {
+            await transaction.RollbackAsync(cancellationToken);
+            return CardRewriteOutcome.Skipped;
+        }
+        await dbContext.SaveChangesAsync(cancellationToken);
+        await transaction.CommitAsync(cancellationToken);
+        return CardRewriteOutcome.Rewritten;
+    }
 }
