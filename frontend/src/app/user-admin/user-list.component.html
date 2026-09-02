@@ -1,0 +1,55 @@
+<mat-card class="screen-card">
+  <mat-card-header>
+    <mat-card-title>List Users</mat-card-title>
+    <mat-card-subtitle>Type a User ID to search, or U (update) / D (delete) next to a row, then press ENTER</mat-card-subtitle>
+  </mat-card-header>
+  <mat-card-content>
+    <form (ngSubmit)="submit()">
+      <mat-form-field appearance="outline" class="field-8">
+        <mat-label>Search User ID</mat-label>
+        <input matInput name="searchUserId" [(ngModel)]="searchUserId" [maxlength]="lenUserId" data-testid="search-input" data-field="userId" />
+      </mat-form-field>
+      <div class="page-info" data-testid="page-number">Page: {{ pageNum }}</div>
+      <table class="user-table" data-testid="user-table">
+        <thead>
+          <tr>
+            <th>Sel</th>
+            <th>User ID</th>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Type</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (row of rows; track row.userId; let i = $index) {
+            <tr data-testid="user-row">
+              <td>
+                <input
+                  type="text"
+                  [name]="'sel' + i"
+                  [(ngModel)]="row.select"
+                  [maxlength]="lenSelect"
+                  [attr.aria-label]="'Select ' + row.userId"
+                  data-testid="select-input"
+                />
+              </td>
+              <td data-testid="row-user-id">{{ row.userId }}</td>
+              <td data-testid="row-first-name">{{ row.firstName }}</td>
+              <td data-testid="row-last-name">{{ row.lastName }}</td>
+              <td data-testid="row-user-type">{{ row.userType }}</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+      <div class="message" [ngClass]="severityClass(messageSeverity)" role="alert" data-testid="screen-message">
+        {{ message | slice: 0 : lenMessage }}
+      </div>
+      <div class="actions">
+        <button mat-flat-button color="primary" type="submit" data-testid="enter-button">Enter</button>
+        <button mat-stroked-button type="button" (click)="exit()" data-testid="exit-button">Exit (PF3)</button>
+        <button mat-stroked-button type="button" (click)="pageBackward()" data-testid="backward-button">Backward (PF7)</button>
+        <button mat-stroked-button type="button" (click)="pageForward()" data-testid="forward-button">Forward (PF8)</button>
+      </div>
+    </form>
+  </mat-card-content>
+</mat-card>

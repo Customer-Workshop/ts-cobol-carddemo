@@ -1,0 +1,47 @@
+<mat-card class="screen-card">
+  <mat-card-header>
+    <mat-card-title>Update User</mat-card-title>
+    <mat-card-subtitle>Type a User ID and press ENTER to fetch; change the details and press F5 to save</mat-card-subtitle>
+  </mat-card-header>
+  <mat-card-content>
+    <form (ngSubmit)="fetch()">
+      <div class="field-row">
+        <mat-form-field appearance="outline" class="field-8">
+          <mat-label>User ID</mat-label>
+          <input matInput name="userId" [(ngModel)]="userId" [maxlength]="lenUserId" autocomplete="off" data-testid="user-id-input" data-field="userId" />
+        </mat-form-field>
+      </div>
+      <div class="field-row">
+        <mat-form-field appearance="outline" class="field-20">
+          <mat-label>First Name</mat-label>
+          <input matInput name="firstName" [(ngModel)]="firstName" [maxlength]="lenName" data-testid="first-name-input" data-field="firstName" />
+        </mat-form-field>
+        <mat-form-field appearance="outline" class="field-20">
+          <mat-label>Last Name</mat-label>
+          <input matInput name="lastName" [(ngModel)]="lastName" [maxlength]="lenName" data-testid="last-name-input" data-field="lastName" />
+        </mat-form-field>
+      </div>
+      <div class="field-row">
+        <mat-form-field appearance="outline" class="field-8">
+          <mat-label>Password</mat-label>
+          <input matInput type="password" name="password" [(ngModel)]="password" [maxlength]="lenPassword" autocomplete="new-password" data-testid="password-input" data-field="password" />
+        </mat-form-field>
+        <mat-form-field appearance="outline" class="field-1">
+          <mat-label>User Type</mat-label>
+          <input matInput name="userType" [(ngModel)]="userType" [maxlength]="lenUserType" data-testid="user-type-input" data-field="userType" />
+          <mat-hint>A=Admin, U=User</mat-hint>
+        </mat-form-field>
+      </div>
+      <div class="message" [ngClass]="severityClass(messageSeverity)" role="alert" data-testid="screen-message">
+        {{ message | slice: 0 : lenMessage }}
+      </div>
+      <div class="actions">
+        <button mat-flat-button color="primary" type="submit" data-testid="enter-button">Enter (Fetch)</button>
+        <button mat-stroked-button type="button" (click)="saveAndExit()" data-testid="exit-button">Save &amp; Exit (PF3)</button>
+        <button mat-stroked-button type="button" (click)="clear()" data-testid="clear-button">Clear (PF4)</button>
+        <button mat-stroked-button type="button" (click)="save()" data-testid="save-button">Save (PF5)</button>
+        <button mat-stroked-button type="button" (click)="cancel()" data-testid="cancel-button">Cancel (PF12)</button>
+      </div>
+    </form>
+  </mat-card-content>
+</mat-card>
