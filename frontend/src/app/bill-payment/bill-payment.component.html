@@ -1,0 +1,62 @@
+<mat-card class="bill-payment-card">
+  <mat-card-header>
+    <div class="screen-header" data-testid="screen-header">
+      <span>Tran: {{ transactionName }}</span>
+      <span>Prog: {{ programName }}</span>
+    </div>
+    <mat-card-title>{{ title }}</mat-card-title>
+    <mat-card-subtitle>Enter Acct ID, press ENTER; confirm with Y to pay the full balance</mat-card-subtitle>
+  </mat-card-header>
+  <mat-card-content>
+    <form (ngSubmit)="submit()">
+      <mat-form-field appearance="outline" class="account-field">
+        <mat-label>Enter Acct ID</mat-label>
+        <input
+          #accountIdInput
+          matInput
+          name="accountId"
+          [(ngModel)]="accountId"
+          maxlength="11"
+          autocomplete="off"
+          data-testid="account-id-input"
+        />
+      </mat-form-field>
+
+      <div class="balance-row">
+        <span class="balance-label">Your current balance is:</span>
+        <output class="balance-value" data-testid="current-balance">{{ currentBalance }}</output>
+      </div>
+
+      <mat-form-field appearance="outline" class="confirm-field">
+        <mat-label>Do you want to pay your balance now? Confirm (Y/N)</mat-label>
+        <input
+          #confirmInput
+          matInput
+          name="confirm"
+          [(ngModel)]="confirm"
+          maxlength="1"
+          autocomplete="off"
+          data-testid="confirm-input"
+        />
+      </mat-form-field>
+
+      @if (message) {
+        <div
+          class="message"
+          [class.error-message]="messageSeverity === 'error'"
+          [class.success-message]="messageSeverity === 'success'"
+          role="alert"
+          data-testid="bill-payment-message"
+        >
+          {{ message }}
+        </div>
+      }
+
+      <div class="actions">
+        <button mat-flat-button color="primary" type="submit" data-testid="enter-button">Enter</button>
+        <button mat-stroked-button type="button" (click)="back()" data-testid="back-button">Back (PF3)</button>
+        <button mat-stroked-button type="button" (click)="clear()" data-testid="clear-button">Clear (PF4)</button>
+      </div>
+    </form>
+  </mat-card-content>
+</mat-card>

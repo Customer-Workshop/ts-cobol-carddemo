@@ -2,6 +2,7 @@ using System.Text;
 using CardDemo.Application.AccountUpdate;
 using CardDemo.Application.Accounts;
 using CardDemo.Application.Auth;
+using CardDemo.Application.BillPayment;
 using CardDemo.Application.Cards;
 using CardDemo.Application.Customers;
 using CardDemo.Application.LegacyData;
@@ -52,6 +53,8 @@ builder.Services.AddScoped<CardUpdateService>();
 builder.Services.AddScoped<TransactionListService>();
 builder.Services.AddSingleton<DateValidationService>();
 builder.Services.AddScoped<TransactionAddService>();
+builder.Services.AddScoped<IBillPaymentRepository, BillPaymentRepository>();
+builder.Services.AddScoped<BillPaymentService>();
 
 var jwtOptions = builder.Configuration.GetSection(JwtOptions.SectionName).Get<JwtOptions>() ?? new JwtOptions();
 if (string.IsNullOrWhiteSpace(jwtOptions.SigningKey) || Encoding.UTF8.GetByteCount(jwtOptions.SigningKey) < 32)
