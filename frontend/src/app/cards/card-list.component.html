@@ -1,0 +1,87 @@
+<mat-card class="card-list-card">
+  <mat-card-header>
+    <div class="screen-header">
+      <span data-testid="tran">Tran: {{ transaction }}</span>
+      <mat-card-title>{{ title }}</mat-card-title>
+      <span data-testid="prog">Prog: {{ program }}</span>
+    </div>
+  </mat-card-header>
+  <mat-card-content>
+    <div class="page-number" data-testid="page-number">Page {{ screenNumber }}</div>
+    <form (ngSubmit)="submit()">
+      <div class="filters">
+        <mat-form-field appearance="outline" class="account-field">
+          <mat-label>Account Number</mat-label>
+          <input
+            matInput
+            #accountInput
+            name="accountFilter"
+            [(ngModel)]="accountFilter"
+            [maxlength]="accountFilterLength"
+            [class.field-error]="accountFilterError"
+            data-testid="account-filter"
+          />
+        </mat-form-field>
+        <mat-form-field appearance="outline" class="card-field">
+          <mat-label>Credit Card Number</mat-label>
+          <input
+            matInput
+            #cardInput
+            name="cardFilter"
+            [(ngModel)]="cardFilter"
+            [maxlength]="cardFilterLength"
+            [class.field-error]="cardFilterError"
+            data-testid="card-filter"
+          />
+        </mat-form-field>
+      </div>
+
+      <table class="card-rows" data-testid="card-rows">
+        <thead>
+          <tr>
+            <th class="select-col">Select</th>
+            <th class="account-col">Account Number</th>
+            <th class="card-col">Card Number</th>
+            <th class="active-col">Active</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (row of rows; track $index) {
+            <tr data-testid="card-row" [class.row-error]="row.selectionError">
+              <td class="select-col">
+                <input
+                  #selectInput
+                  class="select-input"
+                  [class.field-error]="row.selectionError"
+                  [name]="'select' + ($index + 1)"
+                  [(ngModel)]="selections[$index]"
+                  maxlength="1"
+                  [disabled]="row.selectionProtected"
+                  [attr.data-testid]="'select-' + ($index + 1)"
+                />
+              </td>
+              <td class="account-col" [attr.data-testid]="'account-' + ($index + 1)">{{ row.accountId }}</td>
+              <td class="card-col" [attr.data-testid]="'card-' + ($index + 1)">{{ row.cardNumber }}</td>
+              <td class="active-col" [attr.data-testid]="'active-' + ($index + 1)">{{ row.activeStatus }}</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+
+      <div class="info-message" role="status" data-testid="info-message">{{ infoMessage }}</div>
+      <div class="error-message" role="alert" data-testid="error-message">{{ errorMessage }}</div>
+
+      <div class="actions">
+        <button mat-flat-button color="primary" type="submit" [disabled]="busy" data-testid="enter-button">Enter</button>
+        <button mat-stroked-button type="button" (click)="exit()" [disabled]="busy" data-testid="exit-button">Exit (F3)</button>
+        <button mat-stroked-button type="button" (click)="backward()" [disabled]="busy" data-testid="backward-button">
+          Backward (F7)
+        </button>
+        <button mat-stroked-button type="button" (click)="forward()" [disabled]="busy" data-testid="forward-button">
+          Forward (F8)
+        </button>
+      </div>
+      <div class="footer" data-testid="footer">{{ footer }}</div>
+    </form>
+  </mat-card-content>
+</mat-card>

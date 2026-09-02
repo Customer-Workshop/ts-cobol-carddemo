@@ -1,0 +1,102 @@
+.card-list-card {
+  max-width: 720px;
+  margin: 48px auto;
+  font-family: monospace;
+}
+
+.screen-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  width: 100%;
+  gap: 16px;
+}
+
+.page-number {
+  text-align: right;
+  margin-bottom: 8px;
+}
+
+.filters {
+  display: flex;
+  gap: 16px;
+}
+
+.account-field {
+  width: 200px;
+}
+
+.card-field {
+  width: 260px;
+}
+
+.card-rows {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 12px;
+
+  th,
+  td {
+    text-align: left;
+    padding: 2px 8px;
+    font-family: monospace;
+  }
+
+  th {
+    border-bottom: 1px solid #9e9e9e;
+  }
+
+  tbody tr {
+    height: 28px;
+  }
+}
+
+.select-col {
+  width: 64px;
+}
+
+.account-col {
+  width: 140px;
+}
+
+.card-col {
+  width: 200px;
+}
+
+.active-col {
+  width: 64px;
+}
+
+.select-input {
+  width: 1.5em;
+  font-family: monospace;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.field-error {
+  color: #b00020;
+  border-color: #b00020;
+}
+
+.info-message {
+  min-height: 1.5em;
+  color: #1b5e20;
+}
+
+.error-message {
+  min-height: 1.5em;
+  margin-bottom: 12px;
+  color: #b00020;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.footer {
+  margin-top: 12px;
+  color: #616161;
+}

@@ -32,4 +32,53 @@ public class CardRepository(CardDemoDbContext dbContext) : ICardRepository
         var rows = await query.OrderBy(c => c.CardNumber).Take(pageSize + 1).ToListAsync(cancellationToken);
         return new KeyedPage<Card>(rows.Take(pageSize).ToList(), rows.Count > pageSize);
     }
+
+    public async Task<IReadOnlyList<Card>> BrowseForwardAsync(
+        string startCardNumber,
+        int maxRows,
+        string? accountIdFilter,
+        string? cardNumberFilter,
+        CancellationToken cancellationToken = default)
+    {
+        ArgumentOutOfRangeException.ThrowIfNegativeOrZero(maxRows);
+        var query = ApplyFilters(
+            dbContext.Cards.AsNoTracking().Where(c => c.CardNumber.CompareTo(startCardNumber) >= 0),
+            accountIdFilter,
+            cardNumberFilter);
+        return await query.OrderBy(c => c.CardNumber).Take(maxRows).ToListAsync(cancellationToken);
+    }
+
+    public async Task<IReadOnlyList<Card>> BrowseBackwardAsync(
+        string beforeCardNumber,
+        int maxRows,
+        string? accountIdFilter,
+        string? cardNumberFilter,
+        CancellationToken cancellationToken = default)
+    {
+        ArgumentOutOfRangeException.ThrowIfNegativeOrZero(maxRows);
+        var query = ApplyFilters(
+            dbContext.Cards.AsNoTracking().Where(c => c.CardNumber.CompareTo(beforeCardNumber) < 0),
+            accountIdFilter,
+            cardNumberFilter);
+        return await query.OrderByDescending(c => c.CardNumber).Take(maxRows).ToListAsync(cancellationToken);
+    }
+
+    public Task<Card?> ReadNextAsync(string afterCardNumber, CancellationToken cancellationToken = default) =>
+        dbContext.Cards.AsNoTracking()
+            .Where(c => c.CardNumber.CompareTo(afterCardNumber) > 0)
+            .OrderBy(c => c.CardNumber)
+            .FirstOrDefaultAsync(cancellationToken);
+
+    private static IQueryable<Card> ApplyFilters(IQueryable<Card> query, string? accountIdFilter, string? cardNumberFilter)
+    {
+        if (!string.IsNullOrEmpty(accountIdFilter))
+        {
+            query = query.Where(c => c.AccountId == accountIdFilter);
+        }
+        if (!string.IsNullOrEmpty(cardNumberFilter))
+        {
+            query = query.Where(c => c.CardNumber == cardNumberFilter);
+        }
+        return query;
+    }
 }
