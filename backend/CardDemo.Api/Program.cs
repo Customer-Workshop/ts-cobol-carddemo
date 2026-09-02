@@ -1,4 +1,5 @@
 using System.Text;
+using CardDemo.Application.AccountUpdate;
 using CardDemo.Application.Accounts;
 using CardDemo.Application.Auth;
 using CardDemo.Application.Cards;
@@ -40,6 +41,9 @@ builder.Services.Configure<MenuRouteRegistryOptions>(builder.Configuration.GetSe
 builder.Services.AddScoped(sp => sp.GetRequiredService<IOptions<MenuRouteRegistryOptions>>().Value);
 builder.Services.AddScoped<MenuService>();
 builder.Services.AddScoped<AccountViewService>();
+builder.Services.AddSingleton(TimeProvider.System);
+builder.Services.AddScoped<IAccountUpdateWriter, AccountUpdateWriter>();
+builder.Services.AddScoped<AccountUpdateService>();
 
 var jwtOptions = builder.Configuration.GetSection(JwtOptions.SectionName).Get<JwtOptions>() ?? new JwtOptions();
 if (string.IsNullOrWhiteSpace(jwtOptions.SigningKey) || Encoding.UTF8.GetByteCount(jwtOptions.SigningKey) < 32)
