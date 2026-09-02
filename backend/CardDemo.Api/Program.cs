@@ -34,6 +34,7 @@ builder.Services.AddScoped<ITransactionRepository, TransactionRepository>();
 builder.Services.AddScoped<ILegacyDataWriter, LegacyDataWriter>();
 builder.Services.AddScoped<LegacyDataImportService>();
 builder.Services.AddScoped<SignInService>();
+builder.Services.AddScoped<TransactionViewService>();
 builder.Services.AddSingleton<IJwtTokenIssuer, JwtTokenIssuer>();
 builder.Services.Configure<JwtOptions>(builder.Configuration.GetSection(JwtOptions.SectionName));
 builder.Services.Configure<MenuRouteRegistryOptions>(builder.Configuration.GetSection(MenuRouteRegistryOptions.SectionName));

@@ -1,0 +1,54 @@
+.tran-view-card {
+  max-width: 720px;
+  margin: 48px auto;
+}
+
+.tran-id-field {
+  width: 260px;
+  display: block;
+}
+
+.detail-fields {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  column-gap: 16px;
+  row-gap: 4px;
+  margin: 0 0 16px;
+  font-family: monospace;
+
+  dt {
+    color: #006064;
+  }
+
+  dd {
+    margin: 0;
+    min-height: 1.2em;
+    white-space: pre;
+  }
+}
+
+.message {
+  margin-bottom: 12px;
+  font-family: monospace;
+}
+
+.error-message {
+  color: #b00020;
+}
+
+.info-message {
+  color: #1b5e20;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.footer {
+  margin-top: 16px;
+  font-family: monospace;
+  color: #8a6d00;
+  white-space: pre;
+}

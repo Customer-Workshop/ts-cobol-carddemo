@@ -1,0 +1,49 @@
+<mat-card class="tran-view-card">
+  <mat-card-header>
+    <mat-card-title data-testid="screen-title">{{ title }}</mat-card-title>
+    <mat-card-subtitle data-testid="screen-header">Tran: {{ transactionCode }} &nbsp; Prog: {{ programName }}</mat-card-subtitle>
+  </mat-card-header>
+  <mat-card-content>
+    <form (ngSubmit)="submit()">
+      <mat-form-field appearance="outline" class="tran-id-field">
+        <mat-label>Enter Tran ID:</mat-label>
+        <input
+          #tranIdInput
+          matInput
+          name="tranId"
+          [(ngModel)]="tranId"
+          maxlength="16"
+          autocomplete="off"
+          data-testid="tran-id-input"
+        />
+      </mat-form-field>
+
+      <dl class="detail-fields" data-testid="detail-fields">
+        @for (field of fields; track field.key) {
+          <dt>{{ field.label }}</dt>
+          <dd [attr.data-testid]="'field-' + field.key" [style.min-width.ch]="field.length">{{ detail[field.key] }}</dd>
+        }
+      </dl>
+
+      @if (message) {
+        <div
+          class="message"
+          [class.error-message]="messageSeverity === 'error'"
+          [class.info-message]="messageSeverity === 'info'"
+          role="alert"
+          data-testid="tran-view-message"
+        >
+          {{ message }}
+        </div>
+      }
+
+      <div class="actions">
+        <button mat-flat-button color="primary" type="submit" data-testid="fetch-button">Enter</button>
+        <button mat-stroked-button type="button" (click)="back()" data-testid="back-button">Back (PF3)</button>
+        <button mat-stroked-button type="button" (click)="clear()" data-testid="clear-button">Clear (PF4)</button>
+        <button mat-stroked-button type="button" (click)="browseTransactions()" data-testid="browse-button">Browse Tran. (PF5)</button>
+      </div>
+      <div class="footer" data-testid="screen-footer">{{ footer }}</div>
+    </form>
+  </mat-card-content>
+</mat-card>
