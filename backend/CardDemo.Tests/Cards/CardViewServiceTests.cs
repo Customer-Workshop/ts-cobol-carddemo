@@ -37,6 +37,18 @@ public class CardViewServiceTests
 
         public Task<KeyedPage<Card>> BrowseAsync(string startCardNumber, int pageSize, string? accountIdFilter = null, CancellationToken cancellationToken = default) =>
             throw new NotSupportedException();
+
+        public Task<IReadOnlyList<Card>> BrowseForwardAsync(string startCardNumber, int maxRows, string? accountIdFilter, string? cardNumberFilter, CancellationToken cancellationToken = default) =>
+            throw new NotSupportedException();
+
+        public Task<IReadOnlyList<Card>> BrowseBackwardAsync(string beforeCardNumber, int maxRows, string? accountIdFilter, string? cardNumberFilter, CancellationToken cancellationToken = default) =>
+            throw new NotSupportedException();
+
+        public Task<Card?> ReadNextAsync(string afterCardNumber, CancellationToken cancellationToken = default) =>
+            throw new NotSupportedException();
+
+        public Task<CardRewriteOutcome> RewriteAsync(string cardNumber, Func<Card, bool> rewrite, CancellationToken cancellationToken = default) =>
+            throw new NotSupportedException();
     }
 
     private readonly InMemoryCardRepository _repository = new();

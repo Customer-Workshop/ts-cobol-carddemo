@@ -6,6 +6,7 @@ import { AccountViewComponent } from './account-view/account-view.component';
 import { AccountUpdateComponent } from './account-update/account-update.component';
 import { CardListComponent } from './cards/card-list.component';
 import { CardViewComponent } from './cards/card-view.component';
+import { CardUpdateComponent } from './cards/card-update.component';
 import { adminGuard, authGuard } from './auth/auth.guard';
 
 export const routes: Routes = [
@@ -16,5 +17,6 @@ export const routes: Routes = [
   { path: 'accounts/view', component: AccountViewComponent, canActivate: [authGuard] },
   { path: 'account-update', component: AccountUpdateComponent, canActivate: [authGuard] },
   { path: 'cards/list', component: CardListComponent, canActivate: [authGuard] },
-  { path: 'cards/view', component: CardViewComponent, canActivate: [authGuard] }
+  { path: 'cards/view', component: CardViewComponent, canActivate: [authGuard] },
+  { path: 'cards/update', component: CardUpdateComponent, canActivate: [authGuard] }
 ];

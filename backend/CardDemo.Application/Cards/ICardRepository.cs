@@ -48,4 +48,13 @@ public interface ICardRepository
 
     /// <summary>Unfiltered look-ahead READNEXT (COCRDLIC.cbl:1197-1214): the card with the smallest CARD-NUM &gt; the given key.</summary>
     Task<Card?> ReadNextAsync(string afterCardNumber, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// COCRDUPC-style READ UPDATE + REWRITE: locks the CARDDAT row, hands the current image to
+    /// <paramref name="rewrite"/>, and persists the mutated entity only when it returns true.
+    /// </summary>
+    Task<CardRewriteOutcome> RewriteAsync(
+        string cardNumber,
+        Func<Card, bool> rewrite,
+        CancellationToken cancellationToken = default);
 }

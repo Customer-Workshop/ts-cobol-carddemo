@@ -51,6 +51,9 @@ public sealed class FakeCardRepository(IEnumerable<Card> cards) : ICardRepositor
     public Task<Card?> ReadNextAsync(string afterCardNumber, CancellationToken cancellationToken = default) =>
         Task.FromResult(_cards.FirstOrDefault(c => string.CompareOrdinal(c.CardNumber, afterCardNumber) > 0));
 
+    public Task<CardRewriteOutcome> RewriteAsync(string cardNumber, Func<Card, bool> rewrite, CancellationToken cancellationToken = default) =>
+        throw new NotSupportedException();
+
     private static IEnumerable<Card> Filter(IEnumerable<Card> query, string? accountIdFilter, string? cardNumberFilter)
     {
         if (!string.IsNullOrEmpty(accountIdFilter))
