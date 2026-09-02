@@ -1,4 +1,5 @@
 using CardDemo.Application.Auth;
+using CardDemo.Application.Common;
 using CardDemo.Application.Users;
 using CardDemo.Domain.Users;
 using CardDemo.Infrastructure.Security;
@@ -32,6 +33,44 @@ public class SignInServiceTests
 
         public Task<int> CountAsync(CancellationToken cancellationToken = default) =>
             Task.FromResult(_users.Count);
+
+        public Task<bool> AddAsync(User user, CancellationToken cancellationToken = default) =>
+            Task.FromResult(_users.TryAdd(user.UserId, user));
+
+        public Task<bool> UpdateAsync(User user, CancellationToken cancellationToken = default)
+        {
+            if (!_users.ContainsKey(user.UserId))
+            {
+                return Task.FromResult(false);
+            }
+            _users[user.UserId] = user;
+            return Task.FromResult(true);
+        }
+
+        public Task<bool> DeleteAsync(string userId, CancellationToken cancellationToken = default) =>
+            Task.FromResult(_users.Remove(userId));
+
+        public Task<KeyedPage<User>> BrowseForwardAsync(string startUserId, bool inclusive, int pageSize, CancellationToken cancellationToken = default)
+        {
+            var rows = _users.Values
+                .Where(u => inclusive
+                    ? string.CompareOrdinal(u.UserId, startUserId) >= 0
+                    : string.CompareOrdinal(u.UserId, startUserId) > 0)
+                .OrderBy(u => u.UserId, StringComparer.Ordinal)
+                .Take(pageSize + 1)
+                .ToList();
+            return Task.FromResult(new KeyedPage<User>(rows.Take(pageSize).ToList(), rows.Count > pageSize));
+        }
+
+        public Task<KeyedPage<User>> BrowseBackwardAsync(string beforeUserId, int pageSize, CancellationToken cancellationToken = default)
+        {
+            var rows = _users.Values
+                .Where(u => string.CompareOrdinal(u.UserId, beforeUserId) < 0)
+                .OrderByDescending(u => u.UserId, StringComparer.Ordinal)
+                .Take(pageSize + 1)
+                .ToList();
+            return Task.FromResult(new KeyedPage<User>(rows.Take(pageSize).Reverse().ToList(), rows.Count > pageSize));
+        }
     }
 
     private static async Task<(SignInService Service, InMemoryUserRepository Repository)> BuildAsync()

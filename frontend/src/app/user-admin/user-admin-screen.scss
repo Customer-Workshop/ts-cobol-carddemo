@@ -1,0 +1,69 @@
+.screen-card {
+  max-width: 720px;
+  margin: 48px auto;
+}
+
+.field-row {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.field-8 {
+  width: 160px;
+}
+
+.field-20 {
+  width: 280px;
+}
+
+.field-1 {
+  width: 96px;
+}
+
+.message {
+  font-family: monospace;
+  min-height: 1.5em;
+  margin-bottom: 12px;
+}
+
+.error-message {
+  color: #b00020;
+}
+
+.success-message {
+  color: #1b5e20;
+}
+
+.neutral-message {
+  color: inherit;
+}
+
+.actions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.user-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: monospace;
+
+  th,
+  td {
+    text-align: left;
+    padding: 2px 8px;
+  }
+
+  input {
+    width: 2ch;
+    font-family: monospace;
+    text-transform: none;
+  }
+}
+
+.page-info {
+  font-family: monospace;
+  margin: 8px 0;
+}

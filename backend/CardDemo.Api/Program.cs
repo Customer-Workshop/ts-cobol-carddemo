@@ -9,6 +9,7 @@ using CardDemo.Application.LegacyData;
 using CardDemo.Application.Menu;
 using CardDemo.Application.Sessions;
 using CardDemo.Application.Transactions;
+using CardDemo.Application.UserAdmin;
 using CardDemo.Application.Users;
 using CardDemo.Domain.Dates;
 using CardDemo.Infrastructure.Persistence;
@@ -55,6 +56,7 @@ builder.Services.AddSingleton<DateValidationService>();
 builder.Services.AddScoped<TransactionAddService>();
 builder.Services.AddScoped<IBillPaymentRepository, BillPaymentRepository>();
 builder.Services.AddScoped<BillPaymentService>();
+builder.Services.AddScoped<UserAdminService>();
 
 var jwtOptions = builder.Configuration.GetSection(JwtOptions.SectionName).Get<JwtOptions>() ?? new JwtOptions();
 if (string.IsNullOrWhiteSpace(jwtOptions.SigningKey) || Encoding.UTF8.GetByteCount(jwtOptions.SigningKey) < 32)
