@@ -27,7 +27,7 @@ function response(overrides: Partial<BillPaymentResponse>): BillPaymentResponse 
 describe('BillPaymentComponent', () => {
   let fixture: ComponentFixture<BillPaymentComponent>;
   let component: BillPaymentComponent;
-  let httpMock: HttpTestingController;
+  let httpMock: HttpTestingController | undefined;
   let router: Router;
 
   async function setup(queryParams: Record<string, string> = {}): Promise<void> {
@@ -50,7 +50,8 @@ describe('BillPaymentComponent', () => {
   }
 
   afterEach(() => {
-    httpMock.verify();
+    httpMock?.verify();
+    httpMock = undefined;
   });
 
   function el<T extends HTMLElement>(testId: string): T {
@@ -70,7 +71,7 @@ describe('BillPaymentComponent', () => {
 
   function submitAndFlush(body: BillPaymentResponse): void {
     component.submit();
-    httpMock.expectOne(API).flush(body);
+    httpMock!.expectOne(API).flush(body);
     fixture.detectChanges();
   }
 
@@ -99,7 +100,7 @@ describe('BillPaymentComponent', () => {
       component.confirm = 'Y';
       component.submit();
 
-      const req = httpMock.expectOne(API);
+      const req = httpMock!.expectOne(API);
       expect(req.request.method).toBe('POST');
       expect(req.request.body).toEqual({ accountId: '00000000010', confirm: 'Y' });
       req.flush(response({ outcome: 'nothingToPay', message: 'You have nothing to pay...' }));
@@ -275,7 +276,7 @@ describe('BillPaymentComponent', () => {
         expect(messageEl()?.classList).toContain('error-message');
       }
       expect(router.navigateByUrl).not.toHaveBeenCalled();
-      httpMock.expectNone(API);
+      httpMock!.expectNone(API);
     });
 
     it('ordinary keys are ignored', () => {
@@ -289,7 +290,7 @@ describe('BillPaymentComponent', () => {
     it('pre-fills the acct id from the query parameter and processes it immediately', async () => {
       await setup({ accountId: '00000000010' });
 
-      const req = httpMock.expectOne(API);
+      const req = httpMock!.expectOne(API);
       expect(req.request.body).toEqual({ accountId: '00000000010', confirm: '' });
       req.flush(
         response({
@@ -308,7 +309,7 @@ describe('BillPaymentComponent', () => {
 
     it('does nothing on first display without a query parameter', async () => {
       await setup();
-      httpMock.expectNone(API);
+      httpMock!.expectNone(API);
       expect(component.accountId).toBe('');
       expect(messageEl()).toBeNull();
     });
