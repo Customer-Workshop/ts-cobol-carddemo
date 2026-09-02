@@ -22,4 +22,30 @@ public interface ICardRepository
         int pageSize,
         string? accountIdFilter = null,
         CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// STARTBR GTEQ at <paramref name="startCardNumber"/> + READNEXT loop with 9500-FILTER-RECORDS
+    /// (COCRDLIC.cbl:1129-1171, 1382-1411): up to <paramref name="maxRows"/> cards with CARD-NUM &gt;= start,
+    /// in key order, keeping only rows equal to the supplied account / card filters.
+    /// </summary>
+    Task<IReadOnlyList<Card>> BrowseForwardAsync(
+        string startCardNumber,
+        int maxRows,
+        string? accountIdFilter,
+        string? cardNumberFilter,
+        CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// READPREV loop below <paramref name="beforeCardNumber"/> (COCRDLIC.cbl:1322-1346): up to
+    /// <paramref name="maxRows"/> filtered cards with CARD-NUM &lt; before, nearest key first.
+    /// </summary>
+    Task<IReadOnlyList<Card>> BrowseBackwardAsync(
+        string beforeCardNumber,
+        int maxRows,
+        string? accountIdFilter,
+        string? cardNumberFilter,
+        CancellationToken cancellationToken = default);
+
+    /// <summary>Unfiltered look-ahead READNEXT (COCRDLIC.cbl:1197-1214): the card with the smallest CARD-NUM &gt; the given key.</summary>
+    Task<Card?> ReadNextAsync(string afterCardNumber, CancellationToken cancellationToken = default);
 }

@@ -44,6 +44,7 @@ builder.Services.AddScoped<AccountViewService>();
 builder.Services.AddSingleton(TimeProvider.System);
 builder.Services.AddScoped<IAccountUpdateWriter, AccountUpdateWriter>();
 builder.Services.AddScoped<AccountUpdateService>();
+builder.Services.AddScoped<CardListService>();
 
 var jwtOptions = builder.Configuration.GetSection(JwtOptions.SectionName).Get<JwtOptions>() ?? new JwtOptions();
 if (string.IsNullOrWhiteSpace(jwtOptions.SigningKey) || Encoding.UTF8.GetByteCount(jwtOptions.SigningKey) < 32)
