@@ -1,0 +1,98 @@
+<mat-card class="account-view-card">
+  <div class="screen-header">
+    <span data-testid="tran-name">Tran: {{ transaction }}</span>
+    <span class="screen-title">AWS Mainframe Modernization</span>
+    <span data-testid="prog-name">Prog: {{ program }}</span>
+    <span class="screen-title">CardDemo</span>
+  </div>
+  <mat-card-header>
+    <mat-card-title>{{ title }}</mat-card-title>
+  </mat-card-header>
+  <mat-card-content>
+    <form (ngSubmit)="submit()">
+      <div class="row">
+        <mat-form-field appearance="outline" class="account-field" [class.field-error]="accountFieldRed">
+          <mat-label>Account Number :</mat-label>
+          <input
+            matInput
+            name="accountId"
+            [(ngModel)]="accountId"
+            maxlength="11"
+            autocomplete="off"
+            data-testid="account-id-input"
+          />
+        </mat-form-field>
+        <span class="field"><label>Active Y/N: </label><output data-testid="active-status">{{ account?.activeStatus }}</output></span>
+      </div>
+
+      <section class="detail-block" data-testid="account-block">
+        <div class="row">
+          <span class="field"><label>Opened:</label><output data-testid="open-date">{{ account?.openDate }}</output></span>
+          <span class="field"><label>Credit Limit :</label><output data-testid="credit-limit">{{ account?.creditLimit }}</output></span>
+        </div>
+        <div class="row">
+          <span class="field"><label>Expiry:</label><output data-testid="expiration-date">{{ account?.expirationDate }}</output></span>
+          <span class="field"><label>Cash credit Limit :</label><output data-testid="cash-credit-limit">{{ account?.cashCreditLimit }}</output></span>
+        </div>
+        <div class="row">
+          <span class="field"><label>Reissue:</label><output data-testid="reissue-date">{{ account?.reissueDate }}</output></span>
+          <span class="field"><label>Current Balance :</label><output data-testid="current-balance">{{ account?.currentBalance }}</output></span>
+        </div>
+        <div class="row">
+          <span class="field"></span>
+          <span class="field"><label>Current Cycle Credit:</label><output data-testid="cycle-credit">{{ account?.currentCycleCredit }}</output></span>
+        </div>
+        <div class="row">
+          <span class="field"><label>Account Group:</label><output data-testid="group-id">{{ account?.groupId }}</output></span>
+          <span class="field"><label>Current Cycle Debit :</label><output data-testid="cycle-debit">{{ account?.currentCycleDebit }}</output></span>
+        </div>
+      </section>
+
+      <h3 class="block-title">Customer Details</h3>
+      <section class="detail-block" data-testid="customer-block">
+        <div class="row">
+          <span class="field"><label>Customer id :</label><output data-testid="customer-id">{{ customer?.customerId }}</output></span>
+          <span class="field"><label>SSN:</label><output data-testid="ssn">{{ customer?.ssn }}</output></span>
+        </div>
+        <div class="row">
+          <span class="field"><label>Date of birth:</label><output data-testid="date-of-birth">{{ customer?.dateOfBirth }}</output></span>
+          <span class="field"><label>FICO Score:</label><output data-testid="fico-score">{{ customer?.ficoScore }}</output></span>
+        </div>
+        <div class="row three">
+          <span class="field"><label>First Name</label><output data-testid="first-name">{{ customer?.firstName }}</output></span>
+          <span class="field"><label>Middle Name: </label><output data-testid="middle-name">{{ customer?.middleName }}</output></span>
+          <span class="field"><label>Last Name : </label><output data-testid="last-name">{{ customer?.lastName }}</output></span>
+        </div>
+        <div class="row">
+          <span class="field wide"><label>Address:</label><output data-testid="address-line1">{{ customer?.addressLine1 }}</output></span>
+          <span class="field narrow"><label>State </label><output data-testid="state">{{ customer?.state }}</output></span>
+        </div>
+        <div class="row">
+          <span class="field wide"><label></label><output data-testid="address-line2">{{ customer?.addressLine2 }}</output></span>
+          <span class="field narrow"><label>Zip</label><output data-testid="zip">{{ customer?.zip }}</output></span>
+        </div>
+        <div class="row">
+          <span class="field wide"><label>City </label><output data-testid="city">{{ customer?.city }}</output></span>
+          <span class="field narrow"><label>Country</label><output data-testid="country">{{ customer?.country }}</output></span>
+        </div>
+        <div class="row">
+          <span class="field"><label>Phone 1:</label><output data-testid="phone1">{{ customer?.phone1 }}</output></span>
+          <span class="field"><label>Government Issued Id Ref : </label><output data-testid="government-id">{{ customer?.governmentIssuedId }}</output></span>
+        </div>
+        <div class="row three">
+          <span class="field"><label>Phone 2:</label><output data-testid="phone2">{{ customer?.phone2 }}</output></span>
+          <span class="field"><label>EFT Account Id: </label><output data-testid="eft-account-id">{{ customer?.eftAccountId }}</output></span>
+          <span class="field"><label>Primary Card Holder Y/N:</label><output data-testid="primary-card-holder">{{ customer?.primaryCardHolder }}</output></span>
+        </div>
+      </section>
+
+      <div class="info-message" data-testid="info-message">{{ infoMessage }}</div>
+      <div class="error-message" role="alert" data-testid="error-message">{{ errorMessage }}</div>
+
+      <div class="actions">
+        <button mat-flat-button color="primary" type="submit" data-testid="enter-button">Enter</button>
+        <button mat-stroked-button type="button" (click)="exit()" data-testid="exit-button">Exit (F3)</button>
+      </div>
+    </form>
+  </mat-card-content>
+</mat-card>

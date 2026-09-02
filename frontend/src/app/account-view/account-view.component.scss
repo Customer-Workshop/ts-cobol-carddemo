@@ -1,0 +1,85 @@
+.account-view-card {
+  max-width: 880px;
+  margin: 32px auto;
+  font-family: monospace;
+}
+
+.screen-header {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  padding: 8px 16px 0;
+  color: #1a237e;
+
+  .screen-title {
+    text-align: center;
+  }
+}
+
+.row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px 24px;
+  align-items: baseline;
+  margin-bottom: 4px;
+
+  &.three {
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+}
+
+.field {
+  display: flex;
+  gap: 8px;
+  white-space: pre;
+
+  label {
+    color: #1a237e;
+  }
+
+  output {
+    color: #0d47a1;
+    min-height: 1.2em;
+  }
+
+  &.wide {
+    grid-column: span 1;
+  }
+}
+
+.account-field {
+  width: 220px;
+
+  &.field-error {
+    --mdc-outlined-text-field-outline-color: #b00020;
+    --mdc-outlined-text-field-focus-outline-color: #b00020;
+    --mdc-outlined-text-field-input-text-color: #b00020;
+  }
+}
+
+.detail-block {
+  padding: 4px 0 8px;
+}
+
+.block-title {
+  text-align: center;
+  margin: 8px 0;
+  color: #1a237e;
+}
+
+.info-message {
+  min-height: 1.4em;
+  color: #333;
+  white-space: pre;
+}
+
+.error-message {
+  min-height: 1.4em;
+  margin-bottom: 12px;
+  color: #b00020;
+  white-space: pre;
+}
+
+.actions {
+  display: flex;
+  gap: 12px;
+}
