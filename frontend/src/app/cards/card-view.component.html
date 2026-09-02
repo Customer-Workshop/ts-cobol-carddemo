@@ -1,0 +1,68 @@
+<mat-card class="card-view-card">
+  <mat-card-header>
+    <mat-card-title>{{ title }}</mat-card-title>
+  </mat-card-header>
+  <mat-card-content>
+    <form (ngSubmit)="submit()">
+      <div class="field-row">
+        <label class="field-label" for="accountId">Account Number    :</label>
+        <mat-form-field appearance="outline" class="account-field">
+          <input
+            #accountInput
+            matInput
+            id="accountId"
+            name="accountId"
+            [(ngModel)]="accountId"
+            [maxlength]="accountIdLength"
+            [readonly]="fromCardList"
+            [class.field-error]="accountFilter !== 'valid'"
+            data-testid="account-input"
+          />
+        </mat-form-field>
+      </div>
+      <div class="field-row">
+        <label class="field-label" for="cardNumber">Card Number       :</label>
+        <mat-form-field appearance="outline" class="card-field">
+          <input
+            #cardInput
+            matInput
+            id="cardNumber"
+            name="cardNumber"
+            [(ngModel)]="cardNumber"
+            [maxlength]="cardNumberLength"
+            [readonly]="fromCardList"
+            [class.field-error]="cardFilter !== 'valid'"
+            data-testid="card-input"
+          />
+        </mat-form-field>
+      </div>
+
+      <dl class="card-details">
+        <div class="field-row">
+          <dt class="field-label">Name on card      :</dt>
+          <dd class="output name-output" data-testid="card-name">{{ card?.embossedName ?? '' }}</dd>
+        </div>
+        <div class="field-row">
+          <dt class="field-label">Card Active Y/N   :</dt>
+          <dd class="output" data-testid="card-status">{{ card?.activeStatus ?? '' }}</dd>
+        </div>
+        <div class="field-row">
+          <dt class="field-label">Expiry Date       :</dt>
+          <dd class="output">
+            <span data-testid="expiry-month">{{ card?.expiryMonth ?? '' }}</span>
+            <span class="date-separator">/</span>
+            <span data-testid="expiry-year">{{ card?.expiryYear ?? '' }}</span>
+          </dd>
+        </div>
+      </dl>
+
+      <div class="info-message" role="status" data-testid="info-message">{{ infoMessage }}</div>
+      <div class="error-message" role="alert" data-testid="error-message">{{ errorMessage }}</div>
+
+      <div class="actions">
+        <button mat-flat-button color="primary" type="submit" data-testid="search-button">ENTER=Search Cards</button>
+        <button mat-stroked-button type="button" (click)="exit()" data-testid="exit-button">F3=Exit</button>
+      </div>
+    </form>
+  </mat-card-content>
+</mat-card>
