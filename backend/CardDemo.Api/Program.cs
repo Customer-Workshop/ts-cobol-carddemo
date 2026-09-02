@@ -9,6 +9,7 @@ using CardDemo.Application.Menu;
 using CardDemo.Application.Sessions;
 using CardDemo.Application.Transactions;
 using CardDemo.Application.Users;
+using CardDemo.Domain.Dates;
 using CardDemo.Infrastructure.Persistence;
 using CardDemo.Infrastructure.Security;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -49,6 +50,8 @@ builder.Services.AddScoped<CardListService>();
 builder.Services.AddScoped<CardViewService>();
 builder.Services.AddScoped<CardUpdateService>();
 builder.Services.AddScoped<TransactionListService>();
+builder.Services.AddSingleton<DateValidationService>();
+builder.Services.AddScoped<TransactionAddService>();
 
 var jwtOptions = builder.Configuration.GetSection(JwtOptions.SectionName).Get<JwtOptions>() ?? new JwtOptions();
 if (string.IsNullOrWhiteSpace(jwtOptions.SigningKey) || Encoding.UTF8.GetByteCount(jwtOptions.SigningKey) < 32)

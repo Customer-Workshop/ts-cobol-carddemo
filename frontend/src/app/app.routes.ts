@@ -9,6 +9,7 @@ import { CardViewComponent } from './cards/card-view.component';
 import { CardUpdateComponent } from './cards/card-update.component';
 import { TransactionListComponent } from './transactions/transaction-list.component';
 import { TransactionViewComponent } from './transactions/transaction-view.component';
+import { TranAddComponent } from './transactions/tran-add.component';
 import { adminGuard, authGuard } from './auth/auth.guard';
 
 export const routes: Routes = [
@@ -22,5 +23,6 @@ export const routes: Routes = [
   { path: 'cards/view', component: CardViewComponent, canActivate: [authGuard] },
   { path: 'cards/update', component: CardUpdateComponent, canActivate: [authGuard] },
   { path: 'transactions/list', component: TransactionListComponent, canActivate: [authGuard] },
-  { path: 'transactions/view', component: TransactionViewComponent, canActivate: [authGuard] }
+  { path: 'transactions/view', component: TransactionViewComponent, canActivate: [authGuard] },
+  { path: 'transactions/add', component: TranAddComponent, canActivate: [authGuard] }
 ];
