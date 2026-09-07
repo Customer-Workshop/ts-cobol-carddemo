@@ -1,0 +1,6 @@
+com/carddemo/data/CobolFieldReaderTest.class
+com/carddemo/support/PostgresIntegrationTest.class
+com/carddemo/H2UnitProfileContextTest.class
+com/carddemo/data/LegacyExtractQ10GateTest.class
+com/carddemo/repository/AccountViewRepositoriesIntegrationTest.class
+com/carddemo/service/DateValidationServiceTest.class

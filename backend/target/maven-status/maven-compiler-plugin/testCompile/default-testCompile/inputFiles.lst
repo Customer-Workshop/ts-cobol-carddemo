@@ -1,0 +1,6 @@
+/home/ubuntu/repos/ts-cobol-carddemo/backend/src/test/java/com/carddemo/H2UnitProfileContextTest.java
+/home/ubuntu/repos/ts-cobol-carddemo/backend/src/test/java/com/carddemo/data/CobolFieldReaderTest.java
+/home/ubuntu/repos/ts-cobol-carddemo/backend/src/test/java/com/carddemo/data/LegacyExtractQ10GateTest.java
+/home/ubuntu/repos/ts-cobol-carddemo/backend/src/test/java/com/carddemo/repository/AccountViewRepositoriesIntegrationTest.java
+/home/ubuntu/repos/ts-cobol-carddemo/backend/src/test/java/com/carddemo/service/DateValidationServiceTest.java
+/home/ubuntu/repos/ts-cobol-carddemo/backend/src/test/java/com/carddemo/support/PostgresIntegrationTest.java
