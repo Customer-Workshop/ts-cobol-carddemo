@@ -1,0 +1,3304 @@
+{
+ "denominator": {
+  "count": 33,
+  "programs": {
+   "CBACT01C": "app/cbl/CBACT01C.cbl",
+   "CBACT02C": "app/cbl/CBACT02C.cbl",
+   "CBACT03C": "app/cbl/CBACT03C.cbl",
+   "CBACT04C": "app/cbl/CBACT04C.cbl",
+   "CBCUS01C": "app/cbl/CBCUS01C.cbl",
+   "CBEXPORT": "app/cbl/CBEXPORT.cbl",
+   "CBIMPORT": "app/cbl/CBIMPORT.cbl",
+   "CBSTM03A": "app/cbl/CBSTM03A.CBL",
+   "CBSTM03B": "app/cbl/CBSTM03B.CBL",
+   "CBTRN01C": "app/cbl/CBTRN01C.cbl",
+   "CBTRN02C": "app/cbl/CBTRN02C.cbl",
+   "CBTRN03C": "app/cbl/CBTRN03C.cbl",
+   "COACTUPC": "app/cbl/COACTUPC.cbl",
+   "COACTVWC": "app/cbl/COACTVWC.cbl",
+   "COADM01C": "app/cbl/COADM01C.cbl",
+   "COBIL00C": "app/cbl/COBIL00C.cbl",
+   "COBSWAIT": "app/cbl/COBSWAIT.cbl",
+   "COCRDLIC": "app/cbl/COCRDLIC.cbl",
+   "COCRDSLC": "app/cbl/COCRDSLC.cbl",
+   "COCRDUPC": "app/cbl/COCRDUPC.cbl",
+   "COMEN01C": "app/cbl/COMEN01C.cbl",
+   "CORPT00C": "app/cbl/CORPT00C.cbl",
+   "COSGN00C": "app/cbl/COSGN00C.cbl",
+   "COTRN00C": "app/cbl/COTRN00C.cbl",
+   "COTRN01C": "app/cbl/COTRN01C.cbl",
+   "COTRN02C": "app/cbl/COTRN02C.cbl",
+   "COUSR00C": "app/cbl/COUSR00C.cbl",
+   "COUSR01C": "app/cbl/COUSR01C.cbl",
+   "COUSR02C": "app/cbl/COUSR02C.cbl",
+   "COUSR03C": "app/cbl/COUSR03C.cbl",
+   "CSUTLDTC": "app/cbl/CSUTLDTC.cbl",
+   "COBDATFT": "app/asm/COBDATFT.asm",
+   "MVSWAIT": "app/asm/MVSWAIT.asm"
+  }
+ },
+ "extensions_out_of_module": [
+  {
+   "program": "CBPAUP0C",
+   "path": "app/app-authorization-ims-db2-mq/cbl/CBPAUP0C.cbl",
+   "extension": "app-authorization-ims-db2-mq"
+  },
+  {
+   "program": "COPAUA0C",
+   "path": "app/app-authorization-ims-db2-mq/cbl/COPAUA0C.cbl",
+   "extension": "app-authorization-ims-db2-mq"
+  },
+  {
+   "program": "COPAUS0C",
+   "path": "app/app-authorization-ims-db2-mq/cbl/COPAUS0C.cbl",
+   "extension": "app-authorization-ims-db2-mq"
+  },
+  {
+   "program": "COPAUS1C",
+   "path": "app/app-authorization-ims-db2-mq/cbl/COPAUS1C.cbl",
+   "extension": "app-authorization-ims-db2-mq"
+  },
+  {
+   "program": "COPAUS2C",
+   "path": "app/app-authorization-ims-db2-mq/cbl/COPAUS2C.cbl",
+   "extension": "app-authorization-ims-db2-mq"
+  },
+  {
+   "program": "DBUNLDGS",
+   "path": "app/app-authorization-ims-db2-mq/cbl/DBUNLDGS.CBL",
+   "extension": "app-authorization-ims-db2-mq"
+  },
+  {
+   "program": "PAUDBLOD",
+   "path": "app/app-authorization-ims-db2-mq/cbl/PAUDBLOD.CBL",
+   "extension": "app-authorization-ims-db2-mq"
+  },
+  {
+   "program": "PAUDBUNL",
+   "path": "app/app-authorization-ims-db2-mq/cbl/PAUDBUNL.CBL",
+   "extension": "app-authorization-ims-db2-mq"
+  },
+  {
+   "program": "COBTUPDT",
+   "path": "app/app-transaction-type-db2/cbl/COBTUPDT.cbl",
+   "extension": "app-transaction-type-db2"
+  },
+  {
+   "program": "COTRTLIC",
+   "path": "app/app-transaction-type-db2/cbl/COTRTLIC.cbl",
+   "extension": "app-transaction-type-db2"
+  },
+  {
+   "program": "COTRTUPC",
+   "path": "app/app-transaction-type-db2/cbl/COTRTUPC.cbl",
+   "extension": "app-transaction-type-db2"
+  },
+  {
+   "program": "COACCT01",
+   "path": "app/app-vsam-mq/cbl/COACCT01.cbl",
+   "extension": "app-vsam-mq"
+  },
+  {
+   "program": "CODATE01",
+   "path": "app/app-vsam-mq/cbl/CODATE01.cbl",
+   "extension": "app-vsam-mq"
+  }
+ ],
+ "edges": [
+  {
+   "from": "CBACT01C",
+   "to": "COBDATFT",
+   "kind": "CALL",
+   "cite": "app/cbl/CBACT01C.cbl:231"
+  },
+  {
+   "from": "CBACT01C",
+   "to": "CEE3ABD",
+   "kind": "CALL",
+   "cite": "app/cbl/CBACT01C.cbl:410"
+  },
+  {
+   "from": "CBACT02C",
+   "to": "CEE3ABD",
+   "kind": "CALL",
+   "cite": "app/cbl/CBACT02C.cbl:158"
+  },
+  {
+   "from": "CBACT03C",
+   "to": "CEE3ABD",
+   "kind": "CALL",
+   "cite": "app/cbl/CBACT03C.cbl:158"
+  },
+  {
+   "from": "CBACT04C",
+   "to": "CEE3ABD",
+   "kind": "CALL",
+   "cite": "app/cbl/CBACT04C.cbl:632"
+  },
+  {
+   "from": "CBCUS01C",
+   "to": "CEE3ABD",
+   "kind": "CALL",
+   "cite": "app/cbl/CBCUS01C.cbl:158"
+  },
+  {
+   "from": "CBEXPORT",
+   "to": "CEE3ABD",
+   "kind": "CALL",
+   "cite": "app/cbl/CBEXPORT.cbl:579"
+  },
+  {
+   "from": "CBIMPORT",
+   "to": "CEE3ABD",
+   "kind": "CALL",
+   "cite": "app/cbl/CBIMPORT.cbl:484"
+  },
+  {
+   "from": "CBSTM03A",
+   "to": "CBSTM03B",
+   "kind": "CALL",
+   "cite": "app/cbl/CBSTM03A.CBL:351"
+  },
+  {
+   "from": "CBSTM03A",
+   "to": "CBSTM03B",
+   "kind": "CALL",
+   "cite": "app/cbl/CBSTM03A.CBL:377"
+  },
+  {
+   "from": "CBSTM03A",
+   "to": "CBSTM03B",
+   "kind": "CALL",
+   "cite": "app/cbl/CBSTM03A.CBL:401"
+  },
+  {
+   "from": "CBSTM03A",
+   "to": "CBSTM03B",
+   "kind": "CALL",
+   "cite": "app/cbl/CBSTM03A.CBL:734"
+  },
+  {
+   "from": "CBSTM03A",
+   "to": "CBSTM03B",
+   "kind": "CALL",
+   "cite": "app/cbl/CBSTM03A.CBL:746"
+  },
+  {
+   "from": "CBSTM03A",
+   "to": "CBSTM03B",
+   "kind": "CALL",
+   "cite": "app/cbl/CBSTM03A.CBL:769"
+  },
+  {
+   "from": "CBSTM03A",
+   "to": "CBSTM03B",
+   "kind": "CALL",
+   "cite": "app/cbl/CBSTM03A.CBL:787"
+  },
+  {
+   "from": "CBSTM03A",
+   "to": "CBSTM03B",
+   "kind": "CALL",
+   "cite": "app/cbl/CBSTM03A.CBL:805"
+  },
+  {
+   "from": "CBSTM03A",
+   "to": "CBSTM03B",
+   "kind": "CALL",
+   "cite": "app/cbl/CBSTM03A.CBL:835"
+  },
+  {
+   "from": "CBSTM03A",
+   "to": "CBSTM03B",
+   "kind": "CALL",
+   "cite": "app/cbl/CBSTM03A.CBL:860"
+  },
+  {
+   "from": "CBSTM03A",
+   "to": "CBSTM03B",
+   "kind": "CALL",
+   "cite": "app/cbl/CBSTM03A.CBL:877"
+  },
+  {
+   "from": "CBSTM03A",
+   "to": "CBSTM03B",
+   "kind": "CALL",
+   "cite": "app/cbl/CBSTM03A.CBL:893"
+  },
+  {
+   "from": "CBSTM03A",
+   "to": "CBSTM03B",
+   "kind": "CALL",
+   "cite": "app/cbl/CBSTM03A.CBL:909"
+  },
+  {
+   "from": "CBSTM03A",
+   "to": "CEE3ABD",
+   "kind": "CALL",
+   "cite": "app/cbl/CBSTM03A.CBL:923"
+  },
+  {
+   "from": "CBTRN01C",
+   "to": "CEE3ABD",
+   "kind": "CALL",
+   "cite": "app/cbl/CBTRN01C.cbl:473"
+  },
+  {
+   "from": "CBTRN02C",
+   "to": "CEE3ABD",
+   "kind": "CALL",
+   "cite": "app/cbl/CBTRN02C.cbl:711"
+  },
+  {
+   "from": "CBTRN03C",
+   "to": "CEE3ABD",
+   "kind": "CALL",
+   "cite": "app/cbl/CBTRN03C.cbl:630"
+  },
+  {
+   "from": "COACTUPC",
+   "to": "COACTUPC",
+   "kind": "XCTL(dyn)",
+   "cite": "app/cbl/COACTUPC.cbl:956",
+   "resolved_via": "MOVE CDEMO-FROM-PROGRAM -> MOVE LIT-THISPGM -> VALUE clause @ app/cbl/COACTUPC.cbl:533"
+  },
+  {
+   "from": "COACTUPC",
+   "to": "COMEN01C",
+   "kind": "XCTL(dyn)",
+   "cite": "app/cbl/COACTUPC.cbl:956",
+   "resolved_via": "MOVE LIT-MENUPGM -> VALUE clause @ app/cbl/COACTUPC.cbl:557"
+  },
+  {
+   "from": "COACTVWC",
+   "to": "COACTVWC",
+   "kind": "XCTL(dyn)",
+   "cite": "app/cbl/COACTVWC.cbl:349",
+   "resolved_via": "MOVE CDEMO-FROM-PROGRAM -> MOVE LIT-THISPGM -> VALUE clause @ app/cbl/COACTVWC.cbl:143"
+  },
+  {
+   "from": "COACTVWC",
+   "to": "COMEN01C",
+   "kind": "XCTL(dyn)",
+   "cite": "app/cbl/COACTVWC.cbl:349",
+   "resolved_via": "MOVE LIT-MENUPGM -> VALUE clause @ app/cbl/COACTVWC.cbl:168"
+  },
+  {
+   "from": "COADM01C",
+   "to": "COTRTLIC",
+   "kind": "XCTL(dyn)",
+   "cite": "app/cbl/COADM01C.cbl:145",
+   "resolved_via": "option table entry @ app/cpy/COADM02Y.cpy:49"
+  },
+  {
+   "from": "COADM01C",
+   "to": "COTRTUPC",
+   "kind": "XCTL(dyn)",
+   "cite": "app/cbl/COADM01C.cbl:145",
+   "resolved_via": "option table entry @ app/cpy/COADM02Y.cpy:53"
+  },
+  {
+   "from": "COADM01C",
+   "to": "COUSR00C",
+   "kind": "XCTL(dyn)",
+   "cite": "app/cbl/COADM01C.cbl:145",
+   "resolved_via": "option table entry @ app/cpy/COADM02Y.cpy:29"
+  },
+  {
+   "from": "COADM01C",
+   "to": "COUSR01C",
+   "kind": "XCTL(dyn)",
+   "cite": "app/cbl/COADM01C.cbl:145",
+   "resolved_via": "option table entry @ app/cpy/COADM02Y.cpy:34"
+  },
+  {
+   "from": "COADM01C",
+   "to": "COUSR02C",
+   "kind": "XCTL(dyn)",
+   "cite": "app/cbl/COADM01C.cbl:145",
+   "resolved_via": "option table entry @ app/cpy/COADM02Y.cpy:39"
+  },
+  {
+   "from": "COADM01C",
+   "to": "COUSR03C",
+   "kind": "XCTL(dyn)",
+   "cite": "app/cbl/COADM01C.cbl:145",
+   "resolved_via": "option table entry @ app/cpy/COADM02Y.cpy:44"
+  },
+  {
+   "from": "COADM01C",
+   "to": "COSGN00C",
+   "kind": "XCTL(dyn)",
+   "cite": "app/cbl/COADM01C.cbl:168",
+   "resolved_via": "MOVE literal @ app/cbl/COADM01C.cbl:101"
+  },
+  {
+   "from": "COADM01C",
+   "to": "COSGN00C",
+   "kind": "XCTL(dyn)",
+   "cite": "app/cbl/COADM01C.cbl:168",
+   "resolved_via": "MOVE literal @ app/cbl/COADM01C.cbl:166"
+  },
+  {
+   "from": "COBIL00C",
+   "to": "COMEN01C",
+   "kind": "XCTL(dyn)",
+   "cite": "app/cbl/COBIL00C.cbl:281",
+   "resolved_via": "MOVE literal @ app/cbl/COBIL00C.cbl:130"
+  },
+  {
+   "from": "COBIL00C",
+   "to": "COSGN00C",
+   "kind": "XCTL(dyn)",
+   "cite": "app/cbl/COBIL00C.cbl:281",
+   "resolved_via": "MOVE literal @ app/cbl/COBIL00C.cbl:108"
+  },
+  {
+   "from": "COBIL00C",
+   "to": "COSGN00C",
+   "kind": "XCTL(dyn)",
+   "cite": "app/cbl/COBIL00C.cbl:281",
+   "resolved_via": "MOVE literal @ app/cbl/COBIL00C.cbl:276"
+  },
+  {
+   "from": "COBSWAIT",
+   "to": "MVSWAIT",
+   "kind": "CALL",
+   "cite": "app/cbl/COBSWAIT.cbl:38"
+  },
+  {
+   "from": "COCRDLIC",
+   "to": "COMEN01C",
+   "kind": "XCTL(dyn)",
+   "cite": "app/cbl/COCRDLIC.cbl:402",
+   "resolved_via": "VALUE clause @ app/cbl/COCRDLIC.cbl:187"
+  },
+  {
+   "from": "COCRDLIC",
+   "to": "COCRDLIC",
+   "kind": "XCTL(dyn)",
+   "cite": "app/cbl/COCRDLIC.cbl:538",
+   "resolved_via": "MOVE LIT-THISPGM -> VALUE clause @ app/cbl/COCRDLIC.cbl:179"
+  },
+  {
+   "from": "COCRDLIC",
+   "to": "COCRDSLC",
+   "kind": "XCTL(dyn)",
+   "cite": "app/cbl/COCRDLIC.cbl:538",
+   "resolved_via": "MOVE LIT-CARDDTLPGM -> VALUE clause @ app/cbl/COCRDLIC.cbl:195"
+  },
+  {
+   "from": "COCRDLIC",
+   "to": "COCRDUPC",
+   "kind": "XCTL(dyn)",
+   "cite": "app/cbl/COCRDLIC.cbl:538",
+   "resolved_via": "MOVE LIT-CARDUPDPGM -> VALUE clause @ app/cbl/COCRDLIC.cbl:203"
+  },
+  {
+   "from": "COCRDLIC",
+   "to": "COCRDLIC",
+   "kind": "XCTL(dyn)",
+   "cite": "app/cbl/COCRDLIC.cbl:566",
+   "resolved_via": "MOVE LIT-THISPGM -> VALUE clause @ app/cbl/COCRDLIC.cbl:179"
+  },
+  {
+   "from": "COCRDLIC",
+   "to": "COCRDSLC",
+   "kind": "XCTL(dyn)",
+   "cite": "app/cbl/COCRDLIC.cbl:566",
+   "resolved_via": "MOVE LIT-CARDDTLPGM -> VALUE clause @ app/cbl/COCRDLIC.cbl:195"
+  },
+  {
+   "from": "COCRDLIC",
+   "to": "COCRDUPC",
+   "kind": "XCTL(dyn)",
+   "cite": "app/cbl/COCRDLIC.cbl:566",
+   "resolved_via": "MOVE LIT-CARDUPDPGM -> VALUE clause @ app/cbl/COCRDLIC.cbl:203"
+  },
+  {
+   "from": "COCRDSLC",
+   "to": "COCRDSLC",
+   "kind": "XCTL(dyn)",
+   "cite": "app/cbl/COCRDSLC.cbl:331",
+   "resolved_via": "MOVE CDEMO-FROM-PROGRAM -> MOVE LIT-THISPGM -> VALUE clause @ app/cbl/COCRDSLC.cbl:163"
+  },
+  {
+   "from": "COCRDSLC",
+   "to": "COMEN01C",
+   "kind": "XCTL(dyn)",
+   "cite": "app/cbl/COCRDSLC.cbl:331",
+   "resolved_via": "MOVE LIT-MENUPGM -> VALUE clause @ app/cbl/COCRDSLC.cbl:179"
+  },
+  {
+   "from": "COCRDUPC",
+   "to": "COCRDUPC",
+   "kind": "XCTL(dyn)",
+   "cite": "app/cbl/COCRDUPC.cbl:473",
+   "resolved_via": "MOVE CDEMO-FROM-PROGRAM -> MOVE LIT-THISPGM -> VALUE clause @ app/cbl/COCRDUPC.cbl:219"
+  },
+  {
+   "from": "COCRDUPC",
+   "to": "COMEN01C",
+   "kind": "XCTL(dyn)",
+   "cite": "app/cbl/COCRDUPC.cbl:473",
+   "resolved_via": "MOVE LIT-MENUPGM -> VALUE clause @ app/cbl/COCRDUPC.cbl:235"
+  },
+  {
+   "from": "COMEN01C",
+   "to": "COACTUPC",
+   "kind": "XCTL(dyn)",
+   "cite": "app/cbl/COMEN01C.cbl:156",
+   "resolved_via": "option table entry @ app/cpy/COMEN02Y.cpy:34"
+  },
+  {
+   "from": "COMEN01C",
+   "to": "COACTVWC",
+   "kind": "XCTL(dyn)",
+   "cite": "app/cbl/COMEN01C.cbl:156",
+   "resolved_via": "option table entry @ app/cpy/COMEN02Y.cpy:28"
+  },
+  {
+   "from": "COMEN01C",
+   "to": "COBIL00C",
+   "kind": "XCTL(dyn)",
+   "cite": "app/cbl/COMEN01C.cbl:156",
+   "resolved_via": "option table entry @ app/cpy/COMEN02Y.cpy:83"
+  },
+  {
+   "from": "COMEN01C",
+   "to": "COCRDLIC",
+   "kind": "XCTL(dyn)",
+   "cite": "app/cbl/COMEN01C.cbl:156",
+   "resolved_via": "option table entry @ app/cpy/COMEN02Y.cpy:40"
+  },
+  {
+   "from": "COMEN01C",
+   "to": "COCRDSLC",
+   "kind": "XCTL(dyn)",
+   "cite": "app/cbl/COMEN01C.cbl:156",
+   "resolved_via": "option table entry @ app/cpy/COMEN02Y.cpy:46"
+  },
+  {
+   "from": "COMEN01C",
+   "to": "COCRDUPC",
+   "kind": "XCTL(dyn)",
+   "cite": "app/cbl/COMEN01C.cbl:156",
+   "resolved_via": "option table entry @ app/cpy/COMEN02Y.cpy:52"
+  },
+  {
+   "from": "COMEN01C",
+   "to": "COPAUS0C",
+   "kind": "XCTL(dyn)",
+   "cite": "app/cbl/COMEN01C.cbl:156",
+   "resolved_via": "option table entry @ app/cpy/COMEN02Y.cpy:89"
+  },
+  {
+   "from": "COMEN01C",
+   "to": "CORPT00C",
+   "kind": "XCTL(dyn)",
+   "cite": "app/cbl/COMEN01C.cbl:156",
+   "resolved_via": "option table entry @ app/cpy/COMEN02Y.cpy:77"
+  },
+  {
+   "from": "COMEN01C",
+   "to": "COTRN00C",
+   "kind": "XCTL(dyn)",
+   "cite": "app/cbl/COMEN01C.cbl:156",
+   "resolved_via": "option table entry @ app/cpy/COMEN02Y.cpy:58"
+  },
+  {
+   "from": "COMEN01C",
+   "to": "COTRN01C",
+   "kind": "XCTL(dyn)",
+   "cite": "app/cbl/COMEN01C.cbl:156",
+   "resolved_via": "option table entry @ app/cpy/COMEN02Y.cpy:64"
+  },
+  {
+   "from": "COMEN01C",
+   "to": "COTRN02C",
+   "kind": "XCTL(dyn)",
+   "cite": "app/cbl/COMEN01C.cbl:156",
+   "resolved_via": "option table entry @ app/cpy/COMEN02Y.cpy:71"
+  },
+  {
+   "from": "COMEN01C",
+   "to": "COACTUPC",
+   "kind": "XCTL(dyn)",
+   "cite": "app/cbl/COMEN01C.cbl:184",
+   "resolved_via": "option table entry @ app/cpy/COMEN02Y.cpy:34"
+  },
+  {
+   "from": "COMEN01C",
+   "to": "COACTVWC",
+   "kind": "XCTL(dyn)",
+   "cite": "app/cbl/COMEN01C.cbl:184",
+   "resolved_via": "option table entry @ app/cpy/COMEN02Y.cpy:28"
+  },
+  {
+   "from": "COMEN01C",
+   "to": "COBIL00C",
+   "kind": "XCTL(dyn)",
+   "cite": "app/cbl/COMEN01C.cbl:184",
+   "resolved_via": "option table entry @ app/cpy/COMEN02Y.cpy:83"
+  },
+  {
+   "from": "COMEN01C",
+   "to": "COCRDLIC",
+   "kind": "XCTL(dyn)",
+   "cite": "app/cbl/COMEN01C.cbl:184",
+   "resolved_via": "option table entry @ app/cpy/COMEN02Y.cpy:40"
+  },
+  {
+   "from": "COMEN01C",
+   "to": "COCRDSLC",
+   "kind": "XCTL(dyn)",
+   "cite": "app/cbl/COMEN01C.cbl:184",
+   "resolved_via": "option table entry @ app/cpy/COMEN02Y.cpy:46"
+  },
+  {
+   "from": "COMEN01C",
+   "to": "COCRDUPC",
+   "kind": "XCTL(dyn)",
+   "cite": "app/cbl/COMEN01C.cbl:184",
+   "resolved_via": "option table entry @ app/cpy/COMEN02Y.cpy:52"
+  },
+  {
+   "from": "COMEN01C",
+   "to": "COPAUS0C",
+   "kind": "XCTL(dyn)",
+   "cite": "app/cbl/COMEN01C.cbl:184",
+   "resolved_via": "option table entry @ app/cpy/COMEN02Y.cpy:89"
+  },
+  {
+   "from": "COMEN01C",
+   "to": "CORPT00C",
+   "kind": "XCTL(dyn)",
+   "cite": "app/cbl/COMEN01C.cbl:184",
+   "resolved_via": "option table entry @ app/cpy/COMEN02Y.cpy:77"
+  },
+  {
+   "from": "COMEN01C",
+   "to": "COTRN00C",
+   "kind": "XCTL(dyn)",
+   "cite": "app/cbl/COMEN01C.cbl:184",
+   "resolved_via": "option table entry @ app/cpy/COMEN02Y.cpy:58"
+  },
+  {
+   "from": "COMEN01C",
+   "to": "COTRN01C",
+   "kind": "XCTL(dyn)",
+   "cite": "app/cbl/COMEN01C.cbl:184",
+   "resolved_via": "option table entry @ app/cpy/COMEN02Y.cpy:64"
+  },
+  {
+   "from": "COMEN01C",
+   "to": "COTRN02C",
+   "kind": "XCTL(dyn)",
+   "cite": "app/cbl/COMEN01C.cbl:184",
+   "resolved_via": "option table entry @ app/cpy/COMEN02Y.cpy:71"
+  },
+  {
+   "from": "COMEN01C",
+   "to": "COSGN00C",
+   "kind": "XCTL(dyn)",
+   "cite": "app/cbl/COMEN01C.cbl:201",
+   "resolved_via": "MOVE literal @ app/cbl/COMEN01C.cbl:199"
+  },
+  {
+   "from": "COMEN01C",
+   "to": "COSGN00C",
+   "kind": "XCTL(dyn)",
+   "cite": "app/cbl/COMEN01C.cbl:201",
+   "resolved_via": "MOVE literal @ app/cbl/COMEN01C.cbl:97"
+  },
+  {
+   "from": "CORPT00C",
+   "to": "CSUTLDTC",
+   "kind": "CALL",
+   "cite": "app/cbl/CORPT00C.cbl:392"
+  },
+  {
+   "from": "CORPT00C",
+   "to": "CSUTLDTC",
+   "kind": "CALL",
+   "cite": "app/cbl/CORPT00C.cbl:412"
+  },
+  {
+   "from": "CORPT00C",
+   "to": "COMEN01C",
+   "kind": "XCTL(dyn)",
+   "cite": "app/cbl/CORPT00C.cbl:548",
+   "resolved_via": "MOVE literal @ app/cbl/CORPT00C.cbl:188"
+  },
+  {
+   "from": "CORPT00C",
+   "to": "COSGN00C",
+   "kind": "XCTL(dyn)",
+   "cite": "app/cbl/CORPT00C.cbl:548",
+   "resolved_via": "MOVE literal @ app/cbl/CORPT00C.cbl:173"
+  },
+  {
+   "from": "CORPT00C",
+   "to": "COSGN00C",
+   "kind": "XCTL(dyn)",
+   "cite": "app/cbl/CORPT00C.cbl:548",
+   "resolved_via": "MOVE literal @ app/cbl/CORPT00C.cbl:543"
+  },
+  {
+   "from": "COSGN00C",
+   "to": "COADM01C",
+   "kind": "XCTL",
+   "cite": "app/cbl/COSGN00C.cbl:231"
+  },
+  {
+   "from": "COSGN00C",
+   "to": "COMEN01C",
+   "kind": "XCTL",
+   "cite": "app/cbl/COSGN00C.cbl:236"
+  },
+  {
+   "from": "COTRN00C",
+   "to": "COMEN01C",
+   "kind": "XCTL(dyn)",
+   "cite": "app/cbl/COTRN00C.cbl:192",
+   "resolved_via": "MOVE literal @ app/cbl/COTRN00C.cbl:123"
+  },
+  {
+   "from": "COTRN00C",
+   "to": "COSGN00C",
+   "kind": "XCTL(dyn)",
+   "cite": "app/cbl/COTRN00C.cbl:192",
+   "resolved_via": "MOVE literal @ app/cbl/COTRN00C.cbl:108"
+  },
+  {
+   "from": "COTRN00C",
+   "to": "COSGN00C",
+   "kind": "XCTL(dyn)",
+   "cite": "app/cbl/COTRN00C.cbl:192",
+   "resolved_via": "MOVE literal @ app/cbl/COTRN00C.cbl:513"
+  },
+  {
+   "from": "COTRN00C",
+   "to": "COTRN01C",
+   "kind": "XCTL(dyn)",
+   "cite": "app/cbl/COTRN00C.cbl:192",
+   "resolved_via": "MOVE literal @ app/cbl/COTRN00C.cbl:188"
+  },
+  {
+   "from": "COTRN00C",
+   "to": "COMEN01C",
+   "kind": "XCTL(dyn)",
+   "cite": "app/cbl/COTRN00C.cbl:518",
+   "resolved_via": "MOVE literal @ app/cbl/COTRN00C.cbl:123"
+  },
+  {
+   "from": "COTRN00C",
+   "to": "COSGN00C",
+   "kind": "XCTL(dyn)",
+   "cite": "app/cbl/COTRN00C.cbl:518",
+   "resolved_via": "MOVE literal @ app/cbl/COTRN00C.cbl:108"
+  },
+  {
+   "from": "COTRN00C",
+   "to": "COSGN00C",
+   "kind": "XCTL(dyn)",
+   "cite": "app/cbl/COTRN00C.cbl:518",
+   "resolved_via": "MOVE literal @ app/cbl/COTRN00C.cbl:513"
+  },
+  {
+   "from": "COTRN00C",
+   "to": "COTRN01C",
+   "kind": "XCTL(dyn)",
+   "cite": "app/cbl/COTRN00C.cbl:518",
+   "resolved_via": "MOVE literal @ app/cbl/COTRN00C.cbl:188"
+  },
+  {
+   "from": "COTRN01C",
+   "to": "COMEN01C",
+   "kind": "XCTL(dyn)",
+   "cite": "app/cbl/COTRN01C.cbl:205",
+   "resolved_via": "MOVE literal @ app/cbl/COTRN01C.cbl:117"
+  },
+  {
+   "from": "COTRN01C",
+   "to": "COSGN00C",
+   "kind": "XCTL(dyn)",
+   "cite": "app/cbl/COTRN01C.cbl:205",
+   "resolved_via": "MOVE literal @ app/cbl/COTRN01C.cbl:200"
+  },
+  {
+   "from": "COTRN01C",
+   "to": "COSGN00C",
+   "kind": "XCTL(dyn)",
+   "cite": "app/cbl/COTRN01C.cbl:205",
+   "resolved_via": "MOVE literal @ app/cbl/COTRN01C.cbl:95"
+  },
+  {
+   "from": "COTRN01C",
+   "to": "COTRN00C",
+   "kind": "XCTL(dyn)",
+   "cite": "app/cbl/COTRN01C.cbl:205",
+   "resolved_via": "MOVE literal @ app/cbl/COTRN01C.cbl:126"
+  },
+  {
+   "from": "COTRN02C",
+   "to": "CSUTLDTC",
+   "kind": "CALL",
+   "cite": "app/cbl/COTRN02C.cbl:393"
+  },
+  {
+   "from": "COTRN02C",
+   "to": "CSUTLDTC",
+   "kind": "CALL",
+   "cite": "app/cbl/COTRN02C.cbl:413"
+  },
+  {
+   "from": "COTRN02C",
+   "to": "COMEN01C",
+   "kind": "XCTL(dyn)",
+   "cite": "app/cbl/COTRN02C.cbl:508",
+   "resolved_via": "MOVE literal @ app/cbl/COTRN02C.cbl:138"
+  },
+  {
+   "from": "COTRN02C",
+   "to": "COSGN00C",
+   "kind": "XCTL(dyn)",
+   "cite": "app/cbl/COTRN02C.cbl:508",
+   "resolved_via": "MOVE literal @ app/cbl/COTRN02C.cbl:116"
+  },
+  {
+   "from": "COTRN02C",
+   "to": "COSGN00C",
+   "kind": "XCTL(dyn)",
+   "cite": "app/cbl/COTRN02C.cbl:508",
+   "resolved_via": "MOVE literal @ app/cbl/COTRN02C.cbl:503"
+  },
+  {
+   "from": "COUSR00C",
+   "to": "COADM01C",
+   "kind": "XCTL(dyn)",
+   "cite": "app/cbl/COUSR00C.cbl:196",
+   "resolved_via": "MOVE literal @ app/cbl/COUSR00C.cbl:126"
+  },
+  {
+   "from": "COUSR00C",
+   "to": "COSGN00C",
+   "kind": "XCTL(dyn)",
+   "cite": "app/cbl/COUSR00C.cbl:196",
+   "resolved_via": "MOVE literal @ app/cbl/COUSR00C.cbl:111"
+  },
+  {
+   "from": "COUSR00C",
+   "to": "COSGN00C",
+   "kind": "XCTL(dyn)",
+   "cite": "app/cbl/COUSR00C.cbl:196",
+   "resolved_via": "MOVE literal @ app/cbl/COUSR00C.cbl:509"
+  },
+  {
+   "from": "COUSR00C",
+   "to": "COUSR02C",
+   "kind": "XCTL(dyn)",
+   "cite": "app/cbl/COUSR00C.cbl:196",
+   "resolved_via": "MOVE literal @ app/cbl/COUSR00C.cbl:192"
+  },
+  {
+   "from": "COUSR00C",
+   "to": "COUSR03C",
+   "kind": "XCTL(dyn)",
+   "cite": "app/cbl/COUSR00C.cbl:196",
+   "resolved_via": "MOVE literal @ app/cbl/COUSR00C.cbl:202"
+  },
+  {
+   "from": "COUSR00C",
+   "to": "COADM01C",
+   "kind": "XCTL(dyn)",
+   "cite": "app/cbl/COUSR00C.cbl:206",
+   "resolved_via": "MOVE literal @ app/cbl/COUSR00C.cbl:126"
+  },
+  {
+   "from": "COUSR00C",
+   "to": "COSGN00C",
+   "kind": "XCTL(dyn)",
+   "cite": "app/cbl/COUSR00C.cbl:206",
+   "resolved_via": "MOVE literal @ app/cbl/COUSR00C.cbl:111"
+  },
+  {
+   "from": "COUSR00C",
+   "to": "COSGN00C",
+   "kind": "XCTL(dyn)",
+   "cite": "app/cbl/COUSR00C.cbl:206",
+   "resolved_via": "MOVE literal @ app/cbl/COUSR00C.cbl:509"
+  },
+  {
+   "from": "COUSR00C",
+   "to": "COUSR02C",
+   "kind": "XCTL(dyn)",
+   "cite": "app/cbl/COUSR00C.cbl:206",
+   "resolved_via": "MOVE literal @ app/cbl/COUSR00C.cbl:192"
+  },
+  {
+   "from": "COUSR00C",
+   "to": "COUSR03C",
+   "kind": "XCTL(dyn)",
+   "cite": "app/cbl/COUSR00C.cbl:206",
+   "resolved_via": "MOVE literal @ app/cbl/COUSR00C.cbl:202"
+  },
+  {
+   "from": "COUSR00C",
+   "to": "COADM01C",
+   "kind": "XCTL(dyn)",
+   "cite": "app/cbl/COUSR00C.cbl:514",
+   "resolved_via": "MOVE literal @ app/cbl/COUSR00C.cbl:126"
+  },
+  {
+   "from": "COUSR00C",
+   "to": "COSGN00C",
+   "kind": "XCTL(dyn)",
+   "cite": "app/cbl/COUSR00C.cbl:514",
+   "resolved_via": "MOVE literal @ app/cbl/COUSR00C.cbl:111"
+  },
+  {
+   "from": "COUSR00C",
+   "to": "COSGN00C",
+   "kind": "XCTL(dyn)",
+   "cite": "app/cbl/COUSR00C.cbl:514",
+   "resolved_via": "MOVE literal @ app/cbl/COUSR00C.cbl:509"
+  },
+  {
+   "from": "COUSR00C",
+   "to": "COUSR02C",
+   "kind": "XCTL(dyn)",
+   "cite": "app/cbl/COUSR00C.cbl:514",
+   "resolved_via": "MOVE literal @ app/cbl/COUSR00C.cbl:192"
+  },
+  {
+   "from": "COUSR00C",
+   "to": "COUSR03C",
+   "kind": "XCTL(dyn)",
+   "cite": "app/cbl/COUSR00C.cbl:514",
+   "resolved_via": "MOVE literal @ app/cbl/COUSR00C.cbl:202"
+  },
+  {
+   "from": "COUSR01C",
+   "to": "COADM01C",
+   "kind": "XCTL(dyn)",
+   "cite": "app/cbl/COUSR01C.cbl:175",
+   "resolved_via": "MOVE literal @ app/cbl/COUSR01C.cbl:94"
+  },
+  {
+   "from": "COUSR01C",
+   "to": "COSGN00C",
+   "kind": "XCTL(dyn)",
+   "cite": "app/cbl/COUSR01C.cbl:175",
+   "resolved_via": "MOVE literal @ app/cbl/COUSR01C.cbl:168"
+  },
+  {
+   "from": "COUSR01C",
+   "to": "COSGN00C",
+   "kind": "XCTL(dyn)",
+   "cite": "app/cbl/COUSR01C.cbl:175",
+   "resolved_via": "MOVE literal @ app/cbl/COUSR01C.cbl:79"
+  },
+  {
+   "from": "COUSR02C",
+   "to": "COADM01C",
+   "kind": "XCTL(dyn)",
+   "cite": "app/cbl/COUSR02C.cbl:258",
+   "resolved_via": "MOVE literal @ app/cbl/COUSR02C.cbl:114"
+  },
+  {
+   "from": "COUSR02C",
+   "to": "COADM01C",
+   "kind": "XCTL(dyn)",
+   "cite": "app/cbl/COUSR02C.cbl:258",
+   "resolved_via": "MOVE literal @ app/cbl/COUSR02C.cbl:125"
+  },
+  {
+   "from": "COUSR02C",
+   "to": "COSGN00C",
+   "kind": "XCTL(dyn)",
+   "cite": "app/cbl/COUSR02C.cbl:258",
+   "resolved_via": "MOVE literal @ app/cbl/COUSR02C.cbl:253"
+  },
+  {
+   "from": "COUSR02C",
+   "to": "COSGN00C",
+   "kind": "XCTL(dyn)",
+   "cite": "app/cbl/COUSR02C.cbl:258",
+   "resolved_via": "MOVE literal @ app/cbl/COUSR02C.cbl:91"
+  },
+  {
+   "from": "COUSR03C",
+   "to": "COADM01C",
+   "kind": "XCTL(dyn)",
+   "cite": "app/cbl/COUSR03C.cbl:205",
+   "resolved_via": "MOVE literal @ app/cbl/COUSR03C.cbl:113"
+  },
+  {
+   "from": "COUSR03C",
+   "to": "COADM01C",
+   "kind": "XCTL(dyn)",
+   "cite": "app/cbl/COUSR03C.cbl:205",
+   "resolved_via": "MOVE literal @ app/cbl/COUSR03C.cbl:124"
+  },
+  {
+   "from": "COUSR03C",
+   "to": "COSGN00C",
+   "kind": "XCTL(dyn)",
+   "cite": "app/cbl/COUSR03C.cbl:205",
+   "resolved_via": "MOVE literal @ app/cbl/COUSR03C.cbl:200"
+  },
+  {
+   "from": "COUSR03C",
+   "to": "COSGN00C",
+   "kind": "XCTL(dyn)",
+   "cite": "app/cbl/COUSR03C.cbl:205",
+   "resolved_via": "MOVE literal @ app/cbl/COUSR03C.cbl:91"
+  },
+  {
+   "from": "CSUTLDTC",
+   "to": "CEEDAYS",
+   "kind": "CALL",
+   "cite": "app/cbl/CSUTLDTC.cbl:116"
+  }
+ ],
+ "unresolved": [],
+ "datasets": [
+  {
+   "program": "COACTUPC",
+   "file": "CXACAIX",
+   "verb": "READ",
+   "cite": "app/cbl/COACTUPC.cbl:3654"
+  },
+  {
+   "program": "COACTUPC",
+   "file": "ACCTDAT",
+   "verb": "READ",
+   "cite": "app/cbl/COACTUPC.cbl:3703"
+  },
+  {
+   "program": "COACTUPC",
+   "file": "CUSTDAT",
+   "verb": "READ",
+   "cite": "app/cbl/COACTUPC.cbl:3753"
+  },
+  {
+   "program": "COACTUPC",
+   "file": "ACCTDAT",
+   "verb": "READ",
+   "cite": "app/cbl/COACTUPC.cbl:3894"
+  },
+  {
+   "program": "COACTUPC",
+   "file": "CUSTDAT",
+   "verb": "READ",
+   "cite": "app/cbl/COACTUPC.cbl:3921"
+  },
+  {
+   "program": "COACTUPC",
+   "file": "ACCTDAT",
+   "verb": "REWRITE",
+   "cite": "app/cbl/COACTUPC.cbl:4065"
+  },
+  {
+   "program": "COACTUPC",
+   "file": "CUSTDAT",
+   "verb": "REWRITE",
+   "cite": "app/cbl/COACTUPC.cbl:4085"
+  },
+  {
+   "program": "COACTVWC",
+   "file": "CXACAIX",
+   "verb": "READ",
+   "cite": "app/cbl/COACTVWC.cbl:727"
+  },
+  {
+   "program": "COACTVWC",
+   "file": "ACCTDAT",
+   "verb": "READ",
+   "cite": "app/cbl/COACTVWC.cbl:776"
+  },
+  {
+   "program": "COACTVWC",
+   "file": "CUSTDAT",
+   "verb": "READ",
+   "cite": "app/cbl/COACTVWC.cbl:826"
+  },
+  {
+   "program": "COBIL00C",
+   "file": "ACCTDAT",
+   "verb": "READ",
+   "cite": "app/cbl/COBIL00C.cbl:345"
+  },
+  {
+   "program": "COBIL00C",
+   "file": "ACCTDAT",
+   "verb": "REWRITE",
+   "cite": "app/cbl/COBIL00C.cbl:379"
+  },
+  {
+   "program": "COBIL00C",
+   "file": "CXACAIX",
+   "verb": "READ",
+   "cite": "app/cbl/COBIL00C.cbl:410"
+  },
+  {
+   "program": "COBIL00C",
+   "file": "TRANSACT",
+   "verb": "STARTBR",
+   "cite": "app/cbl/COBIL00C.cbl:443"
+  },
+  {
+   "program": "COBIL00C",
+   "file": "TRANSACT",
+   "verb": "READPREV",
+   "cite": "app/cbl/COBIL00C.cbl:474"
+  },
+  {
+   "program": "COBIL00C",
+   "file": "TRANSACT",
+   "verb": "WRITE",
+   "cite": "app/cbl/COBIL00C.cbl:512"
+  },
+  {
+   "program": "COCRDLIC",
+   "file": "CARDDAT",
+   "verb": "STARTBR",
+   "cite": "app/cbl/COCRDLIC.cbl:1129"
+  },
+  {
+   "program": "COCRDLIC",
+   "file": "CARDDAT",
+   "verb": "READNEXT",
+   "cite": "app/cbl/COCRDLIC.cbl:1146"
+  },
+  {
+   "program": "COCRDLIC",
+   "file": "CARDDAT",
+   "verb": "READNEXT",
+   "cite": "app/cbl/COCRDLIC.cbl:1197"
+  },
+  {
+   "program": "COCRDLIC",
+   "file": "CARDDAT",
+   "verb": "STARTBR",
+   "cite": "app/cbl/COCRDLIC.cbl:1273"
+  },
+  {
+   "program": "COCRDLIC",
+   "file": "CARDDAT",
+   "verb": "READPREV",
+   "cite": "app/cbl/COCRDLIC.cbl:1294"
+  },
+  {
+   "program": "COCRDLIC",
+   "file": "CARDDAT",
+   "verb": "READPREV",
+   "cite": "app/cbl/COCRDLIC.cbl:1322"
+  },
+  {
+   "program": "COCRDSLC",
+   "file": "CARDAIX",
+   "verb": "READ",
+   "cite": "app/cbl/COCRDSLC.cbl:742"
+  },
+  {
+   "program": "COCRDSLC",
+   "file": "CARDDAT",
+   "verb": "READ",
+   "cite": "app/cbl/COCRDSLC.cbl:742"
+  },
+  {
+   "program": "COCRDSLC",
+   "file": "CARDAIX",
+   "verb": "READ",
+   "cite": "app/cbl/COCRDSLC.cbl:783"
+  },
+  {
+   "program": "COCRDUPC",
+   "file": "CARDAIX",
+   "verb": "READ",
+   "cite": "app/cbl/COCRDUPC.cbl:1382"
+  },
+  {
+   "program": "COCRDUPC",
+   "file": "CARDDAT",
+   "verb": "READ",
+   "cite": "app/cbl/COCRDUPC.cbl:1382"
+  },
+  {
+   "program": "COCRDUPC",
+   "file": "CARDAIX",
+   "verb": "READ",
+   "cite": "app/cbl/COCRDUPC.cbl:1427"
+  },
+  {
+   "program": "COCRDUPC",
+   "file": "CARDDAT",
+   "verb": "READ",
+   "cite": "app/cbl/COCRDUPC.cbl:1427"
+  },
+  {
+   "program": "COCRDUPC",
+   "file": "CARDAIX",
+   "verb": "REWRITE",
+   "cite": "app/cbl/COCRDUPC.cbl:1477"
+  },
+  {
+   "program": "COCRDUPC",
+   "file": "CARDDAT",
+   "verb": "REWRITE",
+   "cite": "app/cbl/COCRDUPC.cbl:1477"
+  },
+  {
+   "program": "COSGN00C",
+   "file": "USRSEC",
+   "verb": "READ",
+   "cite": "app/cbl/COSGN00C.cbl:211"
+  },
+  {
+   "program": "COTRN00C",
+   "file": "TRANSACT",
+   "verb": "STARTBR",
+   "cite": "app/cbl/COTRN00C.cbl:593"
+  },
+  {
+   "program": "COTRN00C",
+   "file": "TRANSACT",
+   "verb": "READNEXT",
+   "cite": "app/cbl/COTRN00C.cbl:626"
+  },
+  {
+   "program": "COTRN00C",
+   "file": "TRANSACT",
+   "verb": "READPREV",
+   "cite": "app/cbl/COTRN00C.cbl:660"
+  },
+  {
+   "program": "COTRN01C",
+   "file": "TRANSACT",
+   "verb": "READ",
+   "cite": "app/cbl/COTRN01C.cbl:269"
+  },
+  {
+   "program": "COTRN02C",
+   "file": "CXACAIX",
+   "verb": "READ",
+   "cite": "app/cbl/COTRN02C.cbl:578"
+  },
+  {
+   "program": "COTRN02C",
+   "file": "CCXREF",
+   "verb": "READ",
+   "cite": "app/cbl/COTRN02C.cbl:611"
+  },
+  {
+   "program": "COTRN02C",
+   "file": "TRANSACT",
+   "verb": "STARTBR",
+   "cite": "app/cbl/COTRN02C.cbl:644"
+  },
+  {
+   "program": "COTRN02C",
+   "file": "TRANSACT",
+   "verb": "READPREV",
+   "cite": "app/cbl/COTRN02C.cbl:675"
+  },
+  {
+   "program": "COTRN02C",
+   "file": "TRANSACT",
+   "verb": "WRITE",
+   "cite": "app/cbl/COTRN02C.cbl:713"
+  },
+  {
+   "program": "COUSR00C",
+   "file": "USRSEC",
+   "verb": "STARTBR",
+   "cite": "app/cbl/COUSR00C.cbl:588"
+  },
+  {
+   "program": "COUSR00C",
+   "file": "USRSEC",
+   "verb": "READNEXT",
+   "cite": "app/cbl/COUSR00C.cbl:621"
+  },
+  {
+   "program": "COUSR00C",
+   "file": "USRSEC",
+   "verb": "READPREV",
+   "cite": "app/cbl/COUSR00C.cbl:655"
+  },
+  {
+   "program": "COUSR01C",
+   "file": "USRSEC",
+   "verb": "WRITE",
+   "cite": "app/cbl/COUSR01C.cbl:240"
+  },
+  {
+   "program": "COUSR02C",
+   "file": "USRSEC",
+   "verb": "READ",
+   "cite": "app/cbl/COUSR02C.cbl:322"
+  },
+  {
+   "program": "COUSR02C",
+   "file": "USRSEC",
+   "verb": "REWRITE",
+   "cite": "app/cbl/COUSR02C.cbl:360"
+  },
+  {
+   "program": "COUSR03C",
+   "file": "USRSEC",
+   "verb": "READ",
+   "cite": "app/cbl/COUSR03C.cbl:269"
+  },
+  {
+   "program": "COUSR03C",
+   "file": "USRSEC",
+   "verb": "DELETE",
+   "cite": "app/cbl/COUSR03C.cbl:307"
+  }
+ ],
+ "returns": [
+  {
+   "from": "COACTUPC",
+   "transid": [
+    "CAUP"
+   ],
+   "cite": "app/cbl/COACTUPC.cbl:1015"
+  },
+  {
+   "from": "COACTVWC",
+   "transid": [
+    "CAVW"
+   ],
+   "cite": "app/cbl/COACTVWC.cbl:402"
+  },
+  {
+   "from": "COADM01C",
+   "transid": [
+    "CA00"
+   ],
+   "cite": "app/cbl/COADM01C.cbl:111"
+  },
+  {
+   "from": "COADM01C",
+   "transid": [
+    "CA00"
+   ],
+   "cite": "app/cbl/COADM01C.cbl:280"
+  },
+  {
+   "from": "COBIL00C",
+   "transid": [
+    "CB00"
+   ],
+   "cite": "app/cbl/COBIL00C.cbl:146"
+  },
+  {
+   "from": "COCRDLIC",
+   "transid": [
+    "CCLI"
+   ],
+   "cite": "app/cbl/COCRDLIC.cbl:615"
+  },
+  {
+   "from": "COCRDSLC",
+   "transid": [
+    "CCDL"
+   ],
+   "cite": "app/cbl/COCRDSLC.cbl:402"
+  },
+  {
+   "from": "COCRDUPC",
+   "transid": [
+    "CCUP"
+   ],
+   "cite": "app/cbl/COCRDUPC.cbl:554"
+  },
+  {
+   "from": "COMEN01C",
+   "transid": [
+    "CM00"
+   ],
+   "cite": "app/cbl/COMEN01C.cbl:107"
+  },
+  {
+   "from": "CORPT00C",
+   "transid": [
+    "CR00"
+   ],
+   "cite": "app/cbl/CORPT00C.cbl:199"
+  },
+  {
+   "from": "CORPT00C",
+   "transid": [
+    "CR00"
+   ],
+   "cite": "app/cbl/CORPT00C.cbl:587"
+  },
+  {
+   "from": "COSGN00C",
+   "transid": [
+    "CC00"
+   ],
+   "cite": "app/cbl/COSGN00C.cbl:98"
+  },
+  {
+   "from": "COTRN00C",
+   "transid": [
+    "CT00"
+   ],
+   "cite": "app/cbl/COTRN00C.cbl:138"
+  },
+  {
+   "from": "COTRN01C",
+   "transid": [
+    "CT01"
+   ],
+   "cite": "app/cbl/COTRN01C.cbl:136"
+  },
+  {
+   "from": "COTRN02C",
+   "transid": [
+    "CT02"
+   ],
+   "cite": "app/cbl/COTRN02C.cbl:156"
+  },
+  {
+   "from": "COTRN02C",
+   "transid": [
+    "CT02"
+   ],
+   "cite": "app/cbl/COTRN02C.cbl:530"
+  },
+  {
+   "from": "COUSR00C",
+   "transid": [
+    "CU00"
+   ],
+   "cite": "app/cbl/COUSR00C.cbl:141"
+  },
+  {
+   "from": "COUSR01C",
+   "transid": [
+    "CU01"
+   ],
+   "cite": "app/cbl/COUSR01C.cbl:107"
+  },
+  {
+   "from": "COUSR02C",
+   "transid": [
+    "CU02"
+   ],
+   "cite": "app/cbl/COUSR02C.cbl:135"
+  },
+  {
+   "from": "COUSR03C",
+   "transid": [
+    "CU03"
+   ],
+   "cite": "app/cbl/COUSR03C.cbl:134"
+  }
+ ],
+ "tdq_writes": [
+  {
+   "program": "CORPT00C",
+   "queue": "JOBS",
+   "cite": "app/cbl/CORPT00C.cbl:517"
+  }
+ ],
+ "jcl_jobs": {
+  "ACCTFILE": {
+   "path": "app/jcl/ACCTFILE.jcl",
+   "steps": [
+    {
+     "step": "STEP05",
+     "pgm": "IDCAMS",
+     "cite": "app/jcl/ACCTFILE.jcl:22"
+    },
+    {
+     "step": "STEP10",
+     "pgm": "IDCAMS",
+     "cite": "app/jcl/ACCTFILE.jcl:33"
+    },
+    {
+     "step": "STEP15",
+     "pgm": "IDCAMS",
+     "cite": "app/jcl/ACCTFILE.jcl:54"
+    }
+   ]
+  },
+  "CARDFILE": {
+   "path": "app/jcl/CARDFILE.jcl",
+   "steps": [
+    {
+     "step": "CLCIFIL",
+     "pgm": "SDSF",
+     "cite": "app/jcl/CARDFILE.jcl:22"
+    },
+    {
+     "step": "STEP05",
+     "pgm": "IDCAMS",
+     "cite": "app/jcl/CARDFILE.jcl:33"
+    },
+    {
+     "step": "STEP10",
+     "pgm": "IDCAMS",
+     "cite": "app/jcl/CARDFILE.jcl:47"
+    },
+    {
+     "step": "STEP15",
+     "pgm": "IDCAMS",
+     "cite": "app/jcl/CARDFILE.jcl:68"
+    },
+    {
+     "step": "STEP40",
+     "pgm": "IDCAMS",
+     "cite": "app/jcl/CARDFILE.jcl:80"
+    },
+    {
+     "step": "STEP50",
+     "pgm": "IDCAMS",
+     "cite": "app/jcl/CARDFILE.jcl:97"
+    },
+    {
+     "step": "STEP60",
+     "pgm": "IDCAMS",
+     "cite": "app/jcl/CARDFILE.jcl:107"
+    },
+    {
+     "step": "OPCIFIL",
+     "pgm": "SDSF",
+     "cite": "app/jcl/CARDFILE.jcl:118"
+    }
+   ]
+  },
+  "CBADMCDJ": {
+   "path": "app/jcl/CBADMCDJ.jcl",
+   "steps": [
+    {
+     "step": "STEP1",
+     "pgm": "DFHCSDUP",
+     "cite": "app/jcl/CBADMCDJ.jcl:27"
+    }
+   ]
+  },
+  "CBEXPORT": {
+   "path": "app/jcl/CBEXPORT.jcl",
+   "steps": [
+    {
+     "step": "STEP01",
+     "pgm": "IDCAMS",
+     "cite": "app/jcl/CBEXPORT.jcl:24"
+    },
+    {
+     "step": "STEP02",
+     "pgm": "CBEXPORT",
+     "cite": "app/jcl/CBEXPORT.jcl:43"
+    }
+   ]
+  },
+  "CBIMPORT": {
+   "path": "app/jcl/CBIMPORT.jcl",
+   "steps": [
+    {
+     "step": "STEP01",
+     "pgm": "CBIMPORT",
+     "cite": "app/jcl/CBIMPORT.jcl:22"
+    }
+   ]
+  },
+  "CLOSEFIL": {
+   "path": "app/jcl/CLOSEFIL.jcl",
+   "steps": [
+    {
+     "step": "CLCIFIL",
+     "pgm": "SDSF",
+     "cite": "app/jcl/CLOSEFIL.jcl:22"
+    }
+   ]
+  },
+  "COMBTRAN": {
+   "path": "app/jcl/COMBTRAN.jcl",
+   "steps": [
+    {
+     "step": "STEP05R",
+     "pgm": "SORT",
+     "cite": "app/jcl/COMBTRAN.jcl:22"
+    },
+    {
+     "step": "STEP10",
+     "pgm": "IDCAMS",
+     "cite": "app/jcl/COMBTRAN.jcl:41"
+    }
+   ]
+  },
+  "CREASTMT": {
+   "path": "app/jcl/CREASTMT.JCL",
+   "steps": [
+    {
+     "step": "DELDEF01",
+     "pgm": "IDCAMS",
+     "cite": "app/jcl/CREASTMT.JCL:22"
+    },
+    {
+     "step": "STEP010",
+     "pgm": "SORT",
+     "cite": "app/jcl/CREASTMT.JCL:44"
+    },
+    {
+     "step": "STEP020",
+     "pgm": "IDCAMS",
+     "cite": "app/jcl/CREASTMT.JCL:56"
+    },
+    {
+     "step": "STEP030",
+     "pgm": "IEFBR14",
+     "cite": "app/jcl/CREASTMT.JCL:66"
+    },
+    {
+     "step": "STEP040",
+     "pgm": "CBSTM03A",
+     "cite": "app/jcl/CREASTMT.JCL:79"
+    }
+   ]
+  },
+  "CUSTFILE": {
+   "path": "app/jcl/CUSTFILE.jcl",
+   "steps": [
+    {
+     "step": "CLCIFIL",
+     "pgm": "SDSF",
+     "cite": "app/jcl/CUSTFILE.jcl:22"
+    },
+    {
+     "step": "STEP05",
+     "pgm": "IDCAMS",
+     "cite": "app/jcl/CUSTFILE.jcl:32"
+    },
+    {
+     "step": "STEP10",
+     "pgm": "IDCAMS",
+     "cite": "app/jcl/CUSTFILE.jcl:43"
+    },
+    {
+     "step": "STEP15",
+     "pgm": "IDCAMS",
+     "cite": "app/jcl/CUSTFILE.jcl:64"
+    },
+    {
+     "step": "OPCIFIL",
+     "pgm": "SDSF",
+     "cite": "app/jcl/CUSTFILE.jcl:76"
+    }
+   ]
+  },
+  "DALYREJS": {
+   "path": "app/jcl/DALYREJS.jcl",
+   "steps": [
+    {
+     "step": "STEP05",
+     "pgm": "IDCAMS",
+     "cite": "app/jcl/DALYREJS.jcl:21"
+    }
+   ]
+  },
+  "DEFCUST": {
+   "path": "app/jcl/DEFCUST.jcl",
+   "steps": [
+    {
+     "step": "STEP05",
+     "pgm": "IDCAMS",
+     "cite": "app/jcl/DEFCUST.jcl:22"
+    },
+    {
+     "step": "STEP05",
+     "pgm": "IDCAMS",
+     "cite": "app/jcl/DEFCUST.jcl:32"
+    }
+   ]
+  },
+  "DEFGDGB": {
+   "path": "app/jcl/DEFGDGB.jcl",
+   "steps": [
+    {
+     "step": "STEP05",
+     "pgm": "IDCAMS",
+     "cite": "app/jcl/DEFGDGB.jcl:21"
+    }
+   ]
+  },
+  "DEFGDGD": {
+   "path": "app/jcl/DEFGDGD.jcl",
+   "steps": [
+    {
+     "step": "STEP10",
+     "pgm": "IDCAMS",
+     "cite": "app/jcl/DEFGDGD.jcl:24"
+    },
+    {
+     "step": "STEP20",
+     "pgm": "IEBGENER",
+     "cite": "app/jcl/DEFGDGD.jcl:36"
+    },
+    {
+     "step": "STEP30",
+     "pgm": "IDCAMS",
+     "cite": "app/jcl/DEFGDGD.jcl:47"
+    },
+    {
+     "step": "STEP40",
+     "pgm": "IEBGENER",
+     "cite": "app/jcl/DEFGDGD.jcl:59"
+    },
+    {
+     "step": "STEP50",
+     "pgm": "IDCAMS",
+     "cite": "app/jcl/DEFGDGD.jcl:70"
+    },
+    {
+     "step": "STEP60",
+     "pgm": "IEBGENER",
+     "cite": "app/jcl/DEFGDGD.jcl:82"
+    }
+   ]
+  },
+  "DISCGRP": {
+   "path": "app/jcl/DISCGRP.jcl",
+   "steps": [
+    {
+     "step": "STEP05",
+     "pgm": "IDCAMS",
+     "cite": "app/jcl/DISCGRP.jcl:22"
+    },
+    {
+     "step": "STEP10",
+     "pgm": "IDCAMS",
+     "cite": "app/jcl/DISCGRP.jcl:33"
+    },
+    {
+     "step": "STEP15",
+     "pgm": "IDCAMS",
+     "cite": "app/jcl/DISCGRP.jcl:54"
+    }
+   ]
+  },
+  "DUSRSECJ": {
+   "path": "app/jcl/DUSRSECJ.jcl",
+   "steps": [
+    {
+     "step": "PREDEL",
+     "pgm": "IEFBR14",
+     "cite": "app/jcl/DUSRSECJ.jcl:23"
+    },
+    {
+     "step": "STEP01",
+     "pgm": "IEBGENER",
+     "cite": "app/jcl/DUSRSECJ.jcl:32"
+    },
+    {
+     "step": "STEP02",
+     "pgm": "IDCAMS",
+     "cite": "app/jcl/DUSRSECJ.jcl:58"
+    },
+    {
+     "step": "STEP03",
+     "pgm": "IDCAMS",
+     "cite": "app/jcl/DUSRSECJ.jcl:80"
+    }
+   ]
+  },
+  "ESDSRRDS": {
+   "path": "app/jcl/ESDSRRDS.jcl",
+   "steps": [
+    {
+     "step": "PREDEL",
+     "pgm": "IEFBR14",
+     "cite": "app/jcl/ESDSRRDS.jcl:24"
+    },
+    {
+     "step": "STEP01",
+     "pgm": "IEBGENER",
+     "cite": "app/jcl/ESDSRRDS.jcl:33"
+    },
+    {
+     "step": "STEP02",
+     "pgm": "IDCAMS",
+     "cite": "app/jcl/ESDSRRDS.jcl:59"
+    },
+    {
+     "step": "STEP03",
+     "pgm": "IDCAMS",
+     "cite": "app/jcl/ESDSRRDS.jcl:79"
+    },
+    {
+     "step": "STEP04",
+     "pgm": "IDCAMS",
+     "cite": "app/jcl/ESDSRRDS.jcl:93"
+    },
+    {
+     "step": "STEP05",
+     "pgm": "IDCAMS",
+     "cite": "app/jcl/ESDSRRDS.jcl:113"
+    }
+   ]
+  },
+  "FTPJCL": {
+   "path": "app/jcl/FTPJCL.JCL",
+   "steps": [
+    {
+     "step": "STEP1",
+     "pgm": "FTP",
+     "cite": "app/jcl/FTPJCL.JCL:30"
+    }
+   ]
+  },
+  "INTCALC": {
+   "path": "app/jcl/INTCALC.jcl",
+   "steps": [
+    {
+     "step": "STEP15",
+     "pgm": "CBACT04C",
+     "cite": "app/jcl/INTCALC.jcl:22"
+    }
+   ]
+  },
+  "INTRDRJ1": {
+   "path": "app/jcl/INTRDRJ1.JCL",
+   "steps": [
+    {
+     "step": "IDCAMS",
+     "pgm": "IDCAMS",
+     "cite": "app/jcl/INTRDRJ1.JCL:6"
+    },
+    {
+     "step": "STEP01",
+     "pgm": "IEBGENER",
+     "cite": "app/jcl/INTRDRJ1.JCL:14"
+    }
+   ]
+  },
+  "INTRDRJ2": {
+   "path": "app/jcl/INTRDRJ2.JCL",
+   "steps": [
+    {
+     "step": "IDCAMS",
+     "pgm": "IDCAMS",
+     "cite": "app/jcl/INTRDRJ2.JCL:7"
+    }
+   ]
+  },
+  "OPENFIL": {
+   "path": "app/jcl/OPENFIL.jcl",
+   "steps": [
+    {
+     "step": "OPCIFIL",
+     "pgm": "SDSF",
+     "cite": "app/jcl/OPENFIL.jcl:22"
+    }
+   ]
+  },
+  "POSTTRAN": {
+   "path": "app/jcl/POSTTRAN.jcl",
+   "steps": [
+    {
+     "step": "STEP15",
+     "pgm": "CBTRN02C",
+     "cite": "app/jcl/POSTTRAN.jcl:23"
+    }
+   ]
+  },
+  "PRTCATBL": {
+   "path": "app/jcl/PRTCATBL.jcl",
+   "steps": [
+    {
+     "step": "DELDEF",
+     "pgm": "IEFBR14",
+     "cite": "app/jcl/PRTCATBL.jcl:21"
+    },
+    {
+     "step": "STEP05R",
+     "proc": "REPROC",
+     "cite": "app/jcl/PRTCATBL.jcl:29"
+    },
+    {
+     "step": "STEP10R",
+     "pgm": "SORT",
+     "cite": "app/jcl/PRTCATBL.jcl:43"
+    }
+   ]
+  },
+  "READACCT": {
+   "path": "app/jcl/READACCT.jcl",
+   "steps": [
+    {
+     "step": "PREDEL",
+     "pgm": "IEFBR14",
+     "cite": "app/jcl/READACCT.jcl:22"
+    },
+    {
+     "step": "STEP05",
+     "pgm": "CBACT01C",
+     "cite": "app/jcl/READACCT.jcl:32"
+    }
+   ]
+  },
+  "READCARD": {
+   "path": "app/jcl/READCARD.jcl",
+   "steps": [
+    {
+     "step": "STEP05",
+     "pgm": "CBACT02C",
+     "cite": "app/jcl/READCARD.jcl:22"
+    }
+   ]
+  },
+  "READCUST": {
+   "path": "app/jcl/READCUST.jcl",
+   "steps": [
+    {
+     "step": "STEP05",
+     "pgm": "CBCUS01C",
+     "cite": "app/jcl/READCUST.jcl:21"
+    }
+   ]
+  },
+  "READXREF": {
+   "path": "app/jcl/READXREF.jcl",
+   "steps": [
+    {
+     "step": "STEP05",
+     "pgm": "CBACT03C",
+     "cite": "app/jcl/READXREF.jcl:22"
+    }
+   ]
+  },
+  "REPTFILE": {
+   "path": "app/jcl/REPTFILE.jcl",
+   "steps": [
+    {
+     "step": "STEP05",
+     "pgm": "IDCAMS",
+     "cite": "app/jcl/REPTFILE.jcl:22"
+    }
+   ]
+  },
+  "TCATBALF": {
+   "path": "app/jcl/TCATBALF.jcl",
+   "steps": [
+    {
+     "step": "STEP05",
+     "pgm": "IDCAMS",
+     "cite": "app/jcl/TCATBALF.jcl:22"
+    },
+    {
+     "step": "STEP10",
+     "pgm": "IDCAMS",
+     "cite": "app/jcl/TCATBALF.jcl:33"
+    },
+    {
+     "step": "STEP15",
+     "pgm": "IDCAMS",
+     "cite": "app/jcl/TCATBALF.jcl:54"
+    }
+   ]
+  },
+  "TRANBKP": {
+   "path": "app/jcl/TRANBKP.jcl",
+   "steps": [
+    {
+     "step": "STEP05R",
+     "proc": "REPROC",
+     "cite": "app/jcl/TRANBKP.jcl:23"
+    },
+    {
+     "step": "STEP05",
+     "pgm": "IDCAMS",
+     "cite": "app/jcl/TRANBKP.jcl:37"
+    },
+    {
+     "step": "STEP10",
+     "pgm": "IDCAMS",
+     "cite": "app/jcl/TRANBKP.jcl:51"
+    }
+   ]
+  },
+  "TRANCATG": {
+   "path": "app/jcl/TRANCATG.jcl",
+   "steps": [
+    {
+     "step": "STEP05",
+     "pgm": "IDCAMS",
+     "cite": "app/jcl/TRANCATG.jcl:22"
+    },
+    {
+     "step": "STEP10",
+     "pgm": "IDCAMS",
+     "cite": "app/jcl/TRANCATG.jcl:33"
+    },
+    {
+     "step": "STEP15",
+     "pgm": "IDCAMS",
+     "cite": "app/jcl/TRANCATG.jcl:54"
+    }
+   ]
+  },
+  "TRANFILE": {
+   "path": "app/jcl/TRANFILE.jcl",
+   "steps": [
+    {
+     "step": "CLCIFIL",
+     "pgm": "SDSF",
+     "cite": "app/jcl/TRANFILE.jcl:22"
+    },
+    {
+     "step": "STEP05",
+     "pgm": "IDCAMS",
+     "cite": "app/jcl/TRANFILE.jcl:32"
+    },
+    {
+     "step": "STEP10",
+     "pgm": "IDCAMS",
+     "cite": "app/jcl/TRANFILE.jcl:46"
+    },
+    {
+     "step": "STEP15",
+     "pgm": "IDCAMS",
+     "cite": "app/jcl/TRANFILE.jcl:67"
+    },
+    {
+     "step": "STEP20",
+     "pgm": "IDCAMS",
+     "cite": "app/jcl/TRANFILE.jcl:79"
+    },
+    {
+     "step": "STEP25",
+     "pgm": "IDCAMS",
+     "cite": "app/jcl/TRANFILE.jcl:96"
+    },
+    {
+     "step": "STEP30",
+     "pgm": "IDCAMS",
+     "cite": "app/jcl/TRANFILE.jcl:106"
+    },
+    {
+     "step": "OPCIFIL",
+     "pgm": "SDSF",
+     "cite": "app/jcl/TRANFILE.jcl:116"
+    }
+   ]
+  },
+  "TRANIDX": {
+   "path": "app/jcl/TRANIDX.jcl",
+   "steps": [
+    {
+     "step": "STEP20",
+     "pgm": "IDCAMS",
+     "cite": "app/jcl/TRANIDX.jcl:22"
+    },
+    {
+     "step": "STEP25",
+     "pgm": "IDCAMS",
+     "cite": "app/jcl/TRANIDX.jcl:39"
+    },
+    {
+     "step": "STEP30",
+     "pgm": "IDCAMS",
+     "cite": "app/jcl/TRANIDX.jcl:49"
+    }
+   ]
+  },
+  "TRANREPT": {
+   "path": "app/jcl/TRANREPT.jcl",
+   "steps": [
+    {
+     "step": "STEP05R",
+     "proc": "REPROC",
+     "cite": "app/jcl/TRANREPT.jcl:23"
+    },
+    {
+     "step": "STEP05R",
+     "pgm": "SORT",
+     "cite": "app/jcl/TRANREPT.jcl:37"
+    },
+    {
+     "step": "STEP10R",
+     "pgm": "CBTRN03C",
+     "cite": "app/jcl/TRANREPT.jcl:59"
+    }
+   ]
+  },
+  "TRANTYPE": {
+   "path": "app/jcl/TRANTYPE.jcl",
+   "steps": [
+    {
+     "step": "STEP05",
+     "pgm": "IDCAMS",
+     "cite": "app/jcl/TRANTYPE.jcl:22"
+    },
+    {
+     "step": "STEP10",
+     "pgm": "IDCAMS",
+     "cite": "app/jcl/TRANTYPE.jcl:33"
+    },
+    {
+     "step": "STEP15",
+     "pgm": "IDCAMS",
+     "cite": "app/jcl/TRANTYPE.jcl:54"
+    }
+   ]
+  },
+  "TXT2PDF1": {
+   "path": "app/jcl/TXT2PDF1.JCL",
+   "steps": [
+    {
+     "step": "TXT2PDF",
+     "pgm": "IKJEFT1B",
+     "cite": "app/jcl/TXT2PDF1.JCL:24"
+    }
+   ]
+  },
+  "WAITSTEP": {
+   "path": "app/jcl/WAITSTEP.jcl",
+   "steps": [
+    {
+     "step": "WAIT",
+     "pgm": "COBSWAIT",
+     "cite": "app/jcl/WAITSTEP.jcl:22"
+    }
+   ]
+  },
+  "XREFFILE": {
+   "path": "app/jcl/XREFFILE.jcl",
+   "steps": [
+    {
+     "step": "STEP05",
+     "pgm": "IDCAMS",
+     "cite": "app/jcl/XREFFILE.jcl:22"
+    },
+    {
+     "step": "STEP10",
+     "pgm": "IDCAMS",
+     "cite": "app/jcl/XREFFILE.jcl:36"
+    },
+    {
+     "step": "STEP15",
+     "pgm": "IDCAMS",
+     "cite": "app/jcl/XREFFILE.jcl:57"
+    },
+    {
+     "step": "STEP20",
+     "pgm": "IDCAMS",
+     "cite": "app/jcl/XREFFILE.jcl:69"
+    },
+    {
+     "step": "STEP25",
+     "pgm": "IDCAMS",
+     "cite": "app/jcl/XREFFILE.jcl:87"
+    },
+    {
+     "step": "STEP30",
+     "pgm": "IDCAMS",
+     "cite": "app/jcl/XREFFILE.jcl:97"
+    }
+   ]
+  }
+ },
+ "procs": {
+  "REPROC": {
+   "path": "app/proc/REPROC.prc",
+   "steps": [
+    {
+     "step": "PRC001",
+     "pgm": "IDCAMS",
+     "cite": "app/proc/REPROC.prc:21"
+    }
+   ]
+  },
+  "TRANREPT": {
+   "path": "app/proc/TRANREPT.prc",
+   "steps": [
+    {
+     "step": "STEP01R",
+     "proc": "REPROC",
+     "cite": "app/proc/TRANREPT.prc:21"
+    },
+    {
+     "step": "STEP05R",
+     "pgm": "SORT",
+     "cite": "app/proc/TRANREPT.prc:35"
+    },
+    {
+     "step": "STEP10R",
+     "pgm": "CBTRN03C",
+     "cite": "app/proc/TRANREPT.prc:57"
+    }
+   ]
+  }
+ },
+ "jcl_edges": [
+  {
+   "job": "ACCTFILE",
+   "step": "STEP05",
+   "pgm": "IDCAMS",
+   "cite": "app/jcl/ACCTFILE.jcl:22",
+   "via": null
+  },
+  {
+   "job": "ACCTFILE",
+   "step": "STEP10",
+   "pgm": "IDCAMS",
+   "cite": "app/jcl/ACCTFILE.jcl:33",
+   "via": null
+  },
+  {
+   "job": "ACCTFILE",
+   "step": "STEP15",
+   "pgm": "IDCAMS",
+   "cite": "app/jcl/ACCTFILE.jcl:54",
+   "via": null
+  },
+  {
+   "job": "CARDFILE",
+   "step": "CLCIFIL",
+   "pgm": "SDSF",
+   "cite": "app/jcl/CARDFILE.jcl:22",
+   "via": null
+  },
+  {
+   "job": "CARDFILE",
+   "step": "STEP05",
+   "pgm": "IDCAMS",
+   "cite": "app/jcl/CARDFILE.jcl:33",
+   "via": null
+  },
+  {
+   "job": "CARDFILE",
+   "step": "STEP10",
+   "pgm": "IDCAMS",
+   "cite": "app/jcl/CARDFILE.jcl:47",
+   "via": null
+  },
+  {
+   "job": "CARDFILE",
+   "step": "STEP15",
+   "pgm": "IDCAMS",
+   "cite": "app/jcl/CARDFILE.jcl:68",
+   "via": null
+  },
+  {
+   "job": "CARDFILE",
+   "step": "STEP40",
+   "pgm": "IDCAMS",
+   "cite": "app/jcl/CARDFILE.jcl:80",
+   "via": null
+  },
+  {
+   "job": "CARDFILE",
+   "step": "STEP50",
+   "pgm": "IDCAMS",
+   "cite": "app/jcl/CARDFILE.jcl:97",
+   "via": null
+  },
+  {
+   "job": "CARDFILE",
+   "step": "STEP60",
+   "pgm": "IDCAMS",
+   "cite": "app/jcl/CARDFILE.jcl:107",
+   "via": null
+  },
+  {
+   "job": "CARDFILE",
+   "step": "OPCIFIL",
+   "pgm": "SDSF",
+   "cite": "app/jcl/CARDFILE.jcl:118",
+   "via": null
+  },
+  {
+   "job": "CBADMCDJ",
+   "step": "STEP1",
+   "pgm": "DFHCSDUP",
+   "cite": "app/jcl/CBADMCDJ.jcl:27",
+   "via": null
+  },
+  {
+   "job": "CBEXPORT",
+   "step": "STEP01",
+   "pgm": "IDCAMS",
+   "cite": "app/jcl/CBEXPORT.jcl:24",
+   "via": null
+  },
+  {
+   "job": "CBEXPORT",
+   "step": "STEP02",
+   "pgm": "CBEXPORT",
+   "cite": "app/jcl/CBEXPORT.jcl:43",
+   "via": null
+  },
+  {
+   "job": "CBIMPORT",
+   "step": "STEP01",
+   "pgm": "CBIMPORT",
+   "cite": "app/jcl/CBIMPORT.jcl:22",
+   "via": null
+  },
+  {
+   "job": "CLOSEFIL",
+   "step": "CLCIFIL",
+   "pgm": "SDSF",
+   "cite": "app/jcl/CLOSEFIL.jcl:22",
+   "via": null
+  },
+  {
+   "job": "COMBTRAN",
+   "step": "STEP05R",
+   "pgm": "SORT",
+   "cite": "app/jcl/COMBTRAN.jcl:22",
+   "via": null
+  },
+  {
+   "job": "COMBTRAN",
+   "step": "STEP10",
+   "pgm": "IDCAMS",
+   "cite": "app/jcl/COMBTRAN.jcl:41",
+   "via": null
+  },
+  {
+   "job": "CREASTMT",
+   "step": "DELDEF01",
+   "pgm": "IDCAMS",
+   "cite": "app/jcl/CREASTMT.JCL:22",
+   "via": null
+  },
+  {
+   "job": "CREASTMT",
+   "step": "STEP010",
+   "pgm": "SORT",
+   "cite": "app/jcl/CREASTMT.JCL:44",
+   "via": null
+  },
+  {
+   "job": "CREASTMT",
+   "step": "STEP020",
+   "pgm": "IDCAMS",
+   "cite": "app/jcl/CREASTMT.JCL:56",
+   "via": null
+  },
+  {
+   "job": "CREASTMT",
+   "step": "STEP030",
+   "pgm": "IEFBR14",
+   "cite": "app/jcl/CREASTMT.JCL:66",
+   "via": null
+  },
+  {
+   "job": "CREASTMT",
+   "step": "STEP040",
+   "pgm": "CBSTM03A",
+   "cite": "app/jcl/CREASTMT.JCL:79",
+   "via": null
+  },
+  {
+   "job": "CUSTFILE",
+   "step": "CLCIFIL",
+   "pgm": "SDSF",
+   "cite": "app/jcl/CUSTFILE.jcl:22",
+   "via": null
+  },
+  {
+   "job": "CUSTFILE",
+   "step": "STEP05",
+   "pgm": "IDCAMS",
+   "cite": "app/jcl/CUSTFILE.jcl:32",
+   "via": null
+  },
+  {
+   "job": "CUSTFILE",
+   "step": "STEP10",
+   "pgm": "IDCAMS",
+   "cite": "app/jcl/CUSTFILE.jcl:43",
+   "via": null
+  },
+  {
+   "job": "CUSTFILE",
+   "step": "STEP15",
+   "pgm": "IDCAMS",
+   "cite": "app/jcl/CUSTFILE.jcl:64",
+   "via": null
+  },
+  {
+   "job": "CUSTFILE",
+   "step": "OPCIFIL",
+   "pgm": "SDSF",
+   "cite": "app/jcl/CUSTFILE.jcl:76",
+   "via": null
+  },
+  {
+   "job": "DALYREJS",
+   "step": "STEP05",
+   "pgm": "IDCAMS",
+   "cite": "app/jcl/DALYREJS.jcl:21",
+   "via": null
+  },
+  {
+   "job": "DEFCUST",
+   "step": "STEP05",
+   "pgm": "IDCAMS",
+   "cite": "app/jcl/DEFCUST.jcl:22",
+   "via": null
+  },
+  {
+   "job": "DEFCUST",
+   "step": "STEP05",
+   "pgm": "IDCAMS",
+   "cite": "app/jcl/DEFCUST.jcl:32",
+   "via": null
+  },
+  {
+   "job": "DEFGDGB",
+   "step": "STEP05",
+   "pgm": "IDCAMS",
+   "cite": "app/jcl/DEFGDGB.jcl:21",
+   "via": null
+  },
+  {
+   "job": "DEFGDGD",
+   "step": "STEP10",
+   "pgm": "IDCAMS",
+   "cite": "app/jcl/DEFGDGD.jcl:24",
+   "via": null
+  },
+  {
+   "job": "DEFGDGD",
+   "step": "STEP20",
+   "pgm": "IEBGENER",
+   "cite": "app/jcl/DEFGDGD.jcl:36",
+   "via": null
+  },
+  {
+   "job": "DEFGDGD",
+   "step": "STEP30",
+   "pgm": "IDCAMS",
+   "cite": "app/jcl/DEFGDGD.jcl:47",
+   "via": null
+  },
+  {
+   "job": "DEFGDGD",
+   "step": "STEP40",
+   "pgm": "IEBGENER",
+   "cite": "app/jcl/DEFGDGD.jcl:59",
+   "via": null
+  },
+  {
+   "job": "DEFGDGD",
+   "step": "STEP50",
+   "pgm": "IDCAMS",
+   "cite": "app/jcl/DEFGDGD.jcl:70",
+   "via": null
+  },
+  {
+   "job": "DEFGDGD",
+   "step": "STEP60",
+   "pgm": "IEBGENER",
+   "cite": "app/jcl/DEFGDGD.jcl:82",
+   "via": null
+  },
+  {
+   "job": "DISCGRP",
+   "step": "STEP05",
+   "pgm": "IDCAMS",
+   "cite": "app/jcl/DISCGRP.jcl:22",
+   "via": null
+  },
+  {
+   "job": "DISCGRP",
+   "step": "STEP10",
+   "pgm": "IDCAMS",
+   "cite": "app/jcl/DISCGRP.jcl:33",
+   "via": null
+  },
+  {
+   "job": "DISCGRP",
+   "step": "STEP15",
+   "pgm": "IDCAMS",
+   "cite": "app/jcl/DISCGRP.jcl:54",
+   "via": null
+  },
+  {
+   "job": "DUSRSECJ",
+   "step": "PREDEL",
+   "pgm": "IEFBR14",
+   "cite": "app/jcl/DUSRSECJ.jcl:23",
+   "via": null
+  },
+  {
+   "job": "DUSRSECJ",
+   "step": "STEP01",
+   "pgm": "IEBGENER",
+   "cite": "app/jcl/DUSRSECJ.jcl:32",
+   "via": null
+  },
+  {
+   "job": "DUSRSECJ",
+   "step": "STEP02",
+   "pgm": "IDCAMS",
+   "cite": "app/jcl/DUSRSECJ.jcl:58",
+   "via": null
+  },
+  {
+   "job": "DUSRSECJ",
+   "step": "STEP03",
+   "pgm": "IDCAMS",
+   "cite": "app/jcl/DUSRSECJ.jcl:80",
+   "via": null
+  },
+  {
+   "job": "ESDSRRDS",
+   "step": "PREDEL",
+   "pgm": "IEFBR14",
+   "cite": "app/jcl/ESDSRRDS.jcl:24",
+   "via": null
+  },
+  {
+   "job": "ESDSRRDS",
+   "step": "STEP01",
+   "pgm": "IEBGENER",
+   "cite": "app/jcl/ESDSRRDS.jcl:33",
+   "via": null
+  },
+  {
+   "job": "ESDSRRDS",
+   "step": "STEP02",
+   "pgm": "IDCAMS",
+   "cite": "app/jcl/ESDSRRDS.jcl:59",
+   "via": null
+  },
+  {
+   "job": "ESDSRRDS",
+   "step": "STEP03",
+   "pgm": "IDCAMS",
+   "cite": "app/jcl/ESDSRRDS.jcl:79",
+   "via": null
+  },
+  {
+   "job": "ESDSRRDS",
+   "step": "STEP04",
+   "pgm": "IDCAMS",
+   "cite": "app/jcl/ESDSRRDS.jcl:93",
+   "via": null
+  },
+  {
+   "job": "ESDSRRDS",
+   "step": "STEP05",
+   "pgm": "IDCAMS",
+   "cite": "app/jcl/ESDSRRDS.jcl:113",
+   "via": null
+  },
+  {
+   "job": "FTPJCL",
+   "step": "STEP1",
+   "pgm": "FTP",
+   "cite": "app/jcl/FTPJCL.JCL:30",
+   "via": null
+  },
+  {
+   "job": "INTCALC",
+   "step": "STEP15",
+   "pgm": "CBACT04C",
+   "cite": "app/jcl/INTCALC.jcl:22",
+   "via": null
+  },
+  {
+   "job": "INTRDRJ1",
+   "step": "IDCAMS",
+   "pgm": "IDCAMS",
+   "cite": "app/jcl/INTRDRJ1.JCL:6",
+   "via": null
+  },
+  {
+   "job": "INTRDRJ1",
+   "step": "STEP01",
+   "pgm": "IEBGENER",
+   "cite": "app/jcl/INTRDRJ1.JCL:14",
+   "via": null
+  },
+  {
+   "job": "INTRDRJ2",
+   "step": "IDCAMS",
+   "pgm": "IDCAMS",
+   "cite": "app/jcl/INTRDRJ2.JCL:7",
+   "via": null
+  },
+  {
+   "job": "OPENFIL",
+   "step": "OPCIFIL",
+   "pgm": "SDSF",
+   "cite": "app/jcl/OPENFIL.jcl:22",
+   "via": null
+  },
+  {
+   "job": "POSTTRAN",
+   "step": "STEP15",
+   "pgm": "CBTRN02C",
+   "cite": "app/jcl/POSTTRAN.jcl:23",
+   "via": null
+  },
+  {
+   "job": "PRTCATBL",
+   "step": "DELDEF",
+   "pgm": "IEFBR14",
+   "cite": "app/jcl/PRTCATBL.jcl:21",
+   "via": null
+  },
+  {
+   "job": "PRTCATBL",
+   "step": "STEP05R.PRC001",
+   "pgm": "IDCAMS",
+   "cite": "app/proc/REPROC.prc:21",
+   "via": "PROC REPROC @ app/jcl/PRTCATBL.jcl:29"
+  },
+  {
+   "job": "PRTCATBL",
+   "step": "STEP10R",
+   "pgm": "SORT",
+   "cite": "app/jcl/PRTCATBL.jcl:43",
+   "via": null
+  },
+  {
+   "job": "READACCT",
+   "step": "PREDEL",
+   "pgm": "IEFBR14",
+   "cite": "app/jcl/READACCT.jcl:22",
+   "via": null
+  },
+  {
+   "job": "READACCT",
+   "step": "STEP05",
+   "pgm": "CBACT01C",
+   "cite": "app/jcl/READACCT.jcl:32",
+   "via": null
+  },
+  {
+   "job": "READCARD",
+   "step": "STEP05",
+   "pgm": "CBACT02C",
+   "cite": "app/jcl/READCARD.jcl:22",
+   "via": null
+  },
+  {
+   "job": "READCUST",
+   "step": "STEP05",
+   "pgm": "CBCUS01C",
+   "cite": "app/jcl/READCUST.jcl:21",
+   "via": null
+  },
+  {
+   "job": "READXREF",
+   "step": "STEP05",
+   "pgm": "CBACT03C",
+   "cite": "app/jcl/READXREF.jcl:22",
+   "via": null
+  },
+  {
+   "job": "REPTFILE",
+   "step": "STEP05",
+   "pgm": "IDCAMS",
+   "cite": "app/jcl/REPTFILE.jcl:22",
+   "via": null
+  },
+  {
+   "job": "TCATBALF",
+   "step": "STEP05",
+   "pgm": "IDCAMS",
+   "cite": "app/jcl/TCATBALF.jcl:22",
+   "via": null
+  },
+  {
+   "job": "TCATBALF",
+   "step": "STEP10",
+   "pgm": "IDCAMS",
+   "cite": "app/jcl/TCATBALF.jcl:33",
+   "via": null
+  },
+  {
+   "job": "TCATBALF",
+   "step": "STEP15",
+   "pgm": "IDCAMS",
+   "cite": "app/jcl/TCATBALF.jcl:54",
+   "via": null
+  },
+  {
+   "job": "TRANBKP",
+   "step": "STEP05R.PRC001",
+   "pgm": "IDCAMS",
+   "cite": "app/proc/REPROC.prc:21",
+   "via": "PROC REPROC @ app/jcl/TRANBKP.jcl:23"
+  },
+  {
+   "job": "TRANBKP",
+   "step": "STEP05",
+   "pgm": "IDCAMS",
+   "cite": "app/jcl/TRANBKP.jcl:37",
+   "via": null
+  },
+  {
+   "job": "TRANBKP",
+   "step": "STEP10",
+   "pgm": "IDCAMS",
+   "cite": "app/jcl/TRANBKP.jcl:51",
+   "via": null
+  },
+  {
+   "job": "TRANCATG",
+   "step": "STEP05",
+   "pgm": "IDCAMS",
+   "cite": "app/jcl/TRANCATG.jcl:22",
+   "via": null
+  },
+  {
+   "job": "TRANCATG",
+   "step": "STEP10",
+   "pgm": "IDCAMS",
+   "cite": "app/jcl/TRANCATG.jcl:33",
+   "via": null
+  },
+  {
+   "job": "TRANCATG",
+   "step": "STEP15",
+   "pgm": "IDCAMS",
+   "cite": "app/jcl/TRANCATG.jcl:54",
+   "via": null
+  },
+  {
+   "job": "TRANFILE",
+   "step": "CLCIFIL",
+   "pgm": "SDSF",
+   "cite": "app/jcl/TRANFILE.jcl:22",
+   "via": null
+  },
+  {
+   "job": "TRANFILE",
+   "step": "STEP05",
+   "pgm": "IDCAMS",
+   "cite": "app/jcl/TRANFILE.jcl:32",
+   "via": null
+  },
+  {
+   "job": "TRANFILE",
+   "step": "STEP10",
+   "pgm": "IDCAMS",
+   "cite": "app/jcl/TRANFILE.jcl:46",
+   "via": null
+  },
+  {
+   "job": "TRANFILE",
+   "step": "STEP15",
+   "pgm": "IDCAMS",
+   "cite": "app/jcl/TRANFILE.jcl:67",
+   "via": null
+  },
+  {
+   "job": "TRANFILE",
+   "step": "STEP20",
+   "pgm": "IDCAMS",
+   "cite": "app/jcl/TRANFILE.jcl:79",
+   "via": null
+  },
+  {
+   "job": "TRANFILE",
+   "step": "STEP25",
+   "pgm": "IDCAMS",
+   "cite": "app/jcl/TRANFILE.jcl:96",
+   "via": null
+  },
+  {
+   "job": "TRANFILE",
+   "step": "STEP30",
+   "pgm": "IDCAMS",
+   "cite": "app/jcl/TRANFILE.jcl:106",
+   "via": null
+  },
+  {
+   "job": "TRANFILE",
+   "step": "OPCIFIL",
+   "pgm": "SDSF",
+   "cite": "app/jcl/TRANFILE.jcl:116",
+   "via": null
+  },
+  {
+   "job": "TRANIDX",
+   "step": "STEP20",
+   "pgm": "IDCAMS",
+   "cite": "app/jcl/TRANIDX.jcl:22",
+   "via": null
+  },
+  {
+   "job": "TRANIDX",
+   "step": "STEP25",
+   "pgm": "IDCAMS",
+   "cite": "app/jcl/TRANIDX.jcl:39",
+   "via": null
+  },
+  {
+   "job": "TRANIDX",
+   "step": "STEP30",
+   "pgm": "IDCAMS",
+   "cite": "app/jcl/TRANIDX.jcl:49",
+   "via": null
+  },
+  {
+   "job": "TRANREPT",
+   "step": "STEP05R.PRC001",
+   "pgm": "IDCAMS",
+   "cite": "app/proc/REPROC.prc:21",
+   "via": "PROC REPROC @ app/jcl/TRANREPT.jcl:23"
+  },
+  {
+   "job": "TRANREPT",
+   "step": "STEP05R",
+   "pgm": "SORT",
+   "cite": "app/jcl/TRANREPT.jcl:37",
+   "via": null
+  },
+  {
+   "job": "TRANREPT",
+   "step": "STEP10R",
+   "pgm": "CBTRN03C",
+   "cite": "app/jcl/TRANREPT.jcl:59",
+   "via": null
+  },
+  {
+   "job": "TRANTYPE",
+   "step": "STEP05",
+   "pgm": "IDCAMS",
+   "cite": "app/jcl/TRANTYPE.jcl:22",
+   "via": null
+  },
+  {
+   "job": "TRANTYPE",
+   "step": "STEP10",
+   "pgm": "IDCAMS",
+   "cite": "app/jcl/TRANTYPE.jcl:33",
+   "via": null
+  },
+  {
+   "job": "TRANTYPE",
+   "step": "STEP15",
+   "pgm": "IDCAMS",
+   "cite": "app/jcl/TRANTYPE.jcl:54",
+   "via": null
+  },
+  {
+   "job": "TXT2PDF1",
+   "step": "TXT2PDF",
+   "pgm": "IKJEFT1B",
+   "cite": "app/jcl/TXT2PDF1.JCL:24",
+   "via": null
+  },
+  {
+   "job": "WAITSTEP",
+   "step": "WAIT",
+   "pgm": "COBSWAIT",
+   "cite": "app/jcl/WAITSTEP.jcl:22",
+   "via": null
+  },
+  {
+   "job": "XREFFILE",
+   "step": "STEP05",
+   "pgm": "IDCAMS",
+   "cite": "app/jcl/XREFFILE.jcl:22",
+   "via": null
+  },
+  {
+   "job": "XREFFILE",
+   "step": "STEP10",
+   "pgm": "IDCAMS",
+   "cite": "app/jcl/XREFFILE.jcl:36",
+   "via": null
+  },
+  {
+   "job": "XREFFILE",
+   "step": "STEP15",
+   "pgm": "IDCAMS",
+   "cite": "app/jcl/XREFFILE.jcl:57",
+   "via": null
+  },
+  {
+   "job": "XREFFILE",
+   "step": "STEP20",
+   "pgm": "IDCAMS",
+   "cite": "app/jcl/XREFFILE.jcl:69",
+   "via": null
+  },
+  {
+   "job": "XREFFILE",
+   "step": "STEP25",
+   "pgm": "IDCAMS",
+   "cite": "app/jcl/XREFFILE.jcl:87",
+   "via": null
+  },
+  {
+   "job": "XREFFILE",
+   "step": "STEP30",
+   "pgm": "IDCAMS",
+   "cite": "app/jcl/XREFFILE.jcl:97",
+   "via": null
+  }
+ ],
+ "csd": {
+  "transactions": {
+   "CAUP": {
+    "cite": "app/csd/CARDDEMO.CSD:306",
+    "program": "COACTUPC",
+    "program_cite": "app/csd/CARDDEMO.CSD:308"
+   },
+   "CAVW": {
+    "cite": "app/csd/CARDDEMO.CSD:317",
+    "program": "COACTVWC",
+    "program_cite": "app/csd/CARDDEMO.CSD:318"
+   },
+   "CA00": {
+    "cite": "app/csd/CARDDEMO.CSD:327",
+    "program": "COADM01C",
+    "program_cite": "app/csd/CARDDEMO.CSD:328"
+   },
+   "CB00": {
+    "cite": "app/csd/CARDDEMO.CSD:337",
+    "program": "COBIL00C",
+    "program_cite": "app/csd/CARDDEMO.CSD:338"
+   },
+   "CCDL": {
+    "cite": "app/csd/CARDDEMO.CSD:347",
+    "program": "COCRDSLC",
+    "program_cite": "app/csd/CARDDEMO.CSD:348"
+   },
+   "CCLI": {
+    "cite": "app/csd/CARDDEMO.CSD:357",
+    "program": "COCRDLIC",
+    "program_cite": "app/csd/CARDDEMO.CSD:358"
+   },
+   "CCUP": {
+    "cite": "app/csd/CARDDEMO.CSD:367",
+    "program": "COCRDUPC",
+    "program_cite": "app/csd/CARDDEMO.CSD:369"
+   },
+   "CC00": {
+    "cite": "app/csd/CARDDEMO.CSD:378",
+    "program": "COSGN00C",
+    "program_cite": "app/csd/CARDDEMO.CSD:379"
+   },
+   "CDV1": {
+    "cite": "app/csd/CARDDEMO.CSD:388",
+    "program": "COCRDSEC",
+    "program_cite": "app/csd/CARDDEMO.CSD:390"
+   },
+   "CM00": {
+    "cite": "app/csd/CARDDEMO.CSD:399",
+    "program": "COMEN01C",
+    "program_cite": "app/csd/CARDDEMO.CSD:400"
+   },
+   "CR00": {
+    "cite": "app/csd/CARDDEMO.CSD:409",
+    "program": "CORPT00C",
+    "program_cite": "app/csd/CARDDEMO.CSD:410"
+   },
+   "CT00": {
+    "cite": "app/csd/CARDDEMO.CSD:419",
+    "program": "COTRN00C",
+    "program_cite": "app/csd/CARDDEMO.CSD:420"
+   },
+   "CT01": {
+    "cite": "app/csd/CARDDEMO.CSD:429",
+    "program": "COTRN01C",
+    "program_cite": "app/csd/CARDDEMO.CSD:430"
+   },
+   "CT02": {
+    "cite": "app/csd/CARDDEMO.CSD:439",
+    "program": "COTRN02C",
+    "program_cite": "app/csd/CARDDEMO.CSD:440"
+   },
+   "CU00": {
+    "cite": "app/csd/CARDDEMO.CSD:449",
+    "program": "COUSR00C",
+    "program_cite": "app/csd/CARDDEMO.CSD:450"
+   },
+   "CU01": {
+    "cite": "app/csd/CARDDEMO.CSD:459",
+    "program": "COUSR01C",
+    "program_cite": "app/csd/CARDDEMO.CSD:460"
+   },
+   "CU02": {
+    "cite": "app/csd/CARDDEMO.CSD:469",
+    "program": "COUSR02C",
+    "program_cite": "app/csd/CARDDEMO.CSD:470"
+   },
+   "CU03": {
+    "cite": "app/csd/CARDDEMO.CSD:479",
+    "program": "COUSR03C",
+    "program_cite": "app/csd/CARDDEMO.CSD:480"
+   }
+  },
+  "programs": {
+   "COACTUPC": {
+    "cite": "app/csd/CARDDEMO.CSD:173"
+   },
+   "COACTVWC": {
+    "cite": "app/csd/CARDDEMO.CSD:181"
+   },
+   "COADM01C": {
+    "cite": "app/csd/CARDDEMO.CSD:189"
+   },
+   "COBIL00C": {
+    "cite": "app/csd/CARDDEMO.CSD:196"
+   },
+   "COCRDLIC": {
+    "cite": "app/csd/CARDDEMO.CSD:203"
+   },
+   "COCRDSEC": {
+    "cite": "app/csd/CARDDEMO.CSD:211"
+   },
+   "COCRDSLC": {
+    "cite": "app/csd/CARDDEMO.CSD:219"
+   },
+   "COCRDUPC": {
+    "cite": "app/csd/CARDDEMO.CSD:227"
+   },
+   "COMEN01C": {
+    "cite": "app/csd/CARDDEMO.CSD:235"
+   },
+   "CORPT00C": {
+    "cite": "app/csd/CARDDEMO.CSD:242"
+   },
+   "COSGN00C": {
+    "cite": "app/csd/CARDDEMO.CSD:249"
+   },
+   "COTRN00C": {
+    "cite": "app/csd/CARDDEMO.CSD:257"
+   },
+   "COTRN01C": {
+    "cite": "app/csd/CARDDEMO.CSD:264"
+   },
+   "COTRN02C": {
+    "cite": "app/csd/CARDDEMO.CSD:271"
+   },
+   "COUSR00C": {
+    "cite": "app/csd/CARDDEMO.CSD:278"
+   },
+   "COUSR01C": {
+    "cite": "app/csd/CARDDEMO.CSD:285"
+   },
+   "COUSR02C": {
+    "cite": "app/csd/CARDDEMO.CSD:292"
+   },
+   "COUSR03C": {
+    "cite": "app/csd/CARDDEMO.CSD:299"
+   }
+  },
+  "files": {
+   "ACCTDAT": {
+    "cite": "app/csd/CARDDEMO.CSD:1",
+    "dsname": "AWS.M2.CARDDEMO.ACCTDATA.VSAM.KSDS"
+   },
+   "CARDAIX": {
+    "cite": "app/csd/CARDDEMO.CSD:13",
+    "dsname": "AWS.M2.CARDDEMO.CARDDATA.VSAM.AIX.PATH"
+   },
+   "CARDDAT": {
+    "cite": "app/csd/CARDDEMO.CSD:25",
+    "dsname": "AWS.M2.CARDDEMO.CARDDATA.VSAM.KSDS"
+   },
+   "CCXREF": {
+    "cite": "app/csd/CARDDEMO.CSD:37",
+    "dsname": "AWS.M2.CARDDEMO.CARDXREF.VSAM.KSDS"
+   },
+   "CUSTDAT": {
+    "cite": "app/csd/CARDDEMO.CSD:50",
+    "dsname": "AWS.M2.CARDDEMO.CUSTDATA.VSAM.KSDS"
+   },
+   "CXACAIX": {
+    "cite": "app/csd/CARDDEMO.CSD:63",
+    "dsname": "AWS.M2.CARDDEMO.CARDXREF.VSAM.AIX.PATH"
+   },
+   "TRANSACT": {
+    "cite": "app/csd/CARDDEMO.CSD:76",
+    "dsname": "AWS.M2.CARDDEMO.TRANSACT.VSAM.KSDS"
+   },
+   "USRSEC": {
+    "cite": "app/csd/CARDDEMO.CSD:88",
+    "dsname": "AWS.M2.CARDDEMO.USRSEC.VSAM.KSDS"
+   }
+  },
+  "mapsets": {
+   "COACTUP": {
+    "cite": "app/csd/CARDDEMO.CSD:100"
+   },
+   "COACTVW": {
+    "cite": "app/csd/CARDDEMO.CSD:105"
+   },
+   "COADM01": {
+    "cite": "app/csd/CARDDEMO.CSD:110"
+   },
+   "COBIL00": {
+    "cite": "app/csd/CARDDEMO.CSD:114"
+   },
+   "COCRDLI": {
+    "cite": "app/csd/CARDDEMO.CSD:118"
+   },
+   "COCRDSL": {
+    "cite": "app/csd/CARDDEMO.CSD:123"
+   },
+   "COCRDUP": {
+    "cite": "app/csd/CARDDEMO.CSD:128"
+   },
+   "COMEN01": {
+    "cite": "app/csd/CARDDEMO.CSD:133"
+   },
+   "CORPT00": {
+    "cite": "app/csd/CARDDEMO.CSD:137"
+   },
+   "COSGN00": {
+    "cite": "app/csd/CARDDEMO.CSD:141"
+   },
+   "COTRN00": {
+    "cite": "app/csd/CARDDEMO.CSD:145"
+   },
+   "COTRN01": {
+    "cite": "app/csd/CARDDEMO.CSD:149"
+   },
+   "COTRN02": {
+    "cite": "app/csd/CARDDEMO.CSD:153"
+   },
+   "COUSR00": {
+    "cite": "app/csd/CARDDEMO.CSD:157"
+   },
+   "COUSR01": {
+    "cite": "app/csd/CARDDEMO.CSD:161"
+   },
+   "COUSR02": {
+    "cite": "app/csd/CARDDEMO.CSD:165"
+   },
+   "COUSR03": {
+    "cite": "app/csd/CARDDEMO.CSD:169"
+   }
+  }
+ },
+ "controlm": [
+  {
+   "folder": "DAILY-TransactionBackup",
+   "jobname": "CLOSEFIL",
+   "memname": "CLOSEFIL",
+   "cite": "app/scheduler/CardDemo.controlm:4",
+   "in": [],
+   "out": [
+    "DAILY-TransactionBackup-CLOSEFIL"
+   ]
+  },
+  {
+   "folder": "DAILY-TransactionBackup",
+   "jobname": "TRANBKP",
+   "memname": "TRANBKP",
+   "cite": "app/scheduler/CardDemo.controlm:8",
+   "in": [
+    "DAILY-TransactionBackup-CLOSEFIL"
+   ],
+   "out": [
+    "DAILY-TransactionBackup-TRANBKP"
+   ]
+  },
+  {
+   "folder": "DAILY-TransactionBackup",
+   "jobname": "WAITSTEP",
+   "memname": "WAITSTEP",
+   "cite": "app/scheduler/CardDemo.controlm:14",
+   "in": [
+    "DAILY-TransactionBackup-TRANBKP"
+   ],
+   "out": [
+    "DAILY-TransactionBackup-WAITSTEP"
+   ]
+  },
+  {
+   "folder": "DAILY-TransactionBackup",
+   "jobname": "OPENFIL",
+   "memname": "OPENFIL",
+   "cite": "app/scheduler/CardDemo.controlm:20",
+   "in": [
+    "DAILY-TransactionBackup-WAITSTEP"
+   ],
+   "out": []
+  },
+  {
+   "folder": "WEEKLY-TransactionTypesDBRefresh",
+   "jobname": "MNTTRDB2",
+   "memname": "MNTTRDB2",
+   "cite": "app/scheduler/CardDemo.controlm:27",
+   "in": [],
+   "out": [
+    "WEEKLY-TransactionTypesDBRefresh-MNTTRDB2"
+   ]
+  },
+  {
+   "folder": "WEEKLY-DisclosureGroupsRefresh",
+   "jobname": "CLOSEFIL",
+   "memname": "CLOSEFIL",
+   "cite": "app/scheduler/CardDemo.controlm:33",
+   "in": [
+    "WEEKLY-TransactionTypesDBRefresh-MNTTRDB2"
+   ],
+   "out": [
+    "WEEKLY-DisclosureGroupsRefresh-CLOSEFIL"
+   ]
+  },
+  {
+   "folder": "WEEKLY-DisclosureGroupsRefresh",
+   "jobname": "DISCGRP",
+   "memname": "DISCGRP",
+   "cite": "app/scheduler/CardDemo.controlm:38",
+   "in": [
+    "WEEKLY-DisclosureGroupsRefresh-CLOSEFIL"
+   ],
+   "out": [
+    "WEEKLY-DisclosureGroupsRefresh-DISCGRP"
+   ]
+  },
+  {
+   "folder": "WEEKLY-DisclosureGroupsRefresh",
+   "jobname": "WAITSTEP",
+   "memname": "WAITSTEP",
+   "cite": "app/scheduler/CardDemo.controlm:44",
+   "in": [
+    "WEEKLY-DisclosureGroupsRefresh-DISCGRP"
+   ],
+   "out": [
+    "WEEKLY-DisclosureGroupsRefresh-WAITSTEP"
+   ]
+  },
+  {
+   "folder": "WEEKLY-DisclosureGroupsRefresh",
+   "jobname": "OPENFIL",
+   "memname": "OPENFIL",
+   "cite": "app/scheduler/CardDemo.controlm:50",
+   "in": [
+    "WEEKLY-DisclosureGroupsRefresh-WAITSTEP"
+   ],
+   "out": []
+  },
+  {
+   "folder": "WEEKLY-TransactionTypesDBRefresh",
+   "jobname": "TRANEXTR",
+   "memname": "TRANEXTR",
+   "cite": "app/scheduler/CardDemo.controlm:58",
+   "in": [
+    "WEEKLY-TransactionTypesDBRefresh-MNTTRDB2"
+   ],
+   "out": []
+  },
+  {
+   "folder": "MONTHLY-InterestCalculation",
+   "jobname": "CLOSEFIL",
+   "memname": "CLOSEFIL",
+   "cite": "app/scheduler/CardDemo.controlm:65",
+   "in": [],
+   "out": [
+    "MONTHLY-InterestCalculation-CLOSEFIL"
+   ]
+  },
+  {
+   "folder": "MONTHLY-InterestCalculation",
+   "jobname": "INTCALC",
+   "memname": "INTCALC",
+   "cite": "app/scheduler/CardDemo.controlm:69",
+   "in": [
+    "MONTHLY-InterestCalculation-CLOSEFIL"
+   ],
+   "out": [
+    "MONTHLY-InterestCalculation-INTCALC"
+   ]
+  },
+  {
+   "folder": "MONTHLY-InterestCalculation",
+   "jobname": "COMBTRAN",
+   "memname": "COMBTRAN",
+   "cite": "app/scheduler/CardDemo.controlm:75",
+   "in": [
+    "MONTHLY-InterestCalculation-INTCALC"
+   ],
+   "out": [
+    "MONTHLY-InterestCalculation-COMBTRAN"
+   ]
+  },
+  {
+   "folder": "MONTHLY-InterestCalculation",
+   "jobname": "WAITSTEP",
+   "memname": "WAITSTEP",
+   "cite": "app/scheduler/CardDemo.controlm:81",
+   "in": [
+    "MONTHLY-InterestCalculation-COMBTRAN"
+   ],
+   "out": [
+    "MONTHLY-InterestCalculation-WAITSTEP"
+   ]
+  },
+  {
+   "folder": "MONTHLY-InterestCalculation",
+   "jobname": "OPENFIL",
+   "memname": "OPENFIL",
+   "cite": "app/scheduler/CardDemo.controlm:87",
+   "in": [
+    "MONTHLY-InterestCalculation-WAITSTEP"
+   ],
+   "out": []
+  }
+ ],
+ "findings": {
+  "csd_program_without_source": [
+   "COCRDSEC"
+  ],
+  "orphan_roots_no_csd_no_jcl_no_caller": [
+   "CBTRN01C"
+  ],
+  "call_targets_without_source": [
+   "COPAUS0C",
+   "COTRTLIC",
+   "COTRTUPC"
+  ],
+  "controlm_memname_without_jcl": [
+   "MNTTRDB2",
+   "TRANEXTR"
+  ],
+  "jcl_only_roots_not_scheduled": [
+   "ACCTFILE",
+   "CARDFILE",
+   "CBADMCDJ",
+   "CBEXPORT",
+   "CBIMPORT",
+   "CREASTMT",
+   "CUSTFILE",
+   "DALYREJS",
+   "DEFCUST",
+   "DEFGDGB",
+   "DEFGDGD",
+   "DUSRSECJ",
+   "ESDSRRDS",
+   "FTPJCL",
+   "INTRDRJ1",
+   "INTRDRJ2",
+   "POSTTRAN",
+   "PRTCATBL",
+   "READACCT",
+   "READCARD",
+   "READCUST",
+   "READXREF",
+   "REPTFILE",
+   "TCATBALF",
+   "TRANCATG",
+   "TRANFILE",
+   "TRANIDX",
+   "TRANREPT",
+   "TRANTYPE",
+   "TXT2PDF1",
+   "XREFFILE"
+  ]
+ }
+}
