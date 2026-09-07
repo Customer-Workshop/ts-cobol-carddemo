@@ -1,0 +1,34 @@
+head: 584f7b7  branch: devin/1788757216-w4-parity
+--- CORE
+PASS  java.version 21
+PASS  spring-boot-starter-parent
+PASS  spring boot 3.x
+PASS  no lombok/mapstruct/modelmapper
+PASS  no float/double in main
+PASS  no @Autowired field injection
+PASS  Request/Response DTOs are records
+PASS  mvn clean verify (backend_suite_rerun.log)
+PASS  no legacy source modified vs origin/main
+--- ONLINE
+endpoints:
+  @GetMapping("/header"
+  @GetMapping("/session"
+  @GetMapping("/view/header"
+  @GetMapping("/{acctId}"
+  @PostMapping("/select"
+  @PostMapping("/signoff"
+  @PostMapping("/signon"
+README endpoint-table rows: 4
+PASS  no standalone:false
+PASS  no @ngrx
+PASS  @angular/material present
+PASS  withCredentials: true
+PASS  frontend build
+PASS  frontend karma (ChromeHeadless)
+--- DATA/BOUNDARY
+PASS  ddl-auto=validate
+PASS  no h2 in application.properties
+PASS  jdbc:postgresql in application.properties
+PASS  BigDecimal columns precision 19,2
+PASS  CommandLineRunner only under import profile
+PASS  no @Transactional in controllers

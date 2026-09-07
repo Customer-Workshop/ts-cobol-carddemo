@@ -127,3 +127,29 @@ cd frontend && npx ng serve   # UI run: parity/wave4/coactvwc/ui/test-plan.md, s
 ```
 
 Evidence index: `coactvwc/cases.md`, `derive_expected.py`, `expected_fixture.json`, `seed_synthetic.sql`, `run_http_cases.sh`, `compare_fields.py`, `http_cases.out`, `http/`, `pg_excerpts.txt`, `backend_suite.log`, `frontend_build.log`, `frontend_test.log`, `conformance.out`, `run_conformance.sh`, `ui/` (13 screenshots + DOM JSON, `network.jsonl`, `test-plan.md`, `coactvwc-ui-evidence.mp4`).
+
+## 10. Re-run on PR #98 head `f16c1415891b53c68f9226014f934f6425bd9596` (fixes for F-1/F-2/F-3)
+
+Working tree: `devin/1788757216-w4-parity` merged with `f16c141` (merge commit `584f7b7`). Same PostgreSQL 16.15 container and seed; backend restarted on the new code; all 24 cases re-executed (HTTP harness unchanged, UI re-checked in a real browser). Evidence: `coactvwc/http_cases_rerun.out`, `http/header_rerun.body`, `backend_suite_rerun.log`, `conformance_rerun.out`, `ui/rerun-01..07.png|json`, `ui/rerun-network.jsonl`, `ui/rerun-plan.md`, `ui/coactvwc-ui-rerun.mp4`.
+
+| Unit | Verdict | Confidence |
+|---|---|---|
+| Backend `GET /api/accounts/{acctId}` + new `GET /api/accounts/view/header` | **PASS** | high |
+| Angular `/accounts/view` | **PASS** | high |
+| Flag #1 ruling | unchanged (target text correct) — the child's E-11/E-12 tests now assert the 75-byte truth | high |
+
+Counts: 24 derived / 24 run / **20 PASS, 3 PASS-WITH-RISK (A-10 DV-06, A-16 F5 browser reload, A-18 container 400s), 0 FAIL, 1 UNTESTED (A-20)**. HTTP harness 31/31 verdicts; API field parity 145/145 (5 accounts × 29); screen field parity for account 027 **29/29** (`FICO Score: 078`).
+
+Re-verified failures:
+
+| Id | Expected (cite) | Observed on f16c141 | Verdict |
+|---|---|---|---|
+| F-1 (A-01) | header date/time/titles present on the first screen (`cbl:436-453`) | `GET /api/accounts/view/header` -> 200 `{"tranId":"CAVW","programName":"COACTVWC","title01":"AWS Mainframe Modernization","title02":"CardDemo","currentDate":"09/07/26","currentTime":"10:45:56",…}`; screen shows `09/07/26` / `10:47:58` and both titles before any search; no `/api/accounts/{id}` call (`ui/rerun-01`) | PASS |
+| F-2 (A-02) | `*` in red in ACCTSID, cursor on field (`cbl:561-565`) | red `No input received`; input value `*`, `data-attrb="DFHRED"`, red bold, `aria-invalid=true`, focused; typing `00000000027` over it works (`ui/rerun-02`) | PASS |
+| F-3 (A-08) | `078` (`cbl:505-506`, raw custdata rec 27) | `FICO Score: 078`; DOM diff vs first run: only FICO and the clock changed (`ui/rerun-03`) | PASS |
+
+Regression in the browser: E-05 (`1234567890A`), E-10 (`00000000901`, no data), E-11 (`00000000902`, account block kept), Exit -> `/menu` signed in — all exact (`ui/rerun-04..07`). Not re-tested in the browser: F5 (A-16, unchanged code path, still PASS-WITH-RISK R-1).
+
+Suites on the new head: backend `mvn clean verify` **184 tests, 0 failures/errors, BUILD SUCCESS** (Testcontainers `postgres:16`, one JVM); frontend build PASS, Karma **83/83 SUCCESS**; conformance skill **21/21 PASS**. No files outside `parity/wave4/` were changed by this pass.
+
+Remaining hand-backs (non-blocking, register/FR only): §5 R-1 (DV-03 wording vs browser-native F5), §6 items 1-2 (FR literals for the 75-byte messages; `ficoScore` typed Integer at the API while the screen renders `X(3)`).
