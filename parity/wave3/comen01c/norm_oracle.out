@@ -1,0 +1,16 @@
+[  ] echo=[00] E08
+[0 ] echo=[00] E08
+[00] echo=[00] E08
+[1 ] echo=[01] OK 
+[ 1] echo=[01] OK 
+[01] echo=[01] OK 
+[2 ] echo=[02] OK 
+[10] echo=[10] OK 
+[11] echo=[11] OK 
+[12] echo=[12] E08
+[99] echo=[99] E08
+[A ] echo=[00] E08
+[1A] echo=[01] OK 
+[A1] echo=[00] E08
+[? ] echo=[00] E08
+[ A] echo=[00] E08

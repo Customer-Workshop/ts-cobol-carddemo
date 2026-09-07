@@ -1,0 +1,14 @@
+❯ Building...
+✔ Building...
+Initial chunk files | Names         |  Raw size
+polyfills.js        | polyfills     |  90.20 kB | 
+styles.css          | styles        |  60.76 kB | 
+main.js             | main          |  39.77 kB | 
+
+                    | Initial total | 190.73 kB
+
+Application bundle generation complete. [1.568 seconds]
+
+Watch mode enabled. Watching for file changes...
+NOTE: Raw file sizes do not reflect development server per-request transformations.
+  ➜  Local:   http://localhost:4200/
