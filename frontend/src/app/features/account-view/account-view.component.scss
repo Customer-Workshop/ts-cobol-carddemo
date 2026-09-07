@@ -58,6 +58,13 @@
   font-family: inherit;
 }
 
+// MOVE DFHRED TO ACCTSIDC (COACTVWC.cbl:555-565): the filter field itself turns red on a bad or
+// blank account filter, matching the ERRMSG colour.
+.field-error input {
+  color: #c62828;
+  font-weight: 700;
+}
+
 .actions {
   grid-column: 1 / -1;
   display: flex;

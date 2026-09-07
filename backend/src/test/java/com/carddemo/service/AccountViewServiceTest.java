@@ -31,6 +31,7 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
@@ -44,9 +45,10 @@ import static org.mockito.Mockito.when;
  * values are decoded from app/data/ASCII/acctdata.txt:27 and custdata.txt:27, never from Java.
  * Confidence HIGH unless stated.
  *
- * <p>E-09..E-12 are asserted as the 75 bytes WS-RETURN-MSG holds (PIC X(75), cbl:117): the STRING
- * statements build longer texts than the field, so the message the screen shows is truncated — the
- * RESP2 digits of E-09/E-10 and the trailing blanks of E-12 fall off the end.
+ * <p>E-09..E-12 are asserted as the 75 bytes WS-RETURN-MSG holds (PIC X(75), cbl:117), which is the
+ * true ceiling of every message: E-09/E-10 lose the last six RESP2 characters, E-11 loses the last
+ * three, and E-12's meaningful text fills the field exactly — all ten RESP2 digits survive and only
+ * the trailing filler blanks of the STRING are cut.
  */
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
@@ -231,6 +233,9 @@ class AccountViewServiceTest {
 
         assertEquals("CustId:000000027 not found in customer master.Resp: 0000000013 REAS:0000000",
                 error.getMessage());
+        // PIC X(75) cuts the last three of the ten RESP2 characters this STRING builds (cbl:117, :836-856).
+        assertEquals(75, error.getMessage().length(), "WS-RETURN-MSG is PIC X(75)");
+        assertTrue(error.getMessage().endsWith("REAS:0000000"));
         assertEquals(HttpStatus.NOT_FOUND, error.getStatus());
         assertEquals("00000000027", error.accountNumber());
         assertEquals("+        284.00", error.account().currentBalance());
@@ -261,6 +266,10 @@ class AccountViewServiceTest {
 
         assertEquals("File Error: READ     on ACCTDAT   returned RESP 0000000016,RESP2 0000000000",
                 error.getMessage());
+        // E-12 fits PIC X(75) exactly: every RESP2 digit survives and only the STRING's trailing
+        // filler blanks are cut (cbl:117, :808-819).
+        assertEquals(75, error.getMessage().length(), "WS-RETURN-MSG is PIC X(75)");
+        assertTrue(error.getMessage().endsWith(",RESP2 0000000000"));
         verifyNoInteractions(customers);
     }
 

@@ -2,6 +2,7 @@ package com.carddemo.api;
 
 import com.carddemo.security.SessionContext;
 import com.carddemo.service.AccountViewService;
+import com.carddemo.service.ScreenHeaderService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
 import org.springframework.http.HttpStatus;
@@ -16,8 +17,9 @@ import org.springframework.web.bind.annotation.RestController;
  * request carries no state beyond the account filter (B-0028) and the program writes nothing
  * (COACTVWC.cbl:687-720 are three reads).
  *
- * <p>The initial {@code SEND MAP ERASE} with no read (:261-284, :416-452) has no endpoint: the
- * component renders the empty map itself, so every call here is a re-entry with a search value.
+ * <p>The initial {@code SEND MAP ERASE} reads no file (:261-284, :416-452), but 1100-SCREEN-INIT
+ * still paints the header from {@code COTTL01Y} and {@code FUNCTION CURRENT-DATE} (:431-453), so the
+ * empty map has its own header endpoint; every account read here is a re-entry with a search value.
  * The 11-digit edit lives in {@link AccountViewService} in the COBOL order (Q-14): the raw bytes of
  * ACCTSIDI reach the service unvalidated, including the blank field, which the legacy reports as E-04.
  */
@@ -27,9 +29,22 @@ import org.springframework.web.bind.annotation.RestController;
 public class AccountController {
 
     private final AccountViewService accountViewService;
+    private final ScreenHeaderService headerService;
 
-    public AccountController(AccountViewService accountViewService) {
+    public AccountController(AccountViewService accountViewService, ScreenHeaderService headerService) {
         this.accountViewService = accountViewService;
+        this.headerService = headerService;
+    }
+
+    /**
+     * FR-13 / AC-ACV-01: 1100-SCREEN-INIT (COACTVWC.cbl:431-453) moves the CCDA titles, the trancode,
+     * the program name and the current date and time into the map on every SEND, the first one
+     * included, so the empty screen carries a live header and reads no account file.
+     */
+    @GetMapping("/view/header")
+    public ScreenHeaderResponse header(HttpServletRequest request) {
+        requireSession(request);
+        return headerService.header(AccountViewService.TRAN_ID, AccountViewService.PROGRAM_NAME);
     }
 
     /** FR-13..FR-21: 2200-EDIT-MAP-INPUTS then 9000-READ-ACCT for the typed account filter. */

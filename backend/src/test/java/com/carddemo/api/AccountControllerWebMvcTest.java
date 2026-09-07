@@ -3,6 +3,7 @@ package com.carddemo.api;
 import com.carddemo.security.SecurityConfig;
 import com.carddemo.security.SessionContext;
 import com.carddemo.service.AccountViewService;
+import com.carddemo.service.ScreenHeaderService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,6 +41,9 @@ class AccountControllerWebMvcTest {
     @MockitoBean
     private AccountViewService accountViewService;
 
+    @MockitoBean
+    private ScreenHeaderService headerService;
+
     private static MockHttpSession signedOnSession() {
         MockHttpSession session = new MockHttpSession();
         new SessionContext("USER0001", SessionContext.UserType.USER).store(session);
@@ -59,6 +63,33 @@ class AccountControllerWebMvcTest {
         return new CustomerBlock("000000027", "980-16-1210", "1986-11-08", 78, "Ward", "Henri", "Jones",
                 "210 Amaya Turnpike", "Suite 180", "Port Dwight", "GU", "07923-8822", "USA",
                 "(935)027-1145", "(103)537-5007", "00000000000881558757", "0050024139", "Y");
+    }
+
+    @Test
+    @DisplayName("FR-13 / AC-ACV-01 — the initial SEND MAP header is served without reading any file (cbl:431-453)")
+    void fr13InitialHeader() throws Exception {
+        when(headerService.header("CAVW", "COACTVWC")).thenReturn(new ScreenHeaderResponse(
+                "CAVW", "COACTVWC", "AWS Mainframe Modernization", "CardDemo", "09/07/26", "14:05:09",
+                "CARDDEMO", "CICS"));
+
+        mockMvc.perform(authenticated(get("/api/accounts/view/header")))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.tranId", is("CAVW")))
+                .andExpect(jsonPath("$.programName", is("COACTVWC")))
+                .andExpect(jsonPath("$.title01", is("AWS Mainframe Modernization")))
+                .andExpect(jsonPath("$.title02", is("CardDemo")))
+                .andExpect(jsonPath("$.currentDate", is("09/07/26")))
+                .andExpect(jsonPath("$.currentTime", is("14:05:09")));
+
+        verify(accountViewService, never()).view(any());
+    }
+
+    @Test
+    @DisplayName("B-0027 — the initial header also needs the sign-on session")
+    void b0027HeaderUnauthenticatedIs401() throws Exception {
+        mockMvc.perform(get("/api/accounts/view/header"))
+                .andExpect(status().isUnauthorized())
+                .andExpect(jsonPath("$.message", is("Authentication required")));
     }
 
     @Test

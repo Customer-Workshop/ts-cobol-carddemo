@@ -21,11 +21,13 @@
 
     <form class="search-form" (submit)="$event.preventDefault(); search()" novalidate>
       <label for="acctsid" class="prompt">{{ labels.accountNumber }}</label>
-      <mat-form-field appearance="outline" class="field">
+      <mat-form-field appearance="outline" class="field" [class.field-error]="accountIdInError">
         <input
           #accountInput
           matInput
           id="acctsid"
+          [attr.aria-invalid]="accountIdInError"
+          [attr.data-attrb]="accountIdInError ? 'DFHRED' : 'DFHDFCOL'"
           name="acctsid"
           data-field="ACCTSID"
           type="text"
@@ -90,7 +92,7 @@
         <span class="label">{{ labels.dateOfBirth }}</span>
         <output data-field="ACSTDOB" class="value">{{ customer?.dateOfBirth }}</output>
         <span class="label">{{ labels.fico }}</span>
-        <output data-field="ACSTFCO" class="value">{{ customer?.ficoScore }}</output>
+        <output data-field="ACSTFCO" class="value">{{ ficoScoreDisplay }}</output>
       </div>
       <div class="row">
         <span class="label">{{ labels.firstName }}</span>

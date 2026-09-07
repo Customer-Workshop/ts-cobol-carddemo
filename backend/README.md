@@ -36,7 +36,7 @@ into `accounts`, `customers`, `card_xrefs`, `users`, and enforces the Q-10 date 
 | `CSUTLDTC` | none (CALLed utility) | none — internal `DateValidationService` (B-0014) | wave 1: ported |
 | `COSGN00C` | `CC00` / `COSGN00` | `POST /api/auth/signon`, `GET /api/auth/session`, `POST /api/auth/signoff`, `GET /api/auth/header` (B-0030 header fields) | wave 2: ported (`AuthService`, `AuthController`) |
 | `COMEN01C` | `CM00` / `COMEN01` | `GET /api/menu` (header + 11 options), `POST /api/menu/select` (B-0010 dispatch) | wave 3: ported (`MenuService`, `MenuController`) |
-| `COACTVWC` | `CAVW` / `COACTVW` | `GET /api/accounts/{acctId}`, `GET /api/accounts/` (blank filter) | wave 4: ported (`AccountViewService`, `AccountController`) |
+| `COACTVWC` | `CAVW` / `COACTVW` | `GET /api/accounts/view/header`, `GET /api/accounts/{acctId}`, `GET /api/accounts/` (blank filter) | wave 4: ported (`AccountViewService`, `AccountController`) |
 
 Wave 1 delivers no HTTP endpoints: only the data seams (Flyway `V1__account_view_schema.sql`, entities,
 repositories), the session-context model (`SessionContext`), the error model (`GlobalExceptionHandler`,
@@ -60,7 +60,9 @@ option gives 400 `Please enter a valid option number...` with the normalised 2-c
 session and answer JSON 401 without it (B-0027); Exit reuses `POST /api/auth/signoff` (the menu PF3 XCTLs to
 COSGN00C without COMMAREA, so no thank-you text is displayed on this screen).
 
-Wave 4 (account view, `COACTVWC`): `GET /api/accounts/{acctId}` -> 200 `{header, accountNumber, infoMessage,
+Wave 4 (account view, `COACTVWC`): `GET /api/accounts/view/header` -> 200 the `1100-SCREEN-INIT` header
+(titles, trancode, program name, date, time; COACTVWC.cbl:431-453) for the initial empty map, which reads no
+account file. `GET /api/accounts/{acctId}` -> 200 `{header, accountNumber, infoMessage,
 account{10 fields}, customer{18 fields}}`, the painted map `CACTVWA` (COACTVWC.cbl:459-534) with money as
 `+ZZZ,ZZZ,ZZZ.99`, SSN as `nnn-nn-nnnn`, dates as the stored 10-character text (Q-10) and the full ZIP / phone
 values (DV-05). `infoMessage` is always the constant `Enter or update id of account to display`. Reads are
