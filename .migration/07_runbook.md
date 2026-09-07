@@ -105,7 +105,7 @@ Lifecycle: `docker stop carddemo-pg` / `docker start carddemo-pg` / `docker rm -
 Reset schema: `docker exec carddemo-pg psql -U carddemo -d carddemo -c 'drop schema public cascade; create schema public;'`
 (not executed; standard psql).
 
-## 5. Target `backend/` and `frontend/` — EXPECTED ONCE PHASE 0 LANDS (NOT executed)
+## 5. Target `backend/` and `frontend/` — executed 2026-09-07 (wave 1, PR #95; CI green)
 
 These directories do not exist yet on this branch. The commands below are the contract that the
 Phase 0 child must make true and then execute, replacing this heading with the execution date.
