@@ -214,6 +214,15 @@ describe('SignonComponent (COSGN00C / COSGN0A)', () => {
       expect(text('[data-field="ERRMSG"]')).toBe('Wrong Password. Try again ...');
     });
 
+    it('FR-06 / AC-SGN-07 — wrong password puts the cursor on PASSWD, not USERID (MOVE -1 TO PASSWDL, COSGN00C.cbl:244)', () => {
+      typeUserId('USER0001');
+      typePassword('WRONG');
+      submit();
+      failSignon(401, 'Wrong Password. Try again ...');
+      expect(document.activeElement).toBe(field('PASSWD'));
+      expect(document.activeElement).not.toBe(field('USERID'));
+    });
+
     it('FR-07 — technical error: ERRMSG shows E-13 verbatim (COSGN00C.cbl:252-257)', () => {
       typeUserId('USER0001');
       typePassword('PASSWORD');

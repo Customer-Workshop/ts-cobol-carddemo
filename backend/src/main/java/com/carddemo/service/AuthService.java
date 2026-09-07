@@ -9,7 +9,7 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.TransactionException;
 
 import java.util.Locale;
 import java.util.Optional;
@@ -48,8 +48,11 @@ public class AuthService {
      * FR-02..FR-07. Returns the identity to be stored in the session (CDEMO-USER-ID /
      * CDEMO-USER-TYPE, COSGN00C.cbl:226-227) or throws a {@link CobolApiException} carrying the
      * verbatim legacy message.
+     *
+     * <p>Not {@code @Transactional}: the repository calls run in their own transactions so that a
+     * failure to even open one (datastore unreachable) surfaces here as WHEN OTHER (:252-256)
+     * instead of escaping the method through the proxy.
      */
-    @Transactional
     public SessionContext signOn(String userId, String password) {
         if (isBlank(userId)) {
             throw new CobolApiException(HttpStatus.BAD_REQUEST, CobolMessages.ENTER_USER_ID);
@@ -63,7 +66,7 @@ public class AuthService {
         Optional<SecurityUser> found;
         try {
             found = users.findById(upperUserId);
-        } catch (DataAccessException ex) {
+        } catch (DataAccessException | TransactionException ex) {
             throw new CobolApiException(HttpStatus.INTERNAL_SERVER_ERROR, CobolMessages.UNABLE_TO_VERIFY_USER);
         }
         SecurityUser user = found.orElseThrow(
@@ -104,7 +107,7 @@ public class AuthService {
         user.setSecUsrPwdLegacy(null);
         try {
             users.save(user);
-        } catch (DataAccessException ex) {
+        } catch (DataAccessException | TransactionException ex) {
             throw new CobolApiException(HttpStatus.INTERNAL_SERVER_ERROR, CobolMessages.UNABLE_TO_VERIFY_USER);
         }
     }

@@ -12,6 +12,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.dao.DataAccessResourceFailureException;
+import org.springframework.transaction.CannotCreateTransactionException;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -143,6 +144,16 @@ class AuthServiceTest {
     @DisplayName("FR-07 / SGN-B10 — OTHER RESP -> E-13 500 (COSGN00C.cbl:252-257)")
     void fr07RepositoryFailure() {
         when(users.findById("USER0001")).thenThrow(new DataAccessResourceFailureException("connection refused"));
+        CobolApiException ex = signOnFails("USER0001", "PASSWORD");
+        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, ex.getStatus());
+        assertEquals(CobolMessages.UNABLE_TO_VERIFY_USER, ex.getMessage());
+    }
+
+    @Test
+    @DisplayName("FR-22 / SGN-B10 — datastore unreachable (no transaction can be opened) -> E-13 500 (COSGN00C.cbl:252-257)")
+    void fr22DatastoreUnreachable() {
+        when(users.findById("USER0001")).thenThrow(
+                new CannotCreateTransactionException("Could not open JPA EntityManager for transaction"));
         CobolApiException ex = signOnFails("USER0001", "PASSWORD");
         assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, ex.getStatus());
         assertEquals(CobolMessages.UNABLE_TO_VERIFY_USER, ex.getMessage());

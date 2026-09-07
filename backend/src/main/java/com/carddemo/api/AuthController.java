@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
 
 import java.util.List;
 
@@ -28,6 +29,7 @@ import java.util.List;
  * COMMAREA written on success (:222-229) becomes the HTTP session (B-0027).
  */
 @RestController
+@ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.SERVLET)
 @RequestMapping("/api/auth")
 public class AuthController {
 
