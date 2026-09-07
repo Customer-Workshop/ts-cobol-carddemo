@@ -100,6 +100,9 @@ describe('AccountViewComponent (COACTVWC / CACTVWA)', () => {
     router = TestBed.inject(Router);
     spyOn(router, 'navigateByUrl').and.resolveTo(true);
     fixture.detectChanges();
+    // 1100-SCREEN-INIT fills the header on the initial SEND MAP too (cbl:431-453).
+    http.expectOne('/api/accounts/view/header').flush(header);
+    fixture.detectChanges();
   });
 
   afterEach(() => http.verify());
@@ -188,10 +191,19 @@ describe('AccountViewComponent (COACTVWC / CACTVWA)', () => {
       expect(text('[data-field="ERRMSG"]')).toBe('');
     });
 
-    it('paints the empty map on entry: no read is issued until ENTER (cbl:290-296)', () => {
-      http.expectNone(() => true);
+    it('paints the empty map on entry: no account read is issued until ENTER (cbl:290-296)', () => {
+      http.expectNone((request) => request.url.startsWith('/api/accounts/') && !request.url.endsWith('/view/header'));
       expect(text('[data-field="ACURBAL"]')).toBe('');
       expect(text('[data-field="ACSTNUM"]')).toBe('');
+    });
+
+    it('AC-ACV-01 — the header carries the titles, trancode, program and clock on entry (cbl:431-453)', () => {
+      expect(text('[data-field="TRNNAME"]')).toBe('CAVW');
+      expect(text('[data-field="PGMNAME"]')).toBe('COACTVWC');
+      expect(text('[data-field="TITLE01"]')).toBe('AWS Mainframe Modernization');
+      expect(text('[data-field="TITLE02"]')).toBe('CardDemo');
+      expect(text('[data-field="CURDATE"]')).toBe('09/07/26');
+      expect(text('[data-field="CURTIME"]')).toBe('14:05:09');
     });
 
     it('puts the cursor in ACCTSID on entry (ATTRB=IC)', async () => {
@@ -214,6 +226,26 @@ describe('AccountViewComponent (COACTVWC / CACTVWA)', () => {
       expect(text('[data-field="ACURBAL"]')).toBe('');
       expect(document.activeElement).toBe(input());
       expect(router.navigateByUrl).not.toHaveBeenCalled();
+    });
+
+    it('E-04 — the blank filter is echoed as "*" in a red ACCTSID (cbl:561-565)', () => {
+      submit();
+      flushError('', { message: 'No input received', status: 400 }, 400);
+
+      expect(input().value).toBe('*');
+      expect(input().dataset['attrb']).toBe('DFHRED');
+      expect(el('mat-form-field').classList).toContain('field-error');
+      expect(document.activeElement).toBe(input());
+    });
+
+    it('E-05 — a rejected filter turns ACCTSID red and keeps the typed value (cbl:555-559)', () => {
+      type('27');
+      submit();
+      flushError('27', { message: 'Account Filter must  be a non-zero 11 digit number', status: 400 }, 400);
+
+      expect(input().value).toBe('27');
+      expect(input().dataset['attrb']).toBe('DFHRED');
+      expect(el('mat-form-field').classList).toContain('field-error');
     });
 
     it('E-05 / Q-02 — a filter shorter than 11 digits shows the verbatim two-space literal', () => {
@@ -278,7 +310,7 @@ describe('AccountViewComponent (COACTVWC / CACTVWA)', () => {
       expect(text('[data-field="ACSTNUM"]')).toBe('000000027');
       expect(text('[data-field="ACSTSSN"]')).toBe('980-16-1210');
       expect(text('[data-field="ACSTDOB"]')).toBe('1986-11-08');
-      expect(text('[data-field="ACSTFCO"]')).toBe('78');
+      expect(text('[data-field="ACSTFCO"]')).toBe('078');
       expect(text('[data-field="ACSFNAM"]')).toBe('Ward');
       expect(text('[data-field="ACSMNAM"]')).toBe('Henri');
       expect(text('[data-field="ACSLNAM"]')).toBe('Jones');
@@ -303,6 +335,14 @@ describe('AccountViewComponent (COACTVWC / CACTVWA)', () => {
     it('DV-06 / D-0038 — Account Group shows the stored A000000000', () => {
       search();
       expect(text('[data-field="AADDGRP"]')).toBe('A000000000');
+    });
+
+    it('MOVE CUST-FICO-CREDIT-SCORE 9(3) TO ACSTFCOO X(3) keeps the leading zero (cbl:505-506)', () => {
+      search();
+      // custdata.txt:27 bytes 322-324 are '078'; the API types the score as an integer (FR §3.2).
+      expect(customer.ficoScore).toBe(78);
+      expect(text('[data-field="ACSTFCO"]')).toBe('078');
+      expect(component.ficoScoreDisplay).toBe('078');
     });
 
     it('leaves the cursor in ACCTSID after a successful search', () => {
@@ -394,6 +434,7 @@ describe('AccountViewComponent (COACTVWC / CACTVWA)', () => {
       expect(component.accountId).toBe('');
       expect(component.account).toBeNull();
       expect(component.customer).toBeNull();
+      expect(component.accountIdInError).toBeFalse();
     });
 
     it('F3 and Escape both exit to /menu', () => {

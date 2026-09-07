@@ -64,4 +64,9 @@ export class AccountService {
   view(accountId: string): Observable<AccountView> {
     return this.api.get<AccountView>(`/accounts/${encodeURIComponent(accountId)}`);
   }
+
+  /** 1100-SCREEN-INIT: the header of the initial SEND MAP, before any account is read. */
+  header(): Observable<ScreenHeader> {
+    return this.api.get<ScreenHeader>('/accounts/view/header');
+  }
 }

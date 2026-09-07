@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, HostListener, ViewChild, inject } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, HostListener, OnInit, ViewChild, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
 import { MatCardModule } from '@angular/material/card';
@@ -22,7 +22,7 @@ import { AccountBlock, AccountService, AccountView, AccountViewError, CustomerBl
   templateUrl: './account-view.component.html',
   styleUrl: './account-view.component.scss',
 })
-export class AccountViewComponent implements AfterViewInit {
+export class AccountViewComponent implements OnInit, AfterViewInit {
   private readonly accountService = inject(AccountService);
   private readonly router = inject(Router);
 
@@ -70,6 +70,12 @@ export class AccountViewComponent implements AfterViewInit {
   /** INFOMSG is a constant on this screen (COACTVWC.cbl:452-455). */
   readonly infoMessage = 'Enter or update id of account to display';
 
+  /** E-04, the message that marks the blank filter (COACTVWC.cbl:124, :628-633). */
+  private static readonly NO_INPUT_RECEIVED = 'No input received';
+
+  /** MOVE '*' TO ACCTSIDO on a blank filter re-enter (COACTVWC.cbl:561-565). */
+  private static readonly BLANK_FILTER_ECHO = '*';
+
   /** ACCTSID: LENGTH=11, NUM (app/bms/COACTVW.bms:84-90). */
   readonly maxLength = 11;
 
@@ -89,6 +95,35 @@ export class AccountViewComponent implements AfterViewInit {
   customer: CustomerBlock | null = null;
   errorMessage = '';
   submitting = false;
+
+  /** MOVE DFHRED TO ACCTSIDC when FLG-ACCTFILTER-NOT-OK (COACTVWC.cbl:555-559). */
+  accountIdInError = false;
+
+  /**
+   * MOVE CUST-FICO-CREDIT-SCORE (PIC 9(3)) TO ACSTFCOO (PIC X(3)) keeps the leading zeroes the
+   * numeric field carries, so score 78 paints as {@code 078} (COACTVWC.cbl:505-506). The API keeps
+   * the value an integer (FR §3.2), so the three-character screen form is built here.
+   */
+  get ficoScoreDisplay(): string {
+    const score = this.customer?.ficoScore;
+    return score === null || score === undefined ? '' : String(score).padStart(3, '0');
+  }
+
+  /**
+   * 1100-SCREEN-INIT paints TITLE01/TITLE02, the trancode, the program name and the current date and
+   * time on every SEND MAP, the initial one included (COACTVWC.cbl:431-453), so the header is filled
+   * before the first search. No account file is read on entry (:290-296).
+   */
+  ngOnInit(): void {
+    this.accountService.header().subscribe({
+      next: (header: ScreenHeader) => (this.header = header),
+      error: (error: HttpErrorResponse) => {
+        if (error.status === 401) {
+          void this.router.navigateByUrl('/signon');
+        }
+      },
+    });
+  }
 
   /**
    * ATTRB=(...,IC) on ACCTSID puts the cursor in the account field on every SEND MAP. The initial
@@ -113,6 +148,7 @@ export class AccountViewComponent implements AfterViewInit {
       return;
     }
     this.errorMessage = '';
+    this.accountIdInError = false;
     this.submitting = true;
     this.accountService.view(this.accountId).subscribe({
       next: (view: AccountView) => {
@@ -136,6 +172,7 @@ export class AccountViewComponent implements AfterViewInit {
     this.account = null;
     this.customer = null;
     this.errorMessage = '';
+    this.accountIdInError = false;
     void this.router.navigateByUrl('/menu');
   }
 
@@ -163,6 +200,12 @@ export class AccountViewComponent implements AfterViewInit {
     this.errorMessage = body?.message ?? '';
     this.account = body?.account ?? null;
     this.customer = null;
+    // 1300-SETUP-SCREEN-ATTRS: a failed account filter turns the field red, and the blank filter on a
+    // re-enter is echoed as '*' in the field itself (cbl:555-565).
+    this.accountIdInError = error.status === 400;
+    if (this.errorMessage === AccountViewComponent.NO_INPUT_RECEIVED) {
+      this.accountId = AccountViewComponent.BLANK_FILTER_ECHO;
+    }
     this.focusAccountId();
   }
 
