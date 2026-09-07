@@ -1,0 +1,377 @@
+[[1;34mINFO[m] Scanning for projects...
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m-------------------< [0;36mcom.carddemo:carddemo-backend[0;1m >--------------------[m
+[[1;34mINFO[m] [1mBuilding carddemo-backend 0.1.0-SNAPSHOT[m
+[[1;34mINFO[m] [1m--------------------------------[ jar ]---------------------------------[m
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m--- [0;32mmaven-clean-plugin:3.4.1:clean[m [1m(default-clean)[m @ [36mcarddemo-backend[0;1m ---[m
+[[1;34mINFO[m] Deleting /home/ubuntu/repos/ts-cobol-carddemo/backend/target
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m--- [0;32mmaven-resources-plugin:3.3.1:resources[m [1m(default-resources)[m @ [36mcarddemo-backend[0;1m ---[m
+[[1;34mINFO[m] Copying 1 resource from src/main/resources to target/classes
+[[1;34mINFO[m] Copying 1 resource from src/main/resources to target/classes
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m--- [0;32mmaven-compiler-plugin:3.13.0:compile[m [1m(default-compile)[m @ [36mcarddemo-backend[0;1m ---[m
+[[1;34mINFO[m] Recompiling the module because of [1mchanged source code[m.
+[[1;34mINFO[m] Compiling 49 source files with javac [debug parameters release 21] to target/classes
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m--- [0;32mmaven-resources-plugin:3.3.1:testResources[m [1m(default-testResources)[m @ [36mcarddemo-backend[0;1m ---[m
+[[1;34mINFO[m] Copying 2 resources from src/test/resources to target/test-classes
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m--- [0;32mmaven-compiler-plugin:3.13.0:testCompile[m [1m(default-testCompile)[m @ [36mcarddemo-backend[0;1m ---[m
+[[1;34mINFO[m] Recompiling the module because of [1mchanged dependency[m.
+[[1;34mINFO[m] Compiling 18 source files with javac [debug parameters release 21] to target/test-classes
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m--- [0;32mmaven-surefire-plugin:3.5.3:test[m [1m(default-test)[m @ [36mcarddemo-backend[0;1m ---[m
+Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/codehaus/plexus/plexus-utils/1.1/plexus-utils-1.1.jar
+Progress (1): 3.3/169 kBProgress (1): 6.1/169 kBProgress (1): 8.8/169 kBProgress (1): 12/169 kB Progress (1): 14/169 kBProgress (1): 17/169 kBProgress (1): 20/169 kBProgress (1): 23/169 kBProgress (1): 25/169 kBProgress (1): 28/169 kBProgress (1): 31/169 kBProgress (1): 34/169 kBProgress (1): 37/169 kBProgress (1): 40/169 kBProgress (1): 42/169 kBProgress (1): 45/169 kBProgress (1): 48/169 kBProgress (1): 51/169 kBProgress (1): 53/169 kBProgress (1): 56/169 kBProgress (1): 59/169 kBProgress (1): 62/169 kBProgress (1): 64/169 kBProgress (1): 67/169 kBProgress (1): 70/169 kBProgress (1): 72/169 kBProgress (1): 75/169 kBProgress (1): 78/169 kBProgress (1): 81/169 kBProgress (1): 83/169 kBProgress (1): 86/169 kBProgress (1): 89/169 kBProgress (1): 92/169 kBProgress (1): 94/169 kBProgress (1): 97/169 kBProgress (1): 100/169 kBProgress (1): 102/169 kBProgress (1): 105/169 kBProgress (1): 108/169 kBProgress (1): 111/169 kBProgress (1): 113/169 kBProgress (1): 116/169 kBProgress (1): 119/169 kBProgress (1): 122/169 kBProgress (1): 124/169 kBProgress (1): 127/169 kBProgress (1): 130/169 kBProgress (1): 132/169 kBProgress (1): 135/169 kBProgress (1): 138/169 kBProgress (1): 141/169 kBProgress (1): 143/169 kBProgress (1): 146/169 kBProgress (1): 149/169 kBProgress (1): 152/169 kBProgress (1): 154/169 kBProgress (1): 157/169 kBProgress (1): 160/169 kBProgress (1): 163/169 kBProgress (1): 165/169 kBProgress (1): 168/169 kBProgress (1): 169 kB                        Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/codehaus/plexus/plexus-utils/1.1/plexus-utils-1.1.jar (169 kB at 730 kB/s)
+[[1;34mINFO[m] Using auto detected provider org.apache.maven.surefire.junitplatform.JUnitPlatformProvider
+Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/apache/maven/surefire/surefire-junit-platform/3.5.3/surefire-junit-platform-3.5.3.pom
+Progress (1): 3.1/5.2 kBProgress (1): 5.2 kB                        Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/apache/maven/surefire/surefire-junit-platform/3.5.3/surefire-junit-platform-3.5.3.pom (5.2 kB at 81 kB/s)
+Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/apache/maven/surefire/surefire-providers/3.5.3/surefire-providers-3.5.3.pom
+Progress (1): 2.5 kB                    Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/apache/maven/surefire/surefire-providers/3.5.3/surefire-providers-3.5.3.pom (2.5 kB at 40 kB/s)
+Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/apache/maven/surefire/common-java5/3.5.3/common-java5-3.5.3.pom
+Progress (1): 3.1 kB                    Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/apache/maven/surefire/common-java5/3.5.3/common-java5-3.5.3.pom (3.1 kB at 52 kB/s)
+Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/junit/platform/junit-platform-engine/1.12.1/junit-platform-engine-1.12.1.pom
+Progress (1): 3.1/3.2 kBProgress (1): 3.2 kB                        Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/junit/platform/junit-platform-engine/1.12.1/junit-platform-engine-1.12.1.pom (3.2 kB at 53 kB/s)
+Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/junit/platform/junit-platform-commons/1.12.1/junit-platform-commons-1.12.1.pom
+Progress (1): 2.8 kB                    Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/junit/platform/junit-platform-commons/1.12.1/junit-platform-commons-1.12.1.pom (2.8 kB at 46 kB/s)
+Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/junit/platform/junit-platform-launcher/1.12.1/junit-platform-launcher-1.12.1.pom
+Progress (1): 3.0 kB                    Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/junit/platform/junit-platform-launcher/1.12.1/junit-platform-launcher-1.12.1.pom (3.0 kB at 126 kB/s)
+Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/apache/maven/surefire/surefire-junit-platform/3.5.3/surefire-junit-platform-3.5.3.jar
+Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/apache/maven/surefire/common-java5/3.5.3/common-java5-3.5.3.jar
+Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/junit/platform/junit-platform-engine/1.12.1/junit-platform-engine-1.12.1.jar
+Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/junit/platform/junit-platform-launcher/1.12.1/junit-platform-launcher-1.12.1.jar
+Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/junit/platform/junit-platform-commons/1.12.1/junit-platform-commons-1.12.1.jar
+Progress (1): 3.1/27 kBProgress (1): 5.8/27 kBProgress (1): 8.6/27 kBProgress (1): 11/27 kB Progress (1): 14/27 kBProgress (1): 17/27 kBProgress (1): 20/27 kBProgress (1): 22/27 kBProgress (1): 25/27 kBProgress (1): 27 kB   Progress (2): 27 kB | 3.1/208 kBProgress (2): 27 kB | 5.8/208 kBProgress (2): 27 kB | 8.6/208 kBProgress (2): 27 kB | 11/208 kB Progress (2): 27 kB | 14/208 kBProgress (2): 27 kB | 17/208 kBProgress (2): 27 kB | 20/208 kBProgress (2): 27 kB | 22/208 kBProgress (2): 27 kB | 25/208 kBProgress (2): 27 kB | 28/208 kBProgress (2): 27 kB | 31/208 kBProgress (2): 27 kB | 33/208 kBProgress (2): 27 kB | 36/208 kBProgress (2): 27 kB | 38/208 kBProgress (2): 27 kB | 41/208 kBProgress (2): 27 kB | 44/208 kBProgress (2): 27 kB | 47/208 kBProgress (2): 27 kB | 49/208 kBProgress (2): 27 kB | 52/208 kBProgress (2): 27 kB | 55/208 kBProgress (2): 27 kB | 58/208 kBProgress (2): 27 kB | 60/208 kBProgress (2): 27 kB | 63/208 kBProgress (2): 27 kB | 66/208 kBProgress (3): 27 kB | 66/208 kB | 3.1/256 kBProgress (3): 27 kB | 68/208 kB | 3.1/256 kBProgress (3): 27 kB | 68/208 kB | 5.8/256 kBProgress (3): 27 kB | 71/208 kB | 5.8/256 kBProgress (3): 27 kB | 71/208 kB | 8.6/256 kBProgress (3): 27 kB | 74/208 kB | 8.6/256 kBProgress (3): 27 kB | 74/208 kB | 11/256 kB Progress (3): 27 kB | 77/208 kB | 11/256 kBProgress (4): 27 kB | 77/208 kB | 11/256 kB | 3.1/152 kBProgress (5): 27 kB | 77/208 kB | 11/256 kB | 3.1/152 kB | 3.1/18 kBProgress (5): 27 kB | 77/208 kB | 11/256 kB | 5.8/152 kB | 3.1/18 kBProgress (5): 27 kB | 77/208 kB | 11/256 kB | 5.8/152 kB | 5.8/18 kBProgress (5): 27 kB | 77/208 kB | 11/256 kB | 5.8/152 kB | 8.6/18 kBProgress (5): 27 kB | 77/208 kB | 11/256 kB | 5.8/152 kB | 11/18 kB Progress (5): 27 kB | 79/208 kB | 11/256 kB | 5.8/152 kB | 11/18 kBProgress (5): 27 kB | 82/208 kB | 11/256 kB | 5.8/152 kB | 11/18 kBProgress (5): 27 kB | 85/208 kB | 11/256 kB | 5.8/152 kB | 11/18 kBProgress (5): 27 kB | 85/208 kB | 11/256 kB | 8.6/152 kB | 11/18 kBProgress (5): 27 kB | 88/208 kB | 11/256 kB | 8.6/152 kB | 11/18 kBProgress (5): 27 kB | 88/208 kB | 11/256 kB | 11/152 kB | 11/18 kB Progress (5): 27 kB | 90/208 kB | 11/256 kB | 11/152 kB | 11/18 kB                                                                  Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/apache/maven/surefire/surefire-junit-platform/3.5.3/surefire-junit-platform-3.5.3.jar (27 kB at 419 kB/s)
+Progress (4): 90/208 kB | 11/256 kB | 14/152 kB | 11/18 kBProgress (4): 93/208 kB | 11/256 kB | 14/152 kB | 11/18 kBProgress (4): 93/208 kB | 11/256 kB | 17/152 kB | 11/18 kBProgress (4): 96/208 kB | 11/256 kB | 17/152 kB | 11/18 kBProgress (4): 98/208 kB | 11/256 kB | 17/152 kB | 11/18 kBProgress (4): 98/208 kB | 14/256 kB | 17/152 kB | 11/18 kBProgress (4): 101/208 kB | 14/256 kB | 17/152 kB | 11/18 kBProgress (4): 101/208 kB | 17/256 kB | 17/152 kB | 11/18 kBProgress (4): 104/208 kB | 17/256 kB | 17/152 kB | 11/18 kBProgress (4): 104/208 kB | 20/256 kB | 17/152 kB | 11/18 kBProgress (4): 107/208 kB | 20/256 kB | 17/152 kB | 11/18 kBProgress (4): 107/208 kB | 20/256 kB | 20/152 kB | 11/18 kBProgress (4): 109/208 kB | 20/256 kB | 20/152 kB | 11/18 kBProgress (4): 109/208 kB | 22/256 kB | 20/152 kB | 11/18 kBProgress (4): 109/208 kB | 22/256 kB | 20/152 kB | 14/18 kBProgress (4): 112/208 kB | 22/256 kB | 20/152 kB | 14/18 kBProgress (4): 115/208 kB | 22/256 kB | 20/152 kB | 14/18 kBProgress (4): 118/208 kB | 22/256 kB | 20/152 kB | 14/18 kBProgress (4): 118/208 kB | 22/256 kB | 22/152 kB | 14/18 kBProgress (4): 120/208 kB | 22/256 kB | 22/152 kB | 14/18 kBProgress (4): 123/208 kB | 22/256 kB | 22/152 kB | 14/18 kBProgress (4): 126/208 kB | 22/256 kB | 22/152 kB | 14/18 kBProgress (4): 129/208 kB | 22/256 kB | 22/152 kB | 14/18 kBProgress (4): 131/208 kB | 22/256 kB | 22/152 kB | 14/18 kBProgress (4): 131/208 kB | 22/256 kB | 22/152 kB | 17/18 kBProgress (4): 134/208 kB | 22/256 kB | 22/152 kB | 17/18 kBProgress (4): 134/208 kB | 25/256 kB | 22/152 kB | 17/18 kBProgress (4): 137/208 kB | 25/256 kB | 22/152 kB | 17/18 kBProgress (4): 137/208 kB | 25/256 kB | 22/152 kB | 18 kB   Progress (4): 137/208 kB | 25/256 kB | 25/152 kB | 18 kBProgress (4): 139/208 kB | 25/256 kB | 25/152 kB | 18 kBProgress (4): 139/208 kB | 28/256 kB | 25/152 kB | 18 kBProgress (4): 142/208 kB | 28/256 kB | 25/152 kB | 18 kBProgress (4): 142/208 kB | 28/256 kB | 28/152 kB | 18 kBProgress (4): 145/208 kB | 28/256 kB | 28/152 kB | 18 kBProgress (4): 148/208 kB | 28/256 kB | 28/152 kB | 18 kBProgress (4): 150/208 kB | 28/256 kB | 28/152 kB | 18 kBProgress (4): 150/208 kB | 31/256 kB | 28/152 kB | 18 kBProgress (4): 153/208 kB | 31/256 kB | 28/152 kB | 18 kBProgress (4): 156/208 kB | 31/256 kB | 28/152 kB | 18 kBProgress (4): 159/208 kB | 31/256 kB | 28/152 kB | 18 kBProgress (4): 159/208 kB | 31/256 kB | 31/152 kB | 18 kBProgress (4): 161/208 kB | 31/256 kB | 31/152 kB | 18 kBProgress (4): 161/208 kB | 31/256 kB | 33/152 kB | 18 kBProgress (4): 161/208 kB | 33/256 kB | 33/152 kB | 18 kBProgress (4): 161/208 kB | 33/256 kB | 36/152 kB | 18 kBProgress (4): 164/208 kB | 33/256 kB | 36/152 kB | 18 kBProgress (4): 164/208 kB | 33/256 kB | 38/152 kB | 18 kBProgress (4): 164/208 kB | 36/256 kB | 38/152 kB | 18 kBProgress (4): 164/208 kB | 36/256 kB | 41/152 kB | 18 kBProgress (4): 164/208 kB | 38/256 kB | 41/152 kB | 18 kBProgress (4): 164/208 kB | 38/256 kB | 44/152 kB | 18 kBProgress (4): 164/208 kB | 41/256 kB | 44/152 kB | 18 kBProgress (4): 164/208 kB | 44/256 kB | 44/152 kB | 18 kBProgress (4): 167/208 kB | 44/256 kB | 44/152 kB | 18 kBProgress (4): 167/208 kB | 47/256 kB | 44/152 kB | 18 kBProgress (4): 167/208 kB | 47/256 kB | 47/152 kB | 18 kBProgress (4): 167/208 kB | 49/256 kB | 47/152 kB | 18 kBProgress (4): 169/208 kB | 49/256 kB | 47/152 kB | 18 kBProgress (4): 169/208 kB | 52/256 kB | 47/152 kB | 18 kBProgress (4): 172/208 kB | 52/256 kB | 47/152 kB | 18 kBProgress (4): 175/208 kB | 52/256 kB | 47/152 kB | 18 kBProgress (4): 175/208 kB | 52/256 kB | 49/152 kB | 18 kBProgress (4): 175/208 kB | 52/256 kB | 52/152 kB | 18 kBProgress (4): 178/208 kB | 52/256 kB | 52/152 kB | 18 kBProgress (4): 178/208 kB | 55/256 kB | 52/152 kB | 18 kBProgress (4): 178/208 kB | 58/256 kB | 52/152 kB | 18 kBProgress (4): 180/208 kB | 58/256 kB | 52/152 kB | 18 kBProgress (4): 180/208 kB | 58/256 kB | 55/152 kB | 18 kBProgress (4): 180/208 kB | 60/256 kB | 55/152 kB | 18 kBProgress (4): 183/208 kB | 60/256 kB | 55/152 kB | 18 kBProgress (4): 183/208 kB | 63/256 kB | 55/152 kB | 18 kBProgress (4): 183/208 kB | 63/256 kB | 58/152 kB | 18 kBProgress (4): 183/208 kB | 66/256 kB | 58/152 kB | 18 kBProgress (4): 186/208 kB | 66/256 kB | 58/152 kB | 18 kBProgress (4): 186/208 kB | 68/256 kB | 58/152 kB | 18 kBProgress (4): 186/208 kB | 68/256 kB | 60/152 kB | 18 kBProgress (4): 186/208 kB | 71/256 kB | 60/152 kB | 18 kBProgress (4): 186/208 kB | 71/256 kB | 63/152 kB | 18 kBProgress (4): 186/208 kB | 74/256 kB | 63/152 kB | 18 kBProgress (4): 186/208 kB | 74/256 kB | 66/152 kB | 18 kBProgress (4): 189/208 kB | 74/256 kB | 66/152 kB | 18 kBProgress (4): 189/208 kB | 74/256 kB | 68/152 kB | 18 kBProgress (4): 191/208 kB | 74/256 kB | 68/152 kB | 18 kBProgress (4): 191/208 kB | 74/256 kB | 71/152 kB | 18 kBProgress (4): 194/208 kB | 74/256 kB | 71/152 kB | 18 kBProgress (4): 194/208 kB | 74/256 kB | 74/152 kB | 18 kBProgress (4): 197/208 kB | 74/256 kB | 74/152 kB | 18 kBProgress (4): 197/208 kB | 74/256 kB | 77/152 kB | 18 kBProgress (4): 197/208 kB | 74/256 kB | 79/152 kB | 18 kBProgress (4): 199/208 kB | 74/256 kB | 79/152 kB | 18 kBProgress (4): 199/208 kB | 74/256 kB | 82/152 kB | 18 kBProgress (4): 202/208 kB | 74/256 kB | 82/152 kB | 18 kBProgress (4): 202/208 kB | 74/256 kB | 85/152 kB | 18 kBProgress (4): 205/208 kB | 74/256 kB | 85/152 kB | 18 kBProgress (4): 205/208 kB | 74/256 kB | 88/152 kB | 18 kBProgress (4): 208 kB | 74/256 kB | 88/152 kB | 18 kB    Progress (4): 208 kB | 74/256 kB | 90/152 kB | 18 kBProgress (4): 208 kB | 74/256 kB | 93/152 kB | 18 kBProgress (4): 208 kB | 74/256 kB | 96/152 kB | 18 kBProgress (4): 208 kB | 74/256 kB | 98/152 kB | 18 kBProgress (4): 208 kB | 74/256 kB | 101/152 kB | 18 kBProgress (4): 208 kB | 74/256 kB | 104/152 kB | 18 kBProgress (4): 208 kB | 77/256 kB | 104/152 kB | 18 kBProgress (4): 208 kB | 77/256 kB | 107/152 kB | 18 kBProgress (4): 208 kB | 79/256 kB | 107/152 kB | 18 kBProgress (4): 208 kB | 82/256 kB | 107/152 kB | 18 kBProgress (4): 208 kB | 82/256 kB | 109/152 kB | 18 kBProgress (4): 208 kB | 85/256 kB | 109/152 kB | 18 kBProgress (4): 208 kB | 85/256 kB | 112/152 kB | 18 kBProgress (4): 208 kB | 88/256 kB | 112/152 kB | 18 kBProgress (4): 208 kB | 90/256 kB | 112/152 kB | 18 kBProgress (4): 208 kB | 93/256 kB | 112/152 kB | 18 kBProgress (4): 208 kB | 93/256 kB | 115/152 kB | 18 kBProgress (4): 208 kB | 96/256 kB | 115/152 kB | 18 kBProgress (4): 208 kB | 96/256 kB | 118/152 kB | 18 kBProgress (4): 208 kB | 98/256 kB | 118/152 kB | 18 kBProgress (4): 208 kB | 98/256 kB | 120/152 kB | 18 kBProgress (4): 208 kB | 98/256 kB | 123/152 kB | 18 kBProgress (4): 208 kB | 101/256 kB | 123/152 kB | 18 kBProgress (4): 208 kB | 101/256 kB | 126/152 kB | 18 kBProgress (4): 208 kB | 104/256 kB | 126/152 kB | 18 kBProgress (4): 208 kB | 107/256 kB | 126/152 kB | 18 kBProgress (4): 208 kB | 109/256 kB | 126/152 kB | 18 kBProgress (4): 208 kB | 112/256 kB | 126/152 kB | 18 kBProgress (4): 208 kB | 112/256 kB | 129/152 kB | 18 kBProgress (4): 208 kB | 112/256 kB | 131/152 kB | 18 kBProgress (4): 208 kB | 112/256 kB | 134/152 kB | 18 kBProgress (4): 208 kB | 115/256 kB | 134/152 kB | 18 kBProgress (4): 208 kB | 115/256 kB | 137/152 kB | 18 kBProgress (4): 208 kB | 118/256 kB | 137/152 kB | 18 kBProgress (4): 208 kB | 118/256 kB | 139/152 kB | 18 kBProgress (4): 208 kB | 120/256 kB | 139/152 kB | 18 kBProgress (4): 208 kB | 120/256 kB | 142/152 kB | 18 kBProgress (4): 208 kB | 123/256 kB | 142/152 kB | 18 kBProgress (4): 208 kB | 123/256 kB | 145/152 kB | 18 kBProgress (4): 208 kB | 126/256 kB | 145/152 kB | 18 kBProgress (4): 208 kB | 126/256 kB | 148/152 kB | 18 kBProgress (4): 208 kB | 129/256 kB | 148/152 kB | 18 kBProgress (4): 208 kB | 129/256 kB | 150/152 kB | 18 kBProgress (4): 208 kB | 131/256 kB | 150/152 kB | 18 kBProgress (4): 208 kB | 131/256 kB | 152 kB | 18 kB    Progress (4): 208 kB | 134/256 kB | 152 kB | 18 kBProgress (4): 208 kB | 137/256 kB | 152 kB | 18 kBProgress (4): 208 kB | 139/256 kB | 152 kB | 18 kBProgress (4): 208 kB | 142/256 kB | 152 kB | 18 kBProgress (4): 208 kB | 145/256 kB | 152 kB | 18 kBProgress (4): 208 kB | 148/256 kB | 152 kB | 18 kBProgress (4): 208 kB | 150/256 kB | 152 kB | 18 kBProgress (4): 208 kB | 153/256 kB | 152 kB | 18 kBProgress (4): 208 kB | 156/256 kB | 152 kB | 18 kBProgress (4): 208 kB | 159/256 kB | 152 kB | 18 kBProgress (4): 208 kB | 161/256 kB | 152 kB | 18 kBProgress (4): 208 kB | 164/256 kB | 152 kB | 18 kBProgress (4): 208 kB | 167/256 kB | 152 kB | 18 kBProgress (4): 208 kB | 169/256 kB | 152 kB | 18 kBProgress (4): 208 kB | 172/256 kB | 152 kB | 18 kBProgress (4): 208 kB | 175/256 kB | 152 kB | 18 kBProgress (4): 208 kB | 178/256 kB | 152 kB | 18 kBProgress (4): 208 kB | 180/256 kB | 152 kB | 18 kBProgress (4): 208 kB | 183/256 kB | 152 kB | 18 kBProgress (4): 208 kB | 186/256 kB | 152 kB | 18 kBProgress (4): 208 kB | 189/256 kB | 152 kB | 18 kBProgress (4): 208 kB | 191/256 kB | 152 kB | 18 kBProgress (4): 208 kB | 194/256 kB | 152 kB | 18 kBProgress (4): 208 kB | 197/256 kB | 152 kB | 18 kBProgress (4): 208 kB | 199/256 kB | 152 kB | 18 kBProgress (4): 208 kB | 202/256 kB | 152 kB | 18 kBProgress (4): 208 kB | 205/256 kB | 152 kB | 18 kBProgress (4): 208 kB | 208/256 kB | 152 kB | 18 kBProgress (4): 208 kB | 210/256 kB | 152 kB | 18 kBProgress (4): 208 kB | 213/256 kB | 152 kB | 18 kBProgress (4): 208 kB | 216/256 kB | 152 kB | 18 kBProgress (4): 208 kB | 219/256 kB | 152 kB | 18 kBProgress (4): 208 kB | 221/256 kB | 152 kB | 18 kBProgress (4): 208 kB | 224/256 kB | 152 kB | 18 kBProgress (4): 208 kB | 227/256 kB | 152 kB | 18 kBProgress (4): 208 kB | 229/256 kB | 152 kB | 18 kBProgress (4): 208 kB | 232/256 kB | 152 kB | 18 kBProgress (4): 208 kB | 235/256 kB | 152 kB | 18 kBProgress (4): 208 kB | 238/256 kB | 152 kB | 18 kBProgress (4): 208 kB | 240/256 kB | 152 kB | 18 kB                                                  Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/junit/platform/junit-platform-launcher/1.12.1/junit-platform-launcher-1.12.1.jar (208 kB at 2.2 MB/s)
+Progress (3): 243/256 kB | 152 kB | 18 kBProgress (3): 246/256 kB | 152 kB | 18 kBProgress (3): 249/256 kB | 152 kB | 18 kBProgress (3): 251/256 kB | 152 kB | 18 kBProgress (3): 254/256 kB | 152 kB | 18 kBProgress (3): 256 kB | 152 kB | 18 kB                                         Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/apache/maven/surefire/common-java5/3.5.3/common-java5-3.5.3.jar (18 kB at 171 kB/s)
+Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/junit/platform/junit-platform-commons/1.12.1/junit-platform-commons-1.12.1.jar (152 kB at 1.3 MB/s)
+Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/junit/platform/junit-platform-engine/1.12.1/junit-platform-engine-1.12.1.jar (256 kB at 2.0 MB/s)
+Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/junit/platform/junit-platform-launcher/1.11.4/junit-platform-launcher-1.11.4.pom
+Progress (1): 3.0 kB                    Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/junit/platform/junit-platform-launcher/1.11.4/junit-platform-launcher-1.11.4.pom (3.0 kB at 80 kB/s)
+Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/junit/platform/junit-platform-launcher/1.11.4/junit-platform-launcher-1.11.4.jar
+Progress (1): 3.1/189 kBProgress (1): 5.8/189 kBProgress (1): 8.6/189 kBProgress (1): 11/189 kB Progress (1): 14/189 kBProgress (1): 17/189 kBProgress (1): 20/189 kBProgress (1): 22/189 kBProgress (1): 25/189 kBProgress (1): 28/189 kBProgress (1): 31/189 kBProgress (1): 33/189 kBProgress (1): 36/189 kBProgress (1): 38/189 kBProgress (1): 41/189 kBProgress (1): 44/189 kBProgress (1): 47/189 kBProgress (1): 49/189 kBProgress (1): 52/189 kBProgress (1): 55/189 kBProgress (1): 58/189 kBProgress (1): 60/189 kBProgress (1): 63/189 kBProgress (1): 66/189 kBProgress (1): 68/189 kBProgress (1): 71/189 kBProgress (1): 74/189 kBProgress (1): 77/189 kBProgress (1): 79/189 kBProgress (1): 82/189 kBProgress (1): 85/189 kBProgress (1): 88/189 kBProgress (1): 90/189 kBProgress (1): 93/189 kBProgress (1): 96/189 kBProgress (1): 98/189 kBProgress (1): 101/189 kBProgress (1): 104/189 kBProgress (1): 107/189 kBProgress (1): 109/189 kBProgress (1): 112/189 kBProgress (1): 115/189 kBProgress (1): 118/189 kBProgress (1): 120/189 kBProgress (1): 123/189 kBProgress (1): 126/189 kBProgress (1): 129/189 kBProgress (1): 131/189 kBProgress (1): 134/189 kBProgress (1): 137/189 kBProgress (1): 139/189 kBProgress (1): 142/189 kBProgress (1): 145/189 kBProgress (1): 148/189 kBProgress (1): 150/189 kBProgress (1): 153/189 kBProgress (1): 156/189 kBProgress (1): 159/189 kBProgress (1): 161/189 kBProgress (1): 164/189 kBProgress (1): 167/189 kBProgress (1): 169/189 kBProgress (1): 172/189 kBProgress (1): 175/189 kBProgress (1): 178/189 kBProgress (1): 180/189 kBProgress (1): 183/189 kBProgress (1): 186/189 kBProgress (1): 189/189 kBProgress (1): 189 kB                        Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/junit/platform/junit-platform-launcher/1.11.4/junit-platform-launcher-1.11.4.jar (189 kB at 4.2 MB/s)
+[[1;34mINFO[m] 
+[[1;34mINFO[m] -------------------------------------------------------
+[[1;34mINFO[m]  T E S T S
+[[1;34mINFO[m] -------------------------------------------------------
+[[1;34mINFO[m] Running com.carddemo.data.[1mCobolFieldReaderTest[m
+[[1;34mINFO[m] [1;32mTests run: [0;1;32m5[m, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.035 s -- in com.carddemo.data.[1mCobolFieldReaderTest[m
+[[1;34mINFO[m] Running com.carddemo.data.[1mLegacyExtractQ10GateTest[m
+Q-10 gate: rows accounts=50 customers=50 date values checked=200 offenders=[]
+[[1;34mINFO[m] [1;32mTests run: [0;1;32m4[m, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.024 s -- in com.carddemo.data.[1mLegacyExtractQ10GateTest[m
+[[1;34mINFO[m] Running com.carddemo.service.[1mAccountViewServiceTest[m
+Mockito is currently self-attaching to enable the inline-mock-maker. This will no longer work in future releases of the JDK. Please add Mockito as an agent to your build what is described in Mockito's documentation: https://javadoc.io/doc/org.mockito/mockito-core/latest/org/mockito/Mockito.html#0.3
+OpenJDK 64-Bit Server VM warning: Sharing is only supported for boot loader classes because bootstrap classpath has been appended
+WARNING: A Java agent has been loaded dynamically (/home/ubuntu/.m2/repository/net/bytebuddy/byte-buddy-agent/1.15.11/byte-buddy-agent-1.15.11.jar)
+WARNING: If a serviceability tool is in use, please run with -XX:+EnableDynamicAgentLoading to hide this warning
+WARNING: If a serviceability tool is not in use, please run with -Djdk.instrument.traceUsage for more information
+WARNING: Dynamic loading of agents will be disallowed by default in a future release
+[[1;34mINFO[m] [1;32mTests run: [0;1;32m23[m, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.741 s -- in com.carddemo.service.[1mAccountViewServiceTest[m
+[[1;34mINFO[m] Running com.carddemo.service.[1mMenuServiceTest[m
+[[1;34mINFO[m] [1;32mTests run: [0;1;32m44[m, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.059 s -- in com.carddemo.service.[1mMenuServiceTest[m
+[[1;34mINFO[m] Running com.carddemo.service.[1mDateValidationServiceTest[m
+[[1;34mINFO[m] [1;32mTests run: [0;1;32m19[m, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.018 s -- in com.carddemo.service.[1mDateValidationServiceTest[m
+[[1;34mINFO[m] Running com.carddemo.service.[1mAuthUpgradeOnLoginIntegrationTest[m
+10:11:46.240 [main] INFO org.springframework.test.context.support.AnnotationConfigContextLoaderUtils -- Could not detect default configuration classes for test class [com.carddemo.service.AuthUpgradeOnLoginIntegrationTest]: AuthUpgradeOnLoginIntegrationTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+10:11:46.277 [main] INFO org.testcontainers.images.PullPolicy -- Image pull policy will be performed by: DefaultPullPolicy()
+10:11:46.278 [main] INFO org.testcontainers.utility.ImageNameSubstitutor -- Image name substitution will be performed by: DefaultImageNameSubstitutor (composite of 'ConfigurationFileImageNameSubstitutor' and 'PrefixingImageNameSubstitutor')
+10:11:46.283 [main] INFO org.testcontainers.DockerClientFactory -- Testcontainers version: 1.20.6
+10:11:46.520 [main] INFO org.testcontainers.dockerclient.DockerClientProviderStrategy -- Found Docker environment with local Unix socket (unix:///var/run/docker.sock)
+10:11:46.525 [main] INFO org.testcontainers.DockerClientFactory -- Docker host IP address is localhost
+10:11:46.537 [main] INFO org.testcontainers.DockerClientFactory -- Connected to docker: 
+  Server Version: 27.4.1
+  API Version: 1.47
+  Operating System: Ubuntu 22.04.5 LTS
+  Total Memory: 32108 MB
+10:11:46.561 [main] INFO tc.testcontainers/ryuk:0.11.0 -- Pulling docker image: testcontainers/ryuk:0.11.0. Please be patient; this may take some time but only needs to be done once.
+10:11:47.343 [docker-java-stream-1520154752] INFO tc.testcontainers/ryuk:0.11.0 -- Starting to pull image
+10:11:47.354 [docker-java-stream-1520154752] INFO tc.testcontainers/ryuk:0.11.0 -- Pulling image layers:  0 pending,  0 downloaded,  0 extracted, (0 bytes/0 bytes)
+10:11:47.817 [docker-java-stream-1520154752] INFO tc.testcontainers/ryuk:0.11.0 -- Pulling image layers:  2 pending,  1 downloaded,  0 extracted, (142 KB/? MB)
+10:11:47.826 [docker-java-stream-1520154752] INFO tc.testcontainers/ryuk:0.11.0 -- Pulling image layers:  1 pending,  2 downloaded,  0 extracted, (3 MB/? MB)
+10:11:47.847 [docker-java-stream-1520154752] INFO tc.testcontainers/ryuk:0.11.0 -- Pulling image layers:  0 pending,  3 downloaded,  0 extracted, (3 MB/10 MB)
+10:11:47.898 [docker-java-stream-1520154752] INFO tc.testcontainers/ryuk:0.11.0 -- Pulling image layers:  0 pending,  3 downloaded,  1 extracted, (3 MB/10 MB)
+10:11:47.943 [docker-java-stream-1520154752] INFO tc.testcontainers/ryuk:0.11.0 -- Pulling image layers:  0 pending,  3 downloaded,  2 extracted, (4 MB/10 MB)
+10:11:47.964 [docker-java-stream-1520154752] INFO tc.testcontainers/ryuk:0.11.0 -- Pulling image layers:  0 pending,  3 downloaded,  3 extracted, (10 MB/10 MB)
+10:11:47.968 [main] INFO tc.testcontainers/ryuk:0.11.0 -- Image testcontainers/ryuk:0.11.0 pull took PT1.406810004S
+10:11:47.983 [main] INFO tc.testcontainers/ryuk:0.11.0 -- Creating container for image: testcontainers/ryuk:0.11.0
+10:11:48.090 [main] INFO tc.testcontainers/ryuk:0.11.0 -- Container testcontainers/ryuk:0.11.0 is starting: 359d04bf72f3f68ccf55cf718bd6f7031b6ca2f947b950dcc97842153fdffb54
+10:11:48.269 [main] INFO tc.testcontainers/ryuk:0.11.0 -- Container testcontainers/ryuk:0.11.0 started in PT0.285663068S
+10:11:48.272 [main] INFO org.testcontainers.utility.RyukResourceReaper -- Ryuk started - will monitor and terminate Testcontainers containers on JVM exit
+10:11:48.273 [main] INFO org.testcontainers.DockerClientFactory -- Checking the system...
+10:11:48.273 [main] INFO org.testcontainers.DockerClientFactory -- ✔︎ Docker server version should be at least 1.6.0
+10:11:48.273 [main] INFO tc.postgres:16 -- Creating container for image: postgres:16
+10:11:48.289 [main] INFO tc.postgres:16 -- Container postgres:16 is starting: b3996f12997c82a9d625d879345ceb90380de945932ee2d4dad5d474c2b1fb7e
+10:11:49.159 [main] INFO tc.postgres:16 -- Container postgres:16 started in PT0.885980888S
+10:11:49.160 [main] INFO tc.postgres:16 -- Container is started (JDBC URL: jdbc:postgresql://localhost:32769/test?loggerLevel=OFF)
+10:11:49.219 [main] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper -- Found @SpringBootConfiguration com.carddemo.CardDemoApplication for test class com.carddemo.service.AuthUpgradeOnLoginIntegrationTest
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v3.4.5)
+
+2026-09-07T10:11:49.453Z  INFO 9809 --- [carddemo] [           main] c.c.s.AuthUpgradeOnLoginIntegrationTest  : Starting AuthUpgradeOnLoginIntegrationTest using Java 21.0.12 with PID 9809 (started by ubuntu in /home/ubuntu/repos/ts-cobol-carddemo/backend)
+2026-09-07T10:11:49.454Z  INFO 9809 --- [carddemo] [           main] c.c.s.AuthUpgradeOnLoginIntegrationTest  : No active profile set, falling back to 1 default profile: "default"
+2026-09-07T10:11:49.839Z  INFO 9809 --- [carddemo] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-09-07T10:11:49.883Z  INFO 9809 --- [carddemo] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 29 ms. Found 4 JPA repository interfaces.
+2026-09-07T10:11:50.283Z  INFO 9809 --- [carddemo] [           main] org.flywaydb.core.FlywayExecutor         : Database: jdbc:postgresql://localhost:32769/test?loggerLevel=OFF (PostgreSQL 16.15)
+2026-09-07T10:11:50.309Z  INFO 9809 --- [carddemo] [           main] o.f.c.i.s.JdbcTableSchemaHistory         : Schema history table "public"."flyway_schema_history" does not exist yet
+2026-09-07T10:11:50.310Z  INFO 9809 --- [carddemo] [           main] o.f.core.internal.command.DbValidate     : Successfully validated 2 migrations (execution time 00:00.012s)
+2026-09-07T10:11:50.319Z  INFO 9809 --- [carddemo] [           main] o.f.c.i.s.JdbcTableSchemaHistory         : Creating Schema History table "public"."flyway_schema_history" ...
+2026-09-07T10:11:50.342Z  INFO 9809 --- [carddemo] [           main] o.f.core.internal.command.DbMigrate      : Current version of schema "public": << Empty Schema >>
+2026-09-07T10:11:50.348Z  INFO 9809 --- [carddemo] [           main] o.f.core.internal.command.DbMigrate      : Migrating schema "public" to version "1 - account view schema"
+2026-09-07T10:11:50.361Z  INFO 9809 --- [carddemo] [           main] o.f.core.internal.command.DbMigrate      : Migrating schema "public" with repeatable migration "seed test data"
+2026-09-07T10:11:50.368Z  INFO 9809 --- [carddemo] [           main] o.f.core.internal.command.DbMigrate      : Successfully applied 2 migrations to schema "public", now at version v1 (execution time 00:00.009s)
+2026-09-07T10:11:50.416Z  INFO 9809 --- [carddemo] [           main] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2026-09-07T10:11:50.436Z  INFO 9809 --- [carddemo] [           main] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.6.13.Final
+2026-09-07T10:11:50.451Z  INFO 9809 --- [carddemo] [           main] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
+2026-09-07T10:11:50.505Z  INFO 9809 --- [carddemo] [           main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-09-07T10:11:50.520Z  INFO 9809 --- [carddemo] [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2026-09-07T10:11:50.534Z  INFO 9809 --- [carddemo] [           main] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@19c6e821
+2026-09-07T10:11:50.535Z  INFO 9809 --- [carddemo] [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2026-09-07T10:11:50.568Z  INFO 9809 --- [carddemo] [           main] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
+	Database driver: undefined/unknown
+	Database version: 16.15
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-09-07T10:11:50.902Z  INFO 9809 --- [carddemo] [           main] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-09-07T10:11:50.920Z  INFO 9809 --- [carddemo] [           main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-09-07T10:11:51.100Z  WARN 9809 --- [carddemo] [           main] .s.s.UserDetailsServiceAutoConfiguration : 
+
+Using generated security password: 9906b767-df64-46b7-8858-99e2e45d84a6
+
+This generated password is for development use only. Your security configuration must be updated before running your application in production.
+
+2026-09-07T10:11:51.103Z  INFO 9809 --- [carddemo] [           main] r$InitializeUserDetailsManagerConfigurer : Global AuthenticationManager configured with UserDetailsService bean with name inMemoryUserDetailsManager
+2026-09-07T10:11:51.375Z  INFO 9809 --- [carddemo] [           main] c.c.s.AuthUpgradeOnLoginIntegrationTest  : Started AuthUpgradeOnLoginIntegrationTest in 2.089 seconds (process running for 6.472)
+[[1;34mINFO[m] [1;32mTests run: [0;1;32m5[m, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 6.312 s -- in com.carddemo.service.[1mAuthUpgradeOnLoginIntegrationTest[m
+[[1;34mINFO[m] Running com.carddemo.service.[1mScreenHeaderServiceTest[m
+[[1;34mINFO[m] [1;32mTests run: [0;1;32m1[m, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.001 s -- in com.carddemo.service.[1mScreenHeaderServiceTest[m
+[[1;34mINFO[m] Running com.carddemo.service.[1mAuthServiceTest[m
+[[1;34mINFO[m] [1;32mTests run: [0;1;32m20[m, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.723 s -- in com.carddemo.service.[1mAuthServiceTest[m
+[[1;34mINFO[m] Running com.carddemo.repository.[1mAccountViewRepositoriesIntegrationTest[m
+2026-09-07T10:11:53.221Z  INFO 9809 --- [carddemo] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.carddemo.repository.AccountViewRepositoriesIntegrationTest]: AccountViewRepositoriesIntegrationTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-09-07T10:11:53.226Z  INFO 9809 --- [carddemo] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.carddemo.CardDemoApplication for test class com.carddemo.repository.AccountViewRepositoriesIntegrationTest
+[[1;34mINFO[m] [1;32mTests run: [0;1;32m6[m, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.076 s -- in com.carddemo.repository.[1mAccountViewRepositoriesIntegrationTest[m
+[[1;34mINFO[m] Running com.carddemo.api.[1mCobolPictureTest[m
+[[1;34mINFO[m] [1;32mTests run: [0;1;32m7[m, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.002 s -- in com.carddemo.api.[1mCobolPictureTest[m
+[[1;34mINFO[m] Running com.carddemo.api.[1mAccountViewFlowIntegrationTest[m
+2026-09-07T10:11:53.300Z  INFO 9809 --- [carddemo] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.carddemo.api.AccountViewFlowIntegrationTest]: AccountViewFlowIntegrationTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-09-07T10:11:53.309Z  INFO 9809 --- [carddemo] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.carddemo.CardDemoApplication for test class com.carddemo.api.AccountViewFlowIntegrationTest
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v3.4.5)
+
+2026-09-07T10:11:53.334Z  INFO 9809 --- [carddemo] [           main] c.c.api.AccountViewFlowIntegrationTest   : Starting AccountViewFlowIntegrationTest using Java 21.0.12 with PID 9809 (started by ubuntu in /home/ubuntu/repos/ts-cobol-carddemo/backend)
+2026-09-07T10:11:53.334Z  INFO 9809 --- [carddemo] [           main] c.c.api.AccountViewFlowIntegrationTest   : No active profile set, falling back to 1 default profile: "default"
+2026-09-07T10:11:53.399Z  INFO 9809 --- [carddemo] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-09-07T10:11:53.404Z  INFO 9809 --- [carddemo] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 3 ms. Found 4 JPA repository interfaces.
+2026-09-07T10:11:53.472Z  INFO 9809 --- [carddemo] [           main] org.flywaydb.core.FlywayExecutor         : Database: jdbc:postgresql://localhost:32769/test?loggerLevel=OFF (PostgreSQL 16.15)
+2026-09-07T10:11:53.478Z  INFO 9809 --- [carddemo] [           main] o.f.core.internal.command.DbValidate     : Successfully validated 2 migrations (execution time 00:00.003s)
+2026-09-07T10:11:53.487Z  INFO 9809 --- [carddemo] [           main] o.f.core.internal.command.DbMigrate      : Current version of schema "public": 1
+2026-09-07T10:11:53.487Z  INFO 9809 --- [carddemo] [           main] o.f.core.internal.command.DbMigrate      : Schema "public" is up to date. No migration necessary.
+2026-09-07T10:11:53.495Z  INFO 9809 --- [carddemo] [           main] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2026-09-07T10:11:53.496Z  INFO 9809 --- [carddemo] [           main] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
+2026-09-07T10:11:53.500Z  INFO 9809 --- [carddemo] [           main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-09-07T10:11:53.500Z  INFO 9809 --- [carddemo] [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-2 - Starting...
+2026-09-07T10:11:53.504Z  INFO 9809 --- [carddemo] [           main] com.zaxxer.hikari.pool.HikariPool        : HikariPool-2 - Added connection org.postgresql.jdbc.PgConnection@7e30050
+2026-09-07T10:11:53.505Z  INFO 9809 --- [carddemo] [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-2 - Start completed.
+2026-09-07T10:11:53.506Z  INFO 9809 --- [carddemo] [           main] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-2)']
+	Database driver: undefined/unknown
+	Database version: 16.15
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-09-07T10:11:53.530Z  INFO 9809 --- [carddemo] [           main] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-09-07T10:11:53.538Z  INFO 9809 --- [carddemo] [           main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-09-07T10:11:53.574Z  WARN 9809 --- [carddemo] [           main] .s.s.UserDetailsServiceAutoConfiguration : 
+
+Using generated security password: e8080dda-5709-4fc0-be29-2ccfd6406403
+
+This generated password is for development use only. Your security configuration must be updated before running your application in production.
+
+2026-09-07T10:11:53.574Z  INFO 9809 --- [carddemo] [           main] r$InitializeUserDetailsManagerConfigurer : Global AuthenticationManager configured with UserDetailsService bean with name inMemoryUserDetailsManager
+2026-09-07T10:11:53.666Z  INFO 9809 --- [carddemo] [           main] o.s.b.t.m.w.SpringBootMockServletContext : Initializing Spring TestDispatcherServlet ''
+2026-09-07T10:11:53.667Z  INFO 9809 --- [carddemo] [           main] o.s.t.web.servlet.TestDispatcherServlet  : Initializing Servlet ''
+2026-09-07T10:11:53.667Z  INFO 9809 --- [carddemo] [           main] o.s.t.web.servlet.TestDispatcherServlet  : Completed initialization in 0 ms
+2026-09-07T10:11:53.672Z  INFO 9809 --- [carddemo] [           main] c.c.api.AccountViewFlowIntegrationTest   : Started AccountViewFlowIntegrationTest in 0.361 seconds (process running for 8.769)
+[[1;34mINFO[m] [1;32mTests run: [0;1;32m6[m, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.900 s -- in com.carddemo.api.[1mAccountViewFlowIntegrationTest[m
+[[1;34mINFO[m] Running com.carddemo.api.[1mMenuFlowIntegrationTest[m
+2026-09-07T10:11:54.200Z  INFO 9809 --- [carddemo] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.carddemo.api.MenuFlowIntegrationTest]: MenuFlowIntegrationTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-09-07T10:11:54.202Z  INFO 9809 --- [carddemo] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.carddemo.CardDemoApplication for test class com.carddemo.api.MenuFlowIntegrationTest
+[[1;34mINFO[m] [1;32mTests run: [0;1;32m4[m, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.285 s -- in com.carddemo.api.[1mMenuFlowIntegrationTest[m
+[[1;34mINFO[m] Running com.carddemo.api.[1mAuthControllerWebMvcTest[m
+2026-09-07T10:11:54.487Z  INFO 9809 --- [carddemo] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.carddemo.api.AuthControllerWebMvcTest]: AuthControllerWebMvcTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-09-07T10:11:54.493Z  INFO 9809 --- [carddemo] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.carddemo.CardDemoApplication for test class com.carddemo.api.AuthControllerWebMvcTest
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v3.4.5)
+
+2026-09-07T10:11:54.503Z  INFO 9809 --- [carddemo] [           main] c.carddemo.api.AuthControllerWebMvcTest  : Starting AuthControllerWebMvcTest using Java 21.0.12 with PID 9809 (started by ubuntu in /home/ubuntu/repos/ts-cobol-carddemo/backend)
+2026-09-07T10:11:54.503Z  INFO 9809 --- [carddemo] [           main] c.carddemo.api.AuthControllerWebMvcTest  : No active profile set, falling back to 1 default profile: "default"
+2026-09-07T10:11:54.589Z  WARN 9809 --- [carddemo] [           main] .s.s.UserDetailsServiceAutoConfiguration : 
+
+Using generated security password: bf229a25-3dee-445f-a5f9-997e78664e91
+
+This generated password is for development use only. Your security configuration must be updated before running your application in production.
+
+2026-09-07T10:11:54.589Z  INFO 9809 --- [carddemo] [           main] r$InitializeUserDetailsManagerConfigurer : Global AuthenticationManager configured with UserDetailsService bean with name inMemoryUserDetailsManager
+2026-09-07T10:11:54.627Z  INFO 9809 --- [carddemo] [           main] o.s.b.t.m.w.SpringBootMockServletContext : Initializing Spring TestDispatcherServlet ''
+2026-09-07T10:11:54.627Z  INFO 9809 --- [carddemo] [           main] o.s.t.web.servlet.TestDispatcherServlet  : Initializing Servlet ''
+2026-09-07T10:11:54.628Z  INFO 9809 --- [carddemo] [           main] o.s.t.web.servlet.TestDispatcherServlet  : Completed initialization in 1 ms
+2026-09-07T10:11:54.629Z  INFO 9809 --- [carddemo] [           main] c.carddemo.api.AuthControllerWebMvcTest  : Started AuthControllerWebMvcTest in 0.135 seconds (process running for 9.726)
+[[1;34mINFO[m] [1;32mTests run: [0;1;32m11[m, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.185 s -- in com.carddemo.api.[1mAuthControllerWebMvcTest[m
+[[1;34mINFO[m] Running com.carddemo.api.[1mAuthControllerH2Test[m
+2026-09-07T10:11:54.672Z  INFO 9809 --- [carddemo] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.carddemo.api.AuthControllerH2Test]: AuthControllerH2Test does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-09-07T10:11:54.674Z  INFO 9809 --- [carddemo] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.carddemo.CardDemoApplication for test class com.carddemo.api.AuthControllerH2Test
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v3.4.5)
+
+2026-09-07T10:11:54.683Z  INFO 9809 --- [carddemo] [           main] com.carddemo.api.AuthControllerH2Test    : Starting AuthControllerH2Test using Java 21.0.12 with PID 9809 (started by ubuntu in /home/ubuntu/repos/ts-cobol-carddemo/backend)
+2026-09-07T10:11:54.683Z  INFO 9809 --- [carddemo] [           main] com.carddemo.api.AuthControllerH2Test    : The following 1 profile is active: "test"
+2026-09-07T10:11:54.735Z  INFO 9809 --- [carddemo] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-09-07T10:11:54.739Z  INFO 9809 --- [carddemo] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 3 ms. Found 4 JPA repository interfaces.
+2026-09-07T10:11:54.773Z  INFO 9809 --- [carddemo] [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-3 - Starting...
+2026-09-07T10:11:54.888Z  INFO 9809 --- [carddemo] [           main] com.zaxxer.hikari.pool.HikariPool        : HikariPool-3 - Added connection conn0: url=jdbc:h2:mem:carddemo user=SA
+2026-09-07T10:11:54.889Z  INFO 9809 --- [carddemo] [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-3 - Start completed.
+2026-09-07T10:11:54.905Z  INFO 9809 --- [carddemo] [           main] org.flywaydb.core.FlywayExecutor         : Database: jdbc:h2:mem:carddemo (H2 2.3)
+2026-09-07T10:11:54.907Z  WARN 9809 --- [carddemo] [           main] o.f.c.internal.database.base.Database    : Flyway upgrade recommended: H2 2.3.232 is newer than this version of Flyway and support has not been tested. The latest supported version of H2 is 2.2.224.
+2026-09-07T10:11:54.912Z  INFO 9809 --- [carddemo] [           main] o.f.c.i.s.JdbcTableSchemaHistory         : Schema history table "public"."flyway_schema_history" does not exist yet
+2026-09-07T10:11:54.913Z  INFO 9809 --- [carddemo] [           main] o.f.core.internal.command.DbValidate     : Successfully validated 2 migrations (execution time 00:00.003s)
+2026-09-07T10:11:54.916Z  INFO 9809 --- [carddemo] [           main] o.f.c.i.s.JdbcTableSchemaHistory         : Creating Schema History table "public"."flyway_schema_history" ...
+2026-09-07T10:11:54.925Z  INFO 9809 --- [carddemo] [           main] o.f.core.internal.command.DbMigrate      : Current version of schema "public": << Empty Schema >>
+2026-09-07T10:11:54.927Z  INFO 9809 --- [carddemo] [           main] o.f.core.internal.command.DbMigrate      : Migrating schema "public" to version "1 - account view schema"
+2026-09-07T10:11:54.933Z  INFO 9809 --- [carddemo] [           main] o.f.core.internal.command.DbMigrate      : Migrating schema "public" with repeatable migration "seed test data"
+2026-09-07T10:11:54.937Z  INFO 9809 --- [carddemo] [           main] o.f.core.internal.command.DbMigrate      : Successfully applied 2 migrations to schema "public", now at version v1 (execution time 00:00.004s)
+2026-09-07T10:11:54.944Z  INFO 9809 --- [carddemo] [           main] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2026-09-07T10:11:54.944Z  INFO 9809 --- [carddemo] [           main] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
+2026-09-07T10:11:54.948Z  INFO 9809 --- [carddemo] [           main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-09-07T10:11:54.950Z  INFO 9809 --- [carddemo] [           main] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-3)']
+	Database driver: undefined/unknown
+	Database version: 2.3.232
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-09-07T10:11:54.979Z  INFO 9809 --- [carddemo] [           main] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-09-07T10:11:54.980Z  INFO 9809 --- [carddemo] [           main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-09-07T10:11:55.013Z  WARN 9809 --- [carddemo] [           main] .s.s.UserDetailsServiceAutoConfiguration : 
+
+Using generated security password: 26672ff2-5052-44fc-bdcd-d7ad252a9816
+
+This generated password is for development use only. Your security configuration must be updated before running your application in production.
+
+2026-09-07T10:11:55.013Z  INFO 9809 --- [carddemo] [           main] r$InitializeUserDetailsManagerConfigurer : Global AuthenticationManager configured with UserDetailsService bean with name inMemoryUserDetailsManager
+2026-09-07T10:11:55.066Z  INFO 9809 --- [carddemo] [           main] o.s.b.t.m.w.SpringBootMockServletContext : Initializing Spring TestDispatcherServlet ''
+2026-09-07T10:11:55.066Z  INFO 9809 --- [carddemo] [           main] o.s.t.web.servlet.TestDispatcherServlet  : Initializing Servlet ''
+2026-09-07T10:11:55.067Z  INFO 9809 --- [carddemo] [           main] o.s.t.web.servlet.TestDispatcherServlet  : Completed initialization in 1 ms
+2026-09-07T10:11:55.070Z  INFO 9809 --- [carddemo] [           main] com.carddemo.api.AuthControllerH2Test    : Started AuthControllerH2Test in 0.395 seconds (process running for 10.167)
+[[1;34mINFO[m] [1;32mTests run: [0;1;32m6[m, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.899 s -- in com.carddemo.api.[1mAuthControllerH2Test[m
+[[1;34mINFO[m] Running com.carddemo.api.[1mAccountControllerWebMvcTest[m
+2026-09-07T10:11:55.572Z  INFO 9809 --- [carddemo] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.carddemo.api.AccountControllerWebMvcTest]: AccountControllerWebMvcTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-09-07T10:11:55.576Z  INFO 9809 --- [carddemo] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.carddemo.CardDemoApplication for test class com.carddemo.api.AccountControllerWebMvcTest
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v3.4.5)
+
+2026-09-07T10:11:55.584Z  INFO 9809 --- [carddemo] [           main] c.c.api.AccountControllerWebMvcTest      : Starting AccountControllerWebMvcTest using Java 21.0.12 with PID 9809 (started by ubuntu in /home/ubuntu/repos/ts-cobol-carddemo/backend)
+2026-09-07T10:11:55.584Z  INFO 9809 --- [carddemo] [           main] c.c.api.AccountControllerWebMvcTest      : No active profile set, falling back to 1 default profile: "default"
+2026-09-07T10:11:55.671Z  WARN 9809 --- [carddemo] [           main] .s.s.UserDetailsServiceAutoConfiguration : 
+
+Using generated security password: 396a9495-6dd1-43a8-88ac-4f0235d011e3
+
+This generated password is for development use only. Your security configuration must be updated before running your application in production.
+
+2026-09-07T10:11:55.671Z  INFO 9809 --- [carddemo] [           main] r$InitializeUserDetailsManagerConfigurer : Global AuthenticationManager configured with UserDetailsService bean with name inMemoryUserDetailsManager
+2026-09-07T10:11:55.694Z  INFO 9809 --- [carddemo] [           main] o.s.b.t.m.w.SpringBootMockServletContext : Initializing Spring TestDispatcherServlet ''
+2026-09-07T10:11:55.694Z  INFO 9809 --- [carddemo] [           main] o.s.t.web.servlet.TestDispatcherServlet  : Initializing Servlet ''
+2026-09-07T10:11:55.694Z  INFO 9809 --- [carddemo] [           main] o.s.t.web.servlet.TestDispatcherServlet  : Completed initialization in 0 ms
+2026-09-07T10:11:55.696Z  INFO 9809 --- [carddemo] [           main] c.c.api.AccountControllerWebMvcTest      : Started AccountControllerWebMvcTest in 0.119 seconds (process running for 10.793)
+[[1;34mINFO[m] [1;32mTests run: [0;1;32m10[m, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.173 s -- in com.carddemo.api.[1mAccountControllerWebMvcTest[m
+[[1;34mINFO[m] Running com.carddemo.api.[1mMenuControllerWebMvcTest[m
+2026-09-07T10:11:55.745Z  INFO 9809 --- [carddemo] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.carddemo.api.MenuControllerWebMvcTest]: MenuControllerWebMvcTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-09-07T10:11:55.748Z  INFO 9809 --- [carddemo] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.carddemo.CardDemoApplication for test class com.carddemo.api.MenuControllerWebMvcTest
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v3.4.5)
+
+2026-09-07T10:11:55.755Z  INFO 9809 --- [carddemo] [           main] c.carddemo.api.MenuControllerWebMvcTest  : Starting MenuControllerWebMvcTest using Java 21.0.12 with PID 9809 (started by ubuntu in /home/ubuntu/repos/ts-cobol-carddemo/backend)
+2026-09-07T10:11:55.756Z  INFO 9809 --- [carddemo] [           main] c.carddemo.api.MenuControllerWebMvcTest  : No active profile set, falling back to 1 default profile: "default"
+2026-09-07T10:11:55.834Z  WARN 9809 --- [carddemo] [           main] .s.s.UserDetailsServiceAutoConfiguration : 
+
+Using generated security password: a2ca2737-a81c-493b-9f9e-8bd10404d882
+
+This generated password is for development use only. Your security configuration must be updated before running your application in production.
+
+2026-09-07T10:11:55.835Z  INFO 9809 --- [carddemo] [           main] r$InitializeUserDetailsManagerConfigurer : Global AuthenticationManager configured with UserDetailsService bean with name inMemoryUserDetailsManager
+2026-09-07T10:11:55.855Z  INFO 9809 --- [carddemo] [           main] o.s.b.t.m.w.SpringBootMockServletContext : Initializing Spring TestDispatcherServlet ''
+2026-09-07T10:11:55.855Z  INFO 9809 --- [carddemo] [           main] o.s.t.web.servlet.TestDispatcherServlet  : Initializing Servlet ''
+2026-09-07T10:11:55.856Z  INFO 9809 --- [carddemo] [           main] o.s.t.web.servlet.TestDispatcherServlet  : Completed initialization in 1 ms
+2026-09-07T10:11:55.857Z  INFO 9809 --- [carddemo] [           main] c.carddemo.api.MenuControllerWebMvcTest  : Started MenuControllerWebMvcTest in 0.108 seconds (process running for 10.954)
+[[1;34mINFO[m] [1;32mTests run: [0;1;32m8[m, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.141 s -- in com.carddemo.api.[1mMenuControllerWebMvcTest[m
+[[1;34mINFO[m] Running com.carddemo.[1mH2UnitProfileContextTest[m
+2026-09-07T10:11:55.886Z  INFO 9809 --- [carddemo] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.carddemo.H2UnitProfileContextTest]: H2UnitProfileContextTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-09-07T10:11:55.889Z  INFO 9809 --- [carddemo] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.carddemo.CardDemoApplication for test class com.carddemo.H2UnitProfileContextTest
+[[1;34mINFO[m] [1;32mTests run: [0;1;32m3[m, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.138 s -- in com.carddemo.[1mH2UnitProfileContextTest[m
+[[1;34mINFO[m] 
+[[1;34mINFO[m] Results:
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1;32mTests run: 182, Failures: 0, Errors: 0, Skipped: 0[m
+[[1;34mINFO[m] 
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m--- [0;32mmaven-jar-plugin:3.4.2:jar[m [1m(default-jar)[m @ [36mcarddemo-backend[0;1m ---[m
+[[1;34mINFO[m] Building jar: /home/ubuntu/repos/ts-cobol-carddemo/backend/target/carddemo-backend-0.1.0-SNAPSHOT.jar
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m--- [0;32mspring-boot-maven-plugin:3.4.5:repackage[m [1m(repackage)[m @ [36mcarddemo-backend[0;1m ---[m
+[[1;34mINFO[m] Replacing main artifact /home/ubuntu/repos/ts-cobol-carddemo/backend/target/carddemo-backend-0.1.0-SNAPSHOT.jar with repackaged archive, adding nested dependencies in BOOT-INF/.
+[[1;34mINFO[m] The original artifact has been renamed to /home/ubuntu/repos/ts-cobol-carddemo/backend/target/carddemo-backend-0.1.0-SNAPSHOT.jar.original
+[[1;34mINFO[m] [1m------------------------------------------------------------------------[m
+[[1;34mINFO[m] [1;32mBUILD SUCCESS[m
+[[1;34mINFO[m] [1m------------------------------------------------------------------------[m
+[[1;34mINFO[m] Total time:  14.200 s
+[[1;34mINFO[m] Finished at: 2026-09-07T10:11:56Z
+[[1;34mINFO[m] [1m------------------------------------------------------------------------[m
+EXIT 0

@@ -1,0 +1,21 @@
+
+> frontend@0.0.0 build
+> ng build
+
+❯ Building...
+✔ Building...
+Initial chunk files   | Names         |  Raw size | Estimated transfer size
+main-WI7XMSCS.js      | main          | 267.92 kB |                54.34 kB
+chunk-O6C22UBK.js     | -             | 147.38 kB |                42.59 kB
+styles-ZZPYEK52.css   | styles        |  56.11 kB |                 5.96 kB
+polyfills-FFHMD2TL.js | polyfills     |  34.52 kB |                11.28 kB
+
+                      | Initial total | 505.93 kB |               114.17 kB
+
+Lazy chunk files      | Names         |  Raw size | Estimated transfer size
+chunk-XN5B6ZNE.js     | browser       |  63.57 kB |                16.84 kB
+
+Application bundle generation complete. [3.439 seconds]
+
+Output location: /home/ubuntu/repos/ts-cobol-carddemo/frontend/dist/frontend
+
