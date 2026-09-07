@@ -1,0 +1,38 @@
+flowchart TB
+  %% S-01 AccountView DAG. Arrows point from caller to callee/leaf; waves are numbered leaf-first (wave 1 = leaves, bottom).
+  %% Solid edge = executes/reads at runtime; dashed = contract-only or out of stream.
+  subgraph W4["Wave 4 - stream entry (depth 3)"]
+    COACTVWC["COACTVWC  CAVW  map COACTVW\napp/cbl/COACTVWC.cbl"]
+  end
+  subgraph W3["Wave 3 - menu shell (depth 2)"]
+    COMEN01C["COMEN01C  CM00  map COMEN01\napp/cbl/COMEN01C.cbl"]
+  end
+  subgraph W2["Wave 2 - sign-on shell (depth 1)"]
+    COSGN00C["COSGN00C  CC00  map COSGN00\napp/cbl/COSGN00C.cbl"]
+  end
+  subgraph W1["Wave 1 - data seams + shared utility (depth 0)"]
+    USRSEC[("USRSEC VSAM KSDS\nCARDDEMO.CSD:88-89\nB-0006 / B-0026")]
+    CXACAIX[("CXACAIX VSAM AIX path over CCXREF\nCARDDEMO.CSD:63-65\nB-0007")]
+    ACCTDAT[("ACCTDAT VSAM KSDS\nCARDDEMO.CSD:1-2\nB-0001")]
+    CUSTDAT[("CUSTDAT VSAM KSDS\nCARDDEMO.CSD:50-52\nB-0002")]
+    COMMAREA[/"COCOM01Y COMMAREA contract\nB-0027"/]
+    CSUTLDTC["CSUTLDTC date utility\napp/cbl/CSUTLDTC.cbl\nB-0014 (owned by S-01, D-0020)"]
+    CEEDAYS{{"LE CEEDAYS\n(absent: z/OS runtime)\nB-0015"}}
+    CSUTLDTC -- "CALL CSUTLDTC.cbl:116" --> CEEDAYS
+  end
+  COSGN00C -- "READ COSGN00C.cbl:211" --> USRSEC
+  COSGN00C -- "XCTL COMMAREA :236-239" --> COMMAREA
+  COMEN01C -- "XCTL opt 1 :184-187" --> COMMAREA
+  COACTVWC -- "READ :727" --> CXACAIX
+  COACTVWC -- "READ :776" --> ACCTDAT
+  COACTVWC -- "READ :826" --> CUSTDAT
+  COACTVWC -- "RETURN TRANSID CAVW :402" --> COMMAREA
+  COMEN01C -. "XCTL from COSGN00C :236 (USRTYP=U)" .-> COSGN00C
+  COACTVWC -. "XCTL from COMEN01C :185 (opt 1)" .-> COMEN01C
+  COACTVWC == "HARD STOP: PF3 XCTL COMEN01C :349-352" ==> COMEN01C
+  COADM01C["COADM01C (admin, EXCLUDED)"]:::excl
+  OTHER["menu options 2..11 (EXCLUDED)"]:::excl
+  COSGN00C -. "XCTL :231 USRTYP=A" .-> COADM01C
+  COMEN01C -. "XCTL :157,:185" .-> OTHER
+  CSUTLDTC -. "no runtime caller in S-01\n(callers: COTRN02C, CORPT00C)" .-> COACTVWC
+  classDef excl fill:#eee,stroke:#999,color:#666,stroke-dasharray: 4 4
