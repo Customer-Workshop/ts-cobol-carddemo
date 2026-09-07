@@ -156,9 +156,15 @@ export class SignonComponent implements OnInit {
     return body?.message ?? 'Unable to verify the User ...';
   }
 
-  /** Cursor placement of the COBOL (COSGN00C.cbl:119, :124: the field found blank gets the cursor). */
+  /**
+   * Cursor placement of the COBOL: blank password (:124) and wrong password (:244) put the cursor
+   * on PASSWD; every other message puts it on USERID (:119, :249, :254).
+   */
   private focusAfterError(): void {
-    if (this.errorMessage === 'Please enter Password ...') {
+    if (
+      this.errorMessage === 'Please enter Password ...' ||
+      this.errorMessage === 'Wrong Password. Try again ...'
+    ) {
       this.passwordInput?.nativeElement.focus();
     } else {
       this.userIdInput?.nativeElement.focus();

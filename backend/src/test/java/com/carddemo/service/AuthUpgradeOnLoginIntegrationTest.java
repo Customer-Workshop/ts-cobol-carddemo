@@ -8,17 +8,12 @@ import com.carddemo.data.LegacyExtractParser;
 import com.carddemo.model.SecurityUser;
 import com.carddemo.repository.SecurityUserRepository;
 import com.carddemo.security.SessionContext;
+import com.carddemo.support.PostgresIntegrationTest;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
-import org.springframework.test.context.TestPropertySource;
-import org.testcontainers.containers.PostgreSQLContainer;
-import org.testcontainers.junit.jupiter.Container;
-import org.testcontainers.junit.jupiter.Testcontainers;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
@@ -41,17 +36,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * Fixture: R__seed_test_data (ADMIN001 / USER0001) plus the real extract
  * app/data/EBCDIC/AWS.M2.CARDDEMO.USRSEC.PS parsed by the wave-1 importer.
  */
-@SpringBootTest
-@Testcontainers
-@TestPropertySource(properties = {
-        "spring.flyway.locations=classpath:db/migration,classpath:db/testdata"
-})
-class AuthUpgradeOnLoginIntegrationTest {
-
-    /** Own container (same image/fixture as PostgresIntegrationTest) so this class never shares a stopped one. */
-    @Container
-    @ServiceConnection
-    static final PostgreSQLContainer<?> POSTGRES = new PostgreSQLContainer<>("postgres:16");
+class AuthUpgradeOnLoginIntegrationTest extends PostgresIntegrationTest {
 
     private static final Path USRSEC_EXTRACT = Path.of("../app/data/EBCDIC/AWS.M2.CARDDEMO.USRSEC.PS");
 
