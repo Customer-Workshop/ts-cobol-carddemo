@@ -1,0 +1,30 @@
+❯ Building...
+✔ Building...
+Initial chunk files   | Names         |  Raw size | Estimated transfer size
+chunk-3CCFG5VS.js     | -             | 123.70 kB |                36.01 kB
+main-L62IKHBO.js      | main          | 120.05 kB |                29.81 kB
+styles-ZZPYEK52.css   | styles        |  56.11 kB |                 5.96 kB
+polyfills-FFHMD2TL.js | polyfills     |  34.52 kB |                11.28 kB
+                      | Initial total | 334.38 kB |                83.06 kB
+Lazy chunk files      | Names         |  Raw size | Estimated transfer size
+chunk-YTQHQV2L.js     | browser       |  67.20 kB |                17.43 kB
+Application bundle generation complete. [2.878 seconds]
+Output location: /home/ubuntu/repos/ts-cobol-carddemo/frontend/dist/frontend
+- Generating browser application bundles (phase: setup)...
+✔ Browser application bundle generation complete.
+07 09 2026 07:08:03.867:INFO [karma-server]: Karma v6.4.4 server started at http://localhost:9877/
+07 09 2026 07:08:03.868:INFO [launcher]: Launching browsers ChromeHeadless with concurrency unlimited
+07 09 2026 07:08:03.869:INFO [launcher]: Starting browser ChromeHeadless
+07 09 2026 07:08:04.042:INFO [Chrome Headless 133.0.0.0 (Linux 0.0.0)]: Connected on socket iKpizvQpyguPE81yAAAA with id 97916898
+Chrome Headless 133.0.0.0 (Linux 0.0.0): Executed 0 of 6 SUCCESS (0 secs / 0 secs)
+[1A[2KChrome Headless 133.0.0.0 (Linux 0.0.0): Executed 1 of 6 SUCCESS (0 secs / 0.002 secs)
+[1A[2KChrome Headless 133.0.0.0 (Linux 0.0.0): Executed 2 of 6 SUCCESS (0 secs / 0.002 secs)
+[1A[2KChrome Headless 133.0.0.0 (Linux 0.0.0): Executed 3 of 6 SUCCESS (0 secs / 0.009 secs)
+[1A[2KChrome Headless 133.0.0.0 (Linux 0.0.0): Executed 4 of 6 SUCCESS (0 secs / 0.013 secs)
+[1A[2KChrome Headless 133.0.0.0 (Linux 0.0.0): Executed 5 of 6 SUCCESS (0 secs / 0.04 secs)
+[1A[2KChrome Headless 133.0.0.0 (Linux 0.0.0): Executed 6 of 6 SUCCESS (0 secs / 0.044 secs)
+[1A[2KChrome Headless 133.0.0.0 (Linux 0.0.0): Executed 6 of 6 SUCCESS (0.053 secs / 0.044 secs)
+TOTAL: 6 SUCCESS
+✔ Browser application bundle generation complete.
+✔ Browser application bundle generation complete.
+FRONTEND_EXIT=0

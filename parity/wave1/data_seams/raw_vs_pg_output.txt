@@ -1,0 +1,335 @@
+# Raw extract vs PostgreSQL (independent, copybook-derived)
+acctdata.txt: 50 lines, line widths [300] (CVACT01Y RECLN 300)
+custdata.txt: 50 lines, line widths [500] (CVCUS01Y RECLN 500)
+cardxref.txt: 50 lines, line widths [36] (CVACT03Y RECLN 50; ASCII extract drops the 14-byte FILLER -> 36, padded here)
+EBCDIC CARDXREF.PS: 2500 bytes = 50 x 50
+EBCDIC USRSEC.PS: 800 bytes = 10 x 80 (cp037 decode)
+ASCII cardxref vs EBCDIC CARDXREF (36 significant bytes): 0 differing records
+overpunch sign census over 250 money fields: {'{': 250}  (only "{"=+0 present -> negatives UNTESTED on this fixture)
+raw card_xrefs: distinct accounts=50 multi-card accounts=[]
+
+## accounts: raw records=50 pg rows=50 fields compared=600 mismatches=100
+  MISMATCH accounts[1].acct_addr_zip: raw='A000000000' pg=''
+  MISMATCH accounts[1].acct_group_id: raw='' pg='A000000000'
+  MISMATCH accounts[10].acct_addr_zip: raw='A000000000' pg=''
+  MISMATCH accounts[10].acct_group_id: raw='' pg='A000000000'
+  MISMATCH accounts[11].acct_addr_zip: raw='A000000000' pg=''
+  MISMATCH accounts[11].acct_group_id: raw='' pg='A000000000'
+  MISMATCH accounts[12].acct_addr_zip: raw='A000000000' pg=''
+  MISMATCH accounts[12].acct_group_id: raw='' pg='A000000000'
+  MISMATCH accounts[13].acct_addr_zip: raw='A000000000' pg=''
+  MISMATCH accounts[13].acct_group_id: raw='' pg='A000000000'
+  MISMATCH accounts[14].acct_addr_zip: raw='A000000000' pg=''
+  MISMATCH accounts[14].acct_group_id: raw='' pg='A000000000'
+  MISMATCH accounts[15].acct_addr_zip: raw='A000000000' pg=''
+  MISMATCH accounts[15].acct_group_id: raw='' pg='A000000000'
+  MISMATCH accounts[16].acct_addr_zip: raw='A000000000' pg=''
+  MISMATCH accounts[16].acct_group_id: raw='' pg='A000000000'
+  MISMATCH accounts[17].acct_addr_zip: raw='A000000000' pg=''
+  MISMATCH accounts[17].acct_group_id: raw='' pg='A000000000'
+  MISMATCH accounts[18].acct_addr_zip: raw='A000000000' pg=''
+  MISMATCH accounts[18].acct_group_id: raw='' pg='A000000000'
+  MISMATCH accounts[19].acct_addr_zip: raw='A000000000' pg=''
+  MISMATCH accounts[19].acct_group_id: raw='' pg='A000000000'
+  MISMATCH accounts[2].acct_addr_zip: raw='A000000000' pg=''
+  MISMATCH accounts[2].acct_group_id: raw='' pg='A000000000'
+  MISMATCH accounts[20].acct_addr_zip: raw='A000000000' pg=''
+  MISMATCH accounts[20].acct_group_id: raw='' pg='A000000000'
+  MISMATCH accounts[21].acct_addr_zip: raw='A000000000' pg=''
+  MISMATCH accounts[21].acct_group_id: raw='' pg='A000000000'
+  MISMATCH accounts[22].acct_addr_zip: raw='A000000000' pg=''
+  MISMATCH accounts[22].acct_group_id: raw='' pg='A000000000'
+  MISMATCH accounts[23].acct_addr_zip: raw='A000000000' pg=''
+  MISMATCH accounts[23].acct_group_id: raw='' pg='A000000000'
+  MISMATCH accounts[24].acct_addr_zip: raw='A000000000' pg=''
+  MISMATCH accounts[24].acct_group_id: raw='' pg='A000000000'
+  MISMATCH accounts[25].acct_addr_zip: raw='A000000000' pg=''
+  MISMATCH accounts[25].acct_group_id: raw='' pg='A000000000'
+  MISMATCH accounts[26].acct_addr_zip: raw='A000000000' pg=''
+  MISMATCH accounts[26].acct_group_id: raw='' pg='A000000000'
+  MISMATCH accounts[27].acct_addr_zip: raw='A000000000' pg=''
+  MISMATCH accounts[27].acct_group_id: raw='' pg='A000000000'
+  MISMATCH accounts[28].acct_addr_zip: raw='A000000000' pg=''
+  MISMATCH accounts[28].acct_group_id: raw='' pg='A000000000'
+  MISMATCH accounts[29].acct_addr_zip: raw='A000000000' pg=''
+  MISMATCH accounts[29].acct_group_id: raw='' pg='A000000000'
+  MISMATCH accounts[3].acct_addr_zip: raw='A000000000' pg=''
+  MISMATCH accounts[3].acct_group_id: raw='' pg='A000000000'
+  MISMATCH accounts[30].acct_addr_zip: raw='A000000000' pg=''
+  MISMATCH accounts[30].acct_group_id: raw='' pg='A000000000'
+  MISMATCH accounts[31].acct_addr_zip: raw='A000000000' pg=''
+  MISMATCH accounts[31].acct_group_id: raw='' pg='A000000000'
+  MISMATCH accounts[32].acct_addr_zip: raw='A000000000' pg=''
+  MISMATCH accounts[32].acct_group_id: raw='' pg='A000000000'
+  MISMATCH accounts[33].acct_addr_zip: raw='A000000000' pg=''
+  MISMATCH accounts[33].acct_group_id: raw='' pg='A000000000'
+  MISMATCH accounts[34].acct_addr_zip: raw='A000000000' pg=''
+  MISMATCH accounts[34].acct_group_id: raw='' pg='A000000000'
+  MISMATCH accounts[35].acct_addr_zip: raw='A000000000' pg=''
+  MISMATCH accounts[35].acct_group_id: raw='' pg='A000000000'
+  MISMATCH accounts[36].acct_addr_zip: raw='A000000000' pg=''
+  MISMATCH accounts[36].acct_group_id: raw='' pg='A000000000'
+  MISMATCH accounts[37].acct_addr_zip: raw='A000000000' pg=''
+  MISMATCH accounts[37].acct_group_id: raw='' pg='A000000000'
+  MISMATCH accounts[38].acct_addr_zip: raw='A000000000' pg=''
+  MISMATCH accounts[38].acct_group_id: raw='' pg='A000000000'
+  MISMATCH accounts[39].acct_addr_zip: raw='A000000000' pg=''
+  MISMATCH accounts[39].acct_group_id: raw='' pg='A000000000'
+  MISMATCH accounts[4].acct_addr_zip: raw='A000000000' pg=''
+  MISMATCH accounts[4].acct_group_id: raw='' pg='A000000000'
+  MISMATCH accounts[40].acct_addr_zip: raw='A000000000' pg=''
+  MISMATCH accounts[40].acct_group_id: raw='' pg='A000000000'
+  MISMATCH accounts[41].acct_addr_zip: raw='A000000000' pg=''
+  MISMATCH accounts[41].acct_group_id: raw='' pg='A000000000'
+  MISMATCH accounts[42].acct_addr_zip: raw='A000000000' pg=''
+  MISMATCH accounts[42].acct_group_id: raw='' pg='A000000000'
+  MISMATCH accounts[43].acct_addr_zip: raw='A000000000' pg=''
+  MISMATCH accounts[43].acct_group_id: raw='' pg='A000000000'
+  MISMATCH accounts[44].acct_addr_zip: raw='A000000000' pg=''
+  MISMATCH accounts[44].acct_group_id: raw='' pg='A000000000'
+  MISMATCH accounts[45].acct_addr_zip: raw='A000000000' pg=''
+  MISMATCH accounts[45].acct_group_id: raw='' pg='A000000000'
+  MISMATCH accounts[46].acct_addr_zip: raw='A000000000' pg=''
+  MISMATCH accounts[46].acct_group_id: raw='' pg='A000000000'
+  MISMATCH accounts[47].acct_addr_zip: raw='A000000000' pg=''
+  MISMATCH accounts[47].acct_group_id: raw='' pg='A000000000'
+  MISMATCH accounts[48].acct_addr_zip: raw='A000000000' pg=''
+  MISMATCH accounts[48].acct_group_id: raw='' pg='A000000000'
+  MISMATCH accounts[49].acct_addr_zip: raw='A000000000' pg=''
+  MISMATCH accounts[49].acct_group_id: raw='' pg='A000000000'
+  MISMATCH accounts[5].acct_addr_zip: raw='A000000000' pg=''
+  MISMATCH accounts[5].acct_group_id: raw='' pg='A000000000'
+  MISMATCH accounts[50].acct_addr_zip: raw='A000000000' pg=''
+  MISMATCH accounts[50].acct_group_id: raw='' pg='A000000000'
+  MISMATCH accounts[6].acct_addr_zip: raw='A000000000' pg=''
+  MISMATCH accounts[6].acct_group_id: raw='' pg='A000000000'
+  MISMATCH accounts[7].acct_addr_zip: raw='A000000000' pg=''
+  MISMATCH accounts[7].acct_group_id: raw='' pg='A000000000'
+  MISMATCH accounts[8].acct_addr_zip: raw='A000000000' pg=''
+  MISMATCH accounts[8].acct_group_id: raw='' pg='A000000000'
+  MISMATCH accounts[9].acct_addr_zip: raw='A000000000' pg=''
+  MISMATCH accounts[9].acct_group_id: raw='' pg='A000000000'
+### spot-check (first 5 by acct_id), raw -> pg
+- acct_id=1
+    acct_id                    raw='1'                                      pg='1'                                      OK
+    acct_active_status         raw='Y'                                      pg='Y'                                      OK
+    acct_curr_bal              raw='194.00'                                 pg='194.00'                                 OK
+    acct_credit_limit          raw='2020.00'                                pg='2020.00'                                OK
+    acct_cash_credit_limit     raw='1020.00'                                pg='1020.00'                                OK
+    acct_open_date             raw='2014-11-20'                             pg='2014-11-20'                             OK
+    acct_expiraion_date        raw='2025-05-20'                             pg='2025-05-20'                             OK
+    acct_reissue_date          raw='2025-05-20'                             pg='2025-05-20'                             OK
+    acct_curr_cyc_credit       raw='0.00'                                   pg='0.00'                                   OK
+    acct_curr_cyc_debit        raw='0.00'                                   pg='0.00'                                   OK
+    acct_addr_zip              raw='A000000000'                             pg=''                                       DIFF
+    acct_group_id              raw=''                                       pg='A000000000'                             DIFF
+- acct_id=2
+    acct_id                    raw='2'                                      pg='2'                                      OK
+    acct_active_status         raw='Y'                                      pg='Y'                                      OK
+    acct_curr_bal              raw='158.00'                                 pg='158.00'                                 OK
+    acct_credit_limit          raw='6130.00'                                pg='6130.00'                                OK
+    acct_cash_credit_limit     raw='5448.00'                                pg='5448.00'                                OK
+    acct_open_date             raw='2013-06-19'                             pg='2013-06-19'                             OK
+    acct_expiraion_date        raw='2024-08-11'                             pg='2024-08-11'                             OK
+    acct_reissue_date          raw='2024-08-11'                             pg='2024-08-11'                             OK
+    acct_curr_cyc_credit       raw='0.00'                                   pg='0.00'                                   OK
+    acct_curr_cyc_debit        raw='0.00'                                   pg='0.00'                                   OK
+    acct_addr_zip              raw='A000000000'                             pg=''                                       DIFF
+    acct_group_id              raw=''                                       pg='A000000000'                             DIFF
+- acct_id=3
+    acct_id                    raw='3'                                      pg='3'                                      OK
+    acct_active_status         raw='Y'                                      pg='Y'                                      OK
+    acct_curr_bal              raw='147.00'                                 pg='147.00'                                 OK
+    acct_credit_limit          raw='4909.00'                                pg='4909.00'                                OK
+    acct_cash_credit_limit     raw='538.00'                                 pg='538.00'                                 OK
+    acct_open_date             raw='2013-08-23'                             pg='2013-08-23'                             OK
+    acct_expiraion_date        raw='2024-01-10'                             pg='2024-01-10'                             OK
+    acct_reissue_date          raw='2024-01-10'                             pg='2024-01-10'                             OK
+    acct_curr_cyc_credit       raw='0.00'                                   pg='0.00'                                   OK
+    acct_curr_cyc_debit        raw='0.00'                                   pg='0.00'                                   OK
+    acct_addr_zip              raw='A000000000'                             pg=''                                       DIFF
+    acct_group_id              raw=''                                       pg='A000000000'                             DIFF
+- acct_id=4
+    acct_id                    raw='4'                                      pg='4'                                      OK
+    acct_active_status         raw='Y'                                      pg='Y'                                      OK
+    acct_curr_bal              raw='40.00'                                  pg='40.00'                                  OK
+    acct_credit_limit          raw='3503.00'                                pg='3503.00'                                OK
+    acct_cash_credit_limit     raw='2789.00'                                pg='2789.00'                                OK
+    acct_open_date             raw='2012-11-17'                             pg='2012-11-17'                             OK
+    acct_expiraion_date        raw='2023-12-16'                             pg='2023-12-16'                             OK
+    acct_reissue_date          raw='2023-12-16'                             pg='2023-12-16'                             OK
+    acct_curr_cyc_credit       raw='0.00'                                   pg='0.00'                                   OK
+    acct_curr_cyc_debit        raw='0.00'                                   pg='0.00'                                   OK
+    acct_addr_zip              raw='A000000000'                             pg=''                                       DIFF
+    acct_group_id              raw=''                                       pg='A000000000'                             DIFF
+- acct_id=5
+    acct_id                    raw='5'                                      pg='5'                                      OK
+    acct_active_status         raw='Y'                                      pg='Y'                                      OK
+    acct_curr_bal              raw='345.00'                                 pg='345.00'                                 OK
+    acct_credit_limit          raw='3819.00'                                pg='3819.00'                                OK
+    acct_cash_credit_limit     raw='2430.00'                                pg='2430.00'                                OK
+    acct_open_date             raw='2012-10-03'                             pg='2012-10-03'                             OK
+    acct_expiraion_date        raw='2025-03-09'                             pg='2025-03-09'                             OK
+    acct_reissue_date          raw='2025-03-09'                             pg='2025-03-09'                             OK
+    acct_curr_cyc_credit       raw='0.00'                                   pg='0.00'                                   OK
+    acct_curr_cyc_debit        raw='0.00'                                   pg='0.00'                                   OK
+    acct_addr_zip              raw='A000000000'                             pg=''                                       DIFF
+    acct_group_id              raw=''                                       pg='A000000000'                             DIFF
+
+## customers: raw records=50 pg rows=50 fields compared=900 mismatches=0
+### spot-check (first 5 by cust_id), raw -> pg
+- cust_id=1
+    cust_id                    raw='1'                                      pg='1'                                      OK
+    cust_first_name            raw='Immanuel'                               pg='Immanuel'                               OK
+    cust_middle_name           raw='Madeline'                               pg='Madeline'                               OK
+    cust_last_name             raw='Kessler'                                pg='Kessler'                                OK
+    cust_addr_line_1           raw='618 Deshaun Route'                      pg='618 Deshaun Route'                      OK
+    cust_addr_line_2           raw='Apt. 802'                               pg='Apt. 802'                               OK
+    cust_addr_line_3           raw='Altenwerthshire'                        pg='Altenwerthshire'                        OK
+    cust_addr_state_cd         raw='NC'                                     pg='NC'                                     OK
+    cust_addr_country_cd       raw='USA'                                    pg='USA'                                    OK
+    cust_addr_zip              raw='12546'                                  pg='12546'                                  OK
+    cust_phone_num_1           raw='(908)119-8310'                          pg='(908)119-8310'                          OK
+    cust_phone_num_2           raw='(373)693-8684'                          pg='(373)693-8684'                          OK
+    cust_ssn                   raw='20973888'                               pg='20973888'                               OK
+    cust_govt_issued_id        raw='00000000000049368437'                   pg='00000000000049368437'                   OK
+    cust_dob_yyyy_mm_dd        raw='1961-06-08'                             pg='1961-06-08'                             OK
+    cust_eft_account_id        raw='0053581756'                             pg='0053581756'                             OK
+    cust_pri_card_holder_ind   raw='Y'                                      pg='Y'                                      OK
+    cust_fico_credit_score     raw='274'                                    pg='274'                                    OK
+- cust_id=2
+    cust_id                    raw='2'                                      pg='2'                                      OK
+    cust_first_name            raw='Enrico'                                 pg='Enrico'                                 OK
+    cust_middle_name           raw='April'                                  pg='April'                                  OK
+    cust_last_name             raw='Rosenbaum'                              pg='Rosenbaum'                              OK
+    cust_addr_line_1           raw='4917 Myrna Flats'                       pg='4917 Myrna Flats'                       OK
+    cust_addr_line_2           raw='Apt. 453'                               pg='Apt. 453'                               OK
+    cust_addr_line_3           raw='West Bernita'                           pg='West Bernita'                           OK
+    cust_addr_state_cd         raw='IN'                                     pg='IN'                                     OK
+    cust_addr_country_cd       raw='USA'                                    pg='USA'                                    OK
+    cust_addr_zip              raw='22770'                                  pg='22770'                                  OK
+    cust_phone_num_1           raw='(429)706-9510'                          pg='(429)706-9510'                          OK
+    cust_phone_num_2           raw='(744)950-5272'                          pg='(744)950-5272'                          OK
+    cust_ssn                   raw='587518382'                              pg='587518382'                              OK
+    cust_govt_issued_id        raw='00000000000506210371'                   pg='00000000000506210371'                   OK
+    cust_dob_yyyy_mm_dd        raw='1961-10-08'                             pg='1961-10-08'                             OK
+    cust_eft_account_id        raw='0069194009'                             pg='0069194009'                             OK
+    cust_pri_card_holder_ind   raw='Y'                                      pg='Y'                                      OK
+    cust_fico_credit_score     raw='268'                                    pg='268'                                    OK
+- cust_id=3
+    cust_id                    raw='3'                                      pg='3'                                      OK
+    cust_first_name            raw='Larry'                                  pg='Larry'                                  OK
+    cust_middle_name           raw='Cody'                                   pg='Cody'                                   OK
+    cust_last_name             raw='Homenick'                               pg='Homenick'                               OK
+    cust_addr_line_1           raw='362 Esta Parks'                         pg='362 Esta Parks'                         OK
+    cust_addr_line_2           raw='Apt. 390'                               pg='Apt. 390'                               OK
+    cust_addr_line_3           raw='New Gladys'                             pg='New Gladys'                             OK
+    cust_addr_state_cd         raw='GA'                                     pg='GA'                                     OK
+    cust_addr_country_cd       raw='USA'                                    pg='USA'                                    OK
+    cust_addr_zip              raw='19852-6716'                             pg='19852-6716'                             OK
+    cust_phone_num_1           raw='(950)396-9024'                          pg='(950)396-9024'                          OK
+    cust_phone_num_2           raw='(685)168-8826'                          pg='(685)168-8826'                          OK
+    cust_ssn                   raw='317460867'                              pg='317460867'                              OK
+    cust_govt_issued_id        raw='00000000000052419303'                   pg='00000000000052419303'                   OK
+    cust_dob_yyyy_mm_dd        raw='1987-11-30'                             pg='1987-11-30'                             OK
+    cust_eft_account_id        raw='0006465789'                             pg='0006465789'                             OK
+    cust_pri_card_holder_ind   raw='Y'                                      pg='Y'                                      OK
+    cust_fico_credit_score     raw='616'                                    pg='616'                                    OK
+- cust_id=4
+    cust_id                    raw='4'                                      pg='4'                                      OK
+    cust_first_name            raw='Delbert'                                pg='Delbert'                                OK
+    cust_middle_name           raw='Kaia'                                   pg='Kaia'                                   OK
+    cust_last_name             raw='Parisian'                               pg='Parisian'                               OK
+    cust_addr_line_1           raw='638 Blanda Gateway'                     pg='638 Blanda Gateway'                     OK
+    cust_addr_line_2           raw='Apt. 076'                               pg='Apt. 076'                               OK
+    cust_addr_line_3           raw='Lake Virginie'                          pg='Lake Virginie'                          OK
+    cust_addr_state_cd         raw='MI'                                     pg='MI'                                     OK
+    cust_addr_country_cd       raw='USA'                                    pg='USA'                                    OK
+    cust_addr_zip              raw='39035-0455'                             pg='39035-0455'                             OK
+    cust_phone_num_1           raw='(801)603-4121'                          pg='(801)603-4121'                          OK
+    cust_phone_num_2           raw='(156)074-6837'                          pg='(156)074-6837'                          OK
+    cust_ssn                   raw='660354258'                              pg='660354258'                              OK
+    cust_govt_issued_id        raw='00000000000068579249'                   pg='00000000000068579249'                   OK
+    cust_dob_yyyy_mm_dd        raw='1985-01-13'                             pg='1985-01-13'                             OK
+    cust_eft_account_id        raw='0040802739'                             pg='0040802739'                             OK
+    cust_pri_card_holder_ind   raw='Y'                                      pg='Y'                                      OK
+    cust_fico_credit_score     raw='776'                                    pg='776'                                    OK
+- cust_id=5
+    cust_id                    raw='5'                                      pg='5'                                      OK
+    cust_first_name            raw='Treva'                                  pg='Treva'                                  OK
+    cust_middle_name           raw='Manley'                                 pg='Manley'                                 OK
+    cust_last_name             raw='Schowalter'                             pg='Schowalter'                             OK
+    cust_addr_line_1           raw='5653 Legros Plaza'                      pg='5653 Legros Plaza'                      OK
+    cust_addr_line_2           raw='Apt. 968'                               pg='Apt. 968'                               OK
+    cust_addr_line_3           raw='Alvinaport'                             pg='Alvinaport'                             OK
+    cust_addr_state_cd         raw='MI'                                     pg='MI'                                     OK
+    cust_addr_country_cd       raw='USA'                                    pg='USA'                                    OK
+    cust_addr_zip              raw='02251-1698'                             pg='02251-1698'                             OK
+    cust_phone_num_1           raw='(978)775-4633'                          pg='(978)775-4633'                          OK
+    cust_phone_num_2           raw='(439)943-7644'                          pg='(439)943-7644'                          OK
+    cust_ssn                   raw='611264288'                              pg='611264288'                              OK
+    cust_govt_issued_id        raw='00000000000639799754'                   pg='00000000000639799754'                   OK
+    cust_dob_yyyy_mm_dd        raw='1971-09-29'                             pg='1971-09-29'                             OK
+    cust_eft_account_id        raw='0006365573'                             pg='0006365573'                             OK
+    cust_pri_card_holder_ind   raw='Y'                                      pg='Y'                                      OK
+    cust_fico_credit_score     raw='529'                                    pg='529'                                    OK
+
+## card_xrefs: raw records=50 pg rows=50 fields compared=150 mismatches=0
+### spot-check (first 5 by xref_card_number), raw -> pg
+- xref_card_number=0500024453765740
+    xref_card_number           raw='0500024453765740'                       pg='0500024453765740'                       OK
+    xref_cust_id               raw='50'                                     pg='50'                                     OK
+    xref_acct_id               raw='50'                                     pg='50'                                     OK
+- xref_card_number=0683586198171516
+    xref_card_number           raw='0683586198171516'                       pg='0683586198171516'                       OK
+    xref_cust_id               raw='27'                                     pg='27'                                     OK
+    xref_acct_id               raw='27'                                     pg='27'                                     OK
+- xref_card_number=0923877193247330
+    xref_card_number           raw='0923877193247330'                       pg='0923877193247330'                       OK
+    xref_cust_id               raw='2'                                      pg='2'                                      OK
+    xref_acct_id               raw='2'                                      pg='2'                                      OK
+- xref_card_number=0927987108636232
+    xref_card_number           raw='0927987108636232'                       pg='0927987108636232'                       OK
+    xref_cust_id               raw='20'                                     pg='20'                                     OK
+    xref_acct_id               raw='20'                                     pg='20'                                     OK
+- xref_card_number=0982496213629795
+    xref_card_number           raw='0982496213629795'                       pg='0982496213629795'                       OK
+    xref_cust_id               raw='12'                                     pg='12'                                     OK
+    xref_acct_id               raw='12'                                     pg='12'                                     OK
+
+## users: raw records=10 pg rows=10 fields compared=50 mismatches=0
+### spot-check (first 5 by sec_usr_id), raw -> pg
+- sec_usr_id=ADMIN001
+    sec_usr_id                 raw='ADMIN001'                               pg='ADMIN001'                               OK
+    sec_usr_fname              raw='MARGARET'                               pg='MARGARET'                               OK
+    sec_usr_lname              raw='GOLD'                                   pg='GOLD'                                   OK
+    sec_usr_pwd_legacy         raw='PASSWORD'                               pg='PASSWORD'                               OK
+    sec_usr_type               raw='A'                                      pg='A'                                      OK
+- sec_usr_id=ADMIN002
+    sec_usr_id                 raw='ADMIN002'                               pg='ADMIN002'                               OK
+    sec_usr_fname              raw='RUSSELL'                                pg='RUSSELL'                                OK
+    sec_usr_lname              raw='RUSSELL'                                pg='RUSSELL'                                OK
+    sec_usr_pwd_legacy         raw='PASSWORD'                               pg='PASSWORD'                               OK
+    sec_usr_type               raw='A'                                      pg='A'                                      OK
+- sec_usr_id=ADMIN003
+    sec_usr_id                 raw='ADMIN003'                               pg='ADMIN003'                               OK
+    sec_usr_fname              raw='RAYMOND'                                pg='RAYMOND'                                OK
+    sec_usr_lname              raw='WHITMORE'                               pg='WHITMORE'                               OK
+    sec_usr_pwd_legacy         raw='PASSWORD'                               pg='PASSWORD'                               OK
+    sec_usr_type               raw='A'                                      pg='A'                                      OK
+- sec_usr_id=ADMIN004
+    sec_usr_id                 raw='ADMIN004'                               pg='ADMIN004'                               OK
+    sec_usr_fname              raw='EMMANUEL'                               pg='EMMANUEL'                               OK
+    sec_usr_lname              raw='CASGRAIN'                               pg='CASGRAIN'                               OK
+    sec_usr_pwd_legacy         raw='PASSWORD'                               pg='PASSWORD'                               OK
+    sec_usr_type               raw='A'                                      pg='A'                                      OK
+- sec_usr_id=ADMIN005
+    sec_usr_id                 raw='ADMIN005'                               pg='ADMIN005'                               OK
+    sec_usr_fname              raw='GRANVILLE'                              pg='GRANVILLE'                              OK
+    sec_usr_lname              raw='LACHAPELLE'                             pg='LACHAPELLE'                             OK
+    sec_usr_pwd_legacy         raw='PASSWORD'                               pg='PASSWORD'                               OK
+    sec_usr_type               raw='A'                                      pg='A'                                      OK
+
+D-0029 post-import: rows with sec_usr_pwd_hash=0, rows with sec_usr_pwd_legacy=10 (expected 0 / 10: hash filled only by upgrade-on-login)
+
+TOTAL mismatches: 100
