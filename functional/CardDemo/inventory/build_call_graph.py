@@ -20,7 +20,6 @@ Comment lines ('*' or '/' in column 7) are skipped for COBOL; '//*' for JCL.
 import json
 import os
 import re
-import sys
 from collections import defaultdict
 
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", ".."))
@@ -128,9 +127,6 @@ def resolve(var, items, depth=0, seen=None):
             m = re.search(r"VALUE\s+'([^']+)'", window)
             if m:
                 out.append((m.group(1).strip(), f"{f}:{ln}", "VALUE clause"))
-            # option table: subordinate of a group that REDEFINES a data block -> gather X(08) values
-            if "OCCURS" in window or re.search(r"\(", var):
-                pass
     if "(" in var:  # subscripted table item: collect PIC X(08) VALUE 'xxxxxxxx' from the copybook holding it
         cb = None
         for f, ln, t in items:
@@ -150,7 +146,6 @@ def parse_cobol(prog, path, progs):
     edges, unresolved, datasets, returns, tdq = [], [], [], [], []
     items = collect_text(os.path.join(ROOT, path))
     own = [(f, ln, t) for f, ln, t in items if f == path]
-    text_by_line = {ln: t for _, ln, t in own}
     n = len(own)
     for i, (f, ln, t) in enumerate(own):
         # static CALL
