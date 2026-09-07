@@ -1,0 +1,107 @@
+:host {
+  display: block;
+}
+
+.signon {
+  max-width: 880px;
+  margin: 0 auto;
+  padding: 16px;
+  font-family: 'Roboto Mono', 'Courier New', monospace;
+}
+
+.screen-header {
+  display: grid;
+  gap: 2px;
+  margin-bottom: 12px;
+}
+
+.header-row {
+  display: grid;
+  grid-template-columns: 3.5em 6em 1fr 3.5em 6em;
+  column-gap: 8px;
+  align-items: baseline;
+}
+
+.label {
+  color: #1565c0;
+}
+
+.value {
+  white-space: pre;
+}
+
+.title {
+  text-align: center;
+  color: #f9a825;
+}
+
+.intro {
+  text-align: center;
+  color: #00838f;
+}
+
+.banner {
+  margin: 8px auto;
+  width: fit-content;
+  color: #1565c0;
+  line-height: 1.2;
+}
+
+.prompt {
+  text-align: center;
+  color: #00838f;
+}
+
+.signon-form {
+  display: grid;
+  justify-content: center;
+  gap: 4px;
+}
+
+.field-row {
+  display: grid;
+  grid-template-columns: 9em 12em 5em;
+  column-gap: 8px;
+  align-items: center;
+}
+
+.field-label {
+  color: #00838f;
+  white-space: pre;
+}
+
+.field input {
+  text-transform: uppercase;
+  font-family: inherit;
+}
+
+.hint {
+  color: #1565c0;
+}
+
+.actions {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  margin-top: 8px;
+}
+
+.screen-footer {
+  margin-top: 12px;
+}
+
+.errmsg {
+  min-height: 1.5em;
+  color: #c62828;
+  font-weight: 700;
+  white-space: pre;
+}
+
+.keys {
+  color: #f9a825;
+}
+
+.signed-off {
+  text-align: center;
+  padding: 32px 0;
+}
