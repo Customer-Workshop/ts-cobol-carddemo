@@ -1,0 +1,418 @@
+run at 2026-09-07T10:13:36Z  BASE=http://localhost:8080
+postgres: PostgreSQL 16.15 (Debian 16.15-1.pgdg13+2) on x86_64-pc-linux-gnu, compiled by gcc (Debian 14.2.0-19) 14.2.0, 64-bit
+rows: 52|50|54|10
+
+=================== A-17 unauthenticated GET /api/accounts/00000000027 and GET /api/accounts (CAVW without COMMAREA -> 401, FR §7) ===================
+REQUEST  GET /api/accounts/00000000027  body=<none>  cookies=none
+STATUS   401
+BODY     {"message":"Authentication required","status":401,"timestamp":"2026-09-07T10:13:36.321572554Z"}
+REQUEST  GET /api/accounts  body=<none>  cookies=none
+STATUS   401
+BODY     {"message":"Authentication required","status":401,"timestamp":"2026-09-07T10:13:36.328317973Z"}
+VERDICT  PASS
+VERDICT  PASS
+
+=================== sign on USER0001 (U) and ADMIN001 (A) - COSGN00C, outside scope; only to get sessions (A-19 baseline) ===================
+REQUEST  POST /api/auth/signon  body={"userId":"USER0001","password":"PASSWORD"}  cookies=yes/home/ubuntu/repos/ts-cobol-carddemo/parity/wave4/coactvwc/http/jar_user.txt
+STATUS   200
+BODY     {"userId":"USER0001","userType":"U","landingTarget":"/menu"}
+REQUEST  POST /api/auth/signon  body={"userId":"ADMIN001","password":"PASSWORD"}  cookies=yes/home/ubuntu/repos/ts-cobol-carddemo/parity/wave4/coactvwc/http/jar_admin.txt
+STATUS   200
+BODY     {"userId":"ADMIN001","userType":"A","landingTarget":"/menu"}
+REQUEST  GET /api/auth/session  body=<none>  cookies=yes/home/ubuntu/repos/ts-cobol-carddemo/parity/wave4/coactvwc/http/jar_user.txt
+STATUS   200
+BODY     {"userId":"USER0001","userType":"U"}
+
+=================== A-01 initial SEND MAP state is rendered locally by the SPA (FR §7 'entry from menu: local render, no API call') -> verified in the UI run; here GET /api/accounts (empty id) must behave as blank input = E-04 (cbl:628-633) ===================
+REQUEST  GET /api/accounts/  body=<none>  cookies=yes/home/ubuntu/repos/ts-cobol-carddemo/parity/wave4/coactvwc/http/jar_user.txt
+STATUS   400
+BODY     {"message":"No input received","status":400,"timestamp":"2026-09-07T10:13:36.498990619Z"}
+EXPECT   status=400 message-prefix=[No input received] contains=[-]
+MSGLEN   17
+VERDICT  PASS
+
+=================== A-02 blank / '*' / spaces -> 400 E-04 (cbl:628-633, 640-642) ===================
+REQUEST  GET /api/accounts/%20  body=<none>  cookies=yes/home/ubuntu/repos/ts-cobol-carddemo/parity/wave4/coactvwc/http/jar_user.txt
+STATUS   400
+BODY     {"message":"No input received","status":400,"timestamp":"2026-09-07T10:13:36.519847727Z"}
+EXPECT   status=400 message-prefix=[No input received] contains=[-]
+MSGLEN   17
+VERDICT  PASS
+REQUEST  GET /api/accounts/*  body=<none>  cookies=yes/home/ubuntu/repos/ts-cobol-carddemo/parity/wave4/coactvwc/http/jar_user.txt
+STATUS   400
+BODY     {"message":"No input received","status":400,"timestamp":"2026-09-07T10:13:36.540341906Z"}
+EXPECT   status=400 message-prefix=[No input received] contains=[-]
+MSGLEN   17
+VERDICT  PASS
+REQUEST  GET /api/accounts/%20%20%20%20%20%20%20%20%20%20%20  body=<none>  cookies=yes/home/ubuntu/repos/ts-cobol-carddemo/parity/wave4/coactvwc/http/jar_user.txt
+STATUS   400
+BODY     {"message":"No input received","status":400,"timestamp":"2026-09-07T10:13:36.560366986Z"}
+EXPECT   status=400 message-prefix=[No input received] contains=[-]
+MSGLEN   17
+VERDICT  PASS
+-- A-02a field echo (cbl:632 MOVE '*' when blank) - 400 ErrorResponse carries no accountNumber; the '*' echo is a SPA rendering rule, asserted in the UI run:
+ACCTNUM  
+
+=================== A-03 NOT NUMERIC / zero / short / long -> 400 E-05 (cbl:666-676; Q-02) ===================
+REQUEST  GET /api/accounts/00000000000  body=<none>  cookies=yes/home/ubuntu/repos/ts-cobol-carddemo/parity/wave4/coactvwc/http/jar_user.txt
+STATUS   400
+BODY     {"message":"Account Filter must  be a non-zero 11 digit number","status":400,"timestamp":"2026-09-07T10:13:36.592676510Z"}
+EXPECT   status=400 message-prefix=[Account Filter must  be a non-zero 11 digit number] contains=[-]
+MSGLEN   50
+VERDICT  PASS
+REQUEST  GET /api/accounts/1234567890A  body=<none>  cookies=yes/home/ubuntu/repos/ts-cobol-carddemo/parity/wave4/coactvwc/http/jar_user.txt
+STATUS   400
+BODY     {"message":"Account Filter must  be a non-zero 11 digit number","status":400,"timestamp":"2026-09-07T10:13:36.613126646Z"}
+EXPECT   status=400 message-prefix=[Account Filter must  be a non-zero 11 digit number] contains=[-]
+MSGLEN   50
+VERDICT  PASS
+REQUEST  GET /api/accounts/12%2034567890  body=<none>  cookies=yes/home/ubuntu/repos/ts-cobol-carddemo/parity/wave4/coactvwc/http/jar_user.txt
+STATUS   400
+BODY     {"message":"Account Filter must  be a non-zero 11 digit number","status":400,"timestamp":"2026-09-07T10:13:36.633120904Z"}
+EXPECT   status=400 message-prefix=[Account Filter must  be a non-zero 11 digit number] contains=[-]
+MSGLEN   50
+VERDICT  PASS
+REQUEST  GET /api/accounts/1234567890  body=<none>  cookies=yes/home/ubuntu/repos/ts-cobol-carddemo/parity/wave4/coactvwc/http/jar_user.txt
+STATUS   400
+BODY     {"message":"Account Filter must  be a non-zero 11 digit number","status":400,"timestamp":"2026-09-07T10:13:36.653046729Z"}
+EXPECT   status=400 message-prefix=[Account Filter must  be a non-zero 11 digit number] contains=[-]
+MSGLEN   50
+VERDICT  PASS
+REQUEST  GET /api/accounts/123456789012  body=<none>  cookies=yes/home/ubuntu/repos/ts-cobol-carddemo/parity/wave4/coactvwc/http/jar_user.txt
+STATUS   400
+BODY     {"message":"Account Filter must  be a non-zero 11 digit number","status":400,"timestamp":"2026-09-07T10:13:36.673144690Z"}
+EXPECT   status=400 message-prefix=[Account Filter must  be a non-zero 11 digit number] contains=[-]
+MSGLEN   50
+VERDICT  PASS
+REQUEST  GET /api/accounts/-0000000001  body=<none>  cookies=yes/home/ubuntu/repos/ts-cobol-carddemo/parity/wave4/coactvwc/http/jar_user.txt
+STATUS   400
+BODY     {"message":"Account Filter must  be a non-zero 11 digit number","status":400,"timestamp":"2026-09-07T10:13:36.693151717Z"}
+EXPECT   status=400 message-prefix=[Account Filter must  be a non-zero 11 digit number] contains=[-]
+MSGLEN   50
+VERDICT  PASS
+-- A-03b field echo (cbl:557-559 value echoed):
+ACCTNUM  
+
+=================== A-04 no xref -> 404 E-09 (cbl:741-758) ===================
+REQUEST  GET /api/accounts/00000000099  body=<none>  cookies=yes/home/ubuntu/repos/ts-cobol-carddemo/parity/wave4/coactvwc/http/jar_user.txt
+STATUS   404
+BODY     {"message":"Account:00000000099 not found in Cross ref file.  Resp:0000000013 Reas:0000","status":404,"timestamp":"2026-09-07T10:13:36.728208651Z"}
+EXPECT   status=404 message-prefix=[Account:00000000099 not found in Cross ref file.  Resp:] contains=[ Reas:]
+MSGLEN   75
+VERDICT  PASS
+BLOCKS   account= customer=
+
+=================== A-05 xref ok, ACCTDAT missing -> 404 E-10, DV-01 no blocks (cbl:786-807) ===================
+REQUEST  GET /api/accounts/00000000901  body=<none>  cookies=yes/home/ubuntu/repos/ts-cobol-carddemo/parity/wave4/coactvwc/http/jar_user.txt
+STATUS   404
+BODY     {"message":"Account:00000000901 not found in Acct Master file.Resp:0000000013 Reas:0000","status":404,"timestamp":"2026-09-07T10:13:36.777919902Z"}
+EXPECT   status=404 message-prefix=[Account:00000000901 not found in Acct Master file.Resp:] contains=[ Reas:]
+MSGLEN   75
+VERDICT  PASS
+BLOCKS   account= customer=  DV-01 PASS
+
+=================== A-06 xref+acct ok, CUSTDAT missing -> 404 E-11 WITH account block (cbl:836-857, :471-493) ===================
+REQUEST  GET /api/accounts/00000000902  body=<none>  cookies=yes/home/ubuntu/repos/ts-cobol-carddemo/parity/wave4/coactvwc/http/jar_user.txt
+STATUS   404
+BODY     {"message":"CustId:999999902 not found in customer master.Resp: 0000000013 REAS:0000000","status":404,"timestamp":"2026-09-07T10:13:36.852632274Z","accountNumber":"00000000902","account":{"activeStatus":"Y","openDate":"2014-11-20","creditLimit":"+      2,020.00","expirationDate":"2025-05-20","cashCreditLimit":"+      1,020.00","reissueDate":"2025-05-20","currentBalance":"+        194.00","currentCycleCredit":"+           .00","groupId":"A000000000","currentCycleDebit":"+           .00"}}
+EXPECT   status=404 message-prefix=[CustId:999999902 not found in customer master.Resp: ] contains=[ REAS:]
+MSGLEN   75
+VERDICT  PASS
+ACCOUNT-BLOCK {'activeStatus': 'Y', 'openDate': '2014-11-20', 'creditLimit': '+      2,020.00', 'expirationDate': '2025-05-20', 'cashCreditLimit': '+      1,020.00', 'reissueDate': '2025-05-20', 'currentBalance': '+        194.00', 'currentCycleCredit': '+           .00', 'groupId': 'A000000000', 'currentCycleDebit': '+           .00'}
+ACCT-BLOCK-PRESENT PASS
+
+=================== A-07/A-08/A-09/A-10 happy path + field parity for 5 fixture accounts (expected_fixture.json from raw bytes) ===================
+REQUEST  GET /api/accounts/00000000001  body=<none>  cookies=yes/home/ubuntu/repos/ts-cobol-carddemo/parity/wave4/coactvwc/http/jar_user.txt
+STATUS   200
+BODY     {"header":{"tranId":"CAVW","programName":"COACTVWC","title01":"AWS Mainframe Modernization","title02":"CardDemo","currentDate":"09/07/26","currentTime":"10:13:36","applId":"CARDDEMO","sysId":"CICS"},"accountNumber":"00000000001","infoMessage":"Enter or update id of account to display","account":{"activeStatus":"Y","openDate":"2014-11-20","creditLimit":"+      2,020.00","expirationDate":"2025-05-20","cashCreditLimit":"+      1,020.00","reissueDate":"2025-05-20","currentBalance":"+        194.00","currentCycleCredit":"+           .00","groupId":"A000000000","currentCycleDebit":"+           .00"},"customer":{"customerId":"000000001","ssn":"020-97-3888","dateOfBirth":"1961-06-08","ficoScore":274,"firstName":"Immanuel","middleName":"Madeline","lastName":"Kessler","addressLine1":"618 Deshaun Route","addressLine2":"Apt. 802","city":"Altenwerthshire","stateCode":"NC","zipCode":"12546","countryCode":"USA","phone1":"(908)119-8310","phone2":"(373)693-8684","governmentIssuedId":"00000000000049368437","eftAccountId":"0053581756","primaryCardHolder":"Y"}}
+EXPECT   status=200 message-prefix=[-] contains=[-]
+MSGLEN   0
+VERDICT  PASS
+REQUEST  GET /api/accounts/00000000010  body=<none>  cookies=yes/home/ubuntu/repos/ts-cobol-carddemo/parity/wave4/coactvwc/http/jar_user.txt
+STATUS   200
+BODY     {"header":{"tranId":"CAVW","programName":"COACTVWC","title01":"AWS Mainframe Modernization","title02":"CardDemo","currentDate":"09/07/26","currentTime":"10:13:36","applId":"CARDDEMO","sysId":"CICS"},"accountNumber":"00000000010","infoMessage":"Enter or update id of account to display","account":{"activeStatus":"Y","openDate":"2015-09-13","creditLimit":"+      5,401.00","expirationDate":"2023-01-27","cashCreditLimit":"+      4,442.00","reissueDate":"2023-01-27","currentBalance":"+        159.00","currentCycleCredit":"+           .00","groupId":"A000000000","currentCycleDebit":"+           .00"},"customer":{"customerId":"000000010","ssn":"754-75-5746","dateOfBirth":"1980-06-11","ficoScore":476,"firstName":"Maybell","middleName":"Creola","lastName":"Mann","addressLine1":"77933 Adah Dale","addressLine2":"Suite 343","city":"Andersonfurt","stateCode":"CT","zipCode":"44803-4279","countryCode":"USA","phone1":"(614)594-2619","phone2":"(667)057-0235","governmentIssuedId":"00000000000212824755","eftAccountId":"0093803568","primaryCardHolder":"Y"}}
+EXPECT   status=200 message-prefix=[-] contains=[-]
+MSGLEN   0
+VERDICT  PASS
+REQUEST  GET /api/accounts/00000000027  body=<none>  cookies=yes/home/ubuntu/repos/ts-cobol-carddemo/parity/wave4/coactvwc/http/jar_user.txt
+STATUS   200
+BODY     {"header":{"tranId":"CAVW","programName":"COACTVWC","title01":"AWS Mainframe Modernization","title02":"CardDemo","currentDate":"09/07/26","currentTime":"10:13:36","applId":"CARDDEMO","sysId":"CICS"},"accountNumber":"00000000027","infoMessage":"Enter or update id of account to display","account":{"activeStatus":"Y","openDate":"2012-09-30","creditLimit":"+      5,572.00","expirationDate":"2025-07-13","cashCreditLimit":"+      2,075.00","reissueDate":"2025-07-13","currentBalance":"+        284.00","currentCycleCredit":"+           .00","groupId":"A000000000","currentCycleDebit":"+           .00"},"customer":{"customerId":"000000027","ssn":"980-16-1210","dateOfBirth":"1986-11-08","ficoScore":78,"firstName":"Ward","middleName":"Henri","lastName":"Jones","addressLine1":"210 Amaya Turnpike","addressLine2":"Suite 180","city":"Port Dwight","stateCode":"GU","zipCode":"07923-8822","countryCode":"USA","phone1":"(935)027-1145","phone2":"(103)537-5007","governmentIssuedId":"00000000000881558757","eftAccountId":"0050024139","primaryCardHolder":"Y"}}
+EXPECT   status=200 message-prefix=[-] contains=[-]
+MSGLEN   0
+VERDICT  PASS
+REQUEST  GET /api/accounts/00000000033  body=<none>  cookies=yes/home/ubuntu/repos/ts-cobol-carddemo/parity/wave4/coactvwc/http/jar_user.txt
+STATUS   200
+BODY     {"header":{"tranId":"CAVW","programName":"COACTVWC","title01":"AWS Mainframe Modernization","title02":"CardDemo","currentDate":"09/07/26","currentTime":"10:13:36","applId":"CARDDEMO","sysId":"CICS"},"accountNumber":"00000000033","infoMessage":"Enter or update id of account to display","account":{"activeStatus":"Y","openDate":"2012-10-11","creditLimit":"+      6,404.00","expirationDate":"2025-10-07","cashCreditLimit":"+        951.00","reissueDate":"2025-10-07","currentBalance":"+        410.00","currentCycleCredit":"+           .00","groupId":"A000000000","currentCycleDebit":"+           .00"},"customer":{"customerId":"000000033","ssn":"144-19-5105","dateOfBirth":"1988-05-19","ficoScore":469,"firstName":"Bernice","middleName":"Norbert","lastName":"Herman","addressLine1":"877 Kassandra Ranch","addressLine2":"Suite 956","city":"Haleyport","stateCode":"AR","zipCode":"19113-4329","countryCode":"USA","phone1":"(836)743-5487","phone2":"(640)208-1176","governmentIssuedId":"00000000000400605429","eftAccountId":"0065245171","primaryCardHolder":"Y"}}
+EXPECT   status=200 message-prefix=[-] contains=[-]
+MSGLEN   0
+VERDICT  PASS
+REQUEST  GET /api/accounts/00000000050  body=<none>  cookies=yes/home/ubuntu/repos/ts-cobol-carddemo/parity/wave4/coactvwc/http/jar_user.txt
+STATUS   200
+BODY     {"header":{"tranId":"CAVW","programName":"COACTVWC","title01":"AWS Mainframe Modernization","title02":"CardDemo","currentDate":"09/07/26","currentTime":"10:13:37","applId":"CARDDEMO","sysId":"CICS"},"accountNumber":"00000000050","infoMessage":"Enter or update id of account to display","account":{"activeStatus":"Y","openDate":"2011-04-22","creditLimit":"+      6,169.00","expirationDate":"2023-03-09","cashCreditLimit":"+      4,587.00","reissueDate":"2023-03-09","currentBalance":"+        492.00","currentCycleCredit":"+           .00","groupId":"A000000000","currentCycleDebit":"+           .00"},"customer":{"customerId":"000000050","ssn":"931-24-8469","dateOfBirth":"1960-12-01","ficoScore":623,"firstName":"Aniya","middleName":"Alba","lastName":"Von","addressLine1":"1588 Nienow Cape","addressLine2":"Suite 187","city":"New Aricchester","stateCode":"OR","zipCode":"04257","countryCode":"USA","phone1":"(325)301-0827","phone2":"(493)985-9283","governmentIssuedId":"00000000000030387824","eftAccountId":"0074883577","primaryCardHolder":"Y"}}
+EXPECT   status=200 message-prefix=[-] contains=[-]
+MSGLEN   0
+VERDICT  PASS
+--- account 00000000001 (xref cust 000000001, expected outcome E-00 (both blocks))
+PASS ACCTSID            expected=       '00000000001' ->      '00000000001' | observed='00000000001' -> '00000000001'  (cbl:465)
+PASS ACSTTUS            expected=                 'Y' ->                'Y' | observed='Y' -> 'Y'  (cbl:473)
+PASS ACURBAL            expected=   '+        194.00' ->          '+194.00' | observed='+        194.00' -> '+194.00'  (cbl:475 PICOUT +ZZZ,ZZZ,ZZZ.99)
+PASS ACRDLIM            expected=   '+      2,020.00' ->         '+2020.00' | observed='+      2,020.00' -> '+2020.00'  (cbl:477)
+PASS ACSHLIM            expected=   '+      1,020.00' ->         '+1020.00' | observed='+      1,020.00' -> '+1020.00'  (cbl:479)
+PASS ACRCYCR            expected=   '+           .00' ->            '+0.00' | observed='+           .00' -> '+0.00'  (cbl:481)
+PASS ACRCYDB            expected=   '+           .00' ->            '+0.00' | observed='+           .00' -> '+0.00'  (cbl:483)
+PASS ADTOPEN            expected=        '2014-11-20' ->       '2014-11-20' | observed='2014-11-20' -> '2014-11-20'  (cbl:486)
+PASS AEXPDT             expected=        '2025-05-20' ->       '2025-05-20' | observed='2025-05-20' -> '2025-05-20'  (cbl:488)
+PASS AREISDT            expected=        '2025-05-20' ->       '2025-05-20' | observed='2025-05-20' -> '2025-05-20'  (cbl:489)
+PASS AADDGRP_DV06       expected=        'A000000000' ->       'A000000000' | observed='A000000000' -> 'A000000000'  (cbl:490 + D-0038 DV-06 (legacy blank))
+PASS ACSTNUM            expected=         '000000001' ->        '000000001' | observed='000000001' -> '000000001'  (cbl:494)
+PASS ACSTSSN            expected=       '020-97-3888' ->      '020-97-3888' | observed='020-97-3888' -> '020-97-3888'  (cbl:496-504)
+PASS ACSTFCO            expected=               '274' ->                274 | observed=274 -> 274  (cbl:506)
+PASS ACSTDOB            expected=        '1961-06-08' ->       '1961-06-08' | observed='1961-06-08' -> '1961-06-08'  (cbl:508)
+PASS ACSFNAM            expected='Immanuel                 ' ->         'Immanuel' | observed='Immanuel' -> 'Immanuel'  (cbl:509)
+PASS ACSMNAM            expected='Madeline                 ' ->         'Madeline' | observed='Madeline' -> 'Madeline'  (cbl:510)
+PASS ACSLNAM            expected='Kessler                  ' ->          'Kessler' | observed='Kessler' -> 'Kessler'  (cbl:511)
+PASS ACSADL1            expected='618 Deshaun Route                                 ' -> '618 Deshaun Route' | observed='618 Deshaun Route' -> '618 Deshaun Route'  (cbl:512)
+PASS ACSADL2            expected='Apt. 802                                          ' ->         'Apt. 802' | observed='Apt. 802' -> 'Apt. 802'  (cbl:513)
+PASS ACSCITY            expected='Altenwerthshire                                   ' ->  'Altenwerthshire' | observed='Altenwerthshire' -> 'Altenwerthshire'  (cbl:514)
+PASS ACSSTTE            expected=                'NC' ->               'NC' | observed='NC' -> 'NC'  (cbl:515)
+PASS ACSZIPC_DV05_full  expected=        '12546     ' ->            '12546' | observed='12546' -> '12546'  (cbl:516 + DV-05 (legacy 5 of 10))
+PASS ACSCTRY            expected=               'USA' ->              'USA' | observed='USA' -> 'USA'  (cbl:517)
+PASS ACSPHN1_DV05_full  expected=   '(908)119-8310  ' ->    '(908)119-8310' | observed='(908)119-8310' -> '(908)119-8310'  (cbl:518 + DV-05 (legacy 13 of 15))
+PASS ACSPHN2_DV05_full  expected=   '(373)693-8684  ' ->    '(373)693-8684' | observed='(373)693-8684' -> '(373)693-8684'  (cbl:519 + DV-05)
+PASS ACSGOVT            expected='00000000000049368437' -> '00000000000049368437' | observed='00000000000049368437' -> '00000000000049368437'  (cbl:520)
+PASS ACSEFTC            expected=        '0053581756' ->       '0053581756' | observed='0053581756' -> '0053581756'  (cbl:521)
+PASS ACSPFLG            expected=                 'Y' ->                'Y' | observed='Y' -> 'Y'  (cbl:522)
+ACCOUNT-TOTAL 00000000001: 29/29 fields match
+--- account 00000000010 (xref cust 000000010, expected outcome E-00 (both blocks))
+PASS ACCTSID            expected=       '00000000010' ->      '00000000010' | observed='00000000010' -> '00000000010'  (cbl:465)
+PASS ACSTTUS            expected=                 'Y' ->                'Y' | observed='Y' -> 'Y'  (cbl:473)
+PASS ACURBAL            expected=   '+        159.00' ->          '+159.00' | observed='+        159.00' -> '+159.00'  (cbl:475 PICOUT +ZZZ,ZZZ,ZZZ.99)
+PASS ACRDLIM            expected=   '+      5,401.00' ->         '+5401.00' | observed='+      5,401.00' -> '+5401.00'  (cbl:477)
+PASS ACSHLIM            expected=   '+      4,442.00' ->         '+4442.00' | observed='+      4,442.00' -> '+4442.00'  (cbl:479)
+PASS ACRCYCR            expected=   '+           .00' ->            '+0.00' | observed='+           .00' -> '+0.00'  (cbl:481)
+PASS ACRCYDB            expected=   '+           .00' ->            '+0.00' | observed='+           .00' -> '+0.00'  (cbl:483)
+PASS ADTOPEN            expected=        '2015-09-13' ->       '2015-09-13' | observed='2015-09-13' -> '2015-09-13'  (cbl:486)
+PASS AEXPDT             expected=        '2023-01-27' ->       '2023-01-27' | observed='2023-01-27' -> '2023-01-27'  (cbl:488)
+PASS AREISDT            expected=        '2023-01-27' ->       '2023-01-27' | observed='2023-01-27' -> '2023-01-27'  (cbl:489)
+PASS AADDGRP_DV06       expected=        'A000000000' ->       'A000000000' | observed='A000000000' -> 'A000000000'  (cbl:490 + D-0038 DV-06 (legacy blank))
+PASS ACSTNUM            expected=         '000000010' ->        '000000010' | observed='000000010' -> '000000010'  (cbl:494)
+PASS ACSTSSN            expected=       '754-75-5746' ->      '754-75-5746' | observed='754-75-5746' -> '754-75-5746'  (cbl:496-504)
+PASS ACSTFCO            expected=               '476' ->                476 | observed=476 -> 476  (cbl:506)
+PASS ACSTDOB            expected=        '1980-06-11' ->       '1980-06-11' | observed='1980-06-11' -> '1980-06-11'  (cbl:508)
+PASS ACSFNAM            expected='Maybell                  ' ->          'Maybell' | observed='Maybell' -> 'Maybell'  (cbl:509)
+PASS ACSMNAM            expected='Creola                   ' ->           'Creola' | observed='Creola' -> 'Creola'  (cbl:510)
+PASS ACSLNAM            expected='Mann                     ' ->             'Mann' | observed='Mann' -> 'Mann'  (cbl:511)
+PASS ACSADL1            expected='77933 Adah Dale                                   ' ->  '77933 Adah Dale' | observed='77933 Adah Dale' -> '77933 Adah Dale'  (cbl:512)
+PASS ACSADL2            expected='Suite 343                                         ' ->        'Suite 343' | observed='Suite 343' -> 'Suite 343'  (cbl:513)
+PASS ACSCITY            expected='Andersonfurt                                      ' ->     'Andersonfurt' | observed='Andersonfurt' -> 'Andersonfurt'  (cbl:514)
+PASS ACSSTTE            expected=                'CT' ->               'CT' | observed='CT' -> 'CT'  (cbl:515)
+PASS ACSZIPC_DV05_full  expected=        '44803-4279' ->       '44803-4279' | observed='44803-4279' -> '44803-4279'  (cbl:516 + DV-05 (legacy 5 of 10))
+PASS ACSCTRY            expected=               'USA' ->              'USA' | observed='USA' -> 'USA'  (cbl:517)
+PASS ACSPHN1_DV05_full  expected=   '(614)594-2619  ' ->    '(614)594-2619' | observed='(614)594-2619' -> '(614)594-2619'  (cbl:518 + DV-05 (legacy 13 of 15))
+PASS ACSPHN2_DV05_full  expected=   '(667)057-0235  ' ->    '(667)057-0235' | observed='(667)057-0235' -> '(667)057-0235'  (cbl:519 + DV-05)
+PASS ACSGOVT            expected='00000000000212824755' -> '00000000000212824755' | observed='00000000000212824755' -> '00000000000212824755'  (cbl:520)
+PASS ACSEFTC            expected=        '0093803568' ->       '0093803568' | observed='0093803568' -> '0093803568'  (cbl:521)
+PASS ACSPFLG            expected=                 'Y' ->                'Y' | observed='Y' -> 'Y'  (cbl:522)
+ACCOUNT-TOTAL 00000000010: 29/29 fields match
+--- account 00000000027 (xref cust 000000027, expected outcome E-00 (both blocks))
+PASS ACCTSID            expected=       '00000000027' ->      '00000000027' | observed='00000000027' -> '00000000027'  (cbl:465)
+PASS ACSTTUS            expected=                 'Y' ->                'Y' | observed='Y' -> 'Y'  (cbl:473)
+PASS ACURBAL            expected=   '+        284.00' ->          '+284.00' | observed='+        284.00' -> '+284.00'  (cbl:475 PICOUT +ZZZ,ZZZ,ZZZ.99)
+PASS ACRDLIM            expected=   '+      5,572.00' ->         '+5572.00' | observed='+      5,572.00' -> '+5572.00'  (cbl:477)
+PASS ACSHLIM            expected=   '+      2,075.00' ->         '+2075.00' | observed='+      2,075.00' -> '+2075.00'  (cbl:479)
+PASS ACRCYCR            expected=   '+           .00' ->            '+0.00' | observed='+           .00' -> '+0.00'  (cbl:481)
+PASS ACRCYDB            expected=   '+           .00' ->            '+0.00' | observed='+           .00' -> '+0.00'  (cbl:483)
+PASS ADTOPEN            expected=        '2012-09-30' ->       '2012-09-30' | observed='2012-09-30' -> '2012-09-30'  (cbl:486)
+PASS AEXPDT             expected=        '2025-07-13' ->       '2025-07-13' | observed='2025-07-13' -> '2025-07-13'  (cbl:488)
+PASS AREISDT            expected=        '2025-07-13' ->       '2025-07-13' | observed='2025-07-13' -> '2025-07-13'  (cbl:489)
+PASS AADDGRP_DV06       expected=        'A000000000' ->       'A000000000' | observed='A000000000' -> 'A000000000'  (cbl:490 + D-0038 DV-06 (legacy blank))
+PASS ACSTNUM            expected=         '000000027' ->        '000000027' | observed='000000027' -> '000000027'  (cbl:494)
+PASS ACSTSSN            expected=       '980-16-1210' ->      '980-16-1210' | observed='980-16-1210' -> '980-16-1210'  (cbl:496-504)
+PASS ACSTFCO            expected=               '078' ->                 78 | observed=78 -> 78  (cbl:506)
+PASS ACSTDOB            expected=        '1986-11-08' ->       '1986-11-08' | observed='1986-11-08' -> '1986-11-08'  (cbl:508)
+PASS ACSFNAM            expected='Ward                     ' ->             'Ward' | observed='Ward' -> 'Ward'  (cbl:509)
+PASS ACSMNAM            expected='Henri                    ' ->            'Henri' | observed='Henri' -> 'Henri'  (cbl:510)
+PASS ACSLNAM            expected='Jones                    ' ->            'Jones' | observed='Jones' -> 'Jones'  (cbl:511)
+PASS ACSADL1            expected='210 Amaya Turnpike                                ' -> '210 Amaya Turnpike' | observed='210 Amaya Turnpike' -> '210 Amaya Turnpike'  (cbl:512)
+PASS ACSADL2            expected='Suite 180                                         ' ->        'Suite 180' | observed='Suite 180' -> 'Suite 180'  (cbl:513)
+PASS ACSCITY            expected='Port Dwight                                       ' ->      'Port Dwight' | observed='Port Dwight' -> 'Port Dwight'  (cbl:514)
+PASS ACSSTTE            expected=                'GU' ->               'GU' | observed='GU' -> 'GU'  (cbl:515)
+PASS ACSZIPC_DV05_full  expected=        '07923-8822' ->       '07923-8822' | observed='07923-8822' -> '07923-8822'  (cbl:516 + DV-05 (legacy 5 of 10))
+PASS ACSCTRY            expected=               'USA' ->              'USA' | observed='USA' -> 'USA'  (cbl:517)
+PASS ACSPHN1_DV05_full  expected=   '(935)027-1145  ' ->    '(935)027-1145' | observed='(935)027-1145' -> '(935)027-1145'  (cbl:518 + DV-05 (legacy 13 of 15))
+PASS ACSPHN2_DV05_full  expected=   '(103)537-5007  ' ->    '(103)537-5007' | observed='(103)537-5007' -> '(103)537-5007'  (cbl:519 + DV-05)
+PASS ACSGOVT            expected='00000000000881558757' -> '00000000000881558757' | observed='00000000000881558757' -> '00000000000881558757'  (cbl:520)
+PASS ACSEFTC            expected=        '0050024139' ->       '0050024139' | observed='0050024139' -> '0050024139'  (cbl:521)
+PASS ACSPFLG            expected=                 'Y' ->                'Y' | observed='Y' -> 'Y'  (cbl:522)
+ACCOUNT-TOTAL 00000000027: 29/29 fields match
+--- account 00000000033 (xref cust 000000033, expected outcome E-00 (both blocks))
+PASS ACCTSID            expected=       '00000000033' ->      '00000000033' | observed='00000000033' -> '00000000033'  (cbl:465)
+PASS ACSTTUS            expected=                 'Y' ->                'Y' | observed='Y' -> 'Y'  (cbl:473)
+PASS ACURBAL            expected=   '+        410.00' ->          '+410.00' | observed='+        410.00' -> '+410.00'  (cbl:475 PICOUT +ZZZ,ZZZ,ZZZ.99)
+PASS ACRDLIM            expected=   '+      6,404.00' ->         '+6404.00' | observed='+      6,404.00' -> '+6404.00'  (cbl:477)
+PASS ACSHLIM            expected=   '+        951.00' ->          '+951.00' | observed='+        951.00' -> '+951.00'  (cbl:479)
+PASS ACRCYCR            expected=   '+           .00' ->            '+0.00' | observed='+           .00' -> '+0.00'  (cbl:481)
+PASS ACRCYDB            expected=   '+           .00' ->            '+0.00' | observed='+           .00' -> '+0.00'  (cbl:483)
+PASS ADTOPEN            expected=        '2012-10-11' ->       '2012-10-11' | observed='2012-10-11' -> '2012-10-11'  (cbl:486)
+PASS AEXPDT             expected=        '2025-10-07' ->       '2025-10-07' | observed='2025-10-07' -> '2025-10-07'  (cbl:488)
+PASS AREISDT            expected=        '2025-10-07' ->       '2025-10-07' | observed='2025-10-07' -> '2025-10-07'  (cbl:489)
+PASS AADDGRP_DV06       expected=        'A000000000' ->       'A000000000' | observed='A000000000' -> 'A000000000'  (cbl:490 + D-0038 DV-06 (legacy blank))
+PASS ACSTNUM            expected=         '000000033' ->        '000000033' | observed='000000033' -> '000000033'  (cbl:494)
+PASS ACSTSSN            expected=       '144-19-5105' ->      '144-19-5105' | observed='144-19-5105' -> '144-19-5105'  (cbl:496-504)
+PASS ACSTFCO            expected=               '469' ->                469 | observed=469 -> 469  (cbl:506)
+PASS ACSTDOB            expected=        '1988-05-19' ->       '1988-05-19' | observed='1988-05-19' -> '1988-05-19'  (cbl:508)
+PASS ACSFNAM            expected='Bernice                  ' ->          'Bernice' | observed='Bernice' -> 'Bernice'  (cbl:509)
+PASS ACSMNAM            expected='Norbert                  ' ->          'Norbert' | observed='Norbert' -> 'Norbert'  (cbl:510)
+PASS ACSLNAM            expected='Herman                   ' ->           'Herman' | observed='Herman' -> 'Herman'  (cbl:511)
+PASS ACSADL1            expected='877 Kassandra Ranch                               ' -> '877 Kassandra Ranch' | observed='877 Kassandra Ranch' -> '877 Kassandra Ranch'  (cbl:512)
+PASS ACSADL2            expected='Suite 956                                         ' ->        'Suite 956' | observed='Suite 956' -> 'Suite 956'  (cbl:513)
+PASS ACSCITY            expected='Haleyport                                         ' ->        'Haleyport' | observed='Haleyport' -> 'Haleyport'  (cbl:514)
+PASS ACSSTTE            expected=                'AR' ->               'AR' | observed='AR' -> 'AR'  (cbl:515)
+PASS ACSZIPC_DV05_full  expected=        '19113-4329' ->       '19113-4329' | observed='19113-4329' -> '19113-4329'  (cbl:516 + DV-05 (legacy 5 of 10))
+PASS ACSCTRY            expected=               'USA' ->              'USA' | observed='USA' -> 'USA'  (cbl:517)
+PASS ACSPHN1_DV05_full  expected=   '(836)743-5487  ' ->    '(836)743-5487' | observed='(836)743-5487' -> '(836)743-5487'  (cbl:518 + DV-05 (legacy 13 of 15))
+PASS ACSPHN2_DV05_full  expected=   '(640)208-1176  ' ->    '(640)208-1176' | observed='(640)208-1176' -> '(640)208-1176'  (cbl:519 + DV-05)
+PASS ACSGOVT            expected='00000000000400605429' -> '00000000000400605429' | observed='00000000000400605429' -> '00000000000400605429'  (cbl:520)
+PASS ACSEFTC            expected=        '0065245171' ->       '0065245171' | observed='0065245171' -> '0065245171'  (cbl:521)
+PASS ACSPFLG            expected=                 'Y' ->                'Y' | observed='Y' -> 'Y'  (cbl:522)
+ACCOUNT-TOTAL 00000000033: 29/29 fields match
+--- account 00000000050 (xref cust 000000050, expected outcome E-00 (both blocks))
+PASS ACCTSID            expected=       '00000000050' ->      '00000000050' | observed='00000000050' -> '00000000050'  (cbl:465)
+PASS ACSTTUS            expected=                 'Y' ->                'Y' | observed='Y' -> 'Y'  (cbl:473)
+PASS ACURBAL            expected=   '+        492.00' ->          '+492.00' | observed='+        492.00' -> '+492.00'  (cbl:475 PICOUT +ZZZ,ZZZ,ZZZ.99)
+PASS ACRDLIM            expected=   '+      6,169.00' ->         '+6169.00' | observed='+      6,169.00' -> '+6169.00'  (cbl:477)
+PASS ACSHLIM            expected=   '+      4,587.00' ->         '+4587.00' | observed='+      4,587.00' -> '+4587.00'  (cbl:479)
+PASS ACRCYCR            expected=   '+           .00' ->            '+0.00' | observed='+           .00' -> '+0.00'  (cbl:481)
+PASS ACRCYDB            expected=   '+           .00' ->            '+0.00' | observed='+           .00' -> '+0.00'  (cbl:483)
+PASS ADTOPEN            expected=        '2011-04-22' ->       '2011-04-22' | observed='2011-04-22' -> '2011-04-22'  (cbl:486)
+PASS AEXPDT             expected=        '2023-03-09' ->       '2023-03-09' | observed='2023-03-09' -> '2023-03-09'  (cbl:488)
+PASS AREISDT            expected=        '2023-03-09' ->       '2023-03-09' | observed='2023-03-09' -> '2023-03-09'  (cbl:489)
+PASS AADDGRP_DV06       expected=        'A000000000' ->       'A000000000' | observed='A000000000' -> 'A000000000'  (cbl:490 + D-0038 DV-06 (legacy blank))
+PASS ACSTNUM            expected=         '000000050' ->        '000000050' | observed='000000050' -> '000000050'  (cbl:494)
+PASS ACSTSSN            expected=       '931-24-8469' ->      '931-24-8469' | observed='931-24-8469' -> '931-24-8469'  (cbl:496-504)
+PASS ACSTFCO            expected=               '623' ->                623 | observed=623 -> 623  (cbl:506)
+PASS ACSTDOB            expected=        '1960-12-01' ->       '1960-12-01' | observed='1960-12-01' -> '1960-12-01'  (cbl:508)
+PASS ACSFNAM            expected='Aniya                    ' ->            'Aniya' | observed='Aniya' -> 'Aniya'  (cbl:509)
+PASS ACSMNAM            expected='Alba                     ' ->             'Alba' | observed='Alba' -> 'Alba'  (cbl:510)
+PASS ACSLNAM            expected='Von                      ' ->              'Von' | observed='Von' -> 'Von'  (cbl:511)
+PASS ACSADL1            expected='1588 Nienow Cape                                  ' -> '1588 Nienow Cape' | observed='1588 Nienow Cape' -> '1588 Nienow Cape'  (cbl:512)
+PASS ACSADL2            expected='Suite 187                                         ' ->        'Suite 187' | observed='Suite 187' -> 'Suite 187'  (cbl:513)
+PASS ACSCITY            expected='New Aricchester                                   ' ->  'New Aricchester' | observed='New Aricchester' -> 'New Aricchester'  (cbl:514)
+PASS ACSSTTE            expected=                'OR' ->               'OR' | observed='OR' -> 'OR'  (cbl:515)
+PASS ACSZIPC_DV05_full  expected=        '04257     ' ->            '04257' | observed='04257' -> '04257'  (cbl:516 + DV-05 (legacy 5 of 10))
+PASS ACSCTRY            expected=               'USA' ->              'USA' | observed='USA' -> 'USA'  (cbl:517)
+PASS ACSPHN1_DV05_full  expected=   '(325)301-0827  ' ->    '(325)301-0827' | observed='(325)301-0827' -> '(325)301-0827'  (cbl:518 + DV-05 (legacy 13 of 15))
+PASS ACSPHN2_DV05_full  expected=   '(493)985-9283  ' ->    '(493)985-9283' | observed='(493)985-9283' -> '(493)985-9283'  (cbl:519 + DV-05)
+PASS ACSGOVT            expected='00000000000030387824' -> '00000000000030387824' | observed='00000000000030387824' -> '00000000000030387824'  (cbl:520)
+PASS ACSEFTC            expected=        '0074883577' ->       '0074883577' | observed='0074883577' -> '0074883577'  (cbl:521)
+PASS ACSPFLG            expected=                 'Y' ->                'Y' | observed='Y' -> 'Y'  (cbl:522)
+ACCOUNT-TOTAL 00000000050: 29/29 fields match
+FIELD-PARITY-TOTAL 145/145
+
+=================== A-11 Q-04 two xref rows for acct 903 (cards ...02 -> cust 2, ...01 -> cust 3): lowest card wins -> customer 000000003 ===================
+REQUEST  GET /api/accounts/00000000903  body=<none>  cookies=yes/home/ubuntu/repos/ts-cobol-carddemo/parity/wave4/coactvwc/http/jar_user.txt
+STATUS   200
+BODY     {"header":{"tranId":"CAVW","programName":"COACTVWC","title01":"AWS Mainframe Modernization","title02":"CardDemo","currentDate":"09/07/26","currentTime":"10:13:37","applId":"CARDDEMO","sysId":"CICS"},"accountNumber":"00000000903","infoMessage":"Enter or update id of account to display","account":{"activeStatus":"Y","openDate":"2012-09-30","creditLimit":"+      5,572.00","expirationDate":"2025-07-13","cashCreditLimit":"+      2,075.00","reissueDate":"2025-07-13","currentBalance":"+        284.00","currentCycleCredit":"+           .00","groupId":"A000000000","currentCycleDebit":"+           .00"},"customer":{"customerId":"000000003","ssn":"317-46-0867","dateOfBirth":"1987-11-30","ficoScore":616,"firstName":"Larry","middleName":"Cody","lastName":"Homenick","addressLine1":"362 Esta Parks","addressLine2":"Apt. 390","city":"New Gladys","stateCode":"GA","zipCode":"19852-6716","countryCode":"USA","phone1":"(950)396-9024","phone2":"(685)168-8826","governmentIssuedId":"00000000000052419303","eftAccountId":"0006465789","primaryCardHolder":"Y"}}
+EXPECT   status=200 message-prefix=[-] contains=[-]
+MSGLEN   0
+VERDICT  PASS
+CUSTID   000000003  PASS
+PG rows: 9993000000000001|3
+9993000000000002|2
+
+=================== A-18 Q-14 payload validation: 30-char id, URL-encoded junk -> 400 E-05 class, never 500 ===================
+REQUEST  GET /api/accounts/123456789012345678901234567890  body=<none>  cookies=yes/home/ubuntu/repos/ts-cobol-carddemo/parity/wave4/coactvwc/http/jar_user.txt
+STATUS   400
+BODY     {"message":"Account Filter must  be a non-zero 11 digit number","status":400,"timestamp":"2026-09-07T10:13:37.137827689Z"}
+EXPECT   status=400 message-prefix=[Account Filter must  be a non-zero 11 digit number] contains=[-]
+MSGLEN   50
+VERDICT  PASS
+REQUEST  GET /api/accounts/%27%3Bdrop  body=<none>  cookies=yes/home/ubuntu/repos/ts-cobol-carddemo/parity/wave4/coactvwc/http/jar_user.txt
+STATUS   400
+BODY     {"timestamp":"2026-09-07T10:13:37.158+00:00","status":400,"error":"Bad Request","path":"/api/accounts/%27%3Bdrop"}
+EXPECT   status=400 message-prefix=[-] contains=[-]
+MSGLEN   0
+VERDICT  PASS
+NOTE     A-18b: '%3B' (;) is rejected by the servlet container before the controller (generic 400 body, no program text) - status class asserted only
+REQUEST  GET /api/accounts/abc%27def12  body=<none>  cookies=yes/home/ubuntu/repos/ts-cobol-carddemo/parity/wave4/coactvwc/http/jar_user.txt
+STATUS   400
+BODY     {"message":"Account Filter must  be a non-zero 11 digit number","status":400,"timestamp":"2026-09-07T10:13:37.178469465Z"}
+EXPECT   status=400 message-prefix=[Account Filter must  be a non-zero 11 digit number] contains=[-]
+MSGLEN   50
+VERDICT  PASS
+REQUEST  GET /api/accounts/0000000002%25  body=<none>  cookies=yes/home/ubuntu/repos/ts-cobol-carddemo/parity/wave4/coactvwc/http/jar_user.txt
+STATUS   400
+BODY     {"timestamp":"2026-09-07T10:13:37.199+00:00","status":400,"error":"Bad Request","path":"/api/accounts/0000000002%25"}
+EXPECT   status=400 message-prefix=[-] contains=[-]
+MSGLEN   0
+VERDICT  PASS
+NOTE     A-18d: encoded '%' is likewise rejected by the container (generic 400) - status class asserted only
+
+=================== A-19 DV-02 / B-0027: session unchanged after account view (U and A) ===================
+REQUEST  GET /api/auth/session  body=<none>  cookies=yes/home/ubuntu/repos/ts-cobol-carddemo/parity/wave4/coactvwc/http/jar_user.txt
+STATUS   200
+BODY     {"userId":"USER0001","userType":"U"}
+SESSION-U before={"userId":"USER0001","userType":"U"}
+SESSION-U after ={"userId":"USER0001","userType":"U"}  PASS
+REQUEST  GET /api/auth/session  body=<none>  cookies=yes/home/ubuntu/repos/ts-cobol-carddemo/parity/wave4/coactvwc/http/jar_admin.txt
+STATUS   200
+BODY     {"userId":"ADMIN001","userType":"A"}
+REQUEST  GET /api/accounts/00000000027  body=<none>  cookies=yes/home/ubuntu/repos/ts-cobol-carddemo/parity/wave4/coactvwc/http/jar_admin.txt
+STATUS   200
+BODY     {"header":{"tranId":"CAVW","programName":"COACTVWC","title01":"AWS Mainframe Modernization","title02":"CardDemo","currentDate":"09/07/26","currentTime":"10:13:37","applId":"CARDDEMO","sysId":"CICS"},"accountNumber":"00000000027","infoMessage":"Enter or update id of account to display","account":{"activeStatus":"Y","openDate":"2012-09-30","creditLimit":"+      5,572.00","expirationDate":"2025-07-13","cashCreditLimit":"+      2,075.00","reissueDate":"2025-07-13","currentBalance":"+        284.00","currentCycleCredit":"+           .00","groupId":"A000000000","currentCycleDebit":"+           .00"},"customer":{"customerId":"000000027","ssn":"980-16-1210","dateOfBirth":"1986-11-08","ficoScore":78,"firstName":"Ward","middleName":"Henri","lastName":"Jones","addressLine1":"210 Amaya Turnpike","addressLine2":"Suite 180","city":"Port Dwight","stateCode":"GU","zipCode":"07923-8822","countryCode":"USA","phone1":"(935)027-1145","phone2":"(103)537-5007","governmentIssuedId":"00000000000881558757","eftAccountId":"0050024139","primaryCardHolder":"Y"}}
+EXPECT   status=200 message-prefix=[-] contains=[-]
+MSGLEN   0
+VERDICT  PASS
+REQUEST  GET /api/auth/session  body=<none>  cookies=yes/home/ubuntu/repos/ts-cobol-carddemo/parity/wave4/coactvwc/http/jar_admin.txt
+STATUS   200
+BODY     {"userId":"ADMIN001","userType":"A"}
+SESSION-A PASS
+
+=================== A-12 E-12 (WHEN OTHER on CXACAIX read): PostgreSQL stopped -> 500 'File Error: READ ... CXACAIX ... returned RESP ...,RESP2 ...' (cbl:760-766, D-0040) ===================
+REQUEST  GET /api/accounts/00000000027  body=<none>  cookies=yes/home/ubuntu/repos/ts-cobol-carddemo/parity/wave4/coactvwc/http/jar_user.txt
+STATUS   500
+BODY     {"message":"File Error: READ     on CXACAIX   returned RESP 0000000016,RESP2 0000000000","status":500,"timestamp":"2026-09-07T10:14:09.526114667Z"}
+EXPECT   status=500 message-prefix=[File Error: READ] contains=[,RESP2 ]
+MSGLEN   75
+VERDICT  PASS
+CONTAINS-CXACAIX PASS
+CONTAINS-'returned RESP ' PASS
+REQUEST  GET /api/accounts/00000000027  body=<none>  cookies=yes/home/ubuntu/repos/ts-cobol-carddemo/parity/wave4/coactvwc/http/jar_user.txt
+STATUS   200
+BODY     {"header":{"tranId":"CAVW","programName":"COACTVWC","title01":"AWS Mainframe Modernization","title02":"CardDemo","currentDate":"09/07/26","currentTime":"10:14:15","applId":"CARDDEMO","sysId":"CICS"},"accountNumber":"00000000027","infoMessage":"Enter or update id of account to display","account":{"activeStatus":"Y","openDate":"2012-09-30","creditLimit":"+      5,572.00","expirationDate":"2025-07-13","cashCreditLimit":"+      2,075.00","reissueDate":"2025-07-13","currentBalance":"+        284.00","currentCycleCredit":"+           .00","groupId":"A000000000","currentCycleDebit":"+           .00"},"customer":{"customerId":"000000027","ssn":"980-16-1210","dateOfBirth":"1986-11-08","ficoScore":78,"firstName":"Ward","middleName":"Henri","lastName":"Jones","addressLine1":"210 Amaya Turnpike","addressLine2":"Suite 180","city":"Port Dwight","stateCode":"GU","zipCode":"07923-8822","countryCode":"USA","phone1":"(935)027-1145","phone2":"(103)537-5007","governmentIssuedId":"00000000000881558757","eftAccountId":"0050024139","primaryCardHolder":"Y"}}
+EXPECT   status=200 message-prefix=[-] contains=[-]
+MSGLEN   0
+VERDICT  PASS
+RECOVERED PASS
+
+=================== A-13 E-12 on the ACCTDAT read only: xref read succeeds, then accounts table renamed away -> 500 'File Error: READ ... ACCTDAT ...' (cbl:809-816) ===================
+REQUEST  GET /api/accounts/00000000027  body=<none>  cookies=yes/home/ubuntu/repos/ts-cobol-carddemo/parity/wave4/coactvwc/http/jar_user.txt
+STATUS   500
+BODY     {"message":"File Error: READ     on ACCTDAT   returned RESP 0000000016,RESP2 0000000000","status":500,"timestamp":"2026-09-07T10:14:15.826905455Z"}
+EXPECT   status=500 message-prefix=[File Error: READ] contains=[,RESP2 ]
+MSGLEN   75
+VERDICT  PASS
+CONTAINS-ACCTDAT PASS
+
+=================== A-14 E-12 on the CUSTDAT read only: xref + account succeed, customers table renamed away -> 500 'File Error: READ ... CUSTDAT ...' (cbl:858-865) ===================
+REQUEST  GET /api/accounts/00000000027  body=<none>  cookies=yes/home/ubuntu/repos/ts-cobol-carddemo/parity/wave4/coactvwc/http/jar_user.txt
+STATUS   500
+BODY     {"message":"File Error: READ     on CUSTDAT   returned RESP 0000000016,RESP2 0000000000","status":500,"timestamp":"2026-09-07T10:14:15.973623814Z"}
+EXPECT   status=500 message-prefix=[File Error: READ] contains=[,RESP2 ]
+MSGLEN   75
+VERDICT  PASS
+CONTAINS-CUSTDAT PASS
+REQUEST  GET /api/accounts/00000000027  body=<none>  cookies=yes/home/ubuntu/repos/ts-cobol-carddemo/parity/wave4/coactvwc/http/jar_user.txt
+STATUS   200
+BODY     {"header":{"tranId":"CAVW","programName":"COACTVWC","title01":"AWS Mainframe Modernization","title02":"CardDemo","currentDate":"09/07/26","currentTime":"10:14:16","applId":"CARDDEMO","sysId":"CICS"},"accountNumber":"00000000027","infoMessage":"Enter or update id of account to display","account":{"activeStatus":"Y","openDate":"2012-09-30","creditLimit":"+      5,572.00","expirationDate":"2025-07-13","cashCreditLimit":"+      2,075.00","reissueDate":"2025-07-13","currentBalance":"+        284.00","currentCycleCredit":"+           .00","groupId":"A000000000","currentCycleDebit":"+           .00"},"customer":{"customerId":"000000027","ssn":"980-16-1210","dateOfBirth":"1986-11-08","ficoScore":78,"firstName":"Ward","middleName":"Henri","lastName":"Jones","addressLine1":"210 Amaya Turnpike","addressLine2":"Suite 180","city":"Port Dwight","stateCode":"GU","zipCode":"07923-8822","countryCode":"USA","phone1":"(935)027-1145","phone2":"(103)537-5007","governmentIssuedId":"00000000000881558757","eftAccountId":"0050024139","primaryCardHolder":"Y"}}
+EXPECT   status=200 message-prefix=[-] contains=[-]
+MSGLEN   0
+VERDICT  PASS
+
+=================== A-24 message lengths observed (75-byte rule: E-09/E-10 71+4, E-11 68+7, E-12 exactly 75) ===================
+A-04 len=75 [Account:00000000099 not found in Cross ref file.  Resp:0000000013 Reas:0000]
+A-05 len=75 [Account:00000000901 not found in Acct Master file.Resp:0000000013 Reas:0000]
+A-06 len=75 [CustId:999999902 not found in customer master.Resp: 0000000013 REAS:0000000]
+A-12 len=75 [File Error: READ     on CXACAIX   returned RESP 0000000016,RESP2 0000000000]
+
+done 2026-09-07T10:14:16Z

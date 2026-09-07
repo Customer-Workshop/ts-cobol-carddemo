@@ -1,0 +1,340 @@
+[[1;34mINFO[m] Scanning for projects...
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m-------------------< [0;36mcom.carddemo:carddemo-backend[0;1m >--------------------[m
+[[1;34mINFO[m] [1mBuilding carddemo-backend 0.1.0-SNAPSHOT[m
+[[1;34mINFO[m] [1m--------------------------------[ jar ]---------------------------------[m
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m--- [0;32mmaven-clean-plugin:3.4.1:clean[m [1m(default-clean)[m @ [36mcarddemo-backend[0;1m ---[m
+[[1;34mINFO[m] Deleting /home/ubuntu/repos/ts-cobol-carddemo/backend/target
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m--- [0;32mmaven-resources-plugin:3.3.1:resources[m [1m(default-resources)[m @ [36mcarddemo-backend[0;1m ---[m
+[[1;34mINFO[m] Copying 1 resource from src/main/resources to target/classes
+[[1;34mINFO[m] Copying 1 resource from src/main/resources to target/classes
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m--- [0;32mmaven-compiler-plugin:3.13.0:compile[m [1m(default-compile)[m @ [36mcarddemo-backend[0;1m ---[m
+[[1;34mINFO[m] Recompiling the module because of [1mchanged source code[m.
+[[1;34mINFO[m] Compiling 49 source files with javac [debug parameters release 21] to target/classes
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m--- [0;32mmaven-resources-plugin:3.3.1:testResources[m [1m(default-testResources)[m @ [36mcarddemo-backend[0;1m ---[m
+[[1;34mINFO[m] Copying 2 resources from src/test/resources to target/test-classes
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m--- [0;32mmaven-compiler-plugin:3.13.0:testCompile[m [1m(default-testCompile)[m @ [36mcarddemo-backend[0;1m ---[m
+[[1;34mINFO[m] Recompiling the module because of [1mchanged dependency[m.
+[[1;34mINFO[m] Compiling 18 source files with javac [debug parameters release 21] to target/test-classes
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m--- [0;32mmaven-surefire-plugin:3.5.3:test[m [1m(default-test)[m @ [36mcarddemo-backend[0;1m ---[m
+[[1;34mINFO[m] Using auto detected provider org.apache.maven.surefire.junitplatform.JUnitPlatformProvider
+[[1;34mINFO[m] 
+[[1;34mINFO[m] -------------------------------------------------------
+[[1;34mINFO[m]  T E S T S
+[[1;34mINFO[m] -------------------------------------------------------
+[[1;34mINFO[m] Running com.carddemo.data.[1mCobolFieldReaderTest[m
+[[1;34mINFO[m] [1;32mTests run: [0;1;32m5[m, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.032 s -- in com.carddemo.data.[1mCobolFieldReaderTest[m
+[[1;34mINFO[m] Running com.carddemo.data.[1mLegacyExtractQ10GateTest[m
+Q-10 gate: rows accounts=50 customers=50 date values checked=200 offenders=[]
+[[1;34mINFO[m] [1;32mTests run: [0;1;32m4[m, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.026 s -- in com.carddemo.data.[1mLegacyExtractQ10GateTest[m
+[[1;34mINFO[m] Running com.carddemo.service.[1mAccountViewServiceTest[m
+Mockito is currently self-attaching to enable the inline-mock-maker. This will no longer work in future releases of the JDK. Please add Mockito as an agent to your build what is described in Mockito's documentation: https://javadoc.io/doc/org.mockito/mockito-core/latest/org/mockito/Mockito.html#0.3
+OpenJDK 64-Bit Server VM warning: Sharing is only supported for boot loader classes because bootstrap classpath has been appended
+WARNING: A Java agent has been loaded dynamically (/home/ubuntu/.m2/repository/net/bytebuddy/byte-buddy-agent/1.15.11/byte-buddy-agent-1.15.11.jar)
+WARNING: If a serviceability tool is in use, please run with -XX:+EnableDynamicAgentLoading to hide this warning
+WARNING: If a serviceability tool is not in use, please run with -Djdk.instrument.traceUsage for more information
+WARNING: Dynamic loading of agents will be disallowed by default in a future release
+[[1;34mINFO[m] [1;32mTests run: [0;1;32m23[m, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.788 s -- in com.carddemo.service.[1mAccountViewServiceTest[m
+[[1;34mINFO[m] Running com.carddemo.service.[1mMenuServiceTest[m
+[[1;34mINFO[m] [1;32mTests run: [0;1;32m44[m, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.057 s -- in com.carddemo.service.[1mMenuServiceTest[m
+[[1;34mINFO[m] Running com.carddemo.service.[1mDateValidationServiceTest[m
+[[1;34mINFO[m] [1;32mTests run: [0;1;32m19[m, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.018 s -- in com.carddemo.service.[1mDateValidationServiceTest[m
+[[1;34mINFO[m] Running com.carddemo.service.[1mAuthUpgradeOnLoginIntegrationTest[m
+10:46:00.506 [main] INFO org.springframework.test.context.support.AnnotationConfigContextLoaderUtils -- Could not detect default configuration classes for test class [com.carddemo.service.AuthUpgradeOnLoginIntegrationTest]: AuthUpgradeOnLoginIntegrationTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+10:46:00.544 [main] INFO org.testcontainers.images.PullPolicy -- Image pull policy will be performed by: DefaultPullPolicy()
+10:46:00.545 [main] INFO org.testcontainers.utility.ImageNameSubstitutor -- Image name substitution will be performed by: DefaultImageNameSubstitutor (composite of 'ConfigurationFileImageNameSubstitutor' and 'PrefixingImageNameSubstitutor')
+10:46:00.551 [main] INFO org.testcontainers.DockerClientFactory -- Testcontainers version: 1.20.6
+10:46:00.661 [main] INFO org.testcontainers.dockerclient.DockerClientProviderStrategy -- Loaded org.testcontainers.dockerclient.UnixSocketClientProviderStrategy from ~/.testcontainers.properties, will try it first
+10:46:00.773 [main] INFO org.testcontainers.dockerclient.DockerClientProviderStrategy -- Found Docker environment with local Unix socket (unix:///var/run/docker.sock)
+10:46:00.774 [main] INFO org.testcontainers.DockerClientFactory -- Docker host IP address is localhost
+10:46:00.782 [main] INFO org.testcontainers.DockerClientFactory -- Connected to docker: 
+  Server Version: 27.4.1
+  API Version: 1.47
+  Operating System: Ubuntu 22.04.5 LTS
+  Total Memory: 32108 MB
+10:46:00.799 [main] INFO tc.testcontainers/ryuk:0.11.0 -- Creating container for image: testcontainers/ryuk:0.11.0
+10:46:00.871 [main] INFO tc.testcontainers/ryuk:0.11.0 -- Container testcontainers/ryuk:0.11.0 is starting: 2eba4ae850fc46a67fea5e2dc72999263f004b917832d721773f7f2f3e987e83
+10:46:01.050 [main] INFO tc.testcontainers/ryuk:0.11.0 -- Container testcontainers/ryuk:0.11.0 started in PT0.251488578S
+10:46:01.054 [main] INFO org.testcontainers.utility.RyukResourceReaper -- Ryuk started - will monitor and terminate Testcontainers containers on JVM exit
+10:46:01.054 [main] INFO org.testcontainers.DockerClientFactory -- Checking the system...
+10:46:01.054 [main] INFO org.testcontainers.DockerClientFactory -- ✔︎ Docker server version should be at least 1.6.0
+10:46:01.054 [main] INFO tc.postgres:16 -- Creating container for image: postgres:16
+10:46:01.068 [main] INFO tc.postgres:16 -- Container postgres:16 is starting: eb4f0473b5c66628653cb759a142abfd995904b3462fea2571ee88296d3ffbb1
+10:46:01.880 [main] INFO tc.postgres:16 -- Container postgres:16 started in PT0.8258397S
+10:46:01.881 [main] INFO tc.postgres:16 -- Container is started (JDBC URL: jdbc:postgresql://localhost:32771/test?loggerLevel=OFF)
+10:46:01.933 [main] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper -- Found @SpringBootConfiguration com.carddemo.CardDemoApplication for test class com.carddemo.service.AuthUpgradeOnLoginIntegrationTest
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v3.4.5)
+
+2026-09-07T10:46:02.133Z  INFO 18032 --- [carddemo] [           main] c.c.s.AuthUpgradeOnLoginIntegrationTest  : Starting AuthUpgradeOnLoginIntegrationTest using Java 21.0.12 with PID 18032 (started by ubuntu in /home/ubuntu/repos/ts-cobol-carddemo/backend)
+2026-09-07T10:46:02.134Z  INFO 18032 --- [carddemo] [           main] c.c.s.AuthUpgradeOnLoginIntegrationTest  : No active profile set, falling back to 1 default profile: "default"
+2026-09-07T10:46:02.438Z  INFO 18032 --- [carddemo] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-09-07T10:46:02.470Z  INFO 18032 --- [carddemo] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 28 ms. Found 4 JPA repository interfaces.
+2026-09-07T10:46:03.057Z  INFO 18032 --- [carddemo] [           main] org.flywaydb.core.FlywayExecutor         : Database: jdbc:postgresql://localhost:32771/test?loggerLevel=OFF (PostgreSQL 16.15)
+2026-09-07T10:46:03.083Z  INFO 18032 --- [carddemo] [           main] o.f.c.i.s.JdbcTableSchemaHistory         : Schema history table "public"."flyway_schema_history" does not exist yet
+2026-09-07T10:46:03.085Z  INFO 18032 --- [carddemo] [           main] o.f.core.internal.command.DbValidate     : Successfully validated 2 migrations (execution time 00:00.014s)
+2026-09-07T10:46:03.094Z  INFO 18032 --- [carddemo] [           main] o.f.c.i.s.JdbcTableSchemaHistory         : Creating Schema History table "public"."flyway_schema_history" ...
+2026-09-07T10:46:03.128Z  INFO 18032 --- [carddemo] [           main] o.f.core.internal.command.DbMigrate      : Current version of schema "public": << Empty Schema >>
+2026-09-07T10:46:03.139Z  INFO 18032 --- [carddemo] [           main] o.f.core.internal.command.DbMigrate      : Migrating schema "public" to version "1 - account view schema"
+2026-09-07T10:46:03.160Z  INFO 18032 --- [carddemo] [           main] o.f.core.internal.command.DbMigrate      : Migrating schema "public" with repeatable migration "seed test data"
+2026-09-07T10:46:03.187Z  INFO 18032 --- [carddemo] [           main] o.f.core.internal.command.DbMigrate      : Successfully applied 2 migrations to schema "public", now at version v1 (execution time 00:00.024s)
+2026-09-07T10:46:03.229Z  INFO 18032 --- [carddemo] [           main] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2026-09-07T10:46:03.255Z  INFO 18032 --- [carddemo] [           main] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.6.13.Final
+2026-09-07T10:46:03.274Z  INFO 18032 --- [carddemo] [           main] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
+2026-09-07T10:46:03.340Z  INFO 18032 --- [carddemo] [           main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-09-07T10:46:03.354Z  INFO 18032 --- [carddemo] [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2026-09-07T10:46:03.369Z  INFO 18032 --- [carddemo] [           main] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@59ac60d1
+2026-09-07T10:46:03.370Z  INFO 18032 --- [carddemo] [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2026-09-07T10:46:03.407Z  INFO 18032 --- [carddemo] [           main] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
+	Database driver: undefined/unknown
+	Database version: 16.15
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-09-07T10:46:03.764Z  INFO 18032 --- [carddemo] [           main] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-09-07T10:46:03.783Z  INFO 18032 --- [carddemo] [           main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-09-07T10:46:03.967Z  WARN 18032 --- [carddemo] [           main] .s.s.UserDetailsServiceAutoConfiguration : 
+
+Using generated security password: fdd6a4d3-a5ca-4a9b-be91-f128701efb0e
+
+This generated password is for development use only. Your security configuration must be updated before running your application in production.
+
+2026-09-07T10:46:03.970Z  INFO 18032 --- [carddemo] [           main] r$InitializeUserDetailsManagerConfigurer : Global AuthenticationManager configured with UserDetailsService bean with name inMemoryUserDetailsManager
+2026-09-07T10:46:04.250Z  INFO 18032 --- [carddemo] [           main] c.c.s.AuthUpgradeOnLoginIntegrationTest  : Started AuthUpgradeOnLoginIntegrationTest in 2.261 seconds (process running for 5.124)
+[[1;34mINFO[m] [1;32mTests run: [0;1;32m5[m, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 4.917 s -- in com.carddemo.service.[1mAuthUpgradeOnLoginIntegrationTest[m
+[[1;34mINFO[m] Running com.carddemo.service.[1mScreenHeaderServiceTest[m
+[[1;34mINFO[m] [1;32mTests run: [0;1;32m1[m, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.001 s -- in com.carddemo.service.[1mScreenHeaderServiceTest[m
+[[1;34mINFO[m] Running com.carddemo.service.[1mAuthServiceTest[m
+[[1;34mINFO[m] [1;32mTests run: [0;1;32m20[m, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.752 s -- in com.carddemo.service.[1mAuthServiceTest[m
+[[1;34mINFO[m] Running com.carddemo.repository.[1mAccountViewRepositoriesIntegrationTest[m
+2026-09-07T10:46:06.114Z  INFO 18032 --- [carddemo] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.carddemo.repository.AccountViewRepositoriesIntegrationTest]: AccountViewRepositoriesIntegrationTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-09-07T10:46:06.120Z  INFO 18032 --- [carddemo] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.carddemo.CardDemoApplication for test class com.carddemo.repository.AccountViewRepositoriesIntegrationTest
+[[1;34mINFO[m] [1;32mTests run: [0;1;32m6[m, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.085 s -- in com.carddemo.repository.[1mAccountViewRepositoriesIntegrationTest[m
+[[1;34mINFO[m] Running com.carddemo.api.[1mCobolPictureTest[m
+[[1;34mINFO[m] [1;32mTests run: [0;1;32m7[m, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.002 s -- in com.carddemo.api.[1mCobolPictureTest[m
+[[1;34mINFO[m] Running com.carddemo.api.[1mAccountViewFlowIntegrationTest[m
+2026-09-07T10:46:06.203Z  INFO 18032 --- [carddemo] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.carddemo.api.AccountViewFlowIntegrationTest]: AccountViewFlowIntegrationTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-09-07T10:46:06.213Z  INFO 18032 --- [carddemo] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.carddemo.CardDemoApplication for test class com.carddemo.api.AccountViewFlowIntegrationTest
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v3.4.5)
+
+2026-09-07T10:46:06.228Z  INFO 18032 --- [carddemo] [           main] c.c.api.AccountViewFlowIntegrationTest   : Starting AccountViewFlowIntegrationTest using Java 21.0.12 with PID 18032 (started by ubuntu in /home/ubuntu/repos/ts-cobol-carddemo/backend)
+2026-09-07T10:46:06.228Z  INFO 18032 --- [carddemo] [           main] c.c.api.AccountViewFlowIntegrationTest   : No active profile set, falling back to 1 default profile: "default"
+2026-09-07T10:46:06.311Z  INFO 18032 --- [carddemo] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-09-07T10:46:06.315Z  INFO 18032 --- [carddemo] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 3 ms. Found 4 JPA repository interfaces.
+2026-09-07T10:46:06.386Z  INFO 18032 --- [carddemo] [           main] org.flywaydb.core.FlywayExecutor         : Database: jdbc:postgresql://localhost:32771/test?loggerLevel=OFF (PostgreSQL 16.15)
+2026-09-07T10:46:06.394Z  INFO 18032 --- [carddemo] [           main] o.f.core.internal.command.DbValidate     : Successfully validated 2 migrations (execution time 00:00.004s)
+2026-09-07T10:46:06.401Z  INFO 18032 --- [carddemo] [           main] o.f.core.internal.command.DbMigrate      : Current version of schema "public": 1
+2026-09-07T10:46:06.402Z  INFO 18032 --- [carddemo] [           main] o.f.core.internal.command.DbMigrate      : Schema "public" is up to date. No migration necessary.
+2026-09-07T10:46:06.411Z  INFO 18032 --- [carddemo] [           main] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2026-09-07T10:46:06.411Z  INFO 18032 --- [carddemo] [           main] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
+2026-09-07T10:46:06.415Z  INFO 18032 --- [carddemo] [           main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-09-07T10:46:06.415Z  INFO 18032 --- [carddemo] [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-2 - Starting...
+2026-09-07T10:46:06.421Z  INFO 18032 --- [carddemo] [           main] com.zaxxer.hikari.pool.HikariPool        : HikariPool-2 - Added connection org.postgresql.jdbc.PgConnection@1c078424
+2026-09-07T10:46:06.421Z  INFO 18032 --- [carddemo] [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-2 - Start completed.
+2026-09-07T10:46:06.424Z  INFO 18032 --- [carddemo] [           main] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-2)']
+	Database driver: undefined/unknown
+	Database version: 16.15
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-09-07T10:46:06.448Z  INFO 18032 --- [carddemo] [           main] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-09-07T10:46:06.456Z  INFO 18032 --- [carddemo] [           main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-09-07T10:46:06.489Z  WARN 18032 --- [carddemo] [           main] .s.s.UserDetailsServiceAutoConfiguration : 
+
+Using generated security password: 3fd304b3-bf65-4fb0-a0ff-3e92002259d8
+
+This generated password is for development use only. Your security configuration must be updated before running your application in production.
+
+2026-09-07T10:46:06.489Z  INFO 18032 --- [carddemo] [           main] r$InitializeUserDetailsManagerConfigurer : Global AuthenticationManager configured with UserDetailsService bean with name inMemoryUserDetailsManager
+2026-09-07T10:46:06.572Z  INFO 18032 --- [carddemo] [           main] o.s.b.t.m.w.SpringBootMockServletContext : Initializing Spring TestDispatcherServlet ''
+2026-09-07T10:46:06.573Z  INFO 18032 --- [carddemo] [           main] o.s.t.web.servlet.TestDispatcherServlet  : Initializing Servlet ''
+2026-09-07T10:46:06.573Z  INFO 18032 --- [carddemo] [           main] o.s.t.web.servlet.TestDispatcherServlet  : Completed initialization in 0 ms
+2026-09-07T10:46:06.579Z  INFO 18032 --- [carddemo] [           main] c.c.api.AccountViewFlowIntegrationTest   : Started AccountViewFlowIntegrationTest in 0.363 seconds (process running for 7.452)
+[[1;34mINFO[m] [1;32mTests run: [0;1;32m6[m, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.895 s -- in com.carddemo.api.[1mAccountViewFlowIntegrationTest[m
+[[1;34mINFO[m] Running com.carddemo.api.[1mMenuFlowIntegrationTest[m
+2026-09-07T10:46:07.098Z  INFO 18032 --- [carddemo] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.carddemo.api.MenuFlowIntegrationTest]: MenuFlowIntegrationTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-09-07T10:46:07.101Z  INFO 18032 --- [carddemo] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.carddemo.CardDemoApplication for test class com.carddemo.api.MenuFlowIntegrationTest
+[[1;34mINFO[m] [1;32mTests run: [0;1;32m4[m, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.286 s -- in com.carddemo.api.[1mMenuFlowIntegrationTest[m
+[[1;34mINFO[m] Running com.carddemo.api.[1mAuthControllerWebMvcTest[m
+2026-09-07T10:46:07.386Z  INFO 18032 --- [carddemo] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.carddemo.api.AuthControllerWebMvcTest]: AuthControllerWebMvcTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-09-07T10:46:07.393Z  INFO 18032 --- [carddemo] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.carddemo.CardDemoApplication for test class com.carddemo.api.AuthControllerWebMvcTest
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v3.4.5)
+
+2026-09-07T10:46:07.404Z  INFO 18032 --- [carddemo] [           main] c.carddemo.api.AuthControllerWebMvcTest  : Starting AuthControllerWebMvcTest using Java 21.0.12 with PID 18032 (started by ubuntu in /home/ubuntu/repos/ts-cobol-carddemo/backend)
+2026-09-07T10:46:07.404Z  INFO 18032 --- [carddemo] [           main] c.carddemo.api.AuthControllerWebMvcTest  : No active profile set, falling back to 1 default profile: "default"
+2026-09-07T10:46:07.493Z  WARN 18032 --- [carddemo] [           main] .s.s.UserDetailsServiceAutoConfiguration : 
+
+Using generated security password: 951a66e7-de57-4092-87b7-a6f7f5c9e74b
+
+This generated password is for development use only. Your security configuration must be updated before running your application in production.
+
+2026-09-07T10:46:07.493Z  INFO 18032 --- [carddemo] [           main] r$InitializeUserDetailsManagerConfigurer : Global AuthenticationManager configured with UserDetailsService bean with name inMemoryUserDetailsManager
+2026-09-07T10:46:07.521Z  INFO 18032 --- [carddemo] [           main] o.s.b.t.m.w.SpringBootMockServletContext : Initializing Spring TestDispatcherServlet ''
+2026-09-07T10:46:07.521Z  INFO 18032 --- [carddemo] [           main] o.s.t.web.servlet.TestDispatcherServlet  : Initializing Servlet ''
+2026-09-07T10:46:07.521Z  INFO 18032 --- [carddemo] [           main] o.s.t.web.servlet.TestDispatcherServlet  : Completed initialization in 0 ms
+2026-09-07T10:46:07.523Z  INFO 18032 --- [carddemo] [           main] c.carddemo.api.AuthControllerWebMvcTest  : Started AuthControllerWebMvcTest in 0.128 seconds (process running for 8.397)
+[[1;34mINFO[m] [1;32mTests run: [0;1;32m11[m, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.180 s -- in com.carddemo.api.[1mAuthControllerWebMvcTest[m
+[[1;34mINFO[m] Running com.carddemo.api.[1mAuthControllerH2Test[m
+2026-09-07T10:46:07.566Z  INFO 18032 --- [carddemo] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.carddemo.api.AuthControllerH2Test]: AuthControllerH2Test does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-09-07T10:46:07.569Z  INFO 18032 --- [carddemo] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.carddemo.CardDemoApplication for test class com.carddemo.api.AuthControllerH2Test
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v3.4.5)
+
+2026-09-07T10:46:07.588Z  INFO 18032 --- [carddemo] [           main] com.carddemo.api.AuthControllerH2Test    : Starting AuthControllerH2Test using Java 21.0.12 with PID 18032 (started by ubuntu in /home/ubuntu/repos/ts-cobol-carddemo/backend)
+2026-09-07T10:46:07.588Z  INFO 18032 --- [carddemo] [           main] com.carddemo.api.AuthControllerH2Test    : The following 1 profile is active: "test"
+2026-09-07T10:46:07.649Z  INFO 18032 --- [carddemo] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-09-07T10:46:07.653Z  INFO 18032 --- [carddemo] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 3 ms. Found 4 JPA repository interfaces.
+2026-09-07T10:46:07.691Z  INFO 18032 --- [carddemo] [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-3 - Starting...
+2026-09-07T10:46:07.784Z  INFO 18032 --- [carddemo] [           main] com.zaxxer.hikari.pool.HikariPool        : HikariPool-3 - Added connection conn0: url=jdbc:h2:mem:carddemo user=SA
+2026-09-07T10:46:07.784Z  INFO 18032 --- [carddemo] [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-3 - Start completed.
+2026-09-07T10:46:07.800Z  INFO 18032 --- [carddemo] [           main] org.flywaydb.core.FlywayExecutor         : Database: jdbc:h2:mem:carddemo (H2 2.3)
+2026-09-07T10:46:07.802Z  WARN 18032 --- [carddemo] [           main] o.f.c.internal.database.base.Database    : Flyway upgrade recommended: H2 2.3.232 is newer than this version of Flyway and support has not been tested. The latest supported version of H2 is 2.2.224.
+2026-09-07T10:46:07.808Z  INFO 18032 --- [carddemo] [           main] o.f.c.i.s.JdbcTableSchemaHistory         : Schema history table "public"."flyway_schema_history" does not exist yet
+2026-09-07T10:46:07.808Z  INFO 18032 --- [carddemo] [           main] o.f.core.internal.command.DbValidate     : Successfully validated 2 migrations (execution time 00:00.003s)
+2026-09-07T10:46:07.811Z  INFO 18032 --- [carddemo] [           main] o.f.c.i.s.JdbcTableSchemaHistory         : Creating Schema History table "public"."flyway_schema_history" ...
+2026-09-07T10:46:07.821Z  INFO 18032 --- [carddemo] [           main] o.f.core.internal.command.DbMigrate      : Current version of schema "public": << Empty Schema >>
+2026-09-07T10:46:07.824Z  INFO 18032 --- [carddemo] [           main] o.f.core.internal.command.DbMigrate      : Migrating schema "public" to version "1 - account view schema"
+2026-09-07T10:46:07.830Z  INFO 18032 --- [carddemo] [           main] o.f.core.internal.command.DbMigrate      : Migrating schema "public" with repeatable migration "seed test data"
+2026-09-07T10:46:07.835Z  INFO 18032 --- [carddemo] [           main] o.f.core.internal.command.DbMigrate      : Successfully applied 2 migrations to schema "public", now at version v1 (execution time 00:00.004s)
+2026-09-07T10:46:07.848Z  INFO 18032 --- [carddemo] [           main] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2026-09-07T10:46:07.850Z  INFO 18032 --- [carddemo] [           main] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
+2026-09-07T10:46:07.854Z  INFO 18032 --- [carddemo] [           main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-09-07T10:46:07.857Z  INFO 18032 --- [carddemo] [           main] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-3)']
+	Database driver: undefined/unknown
+	Database version: 2.3.232
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-09-07T10:46:07.888Z  INFO 18032 --- [carddemo] [           main] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-09-07T10:46:07.889Z  INFO 18032 --- [carddemo] [           main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-09-07T10:46:07.923Z  WARN 18032 --- [carddemo] [           main] .s.s.UserDetailsServiceAutoConfiguration : 
+
+Using generated security password: a03eff37-b098-48b3-b9bf-00757b94b213
+
+This generated password is for development use only. Your security configuration must be updated before running your application in production.
+
+2026-09-07T10:46:07.924Z  INFO 18032 --- [carddemo] [           main] r$InitializeUserDetailsManagerConfigurer : Global AuthenticationManager configured with UserDetailsService bean with name inMemoryUserDetailsManager
+2026-09-07T10:46:07.980Z  INFO 18032 --- [carddemo] [           main] o.s.b.t.m.w.SpringBootMockServletContext : Initializing Spring TestDispatcherServlet ''
+2026-09-07T10:46:07.980Z  INFO 18032 --- [carddemo] [           main] o.s.t.web.servlet.TestDispatcherServlet  : Initializing Servlet ''
+2026-09-07T10:46:07.980Z  INFO 18032 --- [carddemo] [           main] o.s.t.web.servlet.TestDispatcherServlet  : Completed initialization in 0 ms
+2026-09-07T10:46:07.984Z  INFO 18032 --- [carddemo] [           main] com.carddemo.api.AuthControllerH2Test    : Started AuthControllerH2Test in 0.414 seconds (process running for 8.858)
+[[1;34mINFO[m] [1;32mTests run: [0;1;32m6[m, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.880 s -- in com.carddemo.api.[1mAuthControllerH2Test[m
+[[1;34mINFO[m] Running com.carddemo.api.[1mAccountControllerWebMvcTest[m
+2026-09-07T10:46:08.448Z  INFO 18032 --- [carddemo] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.carddemo.api.AccountControllerWebMvcTest]: AccountControllerWebMvcTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-09-07T10:46:08.452Z  INFO 18032 --- [carddemo] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.carddemo.CardDemoApplication for test class com.carddemo.api.AccountControllerWebMvcTest
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v3.4.5)
+
+2026-09-07T10:46:08.461Z  INFO 18032 --- [carddemo] [           main] c.c.api.AccountControllerWebMvcTest      : Starting AccountControllerWebMvcTest using Java 21.0.12 with PID 18032 (started by ubuntu in /home/ubuntu/repos/ts-cobol-carddemo/backend)
+2026-09-07T10:46:08.461Z  INFO 18032 --- [carddemo] [           main] c.c.api.AccountControllerWebMvcTest      : No active profile set, falling back to 1 default profile: "default"
+2026-09-07T10:46:08.550Z  WARN 18032 --- [carddemo] [           main] .s.s.UserDetailsServiceAutoConfiguration : 
+
+Using generated security password: fe57f708-abb0-40da-99a1-9de0922074a0
+
+This generated password is for development use only. Your security configuration must be updated before running your application in production.
+
+2026-09-07T10:46:08.550Z  INFO 18032 --- [carddemo] [           main] r$InitializeUserDetailsManagerConfigurer : Global AuthenticationManager configured with UserDetailsService bean with name inMemoryUserDetailsManager
+2026-09-07T10:46:08.575Z  INFO 18032 --- [carddemo] [           main] o.s.b.t.m.w.SpringBootMockServletContext : Initializing Spring TestDispatcherServlet ''
+2026-09-07T10:46:08.575Z  INFO 18032 --- [carddemo] [           main] o.s.t.web.servlet.TestDispatcherServlet  : Initializing Servlet ''
+2026-09-07T10:46:08.576Z  INFO 18032 --- [carddemo] [           main] o.s.t.web.servlet.TestDispatcherServlet  : Completed initialization in 1 ms
+2026-09-07T10:46:08.577Z  INFO 18032 --- [carddemo] [           main] c.c.api.AccountControllerWebMvcTest      : Started AccountControllerWebMvcTest in 0.123 seconds (process running for 9.451)
+[[1;34mINFO[m] [1;32mTests run: [0;1;32m12[m, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.175 s -- in com.carddemo.api.[1mAccountControllerWebMvcTest[m
+[[1;34mINFO[m] Running com.carddemo.api.[1mMenuControllerWebMvcTest[m
+2026-09-07T10:46:08.623Z  INFO 18032 --- [carddemo] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.carddemo.api.MenuControllerWebMvcTest]: MenuControllerWebMvcTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-09-07T10:46:08.627Z  INFO 18032 --- [carddemo] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.carddemo.CardDemoApplication for test class com.carddemo.api.MenuControllerWebMvcTest
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v3.4.5)
+
+2026-09-07T10:46:08.634Z  INFO 18032 --- [carddemo] [           main] c.carddemo.api.MenuControllerWebMvcTest  : Starting MenuControllerWebMvcTest using Java 21.0.12 with PID 18032 (started by ubuntu in /home/ubuntu/repos/ts-cobol-carddemo/backend)
+2026-09-07T10:46:08.635Z  INFO 18032 --- [carddemo] [           main] c.carddemo.api.MenuControllerWebMvcTest  : No active profile set, falling back to 1 default profile: "default"
+2026-09-07T10:46:08.716Z  WARN 18032 --- [carddemo] [           main] .s.s.UserDetailsServiceAutoConfiguration : 
+
+Using generated security password: aa2b9801-6fa9-4ed0-9c5e-9f6c05711288
+
+This generated password is for development use only. Your security configuration must be updated before running your application in production.
+
+2026-09-07T10:46:08.717Z  INFO 18032 --- [carddemo] [           main] r$InitializeUserDetailsManagerConfigurer : Global AuthenticationManager configured with UserDetailsService bean with name inMemoryUserDetailsManager
+2026-09-07T10:46:08.741Z  INFO 18032 --- [carddemo] [           main] o.s.b.t.m.w.SpringBootMockServletContext : Initializing Spring TestDispatcherServlet ''
+2026-09-07T10:46:08.741Z  INFO 18032 --- [carddemo] [           main] o.s.t.web.servlet.TestDispatcherServlet  : Initializing Servlet ''
+2026-09-07T10:46:08.741Z  INFO 18032 --- [carddemo] [           main] o.s.t.web.servlet.TestDispatcherServlet  : Completed initialization in 0 ms
+2026-09-07T10:46:08.743Z  INFO 18032 --- [carddemo] [           main] c.carddemo.api.MenuControllerWebMvcTest  : Started MenuControllerWebMvcTest in 0.115 seconds (process running for 9.616)
+[[1;34mINFO[m] [1;32mTests run: [0;1;32m8[m, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.149 s -- in com.carddemo.api.[1mMenuControllerWebMvcTest[m
+[[1;34mINFO[m] Running com.carddemo.[1mH2UnitProfileContextTest[m
+2026-09-07T10:46:08.773Z  INFO 18032 --- [carddemo] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.carddemo.H2UnitProfileContextTest]: H2UnitProfileContextTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-09-07T10:46:08.777Z  INFO 18032 --- [carddemo] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.carddemo.CardDemoApplication for test class com.carddemo.H2UnitProfileContextTest
+[[1;34mINFO[m] [1;32mTests run: [0;1;32m3[m, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.160 s -- in com.carddemo.[1mH2UnitProfileContextTest[m
+[[1;34mINFO[m] 
+[[1;34mINFO[m] Results:
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1;32mTests run: 184, Failures: 0, Errors: 0, Skipped: 0[m
+[[1;34mINFO[m] 
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m--- [0;32mmaven-jar-plugin:3.4.2:jar[m [1m(default-jar)[m @ [36mcarddemo-backend[0;1m ---[m
+[[1;34mINFO[m] Building jar: /home/ubuntu/repos/ts-cobol-carddemo/backend/target/carddemo-backend-0.1.0-SNAPSHOT.jar
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m--- [0;32mspring-boot-maven-plugin:3.4.5:repackage[m [1m(repackage)[m @ [36mcarddemo-backend[0;1m ---[m
+[[1;34mINFO[m] Replacing main artifact /home/ubuntu/repos/ts-cobol-carddemo/backend/target/carddemo-backend-0.1.0-SNAPSHOT.jar with repackaged archive, adding nested dependencies in BOOT-INF/.
+[[1;34mINFO[m] The original artifact has been renamed to /home/ubuntu/repos/ts-cobol-carddemo/backend/target/carddemo-backend-0.1.0-SNAPSHOT.jar.original
+[[1;34mINFO[m] [1m------------------------------------------------------------------------[m
+[[1;34mINFO[m] [1;32mBUILD SUCCESS[m
+[[1;34mINFO[m] [1m------------------------------------------------------------------------[m
+[[1;34mINFO[m] Total time:  12.008 s
+[[1;34mINFO[m] Finished at: 2026-09-07T10:46:09Z
+[[1;34mINFO[m] [1m------------------------------------------------------------------------[m
+EXIT 0
