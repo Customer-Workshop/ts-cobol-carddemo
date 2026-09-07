@@ -1,0 +1,4 @@
+ Port 4200 is already in use.
+Would you like to use a different port? (Y/n)[47G
+[?25hAn unhandled exception occurred: Port 4200 is already in use. Use '--port' to specify a different port.
+See "/tmp/ng-d1gbxt/angular-errors.log" for further details.

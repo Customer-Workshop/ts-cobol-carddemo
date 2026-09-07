@@ -410,3 +410,8 @@ Caused by: org.postgresql.util.PSQLException: ERROR: relation "users" does not e
 	at org.hibernate.sql.results.jdbc.internal.DeferredResultSetAccess.executeQuery(DeferredResultSetAccess.java:250) ~[hibernate-core-6.6.13.Final.jar:6.6.13.Final]
 	... 164 common frames omitted
 
+2026-09-07T08:23:07.430Z  INFO 8740 --- [carddemo] [ionShutdownHook] o.s.b.w.e.tomcat.GracefulShutdown        : Commencing graceful shutdown. Waiting for active requests to complete
+2026-09-07T08:23:07.432Z  INFO 8740 --- [carddemo] [tomcat-shutdown] o.s.b.w.e.tomcat.GracefulShutdown        : Graceful shutdown complete
+2026-09-07T08:23:07.435Z  INFO 8740 --- [carddemo] [ionShutdownHook] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2026-09-07T08:23:07.436Z  INFO 8740 --- [carddemo] [ionShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2026-09-07T08:23:07.438Z  INFO 8740 --- [carddemo] [ionShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.

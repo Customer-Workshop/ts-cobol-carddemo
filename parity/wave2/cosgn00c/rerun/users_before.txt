@@ -1,0 +1,14 @@
+ sec_usr_id | sec_usr_type | sec_usr_pwd_hash | has_legacy 
+------------+--------------+------------------+------------
+ ADMIN001   | A            |                  | t
+ ADMIN002   | A            |                  | t
+ ADMIN003   | A            |                  | t
+ ADMIN004   | A            |                  | t
+ ADMIN005   | A            |                  | t
+ USER0001   | U            |                  | t
+ USER0002   | U            |                  | t
+ USER0003   | U            |                  | t
+ USER0004   | U            |                  | t
+ USER0005   | U            |                  | t
+(10 rows)
+

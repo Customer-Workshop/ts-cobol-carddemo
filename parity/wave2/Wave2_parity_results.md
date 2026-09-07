@@ -197,7 +197,7 @@ Endpoints: `/api/auth/header`, `/signon`, `/session`, `/signoff` — all listed 
 ## 10. Evidence index
 
 ```
-parity/wave2/COSGN00C_parity_results.md          this document
+parity/wave2/Wave2_parity_results.md          this document
 parity/wave2/cosgn00c/cases.md                    source-derived case table (written before reading Java/Angular)
 parity/wave2/cosgn00c/REPRODUCE.md                reproduction steps + fixture ids
 parity/wave2/cosgn00c/run_http_cases.sh           HTTP harness script (curl + psql)
@@ -210,4 +210,58 @@ parity/wave2/cosgn00c/probe_static_container.log  D-4 probe run; ProbeSecondSubc
 parity/wave2/cosgn00c/ui/ui_report.md, *.png, cosgn00c_parity.webp   browser pass + recording
 parity/wave2/conformance/skill_checks.txt, backend_mvn_verify.log, frontend_build_test.log, frontend_npm_ci.log
 ```
-Branch `devin/1788757216-w2-parity` (parity artifacts only) on top of `01a7138210c1b9114961b8992a517c058f5f4ed2`.
+Branch `devin/1788757216-w2-parity` (parity artifacts only) on top of `01a7138210c1b9114961b8992a517c058f5f4ed2`; see §11 for the re-run on `60413a0`.
+
+---
+
+## 11. Re-run on PR #96 head `60413a0dd982878e24f06e844535c5e477485d6a`
+
+Requested after the fix commit ("E-13 on datastore unreachable, E-06 cursor on PASSWD, singleton PG test container, headless import profile"). Parity branch merged the new head (merge commit on `devin/1788757216-w2-parity`; only `parity/wave2/**` differs from `60413a0`). The oracle (`cosgn00c/cases.md`) is unchanged; **all 20 cases were re-executed**, not only the two failures. The fix diff (`git diff 01a7138 60413a0`) was read only after re-execution, to confirm the mechanism of each flip.
+
+### 11.1 Verdict table (re-run)
+
+| Unit | Before (01a7138) | Re-run (60413a0) | Confidence |
+|---|---|---|---|
+| Sign-on logic via HTTP (P-01..P-09, P-11..P-20) | PASS | PASS — byte-identical to first run after timestamp/hash/path normalisation (`diff` shows a single changed line: P-10) | HIGH |
+| E-13 `WHEN OTHER` (P-10 PG stopped; P-10c SQL failure) | FAIL (P-10 returned `An unexpected error occurred`) | **PASS** — P-10 now `{"message":"Unable to verify the User ...","status":500}`; P-10c still E-13; P-10b recovery 200 | HIGH |
+| UI `/signon` vs BMS `COSGN0A` (11 browser checks) | FAIL (E-06 focus on User ID) | **PASS** — E-06 now `document.activeElement.id === "password"` (`COSGN00C.cbl:244`); all other 10 checks unchanged PASS | HIGH |
+| BCrypt upgrade-on-login on real PG 16.15 (P-13, P-13b, P-13c) | PASS | PASS (fresh fixture re-imported before the run) | HIGH |
+| HTTP surface: JSON 401, cookie, signoff, session replacement (P-15*) | PASS | PASS | HIGH |
+| Admin → `/menu` (Q-01), `landingTarget` naming | PASS-WITH-RISK | PASS-WITH-RISK (approved deviation, unchanged) | HIGH |
+| D-3 documented headless import command | DEFECT | **FIXED** — `--spring.main.web-application-type=none` against a throwaway `postgres:16` on :5434 exits 0, `Import complete: … users=10`; repeated on `carddemo-pg` to reset the fixture | HIGH |
+| D-4 `PostgresIntegrationTest` static-container lifecycle | DEFECT (probe: 6 errors) | **FIXED** — whole suite in one JVM (`mvn clean verify -DforkCount=1 -Dsurefire.reuseForks=true`): 80/80, 1 × `Container postgres:16 started`, both subclasses (`AuthUpgradeOnLoginIntegrationTest` 5/5, then `AccountViewRepositoriesIntegrationTest` 6/6 in 0.108 s on the cached context) green. The suite itself now has two subclasses, so the temporary probe is no longer needed | HIGH |
+| Conformance skill | 0 failing lines | 0 failing lines; `mvn clean verify` 80/80; `npm run build` OK; karma 30/30 | HIGH |
+
+**Overall (re-run): PASS** for the COSGN00C sign-on function (PASS-WITH-RISK only on the approved Q-01 admin routing). Counts: 20 derived / 20 run / 19 PASS / 0 FAIL / 1 PASS-WITH-RISK. Untested sub-assertions unchanged from §9 (SPA 401 redirect — no protected page in wave 2; F5).
+
+### 11.2 Observations on the fix (not failures)
+
+- `AuthService.signOn` dropped `@Transactional` so a `TransactionException` from an unreachable datastore is caught inside the method. `findById` and the upgrade `save` therefore run in separate transactions; observable behaviour (P-13/P-13c) is unchanged. No parity impact; noted for the migration team.
+- `AuthController` is now `@ConditionalOnWebApplication(SERVLET)`; `PasswordEncoder` moved to `PasswordEncoderConfig` (unconditional). This is what makes the headless import work; `/api/auth/*` behaviour is unchanged (P-01, P-15*).
+- New test added by the fix (`AuthServiceTest`, +1 → 80) was not weakened; existing tests untouched (verified in the diff).
+
+### 11.3 PostgreSQL evidence (re-run, fresh import)
+
+```
+P-13b USER0002 WRONGPWD  -> 401 "Wrong Password. Try again ..."   ROW after : USER0002|U|<null>|<null>|8   (no upgrade)
+P-13  USER0004 before    : USER0004|U|<null>|<null>|8
+      1st sign-on 200    : USER0004|U|{bcrypt}$2a$|68|<null>
+      2nd sign-on 200    : USER0004|U|{bcrypt}$2a$|68|<null>
+P-13c USER0004 BADPASS1  -> 401 "Wrong Password. Try again ..."   ROW after : USER0004|U|{bcrypt}$2a$|68|<null>
+P-10  carddemo-pg stopped -> 500 {"message":"Unable to verify the User ..."}   P-10b after restart -> 200
+```
+Full before/after tables: `cosgn00c/rerun/users_before.txt`, `cosgn00c/rerun/users_after.txt`.
+
+### 11.4 Evidence index (re-run)
+
+```
+parity/wave2/cosgn00c/rerun/http_cases.out, http_case_p10c.out, http/*.body, http/jar_*.txt
+parity/wave2/cosgn00c/rerun/users_before.txt, users_after.txt
+parity/wave2/cosgn00c/rerun/import_headless_throwaway.log      D-3 re-check, throwaway postgres:16 on :5434
+parity/wave2/cosgn00c/rerun/import_headless_carddemo-pg.log    same command, fixture reset on carddemo-pg
+parity/wave2/cosgn00c/rerun/backend_mvn_verify.log             D-4 re-check, whole suite one JVM, 80/80
+parity/wave2/cosgn00c/rerun/backend_run.log, frontend_serve.log
+parity/wave2/cosgn00c/rerun/ui/ui_report.md, *.png, cosgn00c_rerun.webp   browser re-run (06_wrong_password_focus_fixed.png)
+parity/wave2/conformance/run_skill_checks.sh, rerun/skill_checks.txt, rerun/frontend_build_test.log
+```
+Re-run performed on parity branch merge commit of `60413a0dd982878e24f06e844535c5e477485d6a`; head SHA of the branch recorded in the commit message.

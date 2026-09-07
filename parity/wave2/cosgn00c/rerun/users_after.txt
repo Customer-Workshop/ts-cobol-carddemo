@@ -1,0 +1,14 @@
+ sec_usr_id | sec_usr_type | hash_prefix  | hash_len | has_legacy 
+------------+--------------+--------------+----------+------------
+ ADMIN001   | A            | {bcrypt}$2a$ | 68       | f
+ ADMIN002   | A            | {bcrypt}$2a$ | 68       | f
+ ADMIN003   | A            | <null>       | <null>   | t
+ ADMIN004   | A            | <null>       | <null>   | t
+ ADMIN005   | A            | <null>       | <null>   | t
+ USER0001   | U            | {bcrypt}$2a$ | 68       | f
+ USER0002   | U            | {bcrypt}$2a$ | 68       | f
+ USER0003   | U            | {bcrypt}$2a$ | 68       | f
+ USER0004   | U            | {bcrypt}$2a$ | 68       | f
+ USER0005   | U            | {bcrypt}$2a$ | 68       | f
+(10 rows)
+

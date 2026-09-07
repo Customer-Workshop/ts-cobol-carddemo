@@ -1,0 +1,24 @@
+PASS  java 21
+PASS  boot parent
+PASS  boot 3.x
+PASS  no lombok/mapstruct/modelmapper
+PASS  no float/double in main
+PASS  no @Autowired field injection
+PASS  DTOs are records
+INFO  legacy diff vs origin/main: 0 files
+INFO  endpoints:
+@GetMapping("/header"
+@GetMapping("/session"
+@PostMapping("/signoff"
+@PostMapping("/signon"
+INFO  README table rows: 4
+PASS  no standalone:false
+PASS  no ngrx
+PASS  material present
+PASS  withCredentials true
+PASS  ddl-auto=validate
+PASS  no h2 in main props
+PASS  jdbc:postgresql in main props
+PASS  BigDecimal precision
+PASS  CommandLineRunner only under import profile
+PASS  no @Transactional on controllers

@@ -4,7 +4,7 @@
 # Fixture: wave-1 `import` profile (10 USRSEC rows, legacy password PASSWORD). No implementation is modified.
 set -u
 BASE="${BASE:-http://localhost:8080}"
-OUT_DIR="$(cd "$(dirname "$0")" && pwd)/http"
+OUT_DIR="${OUT_DIR:-$(cd "$(dirname "$0")" && pwd)/http}"
 mkdir -p "$OUT_DIR"
 PSQL="docker exec carddemo-pg psql -U carddemo -d carddemo"
 

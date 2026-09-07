@@ -12,3 +12,15 @@ Application bundle generation complete. [1.786 seconds]
 Watch mode enabled. Watching for file changes...
 NOTE: Raw file sizes do not reflect development server per-request transformations.
   ➜  Local:   http://localhost:4200/
+❯ Changes detected. Rebuilding...
+✔ Changes detected. Rebuilding...
+Initial chunk files | Names | Raw size
+main.js             | main  | 24.95 kB | 
+
+Application bundle generation complete. [0.230 seconds]
+
+Page reload sent to client(s).
+8:23:13 AM [vite] http proxy error: /api/auth/header
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1122:18)
+    at afterConnectMultiple (node:net:1689:7)

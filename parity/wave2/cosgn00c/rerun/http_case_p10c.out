@@ -1,0 +1,7 @@
+ALTER TABLE
+{"message":"Unable to verify the User ...","status":500,"timestamp":"2026-09-07T08:26:04.403202209Z"}
+STATUS 500
+ALTER TABLE
+=== recovery
+{"userId":"USER0001","userType":"U","landingTarget":"/menu"}
+STATUS 200
