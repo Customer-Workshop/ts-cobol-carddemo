@@ -1,0 +1,330 @@
+run at 2026-09-07T09:10:00Z  BASE=http://localhost:8080
+postgres: PostgreSQL 16.15 (Debian 16.15-1.pgdg13+2) on x86_64-pc-linux-gnu, compiled by gcc (Debian 14.2.0-19) 14.2.0, 64-bit
+
+=================== M-12 unauthenticated GET /api/menu and POST /api/menu/select (EIBCALEN=0 refusal, cbl:82-84) ===================
+REQUEST  GET /api/menu  body=<none>  cookies=none
+STATUS   401
+BODY     {"message":"Authentication required","status":401,"timestamp":"2026-09-07T09:10:00.453624767Z"}
+REQUEST  POST /api/menu/select  body={"option":"1"}  cookies=none
+STATUS   401
+BODY     {"message":"Authentication required","status":401,"timestamp":"2026-09-07T09:10:00.460427909Z"}
+REQUEST  GET /api/menu  body=<none>  cookies=none
+STATUS   401
+BODY     {"message":"Authentication required","status":401,"timestamp":"2026-09-07T09:10:00.466237946Z"}
+
+=================== sign on USER0001 (type U) and ADMIN001 (type A) - COSGN00C, outside this program's scope; only to get sessions ===================
+REQUEST  POST /api/auth/signon  body={"userId":"USER0001","password":"PASSWORD"}  cookies=yes/home/ubuntu/repos/ts-cobol-carddemo/parity/wave3/comen01c/http/jar_user.txt
+STATUS   200
+BODY     {"userId":"USER0001","userType":"U","landingTarget":"/menu"}
+REQUEST  POST /api/auth/signon  body={"userId":"ADMIN001","password":"PASSWORD"}  cookies=yes/home/ubuntu/repos/ts-cobol-carddemo/parity/wave3/comen01c/http/jar_admin.txt
+STATUS   200
+BODY     {"userId":"ADMIN001","userType":"A","landingTarget":"/menu"}
+
+=================== M-01 GET /api/menu as U (initial SEND MAP, cbl:85-92, 208-303) ===================
+REQUEST  GET /api/menu  body=<none>  cookies=yes/home/ubuntu/repos/ts-cobol-carddemo/parity/wave3/comen01c/http/jar_user.txt
+STATUS   200
+BODY     {"header":{"tranId":"CM00","programName":"COMEN01C","title01":"AWS Mainframe Modernization","title02":"CardDemo","currentDate":"09/07/26","currentTime":"09:10:00","applId":"CARDDEMO","sysId":"CICS"},"options":[{"number":1,"name":"Account View","program":"COACTVWC","endpoint":"/api/accounts/{acctId}","route":"/accounts/view","implemented":true,"userType":"U"},{"number":2,"name":"Account Update","program":"COACTUPC","endpoint":null,"route":null,"implemented":false,"userType":"U"},{"number":3,"name":"Credit Card List","program":"COCRDLIC","endpoint":null,"route":null,"implemented":false,"userType":"U"},{"number":4,"name":"Credit Card View","program":"COCRDSLC","endpoint":null,"route":null,"implemented":false,"userType":"U"},{"number":5,"name":"Credit Card Update","program":"COCRDUPC","endpoint":null,"route":null,"implemented":false,"userType":"U"},{"number":6,"name":"Transaction List","program":"COTRN00C","endpoint":null,"route":null,"implemented":false,"userType":"U"},{"number":7,"name":"Transaction View","program":"COTRN01C","endpoint":null,"route":null,"implemented":false,"userType":"U"},{"number":8,"name":"Transaction Add","program":"COTRN02C","endpoint":null,"route":null,"implemented":false,"userType":"U"},{"number":9,"name":"Transaction Reports","program":"CORPT00C","endpoint":null,"route":null,"implemented":false,"userType":"U"},{"number":10,"name":"Bill Payment","program":"COBIL00C","endpoint":null,"route":null,"implemented":false,"userType":"U"},{"number":11,"name":"Pending Authorization View","program":"COPAUS0C","endpoint":null,"route":null,"implemented":false,"userType":"U"}]}
+HEADER   {"tranId": "CM00", "programName": "COMEN01C", "title01": "AWS Mainframe Modernization", "title02": "CardDemo", "currentDate": "09/07/26", "currentTime": "09:10:00", "applId": "CARDDEMO", "sysId": "CICS"}
+LABELS   ['01. Account View', '02. Account Update', '03. Credit Card List', '04. Credit Card View', '05. Credit Card Update', '06. Transaction List', '07. Transaction View', '08. Transaction Add', '09. Transaction Reports', '10. Bill Payment', '11. Pending Authorization View']
+ROWS     11
+
+=================== M-02 route table vs COMEN02Y.cpy:25-90 (number|name|program|userType|implemented) ===================
+ROW PASS (1, 'Account View', 'COACTVWC', 'U') (1, 'Account View', 'COACTVWC', 'U')
+ROW PASS (2, 'Account Update', 'COACTUPC', 'U') (2, 'Account Update', 'COACTUPC', 'U')
+ROW PASS (3, 'Credit Card List', 'COCRDLIC', 'U') (3, 'Credit Card List', 'COCRDLIC', 'U')
+ROW PASS (4, 'Credit Card View', 'COCRDSLC', 'U') (4, 'Credit Card View', 'COCRDSLC', 'U')
+ROW PASS (5, 'Credit Card Update', 'COCRDUPC', 'U') (5, 'Credit Card Update', 'COCRDUPC', 'U')
+ROW PASS (6, 'Transaction List', 'COTRN00C', 'U') (6, 'Transaction List', 'COTRN00C', 'U')
+ROW PASS (7, 'Transaction View', 'COTRN01C', 'U') (7, 'Transaction View', 'COTRN01C', 'U')
+ROW PASS (8, 'Transaction Add', 'COTRN02C', 'U') (8, 'Transaction Add', 'COTRN02C', 'U')
+ROW PASS (9, 'Transaction Reports', 'CORPT00C', 'U') (9, 'Transaction Reports', 'CORPT00C', 'U')
+ROW PASS (10, 'Bill Payment', 'COBIL00C', 'U') (10, 'Bill Payment', 'COBIL00C', 'U')
+ROW PASS (11, 'Pending Authorization View', 'COPAUS0C', 'U') (11, 'Pending Authorization View', 'COPAUS0C', 'U')
+COUNT PASS 11
+ORDER PASS
+IMPLEMENTED rows: [1] PASS
+ROW1 endpoint/route: /api/accounts/{acctId} /accounts/view
+
+=================== M-03 blank option -> E-08, echo 00 (cbl:117-133) ===================
+REQUEST  POST /api/menu/select  body={"option":""}  cookies=yes/home/ubuntu/repos/ts-cobol-carddemo/parity/wave3/comen01c/http/jar_user.txt
+STATUS   400
+BODY     {"message":"Please enter a valid option number...","status":400,"timestamp":"2026-09-07T09:10:00.660958086Z","option":"00"}
+EXPECT   status=400 echo=00 message=Please enter a valid option number...
+VERDICT  PASS
+REQUEST  POST /api/menu/select  body={"option":"  "}  cookies=yes/home/ubuntu/repos/ts-cobol-carddemo/parity/wave3/comen01c/http/jar_user.txt
+STATUS   400
+BODY     {"message":"Please enter a valid option number...","status":400,"timestamp":"2026-09-07T09:10:00.699210207Z","option":"00"}
+EXPECT   status=400 echo=00 message=Please enter a valid option number...
+VERDICT  PASS
+REQUEST  POST /api/menu/select  body={}  cookies=yes/home/ubuntu/repos/ts-cobol-carddemo/parity/wave3/comen01c/http/jar_user.txt
+STATUS   400
+BODY     {"message":"Please enter a valid option number...","status":400,"timestamp":"2026-09-07T09:10:00.735974739Z","option":"00"}
+EXPECT   status=400 echo=00 message=Please enter a valid option number...
+VERDICT  PASS
+REQUEST  POST /api/menu/select  body={"option":null}  cookies=yes/home/ubuntu/repos/ts-cobol-carddemo/parity/wave3/comen01c/http/jar_user.txt
+STATUS   400
+BODY     {"message":"Please enter a valid option number...","status":400,"timestamp":"2026-09-07T09:10:00.772615740Z","option":"00"}
+EXPECT   status=400 echo=00 message=Please enter a valid option number...
+VERDICT  PASS
+
+=================== M-04 invalid options -> E-08 with normalised echo ===================
+REQUEST  POST /api/menu/select  body={"option":"0"}  cookies=yes/home/ubuntu/repos/ts-cobol-carddemo/parity/wave3/comen01c/http/jar_user.txt
+STATUS   400
+BODY     {"message":"Please enter a valid option number...","status":400,"timestamp":"2026-09-07T09:10:00.809323507Z","option":"00"}
+EXPECT   status=400 echo=00 message=Please enter a valid option number...
+VERDICT  PASS
+REQUEST  POST /api/menu/select  body={"option":"00"}  cookies=yes/home/ubuntu/repos/ts-cobol-carddemo/parity/wave3/comen01c/http/jar_user.txt
+STATUS   400
+BODY     {"message":"Please enter a valid option number...","status":400,"timestamp":"2026-09-07T09:10:00.846868502Z","option":"00"}
+EXPECT   status=400 echo=00 message=Please enter a valid option number...
+VERDICT  PASS
+REQUEST  POST /api/menu/select  body={"option":"A"}  cookies=yes/home/ubuntu/repos/ts-cobol-carddemo/parity/wave3/comen01c/http/jar_user.txt
+STATUS   400
+BODY     {"message":"Please enter a valid option number...","status":400,"timestamp":"2026-09-07T09:10:00.883133290Z","option":"0A"}
+EXPECT   status=400 echo=0A message=Please enter a valid option number...
+VERDICT  PASS
+REQUEST  POST /api/menu/select  body={"option":"1A"}  cookies=yes/home/ubuntu/repos/ts-cobol-carddemo/parity/wave3/comen01c/http/jar_user.txt
+STATUS   400
+BODY     {"message":"Please enter a valid option number...","status":400,"timestamp":"2026-09-07T09:10:00.921104340Z","option":"1A"}
+EXPECT   status=400 echo=1A message=Please enter a valid option number...
+VERDICT  PASS
+REQUEST  POST /api/menu/select  body={"option":"A1"}  cookies=yes/home/ubuntu/repos/ts-cobol-carddemo/parity/wave3/comen01c/http/jar_user.txt
+STATUS   400
+BODY     {"message":"Please enter a valid option number...","status":400,"timestamp":"2026-09-07T09:10:00.957965873Z","option":"A1"}
+EXPECT   status=400 echo=A1 message=Please enter a valid option number...
+VERDICT  PASS
+REQUEST  POST /api/menu/select  body={"option":"?"}  cookies=yes/home/ubuntu/repos/ts-cobol-carddemo/parity/wave3/comen01c/http/jar_user.txt
+STATUS   400
+BODY     {"message":"Please enter a valid option number...","status":400,"timestamp":"2026-09-07T09:10:00.993910632Z","option":"0?"}
+EXPECT   status=400 echo=0? message=Please enter a valid option number...
+VERDICT  PASS
+REQUEST  POST /api/menu/select  body={"option":" A"}  cookies=yes/home/ubuntu/repos/ts-cobol-carddemo/parity/wave3/comen01c/http/jar_user.txt
+STATUS   400
+BODY     {"message":"Please enter a valid option number...","status":400,"timestamp":"2026-09-07T09:10:01.030128583Z","option":"0A"}
+EXPECT   status=400 echo=0A message=Please enter a valid option number...
+VERDICT  PASS
+REQUEST  POST /api/menu/select  body={"option":" 0"}  cookies=yes/home/ubuntu/repos/ts-cobol-carddemo/parity/wave3/comen01c/http/jar_user.txt
+STATUS   400
+BODY     {"message":"Please enter a valid option number...","status":400,"timestamp":"2026-09-07T09:10:01.067242201Z","option":"00"}
+EXPECT   status=400 echo=00 message=Please enter a valid option number...
+VERDICT  PASS
+REQUEST  POST /api/menu/select  body={"option":"a"}  cookies=yes/home/ubuntu/repos/ts-cobol-carddemo/parity/wave3/comen01c/http/jar_user.txt
+STATUS   400
+BODY     {"message":"Please enter a valid option number...","status":400,"timestamp":"2026-09-07T09:10:01.105824962Z","option":"0a"}
+EXPECT   status=400 echo=0a message=Please enter a valid option number...
+VERDICT  PASS
+
+=================== M-05 out-of-range 12..99 -> E-08 echo as typed, never 500 (ruling item 3; cbl:127-137) ===================
+REQUEST  POST /api/menu/select  body={"option":"12"}  cookies=yes/home/ubuntu/repos/ts-cobol-carddemo/parity/wave3/comen01c/http/jar_user.txt
+STATUS   400
+BODY     {"message":"Please enter a valid option number...","status":400,"timestamp":"2026-09-07T09:10:01.142302994Z","option":"12"}
+EXPECT   status=400 echo=12 message=Please enter a valid option number...
+VERDICT  PASS
+REQUEST  POST /api/menu/select  body={"option":"13"}  cookies=yes/home/ubuntu/repos/ts-cobol-carddemo/parity/wave3/comen01c/http/jar_user.txt
+STATUS   400
+BODY     {"message":"Please enter a valid option number...","status":400,"timestamp":"2026-09-07T09:10:01.182216173Z","option":"13"}
+EXPECT   status=400 echo=13 message=Please enter a valid option number...
+VERDICT  PASS
+REQUEST  POST /api/menu/select  body={"option":"99"}  cookies=yes/home/ubuntu/repos/ts-cobol-carddemo/parity/wave3/comen01c/http/jar_user.txt
+STATUS   400
+BODY     {"message":"Please enter a valid option number...","status":400,"timestamp":"2026-09-07T09:10:01.218235551Z","option":"99"}
+EXPECT   status=400 echo=99 message=Please enter a valid option number...
+VERDICT  PASS
+
+=================== M-06 option 1 variants -> dispatch COACTVWC (cbl:117-125, 177-187; tbl:25-29) ===================
+REQUEST  POST /api/menu/select  body={"option":"1"}  cookies=yes/home/ubuntu/repos/ts-cobol-carddemo/parity/wave3/comen01c/http/jar_user.txt
+STATUS   200
+BODY     {"option":"01","program":"COACTVWC","endpoint":"/api/accounts/{acctId}","route":"/accounts/view","implemented":true,"message":null}
+EXPECT   status=200 echo=01 message=-
+VERDICT  PASS
+DISPATCH PASS {'option': '01', 'program': 'COACTVWC', 'endpoint': '/api/accounts/{acctId}', 'route': '/accounts/view', 'implemented': True, 'message': None}
+REQUEST  POST /api/menu/select  body={"option":" 1"}  cookies=yes/home/ubuntu/repos/ts-cobol-carddemo/parity/wave3/comen01c/http/jar_user.txt
+STATUS   200
+BODY     {"option":"01","program":"COACTVWC","endpoint":"/api/accounts/{acctId}","route":"/accounts/view","implemented":true,"message":null}
+EXPECT   status=200 echo=01 message=-
+VERDICT  PASS
+DISPATCH PASS {'option': '01', 'program': 'COACTVWC', 'endpoint': '/api/accounts/{acctId}', 'route': '/accounts/view', 'implemented': True, 'message': None}
+REQUEST  POST /api/menu/select  body={"option":"01"}  cookies=yes/home/ubuntu/repos/ts-cobol-carddemo/parity/wave3/comen01c/http/jar_user.txt
+STATUS   200
+BODY     {"option":"01","program":"COACTVWC","endpoint":"/api/accounts/{acctId}","route":"/accounts/view","implemented":true,"message":null}
+EXPECT   status=200 echo=01 message=-
+VERDICT  PASS
+DISPATCH PASS {'option': '01', 'program': 'COACTVWC', 'endpoint': '/api/accounts/{acctId}', 'route': '/accounts/view', 'implemented': True, 'message': None}
+REQUEST  POST /api/menu/select  body={"option":"1 "}  cookies=yes/home/ubuntu/repos/ts-cobol-carddemo/parity/wave3/comen01c/http/jar_user.txt
+STATUS   200
+BODY     {"option":"01","program":"COACTVWC","endpoint":"/api/accounts/{acctId}","route":"/accounts/view","implemented":true,"message":null}
+EXPECT   status=200 echo=01 message=-
+VERDICT  PASS
+DISPATCH PASS {'option': '01', 'program': 'COACTVWC', 'endpoint': '/api/accounts/{acctId}', 'route': '/accounts/view', 'implemented': True, 'message': None}
+
+=================== M-07 options 2..11 -> Q-12 facade (implemented=false, NEW TEXT), program = table row ===================
+REQUEST  POST /api/menu/select  body={"option":"2"}  cookies=yes/home/ubuntu/repos/ts-cobol-carddemo/parity/wave3/comen01c/http/jar_user.txt
+STATUS   200
+BODY     {"option":"02","program":"COACTUPC","endpoint":null,"route":null,"implemented":false,"message":"Option not available in this release"}
+EXPECT   status=200 echo=02 message=Option not available in this release
+VERDICT  PASS
+FACADE PASS {'option': '02', 'program': 'COACTUPC', 'endpoint': None, 'route': None, 'implemented': False, 'message': 'Option not available in this release'}
+REQUEST  POST /api/menu/select  body={"option":"3"}  cookies=yes/home/ubuntu/repos/ts-cobol-carddemo/parity/wave3/comen01c/http/jar_user.txt
+STATUS   200
+BODY     {"option":"03","program":"COCRDLIC","endpoint":null,"route":null,"implemented":false,"message":"Option not available in this release"}
+EXPECT   status=200 echo=03 message=Option not available in this release
+VERDICT  PASS
+FACADE PASS {'option': '03', 'program': 'COCRDLIC', 'endpoint': None, 'route': None, 'implemented': False, 'message': 'Option not available in this release'}
+REQUEST  POST /api/menu/select  body={"option":"4"}  cookies=yes/home/ubuntu/repos/ts-cobol-carddemo/parity/wave3/comen01c/http/jar_user.txt
+STATUS   200
+BODY     {"option":"04","program":"COCRDSLC","endpoint":null,"route":null,"implemented":false,"message":"Option not available in this release"}
+EXPECT   status=200 echo=04 message=Option not available in this release
+VERDICT  PASS
+FACADE PASS {'option': '04', 'program': 'COCRDSLC', 'endpoint': None, 'route': None, 'implemented': False, 'message': 'Option not available in this release'}
+REQUEST  POST /api/menu/select  body={"option":"5"}  cookies=yes/home/ubuntu/repos/ts-cobol-carddemo/parity/wave3/comen01c/http/jar_user.txt
+STATUS   200
+BODY     {"option":"05","program":"COCRDUPC","endpoint":null,"route":null,"implemented":false,"message":"Option not available in this release"}
+EXPECT   status=200 echo=05 message=Option not available in this release
+VERDICT  PASS
+FACADE PASS {'option': '05', 'program': 'COCRDUPC', 'endpoint': None, 'route': None, 'implemented': False, 'message': 'Option not available in this release'}
+REQUEST  POST /api/menu/select  body={"option":"6"}  cookies=yes/home/ubuntu/repos/ts-cobol-carddemo/parity/wave3/comen01c/http/jar_user.txt
+STATUS   200
+BODY     {"option":"06","program":"COTRN00C","endpoint":null,"route":null,"implemented":false,"message":"Option not available in this release"}
+EXPECT   status=200 echo=06 message=Option not available in this release
+VERDICT  PASS
+FACADE PASS {'option': '06', 'program': 'COTRN00C', 'endpoint': None, 'route': None, 'implemented': False, 'message': 'Option not available in this release'}
+REQUEST  POST /api/menu/select  body={"option":"7"}  cookies=yes/home/ubuntu/repos/ts-cobol-carddemo/parity/wave3/comen01c/http/jar_user.txt
+STATUS   200
+BODY     {"option":"07","program":"COTRN01C","endpoint":null,"route":null,"implemented":false,"message":"Option not available in this release"}
+EXPECT   status=200 echo=07 message=Option not available in this release
+VERDICT  PASS
+FACADE PASS {'option': '07', 'program': 'COTRN01C', 'endpoint': None, 'route': None, 'implemented': False, 'message': 'Option not available in this release'}
+REQUEST  POST /api/menu/select  body={"option":"8"}  cookies=yes/home/ubuntu/repos/ts-cobol-carddemo/parity/wave3/comen01c/http/jar_user.txt
+STATUS   200
+BODY     {"option":"08","program":"COTRN02C","endpoint":null,"route":null,"implemented":false,"message":"Option not available in this release"}
+EXPECT   status=200 echo=08 message=Option not available in this release
+VERDICT  PASS
+FACADE PASS {'option': '08', 'program': 'COTRN02C', 'endpoint': None, 'route': None, 'implemented': False, 'message': 'Option not available in this release'}
+REQUEST  POST /api/menu/select  body={"option":"9"}  cookies=yes/home/ubuntu/repos/ts-cobol-carddemo/parity/wave3/comen01c/http/jar_user.txt
+STATUS   200
+BODY     {"option":"09","program":"CORPT00C","endpoint":null,"route":null,"implemented":false,"message":"Option not available in this release"}
+EXPECT   status=200 echo=09 message=Option not available in this release
+VERDICT  PASS
+FACADE PASS {'option': '09', 'program': 'CORPT00C', 'endpoint': None, 'route': None, 'implemented': False, 'message': 'Option not available in this release'}
+REQUEST  POST /api/menu/select  body={"option":"10"}  cookies=yes/home/ubuntu/repos/ts-cobol-carddemo/parity/wave3/comen01c/http/jar_user.txt
+STATUS   200
+BODY     {"option":"10","program":"COBIL00C","endpoint":null,"route":null,"implemented":false,"message":"Option not available in this release"}
+EXPECT   status=200 echo=10 message=Option not available in this release
+VERDICT  PASS
+FACADE PASS {'option': '10', 'program': 'COBIL00C', 'endpoint': None, 'route': None, 'implemented': False, 'message': 'Option not available in this release'}
+REQUEST  POST /api/menu/select  body={"option":"11"}  cookies=yes/home/ubuntu/repos/ts-cobol-carddemo/parity/wave3/comen01c/http/jar_user.txt
+STATUS   200
+BODY     {"option":"11","program":"COPAUS0C","endpoint":null,"route":null,"implemented":false,"message":"Option not available in this release"}
+EXPECT   status=200 echo=11 message=Option not available in this release
+VERDICT  PASS
+FACADE PASS {'option': '11', 'program': 'COPAUS0C', 'endpoint': None, 'route': None, 'implemented': False, 'message': 'Option not available in this release'}
+REQUEST  POST /api/menu/select  body={"option":"02"}  cookies=yes/home/ubuntu/repos/ts-cobol-carddemo/parity/wave3/comen01c/http/jar_user.txt
+STATUS   200
+BODY     {"option":"02","program":"COACTUPC","endpoint":null,"route":null,"implemented":false,"message":"Option not available in this release"}
+EXPECT   status=200 echo=02 message=Option not available in this release
+VERDICT  PASS
+REQUEST  POST /api/menu/select  body={"option":" 2"}  cookies=yes/home/ubuntu/repos/ts-cobol-carddemo/parity/wave3/comen01c/http/jar_user.txt
+STATUS   200
+BODY     {"option":"02","program":"COACTUPC","endpoint":null,"route":null,"implemented":false,"message":"Option not available in this release"}
+EXPECT   status=200 echo=02 message=Option not available in this release
+VERDICT  PASS
+REQUEST  POST /api/menu/select  body={"option":"11"}  cookies=yes/home/ubuntu/repos/ts-cobol-carddemo/parity/wave3/comen01c/http/jar_user.txt
+STATUS   200
+BODY     {"option":"11","program":"COPAUS0C","endpoint":null,"route":null,"implemented":false,"message":"Option not available in this release"}
+EXPECT   status=200 echo=11 message=Option not available in this release
+VERDICT  PASS
+
+=================== M-08 dead admin guard / excluded texts must never appear (tbl: all rows U; cbl:140, 163-166, 172-175) ===================
+TEXT 'No access' in option responses: 0 files -> PASS
+TEXT 'is not installed' in option responses: 0 files -> PASS
+TEXT 'coming soon' in option responses: 0 files -> PASS
+TEXT 'Invalid key' in option responses: 0 files -> PASS
+
+=================== M-11 admin session (type A): same menu, option 1 works as for U (Q-01) ===================
+REQUEST  GET /api/menu  body=<none>  cookies=yes/home/ubuntu/repos/ts-cobol-carddemo/parity/wave3/comen01c/http/jar_admin.txt
+STATUS   200
+BODY     {"header":{"tranId":"CM00","programName":"COMEN01C","title01":"AWS Mainframe Modernization","title02":"CardDemo","currentDate":"09/07/26","currentTime":"09:10:02","applId":"CARDDEMO","sysId":"CICS"},"options":[{"number":1,"name":"Account View","program":"COACTVWC","endpoint":"/api/accounts/{acctId}","route":"/accounts/view","implemented":true,"userType":"U"},{"number":2,"name":"Account Update","program":"COACTUPC","endpoint":null,"route":null,"implemented":false,"userType":"U"},{"number":3,"name":"Credit Card List","program":"COCRDLIC","endpoint":null,"route":null,"implemented":false,"userType":"U"},{"number":4,"name":"Credit Card View","program":"COCRDSLC","endpoint":null,"route":null,"implemented":false,"userType":"U"},{"number":5,"name":"Credit Card Update","program":"COCRDUPC","endpoint":null,"route":null,"implemented":false,"userType":"U"},{"number":6,"name":"Transaction List","program":"COTRN00C","endpoint":null,"route":null,"implemented":false,"userType":"U"},{"number":7,"name":"Transaction View","program":"COTRN01C","endpoint":null,"route":null,"implemented":false,"userType":"U"},{"number":8,"name":"Transaction Add","program":"COTRN02C","endpoint":null,"route":null,"implemented":false,"userType":"U"},{"number":9,"name":"Transaction Reports","program":"CORPT00C","endpoint":null,"route":null,"implemented":false,"userType":"U"},{"number":10,"name":"Bill Payment","program":"COBIL00C","endpoint":null,"route":null,"implemented":false,"userType":"U"},{"number":11,"name":"Pending Authorization View","program":"COPAUS0C","endpoint":null,"route":null,"implemented":false,"userType":"U"}]}
+OPTIONS identical U vs A: PASS
+REQUEST  POST /api/menu/select  body={"option":"1"}  cookies=yes/home/ubuntu/repos/ts-cobol-carddemo/parity/wave3/comen01c/http/jar_admin.txt
+STATUS   200
+BODY     {"option":"01","program":"COACTVWC","endpoint":"/api/accounts/{acctId}","route":"/accounts/view","implemented":true,"message":null}
+EXPECT   status=200 echo=01 message=-
+VERDICT  PASS
+REQUEST  POST /api/menu/select  body={"option":"5"}  cookies=yes/home/ubuntu/repos/ts-cobol-carddemo/parity/wave3/comen01c/http/jar_admin.txt
+STATUS   200
+BODY     {"option":"05","program":"COCRDUPC","endpoint":null,"route":null,"implemented":false,"message":"Option not available in this release"}
+EXPECT   status=200 echo=05 message=Option not available in this release
+VERDICT  PASS
+REQUEST  GET /api/auth/session  body=<none>  cookies=yes/home/ubuntu/repos/ts-cobol-carddemo/parity/wave3/comen01c/http/jar_admin.txt
+STATUS   200
+BODY     {"userId":"ADMIN001","userType":"A"}
+
+=================== M-13 identity intact after menu -> option 1 -> account view -> back (B-0027 / DV-02) ===================
+REQUEST  GET /api/auth/session  body=<none>  cookies=yes/home/ubuntu/repos/ts-cobol-carddemo/parity/wave3/comen01c/http/jar_user.txt
+STATUS   200
+BODY     {"userId":"USER0001","userType":"U"}
+REQUEST  POST /api/menu/select  body={"option":"1"}  cookies=yes/home/ubuntu/repos/ts-cobol-carddemo/parity/wave3/comen01c/http/jar_user.txt
+STATUS   200
+BODY     {"option":"01","program":"COACTVWC","endpoint":"/api/accounts/{acctId}","route":"/accounts/view","implemented":true,"message":null}
+EXPECT   status=200 echo=01 message=-
+VERDICT  PASS
+REQUEST  GET /api/accounts/00000000001  body=<none>  cookies=yes/home/ubuntu/repos/ts-cobol-carddemo/parity/wave3/comen01c/http/jar_user.txt
+STATUS   404
+BODY     {"message":"Resource not found","status":404,"timestamp":"2026-09-07T09:10:02.204835913Z"}
+REQUEST  GET /api/menu  body=<none>  cookies=yes/home/ubuntu/repos/ts-cobol-carddemo/parity/wave3/comen01c/http/jar_user.txt
+STATUS   200
+BODY     {"header":{"tranId":"CM00","programName":"COMEN01C","title01":"AWS Mainframe Modernization","title02":"CardDemo","currentDate":"09/07/26","currentTime":"09:10:02","applId":"CARDDEMO","sysId":"CICS"},"options":[{"number":1,"name":"Account View","program":"COACTVWC","endpoint":"/api/accounts/{acctId}","route":"/accounts/view","implemented":true,"userType":"U"},{"number":2,"name":"Account Update","program":"COACTUPC","endpoint":null,"route":null,"implemented":false,"userType":"U"},{"number":3,"name":"Credit Card List","program":"COCRDLIC","endpoint":null,"route":null,"implemented":false,"userType":"U"},{"number":4,"name":"Credit Card View","program":"COCRDSLC","endpoint":null,"route":null,"implemented":false,"userType":"U"},{"number":5,"name":"Credit Card Update","program":"COCRDUPC","endpoint":null,"route":null,"implemented":false,"userType":"U"},{"number":6,"name":"Transaction List","program":"COTRN00C","endpoint":null,"route":null,"implemented":false,"userType":"U"},{"number":7,"name":"Transaction View","program":"COTRN01C","endpoint":null,"route":null,"implemented":false,"userType":"U"},{"number":8,"name":"Transaction Add","program":"COTRN02C","endpoint":null,"route":null,"implemented":false,"userType":"U"},{"number":9,"name":"Transaction Reports","program":"CORPT00C","endpoint":null,"route":null,"implemented":false,"userType":"U"},{"number":10,"name":"Bill Payment","program":"COBIL00C","endpoint":null,"route":null,"implemented":false,"userType":"U"},{"number":11,"name":"Pending Authorization View","program":"COPAUS0C","endpoint":null,"route":null,"implemented":false,"userType":"U"}]}
+REQUEST  GET /api/auth/session  body=<none>  cookies=yes/home/ubuntu/repos/ts-cobol-carddemo/parity/wave3/comen01c/http/jar_user.txt
+STATUS   200
+BODY     {"userId":"USER0001","userType":"U"}
+
+=================== M-14 CM00 only in header text (D-0016) ===================
+M-01.body M-11a.body M-13d.body 
+CM00 outside header.tranId: none -> PASS
+
+=================== M-15 target-only payload edits (Q-14): length 3, non-string, malformed JSON, unicode digits ===================
+REQUEST  POST /api/menu/select  body={"option":"123"}  cookies=yes/home/ubuntu/repos/ts-cobol-carddemo/parity/wave3/comen01c/http/jar_user.txt
+STATUS   400
+BODY     {"message":"option: must be at most 2 characters","status":400,"timestamp":"2026-09-07T09:10:02.239443065Z"}
+REQUEST  POST /api/menu/select  body={"option":1}  cookies=yes/home/ubuntu/repos/ts-cobol-carddemo/parity/wave3/comen01c/http/jar_user.txt
+STATUS   200
+BODY     {"option":"01","program":"COACTVWC","endpoint":"/api/accounts/{acctId}","route":"/accounts/view","implemented":true,"message":null}
+REQUEST  POST /api/menu/select  body={"option":  cookies=yes/home/ubuntu/repos/ts-cobol-carddemo/parity/wave3/comen01c/http/jar_user.txt
+STATUS   500
+BODY     {"message":"An unexpected error occurred","status":500,"timestamp":"2026-09-07T09:10:02.253718322Z"}
+REQUEST  POST /api/menu/select  body={"option":"٠١"}  cookies=yes/home/ubuntu/repos/ts-cobol-carddemo/parity/wave3/comen01c/http/jar_user.txt
+STATUS   200
+BODY     {"option":"٠١","program":"COACTVWC","endpoint":"/api/accounts/{acctId}","route":"/accounts/view","implemented":true,"message":null}
+REQUEST  POST /api/menu/select  body={"option":"1","extra":true}  cookies=yes/home/ubuntu/repos/ts-cobol-carddemo/parity/wave3/comen01c/http/jar_user.txt
+STATUS   200
+BODY     {"option":"01","program":"COACTVWC","endpoint":"/api/accounts/{acctId}","route":"/accounts/view","implemented":true,"message":null}
+REQUEST  POST /api/menu/select  body=<none>  cookies=yes/home/ubuntu/repos/ts-cobol-carddemo/parity/wave3/comen01c/http/jar_user.txt
+STATUS   500
+BODY     {"message":"An unexpected error occurred","status":500,"timestamp":"2026-09-07T09:10:02.273464788Z"}
+
+=================== M-09 Exit = POST /api/auth/signoff; afterwards GET /api/menu -> 401 (cbl:96-98, 196-203) ===================
+REQUEST  POST /api/auth/signoff  body=<none>  cookies=yes/home/ubuntu/repos/ts-cobol-carddemo/parity/wave3/comen01c/http/jar_user.txt
+STATUS   200
+BODY     {"message":"Thank you for using CardDemo application...      "}
+REQUEST  GET /api/menu  body=<none>  cookies=yes/home/ubuntu/repos/ts-cobol-carddemo/parity/wave3/comen01c/http/jar_user.txt
+STATUS   401
+BODY     {"message":"Authentication required","status":401,"timestamp":"2026-09-07T09:10:02.286135977Z"}
+REQUEST  POST /api/menu/select  body={"option":"1"}  cookies=yes/home/ubuntu/repos/ts-cobol-carddemo/parity/wave3/comen01c/http/jar_user.txt
+STATUS   401
+BODY     {"message":"Authentication required","status":401,"timestamp":"2026-09-07T09:10:02.292548055Z"}
+
+users table after run:
+ sec_usr_id | sec_usr_type | has_hash | has_legacy 
+------------+--------------+----------+------------
+ ADMIN001   | A            | t        | f
+ ADMIN002   | A            | f        | t
+ ADMIN003   | A            | f        | t
+ ADMIN004   | A            | f        | t
+ ADMIN005   | A            | f        | t
+ USER0001   | U            | t        | f
+ USER0002   | U            | f        | t
+ USER0003   | U            | f        | t
+ USER0004   | U            | f        | t
+ USER0005   | U            | f        | t
+(10 rows)
+
