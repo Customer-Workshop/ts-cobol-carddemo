@@ -1,0 +1,89 @@
+<mat-card class="signon" data-map="COSGN0A">
+  <header class="screen-header" aria-label="Screen header">
+    <div class="header-row">
+      <span class="label">{{ labels.tran }}</span>
+      <output data-field="TRNNAME" class="value">{{ header.tranId }}</output>
+      <output data-field="TITLE01" class="value title">{{ header.title01 }}</output>
+      <span class="label">{{ labels.date }}</span>
+      <output data-field="CURDATE" class="value">{{ header.currentDate }}</output>
+    </div>
+    <div class="header-row">
+      <span class="label">{{ labels.prog }}</span>
+      <output data-field="PGMNAME" class="value">{{ header.programName }}</output>
+      <output data-field="TITLE02" class="value title">{{ header.title02 }}</output>
+      <span class="label">{{ labels.time }}</span>
+      <output data-field="CURTIME" class="value">{{ header.currentTime }}</output>
+    </div>
+    <div class="header-row">
+      <span class="label">{{ labels.appId }}</span>
+      <output data-field="APPLID" class="value">{{ header.applId }}</output>
+      <span class="spacer"></span>
+      <span class="label">{{ labels.sysId }}</span>
+      <output data-field="SYSID" class="value">{{ header.sysId }}</output>
+    </div>
+  </header>
+
+  @if (signedOff) {
+    <section class="signed-off" data-field="THANKYOU" role="status">
+      <p>{{ signOffMessage }}</p>
+      <button mat-stroked-button type="button" (click)="signOnAgain()">Sign on again</button>
+    </section>
+  } @else {
+    <mat-card-content>
+      <p class="intro">{{ labels.intro }}</p>
+      <pre class="banner" aria-hidden="true">{{ bannerText }}</pre>
+      <p class="prompt">{{ labels.prompt }}</p>
+
+      <form class="signon-form" (submit)="$event.preventDefault(); signOn()" novalidate>
+        <div class="field-row">
+          <label for="userId" class="field-label">{{ labels.userId }}</label>
+          <mat-form-field appearance="outline" class="field">
+            <input
+              #userIdInput
+              matInput
+              id="userId"
+              name="userId"
+              data-field="USERID"
+              type="text"
+              maxlength="8"
+              autocomplete="username"
+              autocapitalize="characters"
+              autofocus
+              [value]="userId"
+              (input)="onUserIdInput(userIdInput.value)"
+            />
+          </mat-form-field>
+          <span class="hint">{{ labels.eightChar }}</span>
+        </div>
+        <div class="field-row">
+          <label for="password" class="field-label">{{ labels.password }}</label>
+          <mat-form-field appearance="outline" class="field">
+            <input
+              #passwordInput
+              matInput
+              id="password"
+              name="password"
+              data-field="PASSWD"
+              type="password"
+              maxlength="8"
+              autocomplete="current-password"
+              [value]="password"
+              (input)="onPasswordInput(passwordInput.value)"
+            />
+          </mat-form-field>
+          <span class="hint">{{ labels.eightChar }}</span>
+        </div>
+
+        <div class="actions">
+          <button mat-flat-button color="primary" type="submit" [disabled]="submitting">Sign-on</button>
+          <button mat-stroked-button type="button" (click)="exit()">Exit</button>
+        </div>
+      </form>
+    </mat-card-content>
+  }
+
+  <footer class="screen-footer">
+    <p data-field="ERRMSG" class="errmsg" role="alert" aria-live="assertive">{{ errorMessage }}</p>
+    <p class="keys">{{ labels.footer }}</p>
+  </footer>
+</mat-card>

@@ -34,13 +34,21 @@ into `accounts`, `customers`, `card_xrefs`, `users`, and enforces the Q-10 date 
 | Legacy program | Trancode / map | Target endpoint | Status |
 |---|---|---|---|
 | `CSUTLDTC` | none (CALLed utility) | none — internal `DateValidationService` (B-0014) | wave 1: ported |
-| `COSGN00C` | `CC00` / `COSGN00` | `POST /api/auth/signon`, `POST /api/auth/signoff` | wave 2 (not yet) |
+| `COSGN00C` | `CC00` / `COSGN00` | `POST /api/auth/signon`, `GET /api/auth/session`, `POST /api/auth/signoff`, `GET /api/auth/header` (B-0030 header fields) | wave 2: ported (`AuthService`, `AuthController`) |
 | `COMEN01C` | `CM00` / `COMEN01` | `GET /api/menu/options` | wave 2 (not yet) |
 | `COACTVWC` | `CAVW` / `COACTVW` | `GET /api/accounts/{acctId}` | wave 3 (not yet) |
 
 Wave 1 delivers no HTTP endpoints: only the data seams (Flyway `V1__account_view_schema.sql`, entities,
 repositories), the session-context model (`SessionContext`), the error model (`GlobalExceptionHandler`,
 `CobolApiException`, `ErrorResponse`, `CobolMessages`), the `import` profile and the CSUTLDTC port.
+
+Wave 2 (sign-on, `COSGN00C`): `POST /api/auth/signon` `{userId, password}` -> 200 `{userId, userType, landingTarget}`
+(session cookie set; `landingTarget` is `/menu` for `U` and `A`, B-0009 / Q-01), 400 `Please enter User ID ...` /
+`Please enter Password ...`, 401 `User not found. Try again ...` / `Wrong Password. Try again ...`, 500
+`Unable to verify the User ...`. `POST /api/auth/signoff` invalidates the session and returns the FR-08 thank-you
+text. Passwords: BCrypt via `DelegatingPasswordEncoder`; a `users` row with `sec_usr_pwd_hash IS NULL` is verified
+once against `sec_usr_pwd_legacy` (upper-cased input, Q-13) and rewritten as a hash with the legacy column cleared
+(B-0026, D-0029). `carddemo.applid` / `carddemo.sysid` in `application.properties` feed the screen header (B-0030).
 
 ## Layout
 
