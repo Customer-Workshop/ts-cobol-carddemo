@@ -55,6 +55,23 @@ public final class CobolMessages {
     /** NEW TEXT (not a legacy literal): GET /api/auth/session without a signed-on session (B-0027). */
     public static final String AUTHENTICATION_REQUIRED = "Authentication required";
 
+    /** WS-PROMPT-FOR-INPUT, the constant INFOMSG of COACTVW (COACTVWC.cbl:113-114, PIC X(40)). */
+    public static final String ACCOUNT_VIEW_PROMPT = "Enter or update id of account to display";
+
+    /**
+     * Q-09 / A-ACV-2: ERROR-RESP / ERROR-RESP2 are X(10) windows over the CICS response codes
+     * (COACTVWC.cbl:750-757). Off-host there is no CICS, so the literal portions of E-09..E-12 are
+     * parity-asserted and these digits are stable target values: DFHRESP(NOTFND) = 13 with reason 0,
+     * and a datastore failure the legacy would report through WHEN OTHER uses RESP 16 (DFHRESP(INVREQ))
+     * with reason 0. Never asserted as CICS bytes.
+     */
+    public static final String RESP_NOTFND = "0000000013";
+    public static final String RESP_OTHER = "0000000016";
+    public static final String REAS_NONE = "0000000000";
+
+    /** ERROR-OPNAME as moved before each read (COACTVWC.cbl:761, :810, :860). */
+    public static final String OP_READ = "READ";
+
     /** CICS file names as placed in ERROR-FILE — COACTVWC.cbl:750-766, 799-816, 848-865. */
     public static final String FILE_CXACAIX = "CXACAIX";
     public static final String FILE_ACCTDAT = "ACCTDAT";

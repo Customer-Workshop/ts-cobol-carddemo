@@ -1,0 +1,147 @@
+<mat-card class="account-view" data-map="CACTVWA">
+  <header class="screen-header" aria-label="Screen header">
+    <div class="header-row">
+      <span class="label">{{ labels.tran }}</span>
+      <output data-field="TRNNAME" class="value">{{ header.tranId }}</output>
+      <output data-field="TITLE01" class="value title">{{ header.title01 }}</output>
+      <span class="label">{{ labels.date }}</span>
+      <output data-field="CURDATE" class="value">{{ header.currentDate }}</output>
+    </div>
+    <div class="header-row">
+      <span class="label">{{ labels.prog }}</span>
+      <output data-field="PGMNAME" class="value">{{ header.programName }}</output>
+      <output data-field="TITLE02" class="value title">{{ header.title02 }}</output>
+      <span class="label">{{ labels.time }}</span>
+      <output data-field="CURTIME" class="value">{{ header.currentTime }}</output>
+    </div>
+  </header>
+
+  <mat-card-content>
+    <p class="screen-title">{{ labels.title }}</p>
+
+    <form class="search-form" (submit)="$event.preventDefault(); search()" novalidate>
+      <label for="acctsid" class="prompt">{{ labels.accountNumber }}</label>
+      <mat-form-field appearance="outline" class="field" [class.field-error]="accountIdInError">
+        <input
+          #accountInput
+          matInput
+          id="acctsid"
+          [attr.aria-invalid]="accountIdInError"
+          [attr.data-attrb]="accountIdInError ? 'DFHRED' : 'DFHDFCOL'"
+          name="acctsid"
+          data-field="ACCTSID"
+          type="text"
+          inputmode="numeric"
+          maxlength="11"
+          autocomplete="off"
+          [value]="accountId"
+          (input)="onAccountIdInput(accountInput.value)"
+        />
+      </mat-form-field>
+      <div class="actions">
+        <button mat-flat-button color="primary" type="submit" [disabled]="submitting">Search</button>
+        <button mat-stroked-button type="button" (click)="exit()">Exit</button>
+      </div>
+    </form>
+
+    <section class="block account-block" aria-label="Account details">
+      <div class="row">
+        <span class="label">{{ labels.activeStatus }}</span>
+        <output data-field="ACSTTUS" class="value">{{ account?.activeStatus }}</output>
+        <span class="label">{{ labels.opened }}</span>
+        <output data-field="ADTOPEN" class="value">{{ account?.openDate }}</output>
+      </div>
+      <div class="row">
+        <span class="label">{{ labels.creditLimit }}</span>
+        <output data-field="ACRDLIM" class="value">{{ account?.creditLimit }}</output>
+        <span class="label">{{ labels.expiry }}</span>
+        <output data-field="AEXPDT" class="value">{{ account?.expirationDate }}</output>
+      </div>
+      <div class="row">
+        <span class="label">{{ labels.cashCreditLimit }}</span>
+        <output data-field="ACSHLIM" class="value">{{ account?.cashCreditLimit }}</output>
+        <span class="label">{{ labels.reissue }}</span>
+        <output data-field="AREISDT" class="value">{{ account?.reissueDate }}</output>
+      </div>
+      <div class="row">
+        <span class="label">{{ labels.currentBalance }}</span>
+        <output data-field="ACURBAL" class="value">{{ account?.currentBalance }}</output>
+      </div>
+      <div class="row">
+        <span class="label">{{ labels.currentCycleCredit }}</span>
+        <output data-field="ACRCYCR" class="value">{{ account?.currentCycleCredit }}</output>
+        <span class="label">{{ labels.accountGroup }}</span>
+        <output data-field="AADDGRP" class="value">{{ account?.groupId }}</output>
+      </div>
+      <div class="row">
+        <span class="label">{{ labels.currentCycleDebit }}</span>
+        <output data-field="ACRCYDB" class="value">{{ account?.currentCycleDebit }}</output>
+      </div>
+    </section>
+
+    <p class="block-title">{{ labels.customerDetails }}</p>
+
+    <section class="block customer-block" aria-label="Customer details">
+      <div class="row">
+        <span class="label">{{ labels.customerId }}</span>
+        <output data-field="ACSTNUM" class="value">{{ customer?.customerId }}</output>
+        <span class="label">{{ labels.ssn }}</span>
+        <output data-field="ACSTSSN" class="value">{{ customer?.ssn }}</output>
+      </div>
+      <div class="row">
+        <span class="label">{{ labels.dateOfBirth }}</span>
+        <output data-field="ACSTDOB" class="value">{{ customer?.dateOfBirth }}</output>
+        <span class="label">{{ labels.fico }}</span>
+        <output data-field="ACSTFCO" class="value">{{ ficoScoreDisplay }}</output>
+      </div>
+      <div class="row">
+        <span class="label">{{ labels.firstName }}</span>
+        <output data-field="ACSFNAM" class="value">{{ customer?.firstName }}</output>
+        <span class="label">{{ labels.middleName }}</span>
+        <output data-field="ACSMNAM" class="value">{{ customer?.middleName }}</output>
+        <span class="label">{{ labels.lastName }}</span>
+        <output data-field="ACSLNAM" class="value">{{ customer?.lastName }}</output>
+      </div>
+      <div class="row">
+        <span class="label">{{ labels.address }}</span>
+        <output data-field="ACSADL1" class="value">{{ customer?.addressLine1 }}</output>
+        <span class="label">{{ labels.state }}</span>
+        <output data-field="ACSSTTE" class="value">{{ customer?.stateCode }}</output>
+      </div>
+      <div class="row">
+        <span class="label">{{ labels.address }}</span>
+        <output data-field="ACSADL2" class="value">{{ customer?.addressLine2 }}</output>
+        <span class="label">{{ labels.zip }}</span>
+        <output data-field="ACSZIPC" class="value">{{ customer?.zipCode }}</output>
+      </div>
+      <div class="row">
+        <span class="label">{{ labels.city }}</span>
+        <output data-field="ACSCITY" class="value">{{ customer?.city }}</output>
+        <span class="label">{{ labels.country }}</span>
+        <output data-field="ACSCTRY" class="value">{{ customer?.countryCode }}</output>
+      </div>
+      <div class="row">
+        <span class="label">{{ labels.phone1 }}</span>
+        <output data-field="ACSPHN1" class="value">{{ customer?.phone1 }}</output>
+        <span class="label">{{ labels.governmentId }}</span>
+        <output data-field="ACSGOVT" class="value">{{ customer?.governmentIssuedId }}</output>
+      </div>
+      <div class="row">
+        <span class="label">{{ labels.phone2 }}</span>
+        <output data-field="ACSPHN2" class="value">{{ customer?.phone2 }}</output>
+        <span class="label">{{ labels.eftAccount }}</span>
+        <output data-field="ACSEFTC" class="value">{{ customer?.eftAccountId }}</output>
+      </div>
+      <div class="row">
+        <span class="label">{{ labels.primaryCardHolder }}</span>
+        <output data-field="ACSPFLG" class="value">{{ customer?.primaryCardHolder }}</output>
+      </div>
+    </section>
+  </mat-card-content>
+
+  <footer class="screen-footer">
+    <p data-field="INFOMSG" class="infomsg">{{ infoMessage }}</p>
+    <p data-field="ERRMSG" class="errmsg" role="alert" aria-live="assertive">{{ errorMessage }}</p>
+    <p class="keys">{{ labels.footer }}</p>
+  </footer>
+</mat-card>

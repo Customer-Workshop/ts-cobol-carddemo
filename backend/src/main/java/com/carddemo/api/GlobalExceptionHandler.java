@@ -33,6 +33,13 @@ public class GlobalExceptionHandler {
                 ex.getMessage(), ex.getStatus().value(), Instant.now(), ex.normalizedOption()));
     }
 
+    /** COACTVWC E-11 keeps the account block on the screen (COACTVWC.cbl:471-472, FR §7 A-ACV-1). */
+    @ExceptionHandler(CustomerNotFoundException.class)
+    public ResponseEntity<AccountViewErrorResponse> handleCustomerNotFound(CustomerNotFoundException ex) {
+        return ResponseEntity.status(ex.getStatus()).body(new AccountViewErrorResponse(
+                ex.getMessage(), ex.getStatus().value(), Instant.now(), ex.accountNumber(), ex.account()));
+    }
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorResponse> handleValidation(MethodArgumentNotValidException ex) {
         String message = ex.getBindingResult().getFieldErrors().stream()

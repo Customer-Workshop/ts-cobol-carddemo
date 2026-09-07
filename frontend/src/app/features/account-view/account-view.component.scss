@@ -1,0 +1,120 @@
+:host {
+  display: block;
+}
+
+.account-view {
+  max-width: 980px;
+  margin: 0 auto;
+  padding: 16px;
+  font-family: 'Roboto Mono', 'Courier New', monospace;
+}
+
+.screen-header {
+  display: grid;
+  gap: 2px;
+  margin-bottom: 12px;
+}
+
+.header-row {
+  display: grid;
+  grid-template-columns: 3.5em 9em 1fr 3.5em 6em;
+  column-gap: 8px;
+  align-items: baseline;
+}
+
+.label {
+  color: #1565c0;
+  white-space: pre;
+}
+
+.value {
+  white-space: pre;
+}
+
+.title {
+  text-align: center;
+  color: #f9a825;
+}
+
+.screen-title {
+  text-align: center;
+  font-weight: 700;
+}
+
+.search-form {
+  display: grid;
+  grid-template-columns: auto 12em;
+  justify-content: center;
+  align-items: center;
+  column-gap: 8px;
+}
+
+.prompt {
+  color: #00838f;
+  white-space: pre;
+}
+
+.field input {
+  font-family: inherit;
+}
+
+// MOVE DFHRED TO ACCTSIDC (COACTVWC.cbl:555-565): the filter field itself turns red on a bad or
+// blank account filter, matching the ERRMSG colour.
+.field-error input {
+  color: #c62828;
+  font-weight: 700;
+}
+
+.actions {
+  grid-column: 1 / -1;
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  margin-top: 8px;
+}
+
+.block {
+  display: grid;
+  gap: 2px;
+  margin: 8px 0;
+}
+
+.block-title {
+  text-align: center;
+  color: #f9a825;
+  font-weight: 700;
+  margin: 12px 0 4px;
+}
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  column-gap: 8px;
+}
+
+.customer-block .value,
+.account-block .value {
+  text-decoration: underline;
+}
+
+.screen-footer {
+  margin-top: 12px;
+}
+
+.infomsg {
+  color: #00838f;
+  white-space: pre;
+}
+
+.errmsg {
+  min-height: 1.5em;
+  color: #c62828;
+  font-weight: 700;
+  white-space: pre;
+}
+
+.keys {
+  color: #f9a825;
+  white-space: pre;
+}
