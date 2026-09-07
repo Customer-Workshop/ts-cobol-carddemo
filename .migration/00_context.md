@@ -39,7 +39,7 @@ prior-run `backend/` is C#/.NET and must not be used as a starting point; **F3**
 `functional/CardDemo/CardDemo_target_state.md` (same branch), produced by
 `!mf_ingest_target_state`. Summary and link in `01_target_state.md`. Profiles: CORE, ONLINE,
 DATA/BOUNDARY in scope; **BATCH and SUBTRANSACTION are N/A by decision** for this engagement's
-first stream. Status: **DRAFT, awaiting customer confirmation at STOP A** (see `06_decisions.md`).
+first stream. Status: **CONFIRMED at STOP A 2026-09-07** (see `06_decisions.md` D-0013..D-0018).
 
 ## 4. First stream (registered only — analysis happens in `!mf_stream_analysis`)
 
@@ -112,8 +112,8 @@ Devin session link is fine). Legacy `app/` is never modified. `spring-boot/` is 
 ## 9. Macro chain (how to resume from any point)
 
 ```
-!mf_ingest_target_state   -> functional/CardDemo/CardDemo_target_state.md        [done, pending STOP A]
-!mf_migration_setup       -> .migration/                                           [done, pending STOP A]
+!mf_ingest_target_state   -> functional/CardDemo/CardDemo_target_state.md        [done, STOP A passed]
+!mf_migration_setup       -> .migration/                                           [done, STOP A passed]
 !mf_module_inventory_analysis -> functional/CardDemo/CardDemo_inventory.md
 per stream:
   !mf_stream_analysis         -> <Stream>_analysis.md            (STOP B blocks)

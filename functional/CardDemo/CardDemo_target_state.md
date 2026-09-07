@@ -1,6 +1,6 @@
 # CardDemo Target State (CORE + per-surface profiles)
 
-Status: **DRAFT — awaiting STOP A confirmation.** Every field is marked **FACT** (cited from a
+Status: **CONFIRMED at STOP A (2026-09-07; see .migration/06_decisions.md D-0013..D-0018).** Every field is marked **FACT** (cited from a
 source in this repo) or **PROPOSED** (a default that must be explicitly confirmed or corrected
 before `!mf_migration_setup`, `!mf_stream_migration_plan` or `!mf_program_migration` may run).
 
