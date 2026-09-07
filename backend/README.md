@@ -35,7 +35,7 @@ into `accounts`, `customers`, `card_xrefs`, `users`, and enforces the Q-10 date 
 |---|---|---|---|
 | `CSUTLDTC` | none (CALLed utility) | none — internal `DateValidationService` (B-0014) | wave 1: ported |
 | `COSGN00C` | `CC00` / `COSGN00` | `POST /api/auth/signon`, `GET /api/auth/session`, `POST /api/auth/signoff`, `GET /api/auth/header` (B-0030 header fields) | wave 2: ported (`AuthService`, `AuthController`) |
-| `COMEN01C` | `CM00` / `COMEN01` | `GET /api/menu/options` | wave 2 (not yet) |
+| `COMEN01C` | `CM00` / `COMEN01` | `GET /api/menu` (header + 11 options), `POST /api/menu/select` (B-0010 dispatch) | wave 3: ported (`MenuService`, `MenuController`) |
 | `COACTVWC` | `CAVW` / `COACTVW` | `GET /api/accounts/{acctId}` | wave 3 (not yet) |
 
 Wave 1 delivers no HTTP endpoints: only the data seams (Flyway `V1__account_view_schema.sql`, entities,
@@ -49,6 +49,16 @@ Wave 2 (sign-on, `COSGN00C`): `POST /api/auth/signon` `{userId, password}` -> 20
 text. Passwords: BCrypt via `DelegatingPasswordEncoder`; a `users` row with `sec_usr_pwd_hash IS NULL` is verified
 once against `sec_usr_pwd_legacy` (upper-cased input, Q-13) and rewritten as a hash with the legacy column cleared
 (B-0026, D-0029). `carddemo.applid` / `carddemo.sysid` in `application.properties` feed the screen header (B-0030).
+
+Wave 3 (main menu, `COMEN01C`): `GET /api/menu` -> 200 `{header, options[11]}` with each option
+`{number, name, program, endpoint, route, implemented, userType}` ported from `COMEN02Y` (B-0033); only option 1
+(`COACTVWC`) is `implemented`. `POST /api/menu/select` `{option}` -> 200 `{option, program, endpoint, route,
+implemented, message}`: option 1 gives `route` `/accounts/view`, options 2-11 give `implemented:false` and
+`Option not available in this release` (Q-12 / B-0032, no navigation), and a blank / non-numeric / `0` / `> 11`
+option gives 400 `Please enter a valid option number...` with the normalised 2-character echo in `option`
+(`'1 '`/`' 1'` -> `01`, blank -> `00`, `'A '` -> `0A`; COMEN01C.cbl:117-134). Both endpoints require the sign-on
+session and answer JSON 401 without it (B-0027); Exit reuses `POST /api/auth/signoff` (the menu PF3 XCTLs to
+COSGN00C without COMMAREA, so no thank-you text is displayed on this screen).
 
 ## Layout
 

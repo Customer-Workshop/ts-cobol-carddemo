@@ -49,6 +49,9 @@ public final class CobolMessages {
     /** NEW TEXT (not a legacy literal): a sign-on field longer than its 8-byte BMS field (COSGN00C FR A-SGN-1, Q-14). */
     public static final String FIELD_TOO_LONG = "must be at most 8 characters";
 
+    /** NEW TEXT (not a legacy literal): a menu option longer than its 2-byte BMS field (COMEN01C FR Q-14). */
+    public static final String OPTION_TOO_LONG = "must be at most 2 characters";
+
     /** NEW TEXT (not a legacy literal): GET /api/auth/session without a signed-on session (B-0027). */
     public static final String AUTHENTICATION_REQUIRED = "Authentication required";
 

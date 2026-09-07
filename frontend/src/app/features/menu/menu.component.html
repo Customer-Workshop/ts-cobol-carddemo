@@ -1,0 +1,75 @@
+<mat-card class="menu" data-map="COMEN1A">
+  <header class="screen-header" aria-label="Screen header">
+    <div class="header-row">
+      <span class="label">{{ labels.tran }}</span>
+      <output data-field="TRNNAME" class="value">{{ header.tranId }}</output>
+      <output data-field="TITLE01" class="value title">{{ header.title01 }}</output>
+      <span class="label">{{ labels.date }}</span>
+      <output data-field="CURDATE" class="value">{{ header.currentDate }}</output>
+    </div>
+    <div class="header-row">
+      <span class="label">{{ labels.prog }}</span>
+      <output data-field="PGMNAME" class="value">{{ header.programName }}</output>
+      <output data-field="TITLE02" class="value title">{{ header.title02 }}</output>
+      <span class="label">{{ labels.time }}</span>
+      <output data-field="CURTIME" class="value">{{ header.currentTime }}</output>
+    </div>
+  </header>
+
+  <mat-card-content>
+    <p class="screen-title">{{ labels.title }}</p>
+
+    @if (isAdmin) {
+      <p class="admin-banner" data-field="ADMINBANNER" role="status">{{ adminBanner }}</p>
+    }
+
+    <ul class="options" role="list">
+      @for (menuOption of options; track menuOption.number) {
+        <li class="option-row">
+          <button
+            type="button"
+            mat-button
+            class="option-label"
+            [attr.data-field]="'OPTN0' + (menuOption.number < 10 ? '0' : '') + menuOption.number"
+            [attr.data-option]="menuOption.number"
+            [attr.aria-disabled]="!menuOption.implemented"
+            [class.unavailable]="!menuOption.implemented"
+            [disabled]="!menuOption.implemented"
+            (click)="choose(menuOption)"
+          >
+            {{ menuOption.number < 10 ? '0' : '' }}{{ menuOption.number }}. {{ menuOption.name }}
+          </button>
+        </li>
+      }
+    </ul>
+
+    <form class="option-form" (submit)="$event.preventDefault(); submit()" novalidate>
+      <label for="option" class="prompt">{{ labels.prompt }}</label>
+      <mat-form-field appearance="outline" class="field">
+        <input
+          #optionInput
+          matInput
+          id="option"
+          name="option"
+          data-field="OPTION"
+          type="text"
+          inputmode="numeric"
+          maxlength="2"
+          autocomplete="off"
+          autofocus
+          [value]="option"
+          (input)="onOptionInput(optionInput.value)"
+        />
+      </mat-form-field>
+      <div class="actions">
+        <button mat-flat-button color="primary" type="submit" [disabled]="submitting">Continue</button>
+        <button mat-stroked-button type="button" (click)="exit()">Exit</button>
+      </div>
+    </form>
+  </mat-card-content>
+
+  <footer class="screen-footer">
+    <p data-field="ERRMSG" class="errmsg" role="alert" aria-live="assertive">{{ errorMessage }}</p>
+    <p class="keys">{{ labels.footer }}</p>
+  </footer>
+</mat-card>
