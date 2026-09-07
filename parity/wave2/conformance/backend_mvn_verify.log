@@ -1,0 +1,767 @@
+[INFO] Scanning for projects...
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/springframework/boot/spring-boot-starter-parent/3.4.5/spring-boot-starter-parent-3.4.5.pom
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/springframework/boot/spring-boot-starter-parent/3.4.5/spring-boot-starter-parent-3.4.5.pom (13 kB at 48 kB/s)
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/springframework/boot/spring-boot-dependencies/3.4.5/spring-boot-dependencies-3.4.5.pom
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/springframework/boot/spring-boot-dependencies/3.4.5/spring-boot-dependencies-3.4.5.pom (98 kB at 1.6 MB/s)
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/apache/activemq/artemis-bom/2.37.0/artemis-bom-2.37.0.pom
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/apache/activemq/artemis-bom/2.37.0/artemis-bom-2.37.0.pom (9.6 kB at 144 kB/s)
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/apache/activemq/artemis-project/2.37.0/artemis-project-2.37.0.pom
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/apache/activemq/artemis-project/2.37.0/artemis-project-2.37.0.pom (57 kB at 854 kB/s)
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/assertj/assertj-bom/3.26.3/assertj-bom-3.26.3.pom
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/assertj/assertj-bom/3.26.3/assertj-bom-3.26.3.pom (3.7 kB at 60 kB/s)
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/io/zipkin/reporter2/zipkin-reporter-bom/3.4.3/zipkin-reporter-bom-3.4.3.pom
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/io/zipkin/reporter2/zipkin-reporter-bom/3.4.3/zipkin-reporter-bom-3.4.3.pom (6.4 kB at 97 kB/s)
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/io/zipkin/brave/brave-bom/6.0.3/brave-bom-6.0.3.pom
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/io/zipkin/brave/brave-bom/6.0.3/brave-bom-6.0.3.pom (11 kB at 183 kB/s)
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/apache/cassandra/java-driver-bom/4.18.1/java-driver-bom-4.18.1.pom
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/apache/cassandra/java-driver-bom/4.18.1/java-driver-bom-4.18.1.pom (5.5 kB at 91 kB/s)
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/infinispan/infinispan-bom/15.0.14.Final/infinispan-bom-15.0.14.Final.pom
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/infinispan/infinispan-bom/15.0.14.Final/infinispan-bom-15.0.14.Final.pom (17 kB at 424 kB/s)
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/infinispan/infinispan-build-configuration-parent/15.0.14.Final/infinispan-build-configuration-parent-15.0.14.Final.pom
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/infinispan/infinispan-build-configuration-parent/15.0.14.Final/infinispan-build-configuration-parent-15.0.14.Final.pom (18 kB at 426 kB/s)
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/jboss/jboss-parent/43/jboss-parent-43.pom
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/jboss/jboss-parent/43/jboss-parent-43.pom (75 kB at 1.7 MB/s)
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/com/fasterxml/jackson/jackson-bom/2.18.3/jackson-bom-2.18.3.pom
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/com/fasterxml/jackson/jackson-bom/2.18.3/jackson-bom-2.18.3.pom (19 kB at 813 kB/s)
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/com/fasterxml/jackson/jackson-parent/2.18.1/jackson-parent-2.18.1.pom
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/com/fasterxml/jackson/jackson-parent/2.18.1/jackson-parent-2.18.1.pom (6.7 kB at 304 kB/s)
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/com/fasterxml/oss-parent/61/oss-parent-61.pom
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/com/fasterxml/oss-parent/61/oss-parent-61.pom (23 kB at 903 kB/s)
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/eclipse/jetty/ee10/jetty-ee10-bom/12.0.19/jetty-ee10-bom-12.0.19.pom
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/eclipse/jetty/ee10/jetty-ee10-bom/12.0.19/jetty-ee10-bom-12.0.19.pom (9.6 kB at 245 kB/s)
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/eclipse/jetty/jetty-bom/12.0.19/jetty-bom-12.0.19.pom
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/eclipse/jetty/jetty-bom/12.0.19/jetty-bom-12.0.19.pom (15 kB at 356 kB/s)
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/io/micrometer/micrometer-bom/1.14.6/micrometer-bom-1.14.6.pom
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/io/micrometer/micrometer-bom/1.14.6/micrometer-bom-1.14.6.pom (8.6 kB at 209 kB/s)
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/io/micrometer/micrometer-tracing-bom/1.4.5/micrometer-tracing-bom-1.4.5.pom
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/io/micrometer/micrometer-tracing-bom/1.4.5/micrometer-tracing-bom-1.4.5.pom (4.5 kB at 113 kB/s)
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/mockito/mockito-bom/5.14.2/mockito-bom-5.14.2.pom
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/mockito/mockito-bom/5.14.2/mockito-bom-5.14.2.pom (3.0 kB at 51 kB/s)
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/io/netty/netty-bom/4.1.119.Final/netty-bom-4.1.119.Final.pom
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/io/netty/netty-bom/4.1.119.Final/netty-bom-4.1.119.Final.pom (14 kB at 222 kB/s)
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/io/opentelemetry/opentelemetry-bom/1.43.0/opentelemetry-bom-1.43.0.pom
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/io/opentelemetry/opentelemetry-bom/1.43.0/opentelemetry-bom-1.43.0.pom (5.9 kB at 85 kB/s)
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/apache/pulsar/pulsar-bom/3.3.6/pulsar-bom-3.3.6.pom
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/apache/pulsar/pulsar-bom/3.3.6/pulsar-bom-3.3.6.pom (26 kB at 613 kB/s)
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/io/projectreactor/reactor-bom/2024.0.5/reactor-bom-2024.0.5.pom
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/io/projectreactor/reactor-bom/2024.0.5/reactor-bom-2024.0.5.pom (4.8 kB at 119 kB/s)
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/io/rest-assured/rest-assured-bom/5.5.1/rest-assured-bom-5.5.1.pom
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/io/rest-assured/rest-assured-bom/5.5.1/rest-assured-bom-5.5.1.pom (5.0 kB at 84 kB/s)
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/seleniumhq/selenium/selenium-bom/4.25.0/selenium-bom-4.25.0.pom
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/seleniumhq/selenium/selenium-bom/4.25.0/selenium-bom-4.25.0.pom (6.0 kB at 93 kB/s)
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/springframework/data/spring-data-bom/2024.1.5/spring-data-bom-2024.1.5.pom
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/springframework/data/spring-data-bom/2024.1.5/spring-data-bom-2024.1.5.pom (5.5 kB at 153 kB/s)
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/springframework/spring-framework-bom/6.2.6/spring-framework-bom-6.2.6.pom
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/springframework/spring-framework-bom/6.2.6/spring-framework-bom-6.2.6.pom (5.8 kB at 149 kB/s)
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/springframework/integration/spring-integration-bom/6.4.4/spring-integration-bom-6.4.4.pom
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/springframework/integration/spring-integration-bom/6.4.4/spring-integration-bom-6.4.4.pom (10 kB at 251 kB/s)
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/springframework/pulsar/spring-pulsar-bom/1.2.5/spring-pulsar-bom-1.2.5.pom
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/springframework/pulsar/spring-pulsar-bom/1.2.5/spring-pulsar-bom-1.2.5.pom (2.9 kB at 70 kB/s)
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/springframework/security/spring-security-bom/6.4.5/spring-security-bom-6.4.5.pom
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/springframework/security/spring-security-bom/6.4.5/spring-security-bom-6.4.5.pom (5.3 kB at 130 kB/s)
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/springframework/session/spring-session-bom/3.4.3/spring-session-bom-3.4.3.pom
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/springframework/session/spring-session-bom/3.4.3/spring-session-bom-3.4.3.pom (2.9 kB at 80 kB/s)
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/springframework/ws/spring-ws-bom/4.0.13/spring-ws-bom-4.0.13.pom
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/springframework/ws/spring-ws-bom/4.0.13/spring-ws-bom-4.0.13.pom (2.3 kB at 58 kB/s)
+[INFO] 
+[INFO] -------------------< com.carddemo:carddemo-backend >--------------------
+[INFO] Building carddemo-backend 0.1.0-SNAPSHOT
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/springframework/boot/spring-boot-maven-plugin/3.4.5/spring-boot-maven-plugin-3.4.5.pom
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/springframework/boot/spring-boot-maven-plugin/3.4.5/spring-boot-maven-plugin-3.4.5.pom (4.0 kB at 64 kB/s)
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/springframework/boot/spring-boot-maven-plugin/3.4.5/spring-boot-maven-plugin-3.4.5.jar
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/springframework/boot/spring-boot-maven-plugin/3.4.5/spring-boot-maven-plugin-3.4.5.jar (137 kB at 2.2 MB/s)
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/apache/maven/plugins/maven-compiler-plugin/3.13.0/maven-compiler-plugin-3.13.0.pom
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/apache/maven/plugins/maven-compiler-plugin/3.13.0/maven-compiler-plugin-3.13.0.pom (0 B at 0 B/s)
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/apache/maven/plugins/maven-compiler-plugin/3.13.0/maven-compiler-plugin-3.13.0.jar
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/apache/maven/plugins/maven-compiler-plugin/3.13.0/maven-compiler-plugin-3.13.0.jar (0 B at 0 B/s)
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/springframework/boot/spring-boot-starter-web/3.4.5/spring-boot-starter-web-3.4.5.pom
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/springframework/boot/spring-boot-starter-web/3.4.5/spring-boot-starter-web-3.4.5.pom (2.9 kB at 73 kB/s)
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/springframework/boot/spring-boot-starter/3.4.5/spring-boot-starter-3.4.5.pom
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/springframework/boot/spring-boot-starter/3.4.5/spring-boot-starter-3.4.5.pom (3.0 kB at 89 kB/s)
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/springframework/boot/spring-boot/3.4.5/spring-boot-3.4.5.pom
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/springframework/boot/spring-boot/3.4.5/spring-boot-3.4.5.pom (2.2 kB at 58 kB/s)
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/springframework/spring-core/6.2.6/spring-core-6.2.6.pom
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/springframework/spring-core/6.2.6/spring-core-6.2.6.pom (2.0 kB at 47 kB/s)
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/springframework/spring-jcl/6.2.6/spring-jcl-6.2.6.pom
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/springframework/spring-jcl/6.2.6/spring-jcl-6.2.6.pom (1.8 kB at 47 kB/s)
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/springframework/spring-context/6.2.6/spring-context-6.2.6.pom
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/springframework/spring-context/6.2.6/spring-context-6.2.6.pom (2.8 kB at 71 kB/s)
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/springframework/spring-aop/6.2.6/spring-aop-6.2.6.pom
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/springframework/spring-aop/6.2.6/spring-aop-6.2.6.pom (2.2 kB at 51 kB/s)
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/springframework/spring-beans/6.2.6/spring-beans-6.2.6.pom
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/springframework/spring-beans/6.2.6/spring-beans-6.2.6.pom (2.0 kB at 51 kB/s)
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/springframework/spring-expression/6.2.6/spring-expression-6.2.6.pom
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/springframework/spring-expression/6.2.6/spring-expression-6.2.6.pom (2.1 kB at 46 kB/s)
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/io/micrometer/micrometer-observation/1.14.6/micrometer-observation-1.14.6.pom
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/io/micrometer/micrometer-observation/1.14.6/micrometer-observation-1.14.6.pom (3.8 kB at 104 kB/s)
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/io/micrometer/micrometer-commons/1.14.6/micrometer-commons-1.14.6.pom
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/io/micrometer/micrometer-commons/1.14.6/micrometer-commons-1.14.6.pom (3.4 kB at 83 kB/s)
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/springframework/boot/spring-boot-autoconfigure/3.4.5/spring-boot-autoconfigure-3.4.5.pom
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/springframework/boot/spring-boot-autoconfigure/3.4.5/spring-boot-autoconfigure-3.4.5.pom (2.1 kB at 48 kB/s)
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/springframework/boot/spring-boot-starter-logging/3.4.5/spring-boot-starter-logging-3.4.5.pom
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/springframework/boot/spring-boot-starter-logging/3.4.5/spring-boot-starter-logging-3.4.5.pom (2.5 kB at 65 kB/s)
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/yaml/snakeyaml/2.3/snakeyaml-2.3.pom
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/yaml/snakeyaml/2.3/snakeyaml-2.3.pom (22 kB at 1.1 MB/s)
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/springframework/boot/spring-boot-starter-json/3.4.5/spring-boot-starter-json-3.4.5.pom
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/springframework/boot/spring-boot-starter-json/3.4.5/spring-boot-starter-json-3.4.5.pom (3.1 kB at 70 kB/s)
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/springframework/spring-web/6.2.6/spring-web-6.2.6.pom
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/springframework/spring-web/6.2.6/spring-web-6.2.6.pom (2.4 kB at 58 kB/s)
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/com/fasterxml/jackson/core/jackson-databind/2.18.3/jackson-databind-2.18.3.pom
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/com/fasterxml/jackson/core/jackson-databind/2.18.3/jackson-databind-2.18.3.pom (21 kB at 362 kB/s)
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/com/fasterxml/jackson/jackson-base/2.18.3/jackson-base-2.18.3.pom
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/com/fasterxml/jackson/jackson-base/2.18.3/jackson-base-2.18.3.pom (12 kB at 324 kB/s)
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/com/fasterxml/jackson/core/jackson-annotations/2.18.3/jackson-annotations-2.18.3.pom
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/com/fasterxml/jackson/core/jackson-annotations/2.18.3/jackson-annotations-2.18.3.pom (7.1 kB at 187 kB/s)
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/com/fasterxml/jackson/core/jackson-core/2.18.3/jackson-core-2.18.3.pom
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/com/fasterxml/jackson/core/jackson-core/2.18.3/jackson-core-2.18.3.pom (10 kB at 173 kB/s)
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/com/fasterxml/jackson/datatype/jackson-datatype-jdk8/2.18.3/jackson-datatype-jdk8-2.18.3.pom
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/com/fasterxml/jackson/datatype/jackson-datatype-jdk8/2.18.3/jackson-datatype-jdk8-2.18.3.pom (2.6 kB at 68 kB/s)
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/com/fasterxml/jackson/module/jackson-modules-java8/2.18.3/jackson-modules-java8-2.18.3.pom
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/com/fasterxml/jackson/module/jackson-modules-java8/2.18.3/jackson-modules-java8-2.18.3.pom (3.3 kB at 92 kB/s)
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/com/fasterxml/jackson/datatype/jackson-datatype-jsr310/2.18.3/jackson-datatype-jsr310-2.18.3.pom
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/com/fasterxml/jackson/datatype/jackson-datatype-jsr310/2.18.3/jackson-datatype-jsr310-2.18.3.pom (4.9 kB at 86 kB/s)
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/com/fasterxml/jackson/module/jackson-module-parameter-names/2.18.3/jackson-module-parameter-names-2.18.3.pom
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/com/fasterxml/jackson/module/jackson-module-parameter-names/2.18.3/jackson-module-parameter-names-2.18.3.pom (4.2 kB at 103 kB/s)
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/springframework/boot/spring-boot-starter-tomcat/3.4.5/spring-boot-starter-tomcat-3.4.5.pom
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/springframework/boot/spring-boot-starter-tomcat/3.4.5/spring-boot-starter-tomcat-3.4.5.pom (3.1 kB at 80 kB/s)
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/apache/tomcat/embed/tomcat-embed-core/10.1.40/tomcat-embed-core-10.1.40.pom
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/apache/tomcat/embed/tomcat-embed-core/10.1.40/tomcat-embed-core-10.1.40.pom (1.7 kB at 27 kB/s)
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/apache/tomcat/embed/tomcat-embed-el/10.1.40/tomcat-embed-el-10.1.40.pom
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/apache/tomcat/embed/tomcat-embed-el/10.1.40/tomcat-embed-el-10.1.40.pom (1.5 kB at 35 kB/s)
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/apache/tomcat/embed/tomcat-embed-websocket/10.1.40/tomcat-embed-websocket-10.1.40.pom
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/apache/tomcat/embed/tomcat-embed-websocket/10.1.40/tomcat-embed-websocket-10.1.40.pom (1.7 kB at 44 kB/s)
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/springframework/spring-webmvc/6.2.6/spring-webmvc-6.2.6.pom
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/springframework/spring-webmvc/6.2.6/spring-webmvc-6.2.6.pom (3.0 kB at 76 kB/s)
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/springframework/boot/spring-boot-starter-data-jpa/3.4.5/spring-boot-starter-data-jpa-3.4.5.pom
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/springframework/boot/spring-boot-starter-data-jpa/3.4.5/spring-boot-starter-data-jpa-3.4.5.pom (2.9 kB at 80 kB/s)
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/springframework/boot/spring-boot-starter-jdbc/3.4.5/spring-boot-starter-jdbc-3.4.5.pom
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/springframework/boot/spring-boot-starter-jdbc/3.4.5/spring-boot-starter-jdbc-3.4.5.pom (2.5 kB at 68 kB/s)
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/com/zaxxer/HikariCP/5.1.0/HikariCP-5.1.0.pom
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/com/zaxxer/HikariCP/5.1.0/HikariCP-5.1.0.pom (26 kB at 442 kB/s)
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/springframework/spring-jdbc/6.2.6/spring-jdbc-6.2.6.pom
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/springframework/spring-jdbc/6.2.6/spring-jdbc-6.2.6.pom (2.4 kB at 54 kB/s)
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/springframework/spring-tx/6.2.6/spring-tx-6.2.6.pom
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/springframework/spring-tx/6.2.6/spring-tx-6.2.6.pom (2.2 kB at 58 kB/s)
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/hibernate/orm/hibernate-core/6.6.13.Final/hibernate-core-6.6.13.Final.pom
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/hibernate/orm/hibernate-core/6.6.13.Final/hibernate-core-6.6.13.Final.pom (5.8 kB at 164 kB/s)
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/jboss/logging/jboss-logging/3.6.1.Final/jboss-logging-3.6.1.Final.pom
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/jboss/logging/jboss-logging/3.6.1.Final/jboss-logging-3.6.1.Final.pom (18 kB at 426 kB/s)
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/jboss/logging/logging-parent/1.0.3.Final/logging-parent-1.0.3.Final.pom
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/jboss/logging/logging-parent/1.0.3.Final/logging-parent-1.0.3.Final.pom (5.7 kB at 162 kB/s)
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/jboss/jboss-parent/42/jboss-parent-42.pom
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/jboss/jboss-parent/42/jboss-parent-42.pom (76 kB at 1.7 MB/s)
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/com/fasterxml/classmate/1.7.0/classmate-1.7.0.pom
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/com/fasterxml/classmate/1.7.0/classmate-1.7.0.pom (7.0 kB at 126 kB/s)
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/glassfish/jaxb/jaxb-runtime/4.0.5/jaxb-runtime-4.0.5.pom
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/glassfish/jaxb/jaxb-runtime/4.0.5/jaxb-runtime-4.0.5.pom (11 kB at 264 kB/s)
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/com/sun/xml/bind/mvn/jaxb-runtime-parent/4.0.5/jaxb-runtime-parent-4.0.5.pom
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/com/sun/xml/bind/mvn/jaxb-runtime-parent/4.0.5/jaxb-runtime-parent-4.0.5.pom (1.2 kB at 26 kB/s)
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/com/sun/xml/bind/mvn/jaxb-parent/4.0.5/jaxb-parent-4.0.5.pom
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/com/sun/xml/bind/mvn/jaxb-parent/4.0.5/jaxb-parent-4.0.5.pom (35 kB at 875 kB/s)
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/com/sun/xml/bind/jaxb-bom-ext/4.0.5/jaxb-bom-ext-4.0.5.pom
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/com/sun/xml/bind/jaxb-bom-ext/4.0.5/jaxb-bom-ext-4.0.5.pom (3.5 kB at 85 kB/s)
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/glassfish/jaxb/jaxb-core/4.0.5/jaxb-core-4.0.5.pom
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/glassfish/jaxb/jaxb-core/4.0.5/jaxb-core-4.0.5.pom (3.7 kB at 98 kB/s)
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/eclipse/angus/angus-activation/2.0.2/angus-activation-2.0.2.pom
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/eclipse/angus/angus-activation/2.0.2/angus-activation-2.0.2.pom (4.0 kB at 95 kB/s)
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/eclipse/angus/angus-activation-project/2.0.2/angus-activation-project-2.0.2.pom
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/eclipse/angus/angus-activation-project/2.0.2/angus-activation-project-2.0.2.pom (21 kB at 550 kB/s)
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/glassfish/jaxb/txw2/4.0.5/txw2-4.0.5.pom
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/glassfish/jaxb/txw2/4.0.5/txw2-4.0.5.pom (1.8 kB at 46 kB/s)
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/com/sun/xml/bind/mvn/jaxb-txw-parent/4.0.5/jaxb-txw-parent-4.0.5.pom
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/com/sun/xml/bind/mvn/jaxb-txw-parent/4.0.5/jaxb-txw-parent-4.0.5.pom (1.2 kB at 18 kB/s)
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/com/sun/istack/istack-commons-runtime/4.1.2/istack-commons-runtime-4.1.2.pom
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/com/sun/istack/istack-commons-runtime/4.1.2/istack-commons-runtime-4.1.2.pom (1.6 kB at 28 kB/s)
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/com/sun/istack/istack-commons/4.1.2/istack-commons-4.1.2.pom
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/com/sun/istack/istack-commons/4.1.2/istack-commons-4.1.2.pom (26 kB at 470 kB/s)
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/springframework/data/spring-data-jpa/3.4.5/spring-data-jpa-3.4.5.pom
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/springframework/data/spring-data-jpa/3.4.5/spring-data-jpa-3.4.5.pom (12 kB at 320 kB/s)
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/springframework/data/spring-data-jpa-parent/3.4.5/spring-data-jpa-parent-3.4.5.pom
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/springframework/data/spring-data-jpa-parent/3.4.5/spring-data-jpa-parent-3.4.5.pom (5.2 kB at 119 kB/s)
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/springframework/data/build/spring-data-parent/3.4.5/spring-data-parent-3.4.5.pom
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/springframework/data/build/spring-data-parent/3.4.5/spring-data-parent-3.4.5.pom (43 kB at 1.1 MB/s)
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/springframework/data/build/spring-data-build/3.4.5/spring-data-build-3.4.5.pom
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/springframework/data/build/spring-data-build/3.4.5/spring-data-build-3.4.5.pom (7.3 kB at 198 kB/s)
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/springframework/data/spring-data-commons/3.4.5/spring-data-commons-3.4.5.pom
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/springframework/data/spring-data-commons/3.4.5/spring-data-commons-3.4.5.pom (9.9 kB at 261 kB/s)
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/springframework/spring-orm/6.2.6/spring-orm-6.2.6.pom
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/springframework/spring-orm/6.2.6/spring-orm-6.2.6.pom (2.6 kB at 67 kB/s)
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/springframework/spring-aspects/6.2.6/spring-aspects-6.2.6.pom
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/springframework/spring-aspects/6.2.6/spring-aspects-6.2.6.pom (2.0 kB at 45 kB/s)
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/aspectj/aspectjweaver/1.9.24/aspectjweaver-1.9.24.pom
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/aspectj/aspectjweaver/1.9.24/aspectjweaver-1.9.24.pom (2.2 kB at 36 kB/s)
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/springframework/boot/spring-boot-starter-security/3.4.5/spring-boot-starter-security-3.4.5.pom
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/springframework/boot/spring-boot-starter-security/3.4.5/spring-boot-starter-security-3.4.5.pom (2.7 kB at 70 kB/s)
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/springframework/security/spring-security-config/6.4.5/spring-security-config-6.4.5.pom
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/springframework/security/spring-security-config/6.4.5/spring-security-config-6.4.5.pom (2.8 kB at 56 kB/s)
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/springframework/security/spring-security-core/6.4.5/spring-security-core-6.4.5.pom
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/springframework/security/spring-security-core/6.4.5/spring-security-core-6.4.5.pom (3.2 kB at 84 kB/s)
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/springframework/security/spring-security-crypto/6.4.5/spring-security-crypto-6.4.5.pom
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/springframework/security/spring-security-crypto/6.4.5/spring-security-crypto-6.4.5.pom (1.9 kB at 44 kB/s)
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/springframework/security/spring-security-web/6.4.5/spring-security-web-6.4.5.pom
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/springframework/security/spring-security-web/6.4.5/spring-security-web-6.4.5.pom (3.2 kB at 82 kB/s)
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/springframework/boot/spring-boot-starter-validation/3.4.5/spring-boot-starter-validation-3.4.5.pom
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/springframework/boot/spring-boot-starter-validation/3.4.5/spring-boot-starter-validation-3.4.5.pom (2.5 kB at 63 kB/s)
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/flywaydb/flyway-core/10.20.1/flyway-core-10.20.1.pom
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/flywaydb/flyway-core/10.20.1/flyway-core-10.20.1.pom (5.6 kB at 87 kB/s)
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/flywaydb/flyway-parent/10.20.1/flyway-parent-10.20.1.pom
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/flywaydb/flyway-parent/10.20.1/flyway-parent-10.20.1.pom (36 kB at 603 kB/s)
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/com/fasterxml/jackson/dataformat/jackson-dataformat-toml/2.18.3/jackson-dataformat-toml-2.18.3.pom
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/com/fasterxml/jackson/dataformat/jackson-dataformat-toml/2.18.3/jackson-dataformat-toml-2.18.3.pom (3.5 kB at 92 kB/s)
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/com/fasterxml/jackson/dataformat/jackson-dataformats-text/2.18.3/jackson-dataformats-text-2.18.3.pom
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/com/fasterxml/jackson/dataformat/jackson-dataformats-text/2.18.3/jackson-dataformats-text-2.18.3.pom (3.7 kB at 105 kB/s)
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/flywaydb/flyway-database-postgresql/10.20.1/flyway-database-postgresql-10.20.1.pom
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/flywaydb/flyway-database-postgresql/10.20.1/flyway-database-postgresql-10.20.1.pom (2.7 kB at 61 kB/s)
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/springframework/boot/spring-boot-starter-test/3.4.5/spring-boot-starter-test-3.4.5.pom
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/springframework/boot/spring-boot-starter-test/3.4.5/spring-boot-starter-test-3.4.5.pom (5.1 kB at 158 kB/s)
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/springframework/boot/spring-boot-test/3.4.5/spring-boot-test-3.4.5.pom
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/springframework/boot/spring-boot-test/3.4.5/spring-boot-test-3.4.5.pom (2.2 kB at 58 kB/s)
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/springframework/spring-test/6.2.6/spring-test-6.2.6.pom
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/springframework/spring-test/6.2.6/spring-test-6.2.6.pom (2.1 kB at 61 kB/s)
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/springframework/boot/spring-boot-test-autoconfigure/3.4.5/spring-boot-test-autoconfigure-3.4.5.pom
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/springframework/boot/spring-boot-test-autoconfigure/3.4.5/spring-boot-test-autoconfigure-3.4.5.pom (2.5 kB at 57 kB/s)
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/assertj/assertj-core/3.26.3/assertj-core-3.26.3.pom
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/assertj/assertj-core/3.26.3/assertj-core-3.26.3.pom (3.8 kB at 119 kB/s)
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/awaitility/awaitility/4.2.2/awaitility-4.2.2.pom
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/awaitility/awaitility/4.2.2/awaitility-4.2.2.pom (3.5 kB at 87 kB/s)
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/awaitility/awaitility-parent/4.2.2/awaitility-parent-4.2.2.pom
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/awaitility/awaitility-parent/4.2.2/awaitility-parent-4.2.2.pom (11 kB at 293 kB/s)
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/hamcrest/hamcrest/2.2/hamcrest-2.2.pom
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/hamcrest/hamcrest/2.2/hamcrest-2.2.pom (0 B at 0 B/s)
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/junit/jupiter/junit-jupiter/5.11.4/junit-jupiter-5.11.4.pom
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/junit/jupiter/junit-jupiter/5.11.4/junit-jupiter-5.11.4.pom (3.2 kB at 70 kB/s)
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/junit/jupiter/junit-jupiter-params/5.11.4/junit-jupiter-params-5.11.4.pom
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/junit/jupiter/junit-jupiter-params/5.11.4/junit-jupiter-params-5.11.4.pom (3.0 kB at 77 kB/s)
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/mockito/mockito-core/5.14.2/mockito-core-5.14.2.pom
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/mockito/mockito-core/5.14.2/mockito-core-5.14.2.pom (2.5 kB at 46 kB/s)
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/mockito/mockito-junit-jupiter/5.14.2/mockito-junit-jupiter-5.14.2.pom
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/mockito/mockito-junit-jupiter/5.14.2/mockito-junit-jupiter-5.14.2.pom (2.3 kB at 56 kB/s)
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/xmlunit/xmlunit-core/2.10.0/xmlunit-core-2.10.0.pom
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/xmlunit/xmlunit-core/2.10.0/xmlunit-core-2.10.0.pom (2.4 kB at 128 kB/s)
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/xmlunit/xmlunit-parent/2.10.0/xmlunit-parent-2.10.0.pom
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/xmlunit/xmlunit-parent/2.10.0/xmlunit-parent-2.10.0.pom (21 kB at 1.1 MB/s)
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/springframework/security/spring-security-test/6.4.5/spring-security-test-6.4.5.pom
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/springframework/security/spring-security-test/6.4.5/spring-security-test-6.4.5.pom (2.7 kB at 68 kB/s)
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/springframework/boot/spring-boot-testcontainers/3.4.5/spring-boot-testcontainers-3.4.5.pom
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/springframework/boot/spring-boot-testcontainers/3.4.5/spring-boot-testcontainers-3.4.5.pom (2.3 kB at 41 kB/s)
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/testcontainers/testcontainers/1.20.6/testcontainers-1.20.6.pom
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/testcontainers/testcontainers/1.20.6/testcontainers-1.20.6.pom (2.6 kB at 67 kB/s)
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/hamcrest/hamcrest-core/2.2/hamcrest-core-2.2.pom
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/hamcrest/hamcrest-core/2.2/hamcrest-core-2.2.pom (1.4 kB at 71 kB/s)
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/apache/commons/commons-compress/1.24.0/commons-compress-1.24.0.pom
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/apache/commons/commons-compress/1.24.0/commons-compress-1.24.0.pom (22 kB at 545 kB/s)
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/apache/commons/commons-parent/61/commons-parent-61.pom
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/apache/commons/commons-parent/61/commons-parent-61.pom (81 kB at 2.1 MB/s)
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/rnorth/duct-tape/duct-tape/1.0.8/duct-tape-1.0.8.pom
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/rnorth/duct-tape/duct-tape/1.0.8/duct-tape-1.0.8.pom (6.2 kB at 311 kB/s)
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/jetbrains/annotations/17.0.0/annotations-17.0.0.pom
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/jetbrains/annotations/17.0.0/annotations-17.0.0.pom (1.4 kB at 75 kB/s)
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/com/github/docker-java/docker-java-api/3.4.1/docker-java-api-3.4.1.pom
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/com/github/docker-java/docker-java-api/3.4.1/docker-java-api-3.4.1.pom (2.4 kB at 65 kB/s)
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/com/github/docker-java/docker-java-parent/3.4.1/docker-java-parent-3.4.1.pom
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/com/github/docker-java/docker-java-parent/3.4.1/docker-java-parent-3.4.1.pom (12 kB at 267 kB/s)
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/com/github/docker-java/docker-java-transport-zerodep/3.4.1/docker-java-transport-zerodep-3.4.1.pom
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/com/github/docker-java/docker-java-transport-zerodep/3.4.1/docker-java-transport-zerodep-3.4.1.pom (4.1 kB at 113 kB/s)
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/com/github/docker-java/docker-java-transport/3.4.1/docker-java-transport-3.4.1.pom
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/com/github/docker-java/docker-java-transport/3.4.1/docker-java-transport-3.4.1.pom (1.6 kB at 48 kB/s)
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/testcontainers/junit-jupiter/1.20.6/junit-jupiter-1.20.6.pom
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/testcontainers/junit-jupiter/1.20.6/junit-jupiter-1.20.6.pom (1.5 kB at 27 kB/s)
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/testcontainers/postgresql/1.20.6/postgresql-1.20.6.pom
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/testcontainers/postgresql/1.20.6/postgresql-1.20.6.pom (1.5 kB at 40 kB/s)
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/testcontainers/jdbc/1.20.6/jdbc-1.20.6.pom
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/testcontainers/jdbc/1.20.6/jdbc-1.20.6.pom (1.5 kB at 40 kB/s)
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/testcontainers/database-commons/1.20.6/database-commons-1.20.6.pom
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/testcontainers/database-commons/1.20.6/database-commons-1.20.6.pom (1.5 kB at 40 kB/s)
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/springframework/boot/spring-boot-starter-web/3.4.5/spring-boot-starter-web-3.4.5.jar
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/springframework/boot/spring-boot-starter/3.4.5/spring-boot-starter-3.4.5.jar
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/springframework/boot/spring-boot/3.4.5/spring-boot-3.4.5.jar
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/springframework/boot/spring-boot-starter-logging/3.4.5/spring-boot-starter-logging-3.4.5.jar
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/yaml/snakeyaml/2.3/snakeyaml-2.3.jar
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/springframework/boot/spring-boot-starter/3.4.5/spring-boot-starter-3.4.5.jar (4.8 kB at 136 kB/s)
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/springframework/boot/spring-boot-starter-json/3.4.5/spring-boot-starter-json-3.4.5.jar
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/springframework/boot/spring-boot-starter-json/3.4.5/spring-boot-starter-json-3.4.5.jar (4.7 kB at 47 kB/s)
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/com/fasterxml/jackson/core/jackson-databind/2.18.3/jackson-databind-2.18.3.jar
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/springframework/boot/spring-boot-starter-web/3.4.5/spring-boot-starter-web-3.4.5.jar (4.8 kB at 48 kB/s)
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/com/fasterxml/jackson/datatype/jackson-datatype-jdk8/2.18.3/jackson-datatype-jdk8-2.18.3.jar
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/springframework/boot/spring-boot-starter-logging/3.4.5/spring-boot-starter-logging-3.4.5.jar (4.8 kB at 48 kB/s)
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/com/fasterxml/jackson/module/jackson-module-parameter-names/2.18.3/jackson-module-parameter-names-2.18.3.jar
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/yaml/snakeyaml/2.3/snakeyaml-2.3.jar (342 kB at 3.2 MB/s)
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/springframework/boot/spring-boot-starter-tomcat/3.4.5/spring-boot-starter-tomcat-3.4.5.jar
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/springframework/boot/spring-boot/3.4.5/spring-boot-3.4.5.jar (1.8 MB at 15 MB/s)
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/apache/tomcat/embed/tomcat-embed-core/10.1.40/tomcat-embed-core-10.1.40.jar
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/com/fasterxml/jackson/module/jackson-module-parameter-names/2.18.3/jackson-module-parameter-names-2.18.3.jar (10 kB at 75 kB/s)
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/apache/tomcat/embed/tomcat-embed-websocket/10.1.40/tomcat-embed-websocket-10.1.40.jar
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/com/fasterxml/jackson/datatype/jackson-datatype-jdk8/2.18.3/jackson-datatype-jdk8-2.18.3.jar (36 kB at 253 kB/s)
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/springframework/spring-web/6.2.6/spring-web-6.2.6.jar
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/springframework/boot/spring-boot-starter-tomcat/3.4.5/spring-boot-starter-tomcat-3.4.5.jar (4.8 kB at 32 kB/s)
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/springframework/spring-beans/6.2.6/spring-beans-6.2.6.jar
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/com/fasterxml/jackson/core/jackson-databind/2.18.3/jackson-databind-2.18.3.jar (1.7 MB at 8.6 MB/s)
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/io/micrometer/micrometer-observation/1.14.6/micrometer-observation-1.14.6.jar
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/springframework/spring-beans/6.2.6/spring-beans-6.2.6.jar (886 kB at 4.1 MB/s)
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/io/micrometer/micrometer-commons/1.14.6/micrometer-commons-1.14.6.jar
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/apache/tomcat/embed/tomcat-embed-websocket/10.1.40/tomcat-embed-websocket-10.1.40.jar (282 kB at 1.3 MB/s)
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/springframework/spring-webmvc/6.2.6/spring-webmvc-6.2.6.jar
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/io/micrometer/micrometer-observation/1.14.6/micrometer-observation-1.14.6.jar (75 kB at 315 kB/s)
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/springframework/spring-context/6.2.6/spring-context-6.2.6.jar
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/io/micrometer/micrometer-commons/1.14.6/micrometer-commons-1.14.6.jar (48 kB at 189 kB/s)
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/springframework/spring-expression/6.2.6/spring-expression-6.2.6.jar
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/springframework/spring-webmvc/6.2.6/spring-webmvc-6.2.6.jar (1.1 MB at 3.9 MB/s)
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/springframework/boot/spring-boot-starter-data-jpa/3.4.5/spring-boot-starter-data-jpa-3.4.5.jar
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/springframework/spring-web/6.2.6/spring-web-6.2.6.jar (2.1 MB at 7.1 MB/s)
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/springframework/spring-expression/6.2.6/spring-expression-6.2.6.jar (318 kB at 1.1 MB/s)
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/springframework/boot/spring-boot-starter-jdbc/3.4.5/spring-boot-starter-jdbc-3.4.5.jar
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/com/zaxxer/HikariCP/5.1.0/HikariCP-5.1.0.jar
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/apache/tomcat/embed/tomcat-embed-core/10.1.40/tomcat-embed-core-10.1.40.jar (3.6 MB at 12 MB/s)
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/springframework/spring-jdbc/6.2.6/spring-jdbc-6.2.6.jar
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/springframework/spring-context/6.2.6/spring-context-6.2.6.jar (1.4 MB at 4.5 MB/s)
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/hibernate/orm/hibernate-core/6.6.13.Final/hibernate-core-6.6.13.Final.jar
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/springframework/boot/spring-boot-starter-jdbc/3.4.5/spring-boot-starter-jdbc-3.4.5.jar (4.8 kB at 14 kB/s)
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/jboss/logging/jboss-logging/3.6.1.Final/jboss-logging-3.6.1.Final.jar
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/springframework/spring-jdbc/6.2.6/spring-jdbc-6.2.6.jar (472 kB at 1.4 MB/s)
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/com/fasterxml/classmate/1.7.0/classmate-1.7.0.jar
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/springframework/boot/spring-boot-starter-data-jpa/3.4.5/spring-boot-starter-data-jpa-3.4.5.jar (4.8 kB at 14 kB/s)
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/glassfish/jaxb/jaxb-runtime/4.0.5/jaxb-runtime-4.0.5.jar
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/com/zaxxer/HikariCP/5.1.0/HikariCP-5.1.0.jar (162 kB at 442 kB/s)
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/glassfish/jaxb/jaxb-core/4.0.5/jaxb-core-4.0.5.jar
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/jboss/logging/jboss-logging/3.6.1.Final/jboss-logging-3.6.1.Final.jar (62 kB at 165 kB/s)
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/eclipse/angus/angus-activation/2.0.2/angus-activation-2.0.2.jar
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/glassfish/jaxb/jaxb-runtime/4.0.5/jaxb-runtime-4.0.5.jar (920 kB at 2.4 MB/s)
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/glassfish/jaxb/txw2/4.0.5/txw2-4.0.5.jar
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/glassfish/jaxb/jaxb-core/4.0.5/jaxb-core-4.0.5.jar (139 kB at 359 kB/s)
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/com/sun/istack/istack-commons-runtime/4.1.2/istack-commons-runtime-4.1.2.jar
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/com/fasterxml/classmate/1.7.0/classmate-1.7.0.jar (69 kB at 172 kB/s)
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/springframework/data/spring-data-jpa/3.4.5/spring-data-jpa-3.4.5.jar
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/com/sun/istack/istack-commons-runtime/4.1.2/istack-commons-runtime-4.1.2.jar (26 kB at 64 kB/s)
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/springframework/data/spring-data-commons/3.4.5/spring-data-commons-3.4.5.jar
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/eclipse/angus/angus-activation/2.0.2/angus-activation-2.0.2.jar (27 kB at 65 kB/s)
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/springframework/spring-orm/6.2.6/spring-orm-6.2.6.jar
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/glassfish/jaxb/txw2/4.0.5/txw2-4.0.5.jar (73 kB at 171 kB/s)
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/springframework/spring-tx/6.2.6/spring-tx-6.2.6.jar
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/springframework/data/spring-data-jpa/3.4.5/spring-data-jpa-3.4.5.jar (1.8 MB at 4.0 MB/s)
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/springframework/spring-aspects/6.2.6/spring-aspects-6.2.6.jar
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/springframework/data/spring-data-commons/3.4.5/spring-data-commons-3.4.5.jar (1.5 MB at 3.3 MB/s)
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/aspectj/aspectjweaver/1.9.24/aspectjweaver-1.9.24.jar
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/springframework/spring-orm/6.2.6/spring-orm-6.2.6.jar (235 kB at 510 kB/s)
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/springframework/boot/spring-boot-starter-security/3.4.5/spring-boot-starter-security-3.4.5.jar
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/springframework/spring-tx/6.2.6/spring-tx-6.2.6.jar (285 kB at 595 kB/s)
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/springframework/spring-aop/6.2.6/spring-aop-6.2.6.jar
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/springframework/spring-aspects/6.2.6/spring-aspects-6.2.6.jar (50 kB at 104 kB/s)
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/springframework/security/spring-security-config/6.4.5/spring-security-config-6.4.5.jar
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/hibernate/orm/hibernate-core/6.6.13.Final/hibernate-core-6.6.13.Final.jar (12 MB at 24 MB/s)
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/springframework/security/spring-security-web/6.4.5/spring-security-web-6.4.5.jar
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/springframework/boot/spring-boot-starter-security/3.4.5/spring-boot-starter-security-3.4.5.jar (4.7 kB at 9.4 kB/s)
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/springframework/boot/spring-boot-starter-validation/3.4.5/spring-boot-starter-validation-3.4.5.jar
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/aspectj/aspectjweaver/1.9.24/aspectjweaver-1.9.24.jar (2.2 MB at 4.2 MB/s)
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/apache/tomcat/embed/tomcat-embed-el/10.1.40/tomcat-embed-el-10.1.40.jar
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/springframework/security/spring-security-config/6.4.5/spring-security-config-6.4.5.jar (2.0 MB at 3.8 MB/s)
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/flywaydb/flyway-core/10.20.1/flyway-core-10.20.1.jar
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/springframework/spring-aop/6.2.6/spring-aop-6.2.6.jar (420 kB at 779 kB/s)
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/com/fasterxml/jackson/dataformat/jackson-dataformat-toml/2.18.3/jackson-dataformat-toml-2.18.3.jar
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/springframework/boot/spring-boot-starter-validation/3.4.5/spring-boot-starter-validation-3.4.5.jar (4.8 kB at 8.8 kB/s)
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/com/fasterxml/jackson/core/jackson-core/2.18.3/jackson-core-2.18.3.jar
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/springframework/security/spring-security-web/6.4.5/spring-security-web-6.4.5.jar (997 kB at 1.8 MB/s)
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/com/fasterxml/jackson/datatype/jackson-datatype-jsr310/2.18.3/jackson-datatype-jsr310-2.18.3.jar
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/com/fasterxml/jackson/dataformat/jackson-dataformat-toml/2.18.3/jackson-dataformat-toml-2.18.3.jar (56 kB at 96 kB/s)
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/com/fasterxml/jackson/core/jackson-annotations/2.18.3/jackson-annotations-2.18.3.jar
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/com/fasterxml/jackson/core/jackson-core/2.18.3/jackson-core-2.18.3.jar (598 kB at 1.0 MB/s)
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/flywaydb/flyway-database-postgresql/10.20.1/flyway-database-postgresql-10.20.1.jar
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/apache/tomcat/embed/tomcat-embed-el/10.1.40/tomcat-embed-el-10.1.40.jar (266 kB at 450 kB/s)
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/springframework/boot/spring-boot-starter-test/3.4.5/spring-boot-starter-test-3.4.5.jar
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/com/fasterxml/jackson/datatype/jackson-datatype-jsr310/2.18.3/jackson-datatype-jsr310-2.18.3.jar (133 kB at 224 kB/s)
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/springframework/boot/spring-boot-test/3.4.5/spring-boot-test-3.4.5.jar
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/flywaydb/flyway-core/10.20.1/flyway-core-10.20.1.jar (664 kB at 1.1 MB/s)
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/springframework/boot/spring-boot-test-autoconfigure/3.4.5/spring-boot-test-autoconfigure-3.4.5.jar
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/com/fasterxml/jackson/core/jackson-annotations/2.18.3/jackson-annotations-2.18.3.jar (79 kB at 126 kB/s)
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/assertj/assertj-core/3.26.3/assertj-core-3.26.3.jar
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/springframework/boot/spring-boot-starter-test/3.4.5/spring-boot-starter-test-3.4.5.jar (4.8 kB at 7.6 kB/s)
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/awaitility/awaitility/4.2.2/awaitility-4.2.2.jar
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/flywaydb/flyway-database-postgresql/10.20.1/flyway-database-postgresql-10.20.1.jar (47 kB at 75 kB/s)
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/hamcrest/hamcrest/2.2/hamcrest-2.2.jar
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/springframework/boot/spring-boot-test/3.4.5/spring-boot-test-3.4.5.jar (254 kB at 397 kB/s)
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/junit/jupiter/junit-jupiter/5.11.4/junit-jupiter-5.11.4.jar
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/hamcrest/hamcrest/2.2/hamcrest-2.2.jar (0 B at 0 B/s)
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/junit/jupiter/junit-jupiter-params/5.11.4/junit-jupiter-params-5.11.4.jar
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/springframework/boot/spring-boot-test-autoconfigure/3.4.5/spring-boot-test-autoconfigure-3.4.5.jar (227 kB at 348 kB/s)
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/mockito/mockito-core/5.14.2/mockito-core-5.14.2.jar
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/junit/jupiter/junit-jupiter/5.11.4/junit-jupiter-5.11.4.jar (6.4 kB at 9.6 kB/s)
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/mockito/mockito-junit-jupiter/5.14.2/mockito-junit-jupiter-5.14.2.jar
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/junit/jupiter/junit-jupiter-params/5.11.4/junit-jupiter-params-5.11.4.jar (592 kB at 883 kB/s)
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/springframework/spring-core/6.2.6/spring-core-6.2.6.jar
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/mockito/mockito-junit-jupiter/5.14.2/mockito-junit-jupiter-5.14.2.jar (8.9 kB at 13 kB/s)
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/springframework/spring-jcl/6.2.6/spring-jcl-6.2.6.jar
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/assertj/assertj-core/3.26.3/assertj-core-3.26.3.jar (1.4 MB at 2.0 MB/s)
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/springframework/spring-test/6.2.6/spring-test-6.2.6.jar
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/mockito/mockito-core/5.14.2/mockito-core-5.14.2.jar (708 kB at 1.0 MB/s)
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/xmlunit/xmlunit-core/2.10.0/xmlunit-core-2.10.0.jar
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/awaitility/awaitility/4.2.2/awaitility-4.2.2.jar (97 kB at 140 kB/s)
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/springframework/security/spring-security-test/6.4.5/spring-security-test-6.4.5.jar
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/xmlunit/xmlunit-core/2.10.0/xmlunit-core-2.10.0.jar (181 kB at 258 kB/s)
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/springframework/security/spring-security-core/6.4.5/spring-security-core-6.4.5.jar
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/springframework/spring-jcl/6.2.6/spring-jcl-6.2.6.jar (25 kB at 34 kB/s)
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/springframework/security/spring-security-crypto/6.4.5/spring-security-crypto-6.4.5.jar
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/springframework/spring-core/6.2.6/spring-core-6.2.6.jar (2.0 MB at 2.7 MB/s)
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/springframework/boot/spring-boot-testcontainers/3.4.5/spring-boot-testcontainers-3.4.5.jar
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/springframework/security/spring-security-test/6.4.5/spring-security-test-6.4.5.jar (132 kB at 179 kB/s)
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/springframework/boot/spring-boot-autoconfigure/3.4.5/spring-boot-autoconfigure-3.4.5.jar
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/springframework/spring-test/6.2.6/spring-test-6.2.6.jar (1.0 MB at 1.4 MB/s)
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/testcontainers/testcontainers/1.20.6/testcontainers-1.20.6.jar
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/springframework/security/spring-security-core/6.4.5/spring-security-core-6.4.5.jar (611 kB at 815 kB/s)
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/hamcrest/hamcrest-core/2.2/hamcrest-core-2.2.jar
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/springframework/security/spring-security-crypto/6.4.5/spring-security-crypto-6.4.5.jar (101 kB at 131 kB/s)
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/apache/commons/commons-compress/1.24.0/commons-compress-1.24.0.jar
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/hamcrest/hamcrest-core/2.2/hamcrest-core-2.2.jar (1.5 kB at 1.9 kB/s)
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/rnorth/duct-tape/duct-tape/1.0.8/duct-tape-1.0.8.jar
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/springframework/boot/spring-boot-testcontainers/3.4.5/spring-boot-testcontainers-3.4.5.jar (157 kB at 201 kB/s)
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/jetbrains/annotations/17.0.0/annotations-17.0.0.jar
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/apache/commons/commons-compress/1.24.0/commons-compress-1.24.0.jar (1.1 MB at 1.4 MB/s)
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/com/github/docker-java/docker-java-api/3.4.1/docker-java-api-3.4.1.jar
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/jetbrains/annotations/17.0.0/annotations-17.0.0.jar (19 kB at 24 kB/s)
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/com/github/docker-java/docker-java-transport-zerodep/3.4.1/docker-java-transport-zerodep-3.4.1.jar
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/springframework/boot/spring-boot-autoconfigure/3.4.5/spring-boot-autoconfigure-3.4.5.jar (2.0 MB at 2.5 MB/s)
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/com/github/docker-java/docker-java-transport/3.4.1/docker-java-transport-3.4.1.jar
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/rnorth/duct-tape/duct-tape/1.0.8/duct-tape-1.0.8.jar (25 kB at 31 kB/s)
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/testcontainers/junit-jupiter/1.20.6/junit-jupiter-1.20.6.jar
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/com/github/docker-java/docker-java-api/3.4.1/docker-java-api-3.4.1.jar (486 kB at 580 kB/s)
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/testcontainers/postgresql/1.20.6/postgresql-1.20.6.jar
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/com/github/docker-java/docker-java-transport/3.4.1/docker-java-transport-3.4.1.jar (39 kB at 46 kB/s)
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/testcontainers/jdbc/1.20.6/jdbc-1.20.6.jar
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/com/github/docker-java/docker-java-transport-zerodep/3.4.1/docker-java-transport-zerodep-3.4.1.jar (2.3 MB at 2.7 MB/s)
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/testcontainers/database-commons/1.20.6/database-commons-1.20.6.jar
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/testcontainers/junit-jupiter/1.20.6/junit-jupiter-1.20.6.jar (15 kB at 17 kB/s)
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/testcontainers/postgresql/1.20.6/postgresql-1.20.6.jar (11 kB at 12 kB/s)
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/testcontainers/jdbc/1.20.6/jdbc-1.20.6.jar (30 kB at 34 kB/s)
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/testcontainers/database-commons/1.20.6/database-commons-1.20.6.jar (15 kB at 17 kB/s)
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/testcontainers/testcontainers/1.20.6/testcontainers-1.20.6.jar (18 MB at 16 MB/s)
+[INFO] 
+[INFO] --- maven-clean-plugin:3.4.1:clean (default-clean) @ carddemo-backend ---
+[INFO] 
+[INFO] --- maven-resources-plugin:3.3.1:resources (default-resources) @ carddemo-backend ---
+[INFO] Copying 1 resource from src/main/resources to target/classes
+[INFO] Copying 1 resource from src/main/resources to target/classes
+[INFO] 
+[INFO] --- maven-compiler-plugin:3.13.0:compile (default-compile) @ carddemo-backend ---
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/codehaus/plexus/plexus-utils/4.0.0/plexus-utils-4.0.0.jar
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/codehaus/plexus/plexus-utils/4.0.0/plexus-utils-4.0.0.jar (0 B at 0 B/s)
+[INFO] Recompiling the module because of changed dependency.
+[INFO] Compiling 32 source files with javac [debug parameters release 21] to target/classes
+[INFO] 
+[INFO] --- maven-resources-plugin:3.3.1:testResources (default-testResources) @ carddemo-backend ---
+[INFO] Copying 2 resources from src/test/resources to target/test-classes
+[INFO] 
+[INFO] --- maven-compiler-plugin:3.13.0:testCompile (default-testCompile) @ carddemo-backend ---
+[INFO] Recompiling the module because of changed dependency.
+[INFO] Compiling 11 source files with javac [debug parameters release 21] to target/test-classes
+[INFO] 
+[INFO] --- maven-surefire-plugin:3.5.3:test (default-test) @ carddemo-backend ---
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/codehaus/plexus/plexus-utils/1.1/plexus-utils-1.1.jar
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/codehaus/plexus/plexus-utils/1.1/plexus-utils-1.1.jar (169 kB at 7.3 MB/s)
+[INFO] Using auto detected provider org.apache.maven.surefire.junitplatform.JUnitPlatformProvider
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/apache/maven/surefire/surefire-junit-platform/3.5.3/surefire-junit-platform-3.5.3.pom
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/apache/maven/surefire/surefire-junit-platform/3.5.3/surefire-junit-platform-3.5.3.pom (5.2 kB at 272 kB/s)
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/apache/maven/surefire/surefire-providers/3.5.3/surefire-providers-3.5.3.pom
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/apache/maven/surefire/surefire-providers/3.5.3/surefire-providers-3.5.3.pom (2.5 kB at 134 kB/s)
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/apache/maven/surefire/common-java5/3.5.3/common-java5-3.5.3.pom
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/apache/maven/surefire/common-java5/3.5.3/common-java5-3.5.3.pom (3.1 kB at 161 kB/s)
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/junit/platform/junit-platform-engine/1.12.1/junit-platform-engine-1.12.1.pom
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/junit/platform/junit-platform-engine/1.12.1/junit-platform-engine-1.12.1.pom (3.2 kB at 178 kB/s)
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/junit/platform/junit-platform-commons/1.12.1/junit-platform-commons-1.12.1.pom
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/junit/platform/junit-platform-commons/1.12.1/junit-platform-commons-1.12.1.pom (2.8 kB at 142 kB/s)
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/junit/platform/junit-platform-launcher/1.12.1/junit-platform-launcher-1.12.1.pom
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/junit/platform/junit-platform-launcher/1.12.1/junit-platform-launcher-1.12.1.pom (3.0 kB at 159 kB/s)
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/apache/maven/surefire/surefire-junit-platform/3.5.3/surefire-junit-platform-3.5.3.jar
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/junit/platform/junit-platform-engine/1.12.1/junit-platform-engine-1.12.1.jar
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/junit/platform/junit-platform-launcher/1.12.1/junit-platform-launcher-1.12.1.jar
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/junit/platform/junit-platform-commons/1.12.1/junit-platform-commons-1.12.1.jar
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/apache/maven/surefire/common-java5/3.5.3/common-java5-3.5.3.jar
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/apache/maven/surefire/surefire-junit-platform/3.5.3/surefire-junit-platform-3.5.3.jar (27 kB at 1.4 MB/s)
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/junit/platform/junit-platform-commons/1.12.1/junit-platform-commons-1.12.1.jar (152 kB at 7.2 MB/s)
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/junit/platform/junit-platform-engine/1.12.1/junit-platform-engine-1.12.1.jar (256 kB at 11 MB/s)
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/apache/maven/surefire/common-java5/3.5.3/common-java5-3.5.3.jar (18 kB at 733 kB/s)
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/junit/platform/junit-platform-launcher/1.12.1/junit-platform-launcher-1.12.1.jar (208 kB at 8.3 MB/s)
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/junit/platform/junit-platform-launcher/1.11.4/junit-platform-launcher-1.11.4.pom
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/junit/platform/junit-platform-launcher/1.11.4/junit-platform-launcher-1.11.4.pom (3.0 kB at 151 kB/s)
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/junit/platform/junit-platform-launcher/1.11.4/junit-platform-launcher-1.11.4.jar
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/junit/platform/junit-platform-launcher/1.11.4/junit-platform-launcher-1.11.4.jar (189 kB at 8.2 MB/s)
+[INFO] 
+[INFO] -------------------------------------------------------
+[INFO]  T E S T S
+[INFO] -------------------------------------------------------
+[INFO] Running com.carddemo.data.CobolFieldReaderTest
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.033 s -- in com.carddemo.data.CobolFieldReaderTest
+[INFO] Running com.carddemo.data.LegacyExtractQ10GateTest
+Q-10 gate: rows accounts=50 customers=50 date values checked=200 offenders=[]
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.026 s -- in com.carddemo.data.LegacyExtractQ10GateTest
+[INFO] Running com.carddemo.service.DateValidationServiceTest
+[INFO] Tests run: 19, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.028 s -- in com.carddemo.service.DateValidationServiceTest
+[INFO] Running com.carddemo.service.AuthUpgradeOnLoginIntegrationTest
+07:40:40.551 [main] INFO org.springframework.test.context.support.AnnotationConfigContextLoaderUtils -- Could not detect default configuration classes for test class [com.carddemo.service.AuthUpgradeOnLoginIntegrationTest]: AuthUpgradeOnLoginIntegrationTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+07:40:40.581 [main] INFO org.testcontainers.images.PullPolicy -- Image pull policy will be performed by: DefaultPullPolicy()
+07:40:40.582 [main] INFO org.testcontainers.utility.ImageNameSubstitutor -- Image name substitution will be performed by: DefaultImageNameSubstitutor (composite of 'ConfigurationFileImageNameSubstitutor' and 'PrefixingImageNameSubstitutor')
+07:40:40.599 [main] INFO org.testcontainers.DockerClientFactory -- Testcontainers version: 1.20.6
+07:40:40.829 [main] INFO org.testcontainers.dockerclient.DockerClientProviderStrategy -- Found Docker environment with local Unix socket (unix:///var/run/docker.sock)
+07:40:40.833 [main] INFO org.testcontainers.DockerClientFactory -- Docker host IP address is localhost
+07:40:40.843 [main] INFO org.testcontainers.DockerClientFactory -- Connected to docker: 
+  Server Version: 27.4.1
+  API Version: 1.47
+  Operating System: Ubuntu 22.04.5 LTS
+  Total Memory: 32108 MB
+07:40:40.864 [main] INFO tc.testcontainers/ryuk:0.11.0 -- Pulling docker image: testcontainers/ryuk:0.11.0. Please be patient; this may take some time but only needs to be done once.
+07:40:41.700 [docker-java-stream-1520154752] INFO tc.testcontainers/ryuk:0.11.0 -- Starting to pull image
+07:40:41.717 [docker-java-stream-1520154752] INFO tc.testcontainers/ryuk:0.11.0 -- Pulling image layers:  0 pending,  0 downloaded,  0 extracted, (0 bytes/0 bytes)
+07:40:42.176 [docker-java-stream-1520154752] INFO tc.testcontainers/ryuk:0.11.0 -- Pulling image layers:  2 pending,  1 downloaded,  0 extracted, (142 KB/? MB)
+07:40:42.178 [docker-java-stream-1520154752] INFO tc.testcontainers/ryuk:0.11.0 -- Pulling image layers:  1 pending,  2 downloaded,  0 extracted, (158 KB/? MB)
+07:40:42.189 [docker-java-stream-1520154752] INFO tc.testcontainers/ryuk:0.11.0 -- Pulling image layers:  0 pending,  3 downloaded,  0 extracted, (158 KB/10 MB)
+07:40:42.237 [docker-java-stream-1520154752] INFO tc.testcontainers/ryuk:0.11.0 -- Pulling image layers:  0 pending,  3 downloaded,  1 extracted, (3 MB/10 MB)
+07:40:42.288 [docker-java-stream-1520154752] INFO tc.testcontainers/ryuk:0.11.0 -- Pulling image layers:  0 pending,  3 downloaded,  2 extracted, (4 MB/10 MB)
+07:40:42.313 [docker-java-stream-1520154752] INFO tc.testcontainers/ryuk:0.11.0 -- Pulling image layers:  0 pending,  3 downloaded,  3 extracted, (10 MB/10 MB)
+07:40:42.319 [main] INFO tc.testcontainers/ryuk:0.11.0 -- Image testcontainers/ryuk:0.11.0 pull took PT1.455303048S
+07:40:42.331 [main] INFO tc.testcontainers/ryuk:0.11.0 -- Creating container for image: testcontainers/ryuk:0.11.0
+07:40:42.401 [main] INFO tc.testcontainers/ryuk:0.11.0 -- Container testcontainers/ryuk:0.11.0 is starting: 306a1963135ea1ed4f7b7ee08747f88da1c4ef5259da45032c914066edfd8359
+07:40:42.567 [main] INFO tc.testcontainers/ryuk:0.11.0 -- Container testcontainers/ryuk:0.11.0 started in PT0.235417088S
+07:40:42.570 [main] INFO org.testcontainers.utility.RyukResourceReaper -- Ryuk started - will monitor and terminate Testcontainers containers on JVM exit
+07:40:42.570 [main] INFO org.testcontainers.DockerClientFactory -- Checking the system...
+07:40:42.571 [main] INFO org.testcontainers.DockerClientFactory -- ✔︎ Docker server version should be at least 1.6.0
+07:40:42.622 [main] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper -- Found @SpringBootConfiguration com.carddemo.CardDemoApplication for test class com.carddemo.service.AuthUpgradeOnLoginIntegrationTest
+07:40:42.665 [main] INFO tc.postgres:16 -- Creating container for image: postgres:16
+07:40:42.679 [main] INFO tc.postgres:16 -- Container postgres:16 is starting: 02b4bd8e75af6407a9c507029a92e14ed210062e3247c7a2b0704810ca0470cd
+07:40:43.450 [main] INFO tc.postgres:16 -- Container postgres:16 started in PT0.785141881S
+07:40:43.451 [main] INFO tc.postgres:16 -- Container is started (JDBC URL: jdbc:postgresql://localhost:32769/test?loggerLevel=OFF)
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v3.4.5)
+
+2026-09-07T07:40:43.594Z  INFO 7164 --- [carddemo] [           main] c.c.s.AuthUpgradeOnLoginIntegrationTest  : Starting AuthUpgradeOnLoginIntegrationTest using Java 21.0.12 with PID 7164 (started by ubuntu in /home/ubuntu/repos/ts-cobol-carddemo/backend)
+2026-09-07T07:40:43.595Z  INFO 7164 --- [carddemo] [           main] c.c.s.AuthUpgradeOnLoginIntegrationTest  : No active profile set, falling back to 1 default profile: "default"
+2026-09-07T07:40:43.935Z  INFO 7164 --- [carddemo] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-09-07T07:40:43.968Z  INFO 7164 --- [carddemo] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 28 ms. Found 4 JPA repository interfaces.
+2026-09-07T07:40:44.443Z  INFO 7164 --- [carddemo] [           main] org.flywaydb.core.FlywayExecutor         : Database: jdbc:postgresql://localhost:32769/test?loggerLevel=OFF (PostgreSQL 16.15)
+2026-09-07T07:40:44.479Z  INFO 7164 --- [carddemo] [           main] o.f.c.i.s.JdbcTableSchemaHistory         : Schema history table "public"."flyway_schema_history" does not exist yet
+2026-09-07T07:40:44.482Z  INFO 7164 --- [carddemo] [           main] o.f.core.internal.command.DbValidate     : Successfully validated 2 migrations (execution time 00:00.018s)
+2026-09-07T07:40:44.493Z  INFO 7164 --- [carddemo] [           main] o.f.c.i.s.JdbcTableSchemaHistory         : Creating Schema History table "public"."flyway_schema_history" ...
+2026-09-07T07:40:44.525Z  INFO 7164 --- [carddemo] [           main] o.f.core.internal.command.DbMigrate      : Current version of schema "public": << Empty Schema >>
+2026-09-07T07:40:44.534Z  INFO 7164 --- [carddemo] [           main] o.f.core.internal.command.DbMigrate      : Migrating schema "public" to version "1 - account view schema"
+2026-09-07T07:40:44.548Z  INFO 7164 --- [carddemo] [           main] o.f.core.internal.command.DbMigrate      : Migrating schema "public" with repeatable migration "seed test data"
+2026-09-07T07:40:44.555Z  INFO 7164 --- [carddemo] [           main] o.f.core.internal.command.DbMigrate      : Successfully applied 2 migrations to schema "public", now at version v1 (execution time 00:00.008s)
+2026-09-07T07:40:44.598Z  INFO 7164 --- [carddemo] [           main] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2026-09-07T07:40:44.617Z  INFO 7164 --- [carddemo] [           main] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.6.13.Final
+2026-09-07T07:40:44.630Z  INFO 7164 --- [carddemo] [           main] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
+2026-09-07T07:40:44.760Z  INFO 7164 --- [carddemo] [           main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-09-07T07:40:44.773Z  INFO 7164 --- [carddemo] [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2026-09-07T07:40:44.788Z  INFO 7164 --- [carddemo] [           main] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@1f95158a
+2026-09-07T07:40:44.789Z  INFO 7164 --- [carddemo] [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2026-09-07T07:40:44.819Z  INFO 7164 --- [carddemo] [           main] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
+	Database driver: undefined/unknown
+	Database version: 16.15
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-09-07T07:40:45.250Z  INFO 7164 --- [carddemo] [           main] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-09-07T07:40:45.270Z  INFO 7164 --- [carddemo] [           main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-09-07T07:40:45.455Z  WARN 7164 --- [carddemo] [           main] .s.s.UserDetailsServiceAutoConfiguration : 
+
+Using generated security password: 37060e7d-26dc-4b41-aa6a-4cc2db972d85
+
+This generated password is for development use only. Your security configuration must be updated before running your application in production.
+
+2026-09-07T07:40:45.457Z  INFO 7164 --- [carddemo] [           main] r$InitializeUserDetailsManagerConfigurer : Global AuthenticationManager configured with UserDetailsService bean with name inMemoryUserDetailsManager
+2026-09-07T07:40:45.772Z  INFO 7164 --- [carddemo] [           main] c.c.s.AuthUpgradeOnLoginIntegrationTest  : Started AuthUpgradeOnLoginIntegrationTest in 2.303 seconds (process running for 5.751)
+Mockito is currently self-attaching to enable the inline-mock-maker. This will no longer work in future releases of the JDK. Please add Mockito as an agent to your build what is described in Mockito's documentation: https://javadoc.io/doc/org.mockito/mockito-core/latest/org/mockito/Mockito.html#0.3
+OpenJDK 64-Bit Server VM warning: Sharing is only supported for boot loader classes because bootstrap classpath has been appended
+WARNING: A Java agent has been loaded dynamically (/home/ubuntu/.m2/repository/net/bytebuddy/byte-buddy-agent/1.15.11/byte-buddy-agent-1.15.11.jar)
+WARNING: If a serviceability tool is in use, please run with -XX:+EnableDynamicAgentLoading to hide this warning
+WARNING: If a serviceability tool is not in use, please run with -Djdk.instrument.traceUsage for more information
+WARNING: Dynamic loading of agents will be disallowed by default in a future release
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 6.974 s -- in com.carddemo.service.AuthUpgradeOnLoginIntegrationTest
+[INFO] Running com.carddemo.service.ScreenHeaderServiceTest
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.002 s -- in com.carddemo.service.ScreenHeaderServiceTest
+[INFO] Running com.carddemo.service.AuthServiceTest
+[INFO] Tests run: 19, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.868 s -- in com.carddemo.service.AuthServiceTest
+[INFO] Running com.carddemo.repository.AccountViewRepositoriesIntegrationTest
+2026-09-07T07:40:48.334Z  INFO 7164 --- [carddemo] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.carddemo.repository.AccountViewRepositoriesIntegrationTest]: AccountViewRepositoriesIntegrationTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-09-07T07:40:48.351Z  INFO 7164 --- [carddemo] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.carddemo.CardDemoApplication for test class com.carddemo.repository.AccountViewRepositoriesIntegrationTest
+2026-09-07T07:40:48.353Z  INFO 7164 --- [carddemo] [           main] tc.postgres:16                           : Creating container for image: postgres:16
+2026-09-07T07:40:48.371Z  INFO 7164 --- [carddemo] [           main] tc.postgres:16                           : Container postgres:16 is starting: 13d17b61bea5ee1d241eae6cb5ca1534f0cfceaf422ed761eedfc05833fc88fa
+2026-09-07T07:40:49.158Z  INFO 7164 --- [carddemo] [           main] tc.postgres:16                           : Container postgres:16 started in PT0.804314652S
+2026-09-07T07:40:49.158Z  INFO 7164 --- [carddemo] [           main] tc.postgres:16                           : Container is started (JDBC URL: jdbc:postgresql://localhost:32770/test?loggerLevel=OFF)
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v3.4.5)
+
+2026-09-07T07:40:49.187Z  INFO 7164 --- [carddemo] [           main] r.AccountViewRepositoriesIntegrationTest : Starting AccountViewRepositoriesIntegrationTest using Java 21.0.12 with PID 7164 (started by ubuntu in /home/ubuntu/repos/ts-cobol-carddemo/backend)
+2026-09-07T07:40:49.187Z  INFO 7164 --- [carddemo] [           main] r.AccountViewRepositoriesIntegrationTest : No active profile set, falling back to 1 default profile: "default"
+2026-09-07T07:40:49.288Z  INFO 7164 --- [carddemo] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-09-07T07:40:49.295Z  INFO 7164 --- [carddemo] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 6 ms. Found 4 JPA repository interfaces.
+2026-09-07T07:40:49.421Z  INFO 7164 --- [carddemo] [           main] org.flywaydb.core.FlywayExecutor         : Database: jdbc:postgresql://localhost:32770/test?loggerLevel=OFF (PostgreSQL 16.15)
+2026-09-07T07:40:49.434Z  INFO 7164 --- [carddemo] [           main] o.f.c.i.s.JdbcTableSchemaHistory         : Schema history table "public"."flyway_schema_history" does not exist yet
+2026-09-07T07:40:49.434Z  INFO 7164 --- [carddemo] [           main] o.f.core.internal.command.DbValidate     : Successfully validated 2 migrations (execution time 00:00.006s)
+2026-09-07T07:40:49.439Z  INFO 7164 --- [carddemo] [           main] o.f.c.i.s.JdbcTableSchemaHistory         : Creating Schema History table "public"."flyway_schema_history" ...
+2026-09-07T07:40:49.466Z  INFO 7164 --- [carddemo] [           main] o.f.core.internal.command.DbMigrate      : Current version of schema "public": << Empty Schema >>
+2026-09-07T07:40:49.470Z  INFO 7164 --- [carddemo] [           main] o.f.core.internal.command.DbMigrate      : Migrating schema "public" to version "1 - account view schema"
+2026-09-07T07:40:49.480Z  INFO 7164 --- [carddemo] [           main] o.f.core.internal.command.DbMigrate      : Migrating schema "public" with repeatable migration "seed test data"
+2026-09-07T07:40:49.485Z  INFO 7164 --- [carddemo] [           main] o.f.core.internal.command.DbMigrate      : Successfully applied 2 migrations to schema "public", now at version v1 (execution time 00:00.007s)
+2026-09-07T07:40:49.496Z  INFO 7164 --- [carddemo] [           main] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2026-09-07T07:40:49.498Z  INFO 7164 --- [carddemo] [           main] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
+2026-09-07T07:40:49.504Z  INFO 7164 --- [carddemo] [           main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-09-07T07:40:49.504Z  INFO 7164 --- [carddemo] [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-2 - Starting...
+2026-09-07T07:40:49.514Z  INFO 7164 --- [carddemo] [           main] com.zaxxer.hikari.pool.HikariPool        : HikariPool-2 - Added connection org.postgresql.jdbc.PgConnection@6409a2e4
+2026-09-07T07:40:49.514Z  INFO 7164 --- [carddemo] [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-2 - Start completed.
+2026-09-07T07:40:49.518Z  INFO 7164 --- [carddemo] [           main] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-2)']
+	Database driver: undefined/unknown
+	Database version: 16.15
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-09-07T07:40:49.552Z  INFO 7164 --- [carddemo] [           main] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-09-07T07:40:49.560Z  INFO 7164 --- [carddemo] [           main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-09-07T07:40:49.593Z  WARN 7164 --- [carddemo] [           main] .s.s.UserDetailsServiceAutoConfiguration : 
+
+Using generated security password: bdb8116b-b8a5-4816-8b43-d1906975ca2a
+
+This generated password is for development use only. Your security configuration must be updated before running your application in production.
+
+2026-09-07T07:40:49.593Z  INFO 7164 --- [carddemo] [           main] r$InitializeUserDetailsManagerConfigurer : Global AuthenticationManager configured with UserDetailsService bean with name inMemoryUserDetailsManager
+2026-09-07T07:40:49.698Z  INFO 7164 --- [carddemo] [           main] r.AccountViewRepositoriesIntegrationTest : Started AccountViewRepositoriesIntegrationTest in 0.538 seconds (process running for 9.677)
+[INFO] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.734 s -- in com.carddemo.repository.AccountViewRepositoriesIntegrationTest
+[INFO] Running com.carddemo.api.AuthControllerWebMvcTest
+2026-09-07T07:40:50.074Z  INFO 7164 --- [carddemo] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.carddemo.api.AuthControllerWebMvcTest]: AuthControllerWebMvcTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-09-07T07:40:50.092Z  INFO 7164 --- [carddemo] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.carddemo.CardDemoApplication for test class com.carddemo.api.AuthControllerWebMvcTest
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v3.4.5)
+
+2026-09-07T07:40:50.107Z  INFO 7164 --- [carddemo] [           main] c.carddemo.api.AuthControllerWebMvcTest  : Starting AuthControllerWebMvcTest using Java 21.0.12 with PID 7164 (started by ubuntu in /home/ubuntu/repos/ts-cobol-carddemo/backend)
+2026-09-07T07:40:50.108Z  INFO 7164 --- [carddemo] [           main] c.carddemo.api.AuthControllerWebMvcTest  : No active profile set, falling back to 1 default profile: "default"
+2026-09-07T07:40:50.317Z  WARN 7164 --- [carddemo] [           main] .s.s.UserDetailsServiceAutoConfiguration : 
+
+Using generated security password: 6b1d2568-3916-4a4e-811f-90d82191170a
+
+This generated password is for development use only. Your security configuration must be updated before running your application in production.
+
+2026-09-07T07:40:50.317Z  INFO 7164 --- [carddemo] [           main] r$InitializeUserDetailsManagerConfigurer : Global AuthenticationManager configured with UserDetailsService bean with name inMemoryUserDetailsManager
+2026-09-07T07:40:50.430Z  INFO 7164 --- [carddemo] [           main] o.s.b.t.m.w.SpringBootMockServletContext : Initializing Spring TestDispatcherServlet ''
+2026-09-07T07:40:50.430Z  INFO 7164 --- [carddemo] [           main] o.s.t.web.servlet.TestDispatcherServlet  : Initializing Servlet ''
+2026-09-07T07:40:50.431Z  INFO 7164 --- [carddemo] [           main] o.s.t.web.servlet.TestDispatcherServlet  : Completed initialization in 0 ms
+2026-09-07T07:40:50.441Z  INFO 7164 --- [carddemo] [           main] c.carddemo.api.AuthControllerWebMvcTest  : Started AuthControllerWebMvcTest in 0.347 seconds (process running for 10.42)
+[INFO] Tests run: 11, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.577 s -- in com.carddemo.api.AuthControllerWebMvcTest
+[INFO] Running com.carddemo.api.AuthControllerH2Test
+2026-09-07T07:40:50.652Z  INFO 7164 --- [carddemo] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.carddemo.api.AuthControllerH2Test]: AuthControllerH2Test does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-09-07T07:40:50.657Z  INFO 7164 --- [carddemo] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.carddemo.CardDemoApplication for test class com.carddemo.api.AuthControllerH2Test
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v3.4.5)
+
+2026-09-07T07:40:50.678Z  INFO 7164 --- [carddemo] [           main] com.carddemo.api.AuthControllerH2Test    : Starting AuthControllerH2Test using Java 21.0.12 with PID 7164 (started by ubuntu in /home/ubuntu/repos/ts-cobol-carddemo/backend)
+2026-09-07T07:40:50.678Z  INFO 7164 --- [carddemo] [           main] com.carddemo.api.AuthControllerH2Test    : The following 1 profile is active: "test"
+2026-09-07T07:40:50.815Z  INFO 7164 --- [carddemo] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-09-07T07:40:50.823Z  INFO 7164 --- [carddemo] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 6 ms. Found 4 JPA repository interfaces.
+2026-09-07T07:40:50.925Z  INFO 7164 --- [carddemo] [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-3 - Starting...
+2026-09-07T07:40:51.084Z  INFO 7164 --- [carddemo] [           main] com.zaxxer.hikari.pool.HikariPool        : HikariPool-3 - Added connection conn0: url=jdbc:h2:mem:carddemo user=SA
+2026-09-07T07:40:51.085Z  INFO 7164 --- [carddemo] [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-3 - Start completed.
+2026-09-07T07:40:51.108Z  INFO 7164 --- [carddemo] [           main] org.flywaydb.core.FlywayExecutor         : Database: jdbc:h2:mem:carddemo (H2 2.3)
+2026-09-07T07:40:51.111Z  WARN 7164 --- [carddemo] [           main] o.f.c.internal.database.base.Database    : Flyway upgrade recommended: H2 2.3.232 is newer than this version of Flyway and support has not been tested. The latest supported version of H2 is 2.2.224.
+2026-09-07T07:40:51.120Z  INFO 7164 --- [carddemo] [           main] o.f.c.i.s.JdbcTableSchemaHistory         : Schema history table "public"."flyway_schema_history" does not exist yet
+2026-09-07T07:40:51.120Z  INFO 7164 --- [carddemo] [           main] o.f.core.internal.command.DbValidate     : Successfully validated 2 migrations (execution time 00:00.005s)
+2026-09-07T07:40:51.125Z  INFO 7164 --- [carddemo] [           main] o.f.c.i.s.JdbcTableSchemaHistory         : Creating Schema History table "public"."flyway_schema_history" ...
+2026-09-07T07:40:51.140Z  INFO 7164 --- [carddemo] [           main] o.f.core.internal.command.DbMigrate      : Current version of schema "public": << Empty Schema >>
+2026-09-07T07:40:51.143Z  INFO 7164 --- [carddemo] [           main] o.f.core.internal.command.DbMigrate      : Migrating schema "public" to version "1 - account view schema"
+2026-09-07T07:40:51.152Z  INFO 7164 --- [carddemo] [           main] o.f.core.internal.command.DbMigrate      : Migrating schema "public" with repeatable migration "seed test data"
+2026-09-07T07:40:51.157Z  INFO 7164 --- [carddemo] [           main] o.f.core.internal.command.DbMigrate      : Successfully applied 2 migrations to schema "public", now at version v1 (execution time 00:00.006s)
+2026-09-07T07:40:51.171Z  INFO 7164 --- [carddemo] [           main] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2026-09-07T07:40:51.173Z  INFO 7164 --- [carddemo] [           main] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
+2026-09-07T07:40:51.180Z  INFO 7164 --- [carddemo] [           main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-09-07T07:40:51.184Z  INFO 7164 --- [carddemo] [           main] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-3)']
+	Database driver: undefined/unknown
+	Database version: 2.3.232
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-09-07T07:40:51.234Z  INFO 7164 --- [carddemo] [           main] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-09-07T07:40:51.236Z  INFO 7164 --- [carddemo] [           main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-09-07T07:40:51.287Z  WARN 7164 --- [carddemo] [           main] .s.s.UserDetailsServiceAutoConfiguration : 
+
+Using generated security password: e981a857-0029-49fc-af70-4121723d10bc
+
+This generated password is for development use only. Your security configuration must be updated before running your application in production.
+
+2026-09-07T07:40:51.288Z  INFO 7164 --- [carddemo] [           main] r$InitializeUserDetailsManagerConfigurer : Global AuthenticationManager configured with UserDetailsService bean with name inMemoryUserDetailsManager
+2026-09-07T07:40:51.384Z  INFO 7164 --- [carddemo] [           main] o.s.b.t.m.w.SpringBootMockServletContext : Initializing Spring TestDispatcherServlet ''
+2026-09-07T07:40:51.384Z  INFO 7164 --- [carddemo] [           main] o.s.t.web.servlet.TestDispatcherServlet  : Initializing Servlet ''
+2026-09-07T07:40:51.384Z  INFO 7164 --- [carddemo] [           main] o.s.t.web.servlet.TestDispatcherServlet  : Completed initialization in 0 ms
+2026-09-07T07:40:51.389Z  INFO 7164 --- [carddemo] [           main] com.carddemo.api.AuthControllerH2Test    : Started AuthControllerH2Test in 0.729 seconds (process running for 11.367)
+[INFO] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.204 s -- in com.carddemo.api.AuthControllerH2Test
+[INFO] Running com.carddemo.H2UnitProfileContextTest
+2026-09-07T07:40:51.855Z  INFO 7164 --- [carddemo] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.carddemo.H2UnitProfileContextTest]: H2UnitProfileContextTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-09-07T07:40:51.860Z  INFO 7164 --- [carddemo] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.carddemo.CardDemoApplication for test class com.carddemo.H2UnitProfileContextTest
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.156 s -- in com.carddemo.H2UnitProfileContextTest
+[INFO] 
+[INFO] Results:
+[INFO] 
+[INFO] Tests run: 79, Failures: 0, Errors: 0, Skipped: 0
+[INFO] 
+[INFO] 
+[INFO] --- maven-jar-plugin:3.4.2:jar (default-jar) @ carddemo-backend ---
+[INFO] Building jar: /home/ubuntu/repos/ts-cobol-carddemo/backend/target/carddemo-backend-0.1.0-SNAPSHOT.jar
+[INFO] 
+[INFO] --- spring-boot-maven-plugin:3.4.5:repackage (repackage) @ carddemo-backend ---
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/springframework/boot/spring-boot-buildpack-platform/3.4.5/spring-boot-buildpack-platform-3.4.5.pom
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/springframework/boot/spring-boot-buildpack-platform/3.4.5/spring-boot-buildpack-platform-3.4.5.pom (3.2 kB at 53 kB/s)
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/apache/httpcomponents/client5/httpclient5/5.4.3/httpclient5-5.4.3.pom
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/apache/httpcomponents/client5/httpclient5/5.4.3/httpclient5-5.4.3.pom (6.1 kB at 156 kB/s)
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/apache/httpcomponents/client5/httpclient5-parent/5.4.3/httpclient5-parent-5.4.3.pom
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/apache/httpcomponents/client5/httpclient5-parent/5.4.3/httpclient5-parent-5.4.3.pom (16 kB at 370 kB/s)
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/springframework/boot/spring-boot-loader-tools/3.4.5/spring-boot-loader-tools-3.4.5.pom
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/springframework/boot/spring-boot-loader-tools/3.4.5/spring-boot-loader-tools-3.4.5.pom (2.2 kB at 36 kB/s)
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/io/micrometer/micrometer-observation/1.14.5/micrometer-observation-1.14.5.pom
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/io/micrometer/micrometer-observation/1.14.5/micrometer-observation-1.14.5.pom (3.8 kB at 183 kB/s)
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/io/micrometer/micrometer-commons/1.14.5/micrometer-commons-1.14.5.pom
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/io/micrometer/micrometer-commons/1.14.5/micrometer-commons-1.14.5.pom (3.4 kB at 170 kB/s)
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/springframework/boot/spring-boot-buildpack-platform/3.4.5/spring-boot-buildpack-platform-3.4.5.jar
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/apache/httpcomponents/client5/httpclient5/5.4.3/httpclient5-5.4.3.jar
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/springframework/boot/spring-boot-loader-tools/3.4.5/spring-boot-loader-tools-3.4.5.jar
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/io/micrometer/micrometer-commons/1.14.5/micrometer-commons-1.14.5.jar
+[INFO] Downloading from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/io/micrometer/micrometer-observation/1.14.5/micrometer-observation-1.14.5.jar
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/io/micrometer/micrometer-commons/1.14.5/micrometer-commons-1.14.5.jar (48 kB at 1.8 MB/s)
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/io/micrometer/micrometer-observation/1.14.5/micrometer-observation-1.14.5.jar (75 kB at 2.4 MB/s)
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/apache/httpcomponents/client5/httpclient5/5.4.3/httpclient5-5.4.3.jar (910 kB at 27 MB/s)
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/springframework/boot/spring-boot-loader-tools/3.4.5/spring-boot-loader-tools-3.4.5.jar (465 kB at 9.7 MB/s)
+[INFO] Downloaded from central-gcs: https://maven-central.storage-download.googleapis.com/maven2/org/springframework/boot/spring-boot-buildpack-platform/3.4.5/spring-boot-buildpack-platform-3.4.5.jar (300 kB at 5.9 MB/s)
+[INFO] Replacing main artifact /home/ubuntu/repos/ts-cobol-carddemo/backend/target/carddemo-backend-0.1.0-SNAPSHOT.jar with repackaged archive, adding nested dependencies in BOOT-INF/.
+[INFO] The original artifact has been renamed to /home/ubuntu/repos/ts-cobol-carddemo/backend/target/carddemo-backend-0.1.0-SNAPSHOT.jar.original
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  22.734 s
+[INFO] Finished at: 2026-09-07T07:40:53Z
+[INFO] ------------------------------------------------------------------------
+EXIT=0

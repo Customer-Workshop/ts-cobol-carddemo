@@ -1,0 +1,62 @@
+
+> frontend@0.0.0 build
+> ng build
+
+❯ Building...
+✔ Building...
+Initial chunk files   | Names         |  Raw size | Estimated transfer size
+main-QHCE62XG.js      | main          | 249.87 kB |                51.73 kB
+chunk-DYFWCKQT.js     | -             | 142.75 kB |                41.32 kB
+styles-ZZPYEK52.css   | styles        |  56.11 kB |                 5.96 kB
+polyfills-FFHMD2TL.js | polyfills     |  34.52 kB |                11.28 kB
+
+                      | Initial total | 483.24 kB |               110.29 kB
+
+Lazy chunk files      | Names         |  Raw size | Estimated transfer size
+chunk-KKPUBQF4.js     | browser       |  63.57 kB |                16.83 kB
+
+Application bundle generation complete. [2.048 seconds]
+
+Output location: /home/ubuntu/repos/ts-cobol-carddemo/frontend/dist/frontend
+
+- Generating browser application bundles (phase: setup)...
+✔ Browser application bundle generation complete.
+07 09 2026 08:26:38.803:INFO [karma-server]: Karma v6.4.4 server started at http://localhost:9877/
+07 09 2026 08:26:38.804:INFO [launcher]: Launching browsers ChromeHeadless with concurrency unlimited
+07 09 2026 08:26:38.807:INFO [launcher]: Starting browser ChromeHeadless
+07 09 2026 08:26:39.011:INFO [Chrome Headless 133.0.0.0 (Linux 0.0.0)]: Connected on socket 8tYUk7DjepJSK2UXAAAA with id 11781063
+Chrome Headless 133.0.0.0 (Linux 0.0.0): Executed 0 of 30 SUCCESS (0 secs / 0 secs)
+[1A[2KChrome Headless 133.0.0.0 (Linux 0.0.0): Executed 1 of 30 SUCCESS (0 secs / 0.069 secs)
+[1A[2KChrome Headless 133.0.0.0 (Linux 0.0.0): Executed 2 of 30 SUCCESS (0 secs / 0.072 secs)
+[1A[2KChrome Headless 133.0.0.0 (Linux 0.0.0): Executed 3 of 30 SUCCESS (0 secs / 0.072 secs)
+[1A[2KChrome Headless 133.0.0.0 (Linux 0.0.0): Executed 4 of 30 SUCCESS (0 secs / 0.072 secs)
+[1A[2KChrome Headless 133.0.0.0 (Linux 0.0.0): Executed 5 of 30 SUCCESS (0 secs / 0.087 secs)
+[1A[2KChrome Headless 133.0.0.0 (Linux 0.0.0): Executed 6 of 30 SUCCESS (0 secs / 0.092 secs)
+[1A[2KChrome Headless 133.0.0.0 (Linux 0.0.0): Executed 7 of 30 SUCCESS (0 secs / 0.1 secs)
+[1A[2KChrome Headless 133.0.0.0 (Linux 0.0.0): Executed 8 of 30 SUCCESS (0 secs / 0.101 secs)
+[1A[2KChrome Headless 133.0.0.0 (Linux 0.0.0): Executed 9 of 30 SUCCESS (0 secs / 0.102 secs)
+[1A[2KChrome Headless 133.0.0.0 (Linux 0.0.0): Executed 10 of 30 SUCCESS (0 secs / 0.156 secs)
+[1A[2KChrome Headless 133.0.0.0 (Linux 0.0.0): Executed 11 of 30 SUCCESS (0 secs / 0.165 secs)
+[1A[2KChrome Headless 133.0.0.0 (Linux 0.0.0): Executed 12 of 30 SUCCESS (0 secs / 0.172 secs)
+[1A[2KChrome Headless 133.0.0.0 (Linux 0.0.0): Executed 13 of 30 SUCCESS (0 secs / 0.178 secs)
+[1A[2KChrome Headless 133.0.0.0 (Linux 0.0.0): Executed 14 of 30 SUCCESS (0 secs / 0.185 secs)
+[1A[2KChrome Headless 133.0.0.0 (Linux 0.0.0): Executed 15 of 30 SUCCESS (0 secs / 0.192 secs)
+[1A[2KChrome Headless 133.0.0.0 (Linux 0.0.0): Executed 16 of 30 SUCCESS (0 secs / 0.198 secs)
+[1A[2KChrome Headless 133.0.0.0 (Linux 0.0.0): Executed 17 of 30 SUCCESS (0 secs / 0.204 secs)
+[1A[2KChrome Headless 133.0.0.0 (Linux 0.0.0): Executed 18 of 30 SUCCESS (0 secs / 0.214 secs)
+[1A[2KChrome Headless 133.0.0.0 (Linux 0.0.0): Executed 19 of 30 SUCCESS (0 secs / 0.221 secs)
+[1A[2KChrome Headless 133.0.0.0 (Linux 0.0.0): Executed 20 of 30 SUCCESS (0 secs / 0.227 secs)
+[1A[2KChrome Headless 133.0.0.0 (Linux 0.0.0): Executed 21 of 30 SUCCESS (0 secs / 0.234 secs)
+[1A[2KChrome Headless 133.0.0.0 (Linux 0.0.0): Executed 22 of 30 SUCCESS (0 secs / 0.24 secs)
+[1A[2KChrome Headless 133.0.0.0 (Linux 0.0.0): Executed 23 of 30 SUCCESS (0 secs / 0.252 secs)
+[1A[2KChrome Headless 133.0.0.0 (Linux 0.0.0): Executed 24 of 30 SUCCESS (0 secs / 0.258 secs)
+[1A[2KChrome Headless 133.0.0.0 (Linux 0.0.0): Executed 25 of 30 SUCCESS (0 secs / 0.267 secs)
+[1A[2KChrome Headless 133.0.0.0 (Linux 0.0.0): Executed 26 of 30 SUCCESS (0 secs / 0.277 secs)
+[1A[2KChrome Headless 133.0.0.0 (Linux 0.0.0): Executed 27 of 30 SUCCESS (0 secs / 0.283 secs)
+[1A[2KChrome Headless 133.0.0.0 (Linux 0.0.0): Executed 28 of 30 SUCCESS (0 secs / 0.289 secs)
+[1A[2KChrome Headless 133.0.0.0 (Linux 0.0.0): Executed 29 of 30 SUCCESS (0 secs / 0.293 secs)
+[1A[2KChrome Headless 133.0.0.0 (Linux 0.0.0): Executed 30 of 30 SUCCESS (0 secs / 0.298 secs)
+[1A[2KChrome Headless 133.0.0.0 (Linux 0.0.0): Executed 30 of 30 SUCCESS (0.275 secs / 0.298 secs)
+TOTAL: 30 SUCCESS
+✔ Browser application bundle generation complete.
+✔ Browser application bundle generation complete.

@@ -1,0 +1,8 @@
+=== P-10c OTHER RESP variant: users table renamed (SQL error inside a live connection) ===
+ALTER TABLE
+{"message":"Unable to verify the User ...","status":500,"timestamp":"2026-09-07T07:45:24.126002241Z"}
+STATUS 500
+ALTER TABLE
+=== recovery ===
+{"userId":"USER0001","userType":"U","landingTarget":"/menu"}
+STATUS 200

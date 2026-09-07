@@ -1,0 +1,12 @@
+                            Table "public.users"
+       Column       |         Type          | Collation | Nullable | Default 
+--------------------+-----------------------+-----------+----------+---------
+ sec_usr_id         | character varying(8)  |           | not null | 
+ sec_usr_fname      | character varying(20) |           |          | 
+ sec_usr_lname      | character varying(20) |           |          | 
+ sec_usr_pwd_hash   | character varying(72) |           |          | 
+ sec_usr_pwd_legacy | character varying(8)  |           |          | 
+ sec_usr_type       | character varying(1)  |           | not null | 
+Indexes:
+    "pk_users" PRIMARY KEY, btree (sec_usr_id)
+

@@ -1,0 +1,217 @@
+run at 2026-09-07T08:25:12Z  BASE=http://localhost:8080
+postgres: PostgreSQL 16.15 (Debian 16.15-1.pgdg13+2) on x86_64-pc-linux-gnu, compiled by gcc (Debian 14.2.0-19) 14.2.0, 64-bit
+
+=================== P-01 header (initial screen data) GET /api/auth/header ===================
+REQUEST  GET /api/auth/header  cookies=none
+STATUS   200
+BODY     {"tranId":"CC00","programName":"COSGN00C","title01":"AWS Mainframe Modernization","title02":"CardDemo","currentDate":"09/07/26","currentTime":"08:25:12","applId":"CARDDEMO","sysId":"CICS"}
+
+=================== P-02 blank user id ===================
+REQUEST  POST /api/auth/signon  body={"userId":"","password":"PASSWORD"}
+STATUS   400
+BODY     {"message":"Please enter User ID ...","status":400,"timestamp":"2026-09-07T08:25:12.124699738Z"}
+
+=================== P-02b user id spaces only ===================
+REQUEST  POST /api/auth/signon  body={"userId":"   ","password":"PASSWORD"}
+STATUS   400
+BODY     {"message":"Please enter User ID ...","status":400,"timestamp":"2026-09-07T08:25:12.135415366Z"}
+
+=================== P-02c user id null ===================
+REQUEST  POST /api/auth/signon  body={"password":"PASSWORD"}
+STATUS   400
+BODY     {"message":"Please enter User ID ...","status":400,"timestamp":"2026-09-07T08:25:12.142319799Z"}
+
+=================== P-03 blank password ===================
+REQUEST  POST /api/auth/signon  body={"userId":"USER0001","password":""}
+STATUS   400
+BODY     {"message":"Please enter Password ...","status":400,"timestamp":"2026-09-07T08:25:12.148747713Z"}
+
+=================== P-03b password null ===================
+REQUEST  POST /api/auth/signon  body={"userId":"USER0001"}
+STATUS   400
+BODY     {"message":"Please enter Password ...","status":400,"timestamp":"2026-09-07T08:25:12.155051701Z"}
+
+=================== P-04 both blank (order: user id first) ===================
+REQUEST  POST /api/auth/signon  body={"userId":"","password":""}
+STATUS   400
+BODY     {"message":"Please enter User ID ...","status":400,"timestamp":"2026-09-07T08:25:12.161641906Z"}
+
+=================== P-04b empty object ===================
+REQUEST  POST /api/auth/signon  body={}
+STATUS   400
+BODY     {"message":"Please enter User ID ...","status":400,"timestamp":"2026-09-07T08:25:12.167784117Z"}
+
+=================== P-13b wrong password BEFORE upgrade (USER0002) - row must not change ===================
+ROW before: USER0002|U|<null>|<null>|8
+REQUEST  POST /api/auth/signon  body={"userId":"USER0002","password":"WRONGPWD"}
+STATUS   401
+BODY     {"message":"Wrong Password. Try again ...","status":401,"timestamp":"2026-09-07T08:25:12.255632841Z"}
+ROW after : USER0002|U|<null>|<null>|8
+
+=================== P-08 unknown user (NOTFND) ===================
+REQUEST  POST /api/auth/signon  body={"userId":"NOBODY01","password":"PASSWORD"}
+STATUS   401
+BODY     {"message":"User not found. Try again ...","status":401,"timestamp":"2026-09-07T08:25:12.315394946Z"}
+
+=================== P-07 wrong password (USER0001, legacy row) ===================
+REQUEST  POST /api/auth/signon  body={"userId":"USER0001","password":"BADPASS1"}
+STATUS   401
+BODY     {"message":"Wrong Password. Try again ...","status":401,"timestamp":"2026-09-07T08:25:12.323056742Z"}
+
+=================== P-05 lowercase credentials user0001/password -> upper-cased and authenticated ===================
+ROW before: USER0001|U|<null>|<null>|8
+REQUEST  POST /api/auth/signon  body={"userId":"user0001","password":"password"}
+STATUS   200
+BODY     {"userId":"USER0001","userType":"U","landingTarget":"/menu"}
+ROW after : USER0001|U|{bcrypt}$2a$|68|<null>
+COOKIES  : =... httponly_flag=
+
+=================== P-20 session payload after P-05 ===================
+REQUEST  GET /api/auth/session  cookies=/home/ubuntu/repos/ts-cobol-carddemo/parity/wave2/cosgn00c/rerun/http/jar_p05.txt
+STATUS   200
+BODY     {"userId":"USER0001","userType":"U"}
+
+=================== P-06 valid U user USER0003 (legacy) -> session + /menu ===================
+ROW before: USER0003|U|<null>|<null>|8
+REQUEST  POST /api/auth/signon  body={"userId":"USER0003","password":"PASSWORD"}
+STATUS   200
+BODY     {"userId":"USER0003","userType":"U","landingTarget":"/menu"}
+ROW after : USER0003|U|{bcrypt}$2a$|68|<null>
+REQUEST  GET /api/auth/session  cookies=/home/ubuntu/repos/ts-cobol-carddemo/parity/wave2/cosgn00c/rerun/http/jar_p06.txt
+STATUS   200
+BODY     {"userId":"USER0003","userType":"U"}
+
+=================== P-12 valid A user ADMIN001 -> /menu (Q-01) ===================
+ROW before: ADMIN001|A|<null>|<null>|8
+REQUEST  POST /api/auth/signon  body={"userId":"ADMIN001","password":"PASSWORD"}
+STATUS   200
+BODY     {"userId":"ADMIN001","userType":"A","landingTarget":"/menu"}
+ROW after : ADMIN001|A|{bcrypt}$2a$|68|<null>
+REQUEST  GET /api/auth/session  cookies=/home/ubuntu/repos/ts-cobol-carddemo/parity/wave2/cosgn00c/rerun/http/jar_p12.txt
+STATUS   200
+BODY     {"userId":"ADMIN001","userType":"A"}
+
+=================== P-12b lowercase admin001/password ===================
+REQUEST  POST /api/auth/signon  body={"userId":"admin001","password":"password"}
+STATUS   200
+BODY     {"userId":"ADMIN001","userType":"A","landingTarget":"/menu"}
+
+=================== P-13 legacy -> BCrypt upgrade: USER0004 first login (legacy), second login (hash) ===================
+ROW before 1st: USER0004|U|<null>|<null>|8
+REQUEST  POST /api/auth/signon  body={"userId":"USER0004","password":"PASSWORD"}
+STATUS   200
+BODY     {"userId":"USER0004","userType":"U","landingTarget":"/menu"}
+ROW after 1st : USER0004|U|{bcrypt}$2a$|68|<null>
+REQUEST  POST /api/auth/signon  body={"userId":"USER0004","password":"PASSWORD"}
+STATUS   200
+BODY     {"userId":"USER0004","userType":"U","landingTarget":"/menu"}
+ROW after 2nd : USER0004|U|{bcrypt}$2a$|68|<null>
+
+=================== P-13c wrong password AFTER upgrade (USER0004) ===================
+REQUEST  POST /api/auth/signon  body={"userId":"USER0004","password":"BADPASS1"}
+STATUS   401
+BODY     {"message":"Wrong Password. Try again ...","status":401,"timestamp":"2026-09-07T08:25:13.395910800Z"}
+ROW after     : USER0004|U|{bcrypt}$2a$|68|<null>
+
+=================== P-14 no lockout: 10 wrong attempts then success (USER0005) ===================
+attempt 1 status=401
+attempt 2 status=401
+attempt 3 status=401
+attempt 4 status=401
+attempt 5 status=401
+attempt 6 status=401
+attempt 7 status=401
+attempt 8 status=401
+attempt 9 status=401
+attempt 10 status=401
+REQUEST  POST /api/auth/signon  body={"userId":"USER0005","password":"PASSWORD"}
+STATUS   200
+BODY     {"userId":"USER0005","userType":"U","landingTarget":"/menu"}
+
+=================== P-15 protected URL unauthenticated -> JSON 401 ===================
+REQUEST  GET /api/accounts/00000000001  cookies=none
+STATUS   401
+BODY     {"message":"Authentication required","status":401,"timestamp":"2026-09-07T08:25:13.605104800Z"}
+
+=================== P-15 protected URL with session cookie (P-06 jar) -> not 401 ===================
+REQUEST  GET /api/accounts/00000000001  cookies=/home/ubuntu/repos/ts-cobol-carddemo/parity/wave2/cosgn00c/rerun/http/jar_p06.txt
+STATUS   404
+BODY     {"message":"Resource not found","status":404,"timestamp":"2026-09-07T08:25:13.612180574Z"}
+
+=================== P-15 session endpoint without cookie ===================
+REQUEST  GET /api/auth/session  cookies=none
+STATUS   401
+BODY     {"message":"Authentication required","status":401,"timestamp":"2026-09-07T08:25:13.618355419Z"}
+
+=================== P-09 PF3 / signoff with P-06 session ===================
+REQUEST  POST /api/auth/signoff
+STATUS   200
+BODY     {"message":"Thank you for using CardDemo application...      "}
+
+=================== P-15 session after signoff (same cookie) -> 401 ===================
+REQUEST  GET /api/auth/session  cookies=/home/ubuntu/repos/ts-cobol-carddemo/parity/wave2/cosgn00c/rerun/http/jar_p06.txt
+STATUS   401
+BODY     {"message":"Authentication required","status":401,"timestamp":"2026-09-07T08:25:13.630768515Z"}
+
+=================== P-09b signoff without any session ===================
+STATUS   200
+BODY     {"message":"Thank you for using CardDemo application...      "}
+
+=================== P-15e second sign-on replaces existing session (P-12 jar, sign on as USER0001) ===================
+REQUEST  POST /api/auth/signon  body={"userId":"USER0001","password":"PASSWORD"}
+STATUS   200
+BODY     {"userId":"USER0001","userType":"U","landingTarget":"/menu"}
+REQUEST  GET /api/auth/session  cookies=/home/ubuntu/repos/ts-cobol-carddemo/parity/wave2/cosgn00c/rerun/http/jar_p15e.txt
+STATUS   200
+BODY     {"userId":"USER0001","userType":"U"}
+REQUEST  GET /api/auth/session  cookies=/home/ubuntu/repos/ts-cobol-carddemo/parity/wave2/cosgn00c/rerun/http/jar_p12.txt
+STATUS   401
+BODY     {"message":"Authentication required","status":401,"timestamp":"2026-09-07T08:25:13.724113213Z"}
+
+=================== P-17 over-length input (9 chars) ===================
+REQUEST  POST /api/auth/signon  body={"userId":"USER00011","password":"PASSWORD"}
+STATUS   400
+BODY     {"message":"userId: must be at most 8 characters","status":400,"timestamp":"2026-09-07T08:25:13.732360395Z"}
+REQUEST  POST /api/auth/signon  body={"userId":"USER0001","password":"PASSWORD9"}
+STATUS   400
+BODY     {"message":"password: must be at most 8 characters","status":400,"timestamp":"2026-09-07T08:25:13.738802665Z"}
+
+=================== P-18 trailing/leading spaces ===================
+REQUEST  POST /api/auth/signon  body={"userId":"USER0001 ","password":"PASSWORD"}
+STATUS   400
+BODY     {"message":"userId: must be at most 8 characters","status":400,"timestamp":"2026-09-07T08:25:13.744746409Z"}
+REQUEST  POST /api/auth/signon  body={"userId":" USER0001","password":"PASSWORD"}
+STATUS   400
+BODY     {"message":"userId: must be at most 8 characters","status":400,"timestamp":"2026-09-07T08:25:13.751206134Z"}
+REQUEST  POST /api/auth/signon  body={"userId":"USER0001","password":"PASSWORD "}
+STATUS   400
+BODY     {"message":"password: must be at most 8 characters","status":400,"timestamp":"2026-09-07T08:25:13.757384572Z"}
+
+=================== P-16 CC00 never appears in any URL/response ===================
+P-01.body (files containing CC00; header response is the only legitimate place)
+
+=================== P-10 datastore failure (OTHER RESP): simulate by revoking SELECT on users from the app role is impossible (single role); instead stop PostgreSQL ===================
+REQUEST  POST /api/auth/signon  body={"userId":"USER0001","password":"PASSWORD"}
+STATUS   500
+BODY     {"message":"Unable to verify the User ...","status":500,"timestamp":"2026-09-07T08:25:46.002022996Z"}
+
+=================== P-10b recovery sign-on after PostgreSQL back ===================
+REQUEST  POST /api/auth/signon  body={"userId":"USER0001","password":"PASSWORD"}
+STATUS   200
+BODY     {"userId":"USER0001","userType":"U","landingTarget":"/menu"}
+
+=================== FINAL users table ===================
+ sec_usr_id | sec_usr_type | hash_prefix  | hash_len | has_legacy 
+------------+--------------+--------------+----------+------------
+ ADMIN001   | A            | {bcrypt}$2a$ |       68 | f
+ ADMIN002   | A            |              |          | t
+ ADMIN003   | A            |              |          | t
+ ADMIN004   | A            |              |          | t
+ ADMIN005   | A            |              |          | t
+ USER0001   | U            | {bcrypt}$2a$ |       68 | f
+ USER0002   | U            |              |          | t
+ USER0003   | U            | {bcrypt}$2a$ |       68 | f
+ USER0004   | U            | {bcrypt}$2a$ |       68 | f
+ USER0005   | U            | {bcrypt}$2a$ |       68 | f
+(10 rows)
+
