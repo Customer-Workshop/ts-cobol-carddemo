@@ -25,6 +25,12 @@ export interface SignoffResponse {
   message: string;
 }
 
+/** GET /api/auth/session — the identity the HTTP session carries (B-0027). */
+export interface SessionResponse {
+  userId: string;
+  userType: 'A' | 'U';
+}
+
 /** Client of the COSGN00C endpoints; the session cookie travels with every ApiService call. */
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -40,5 +46,9 @@ export class AuthService {
 
   signOff(): Observable<SignoffResponse> {
     return this.api.post<SignoffResponse>('/auth/signoff', {});
+  }
+
+  session(): Observable<SessionResponse> {
+    return this.api.get<SessionResponse>('/auth/session');
   }
 }

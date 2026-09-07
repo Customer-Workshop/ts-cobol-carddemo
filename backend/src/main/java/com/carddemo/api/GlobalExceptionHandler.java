@@ -26,6 +26,13 @@ public class GlobalExceptionHandler {
         return build(ex.getStatus(), ex.getMessage());
     }
 
+    /** COMEN01C E-08 also carries the normalised OPTIONO echo (COMEN01C.cbl:125, FR §5 B-0010). */
+    @ExceptionHandler(InvalidMenuOptionException.class)
+    public ResponseEntity<MenuErrorResponse> handleInvalidMenuOption(InvalidMenuOptionException ex) {
+        return ResponseEntity.status(ex.getStatus()).body(new MenuErrorResponse(
+                ex.getMessage(), ex.getStatus().value(), Instant.now(), ex.normalizedOption()));
+    }
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorResponse> handleValidation(MethodArgumentNotValidException ex) {
         String message = ex.getBindingResult().getFieldErrors().stream()
