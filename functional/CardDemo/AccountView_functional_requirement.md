@@ -354,12 +354,12 @@ Legacy trancodes for parity records: `CC00` (FR-01..08, 22, 25), `CM00` (FR-09..
 
 ## 10. Program index (input to `!mf_program_fr_generation`)
 
-| Program | Source | Role | Requirements | Error codes | Demoted items |
-|---|---|---|---|---|---|
-| `COSGN00C` | `app/cbl/COSGN00C.cbl` | sign-on screen, credential check, routing to menu (shared, owned by S-01) | FR-01..FR-08, FR-22, FR-25 | E-01, E-02, E-03, E-06, E-07, E-13, E-14 | §7.1 RETURN CC00; §7.2 admin XCTL (excluded); §7.5 header plumbing |
-| `COMEN01C` | `app/cbl/COMEN01C.cbl` | main-menu screen, option validation, option-1 dispatch, exit to sign-on (shared, owned by S-01) | FR-09..FR-12, FR-25 | E-03, E-08 | §7.2 option 11 / DUMMY / options 2..10 (excluded); §7.4 admin guard (unreachable) |
-| `COACTVWC` | `app/cbl/COACTVWC.cbl` | Account View screen, account-id edits, xref -> account -> customer reads, display, PF3 hard stop (stream-private) | FR-11 (target), FR-13..FR-21 | E-04, E-05, E-09, E-10, E-11, E-12 | §7.1 COMMAREA wipe; §7.3 AID folding; §7.4 dead code; §7.5 abend |
-| `CSUTLDTC` | `app/cbl/CSUTLDTC.cbl` | date-validation subroutine (shared, owned by S-01, D-0020; no S-01 caller) | FR-23, FR-24 | §5.4 catalogue | §7.4 commented DISPLAY/GOBACK; B-0015 CEEDAYS |
+| Program | Source | Role | Requirements | Error codes | Demoted items | Program FR |
+|---|---|---|---|---|---|---|
+| `COSGN00C` | `app/cbl/COSGN00C.cbl` | sign-on screen, credential check, routing to menu (shared, owned by S-01) | FR-01..FR-08, FR-22, FR-25 | E-01, E-02, E-03, E-06, E-07, E-13, E-14 | §7.1 RETURN CC00; §7.2 admin XCTL (excluded); §7.5 header plumbing | [`programs/COSGN00C_functional_requirement.md`](programs/COSGN00C_functional_requirement.md) |
+| `COMEN01C` | `app/cbl/COMEN01C.cbl` | main-menu screen, option validation, option-1 dispatch, exit to sign-on (shared, owned by S-01) | FR-09..FR-12, FR-25 | E-03, E-08 | §7.2 option 11 / DUMMY / options 2..10 (excluded); §7.4 admin guard (unreachable) | [`programs/COMEN01C_functional_requirement.md`](programs/COMEN01C_functional_requirement.md) |
+| `COACTVWC` | `app/cbl/COACTVWC.cbl` | Account View screen, account-id edits, xref -> account -> customer reads, display, PF3 hard stop (stream-private) | FR-11 (target), FR-13..FR-21 | E-04, E-05, E-09, E-10, E-11, E-12 | §7.1 COMMAREA wipe; §7.3 AID folding; §7.4 dead code; §7.5 abend | [`programs/COACTVWC_functional_requirement.md`](programs/COACTVWC_functional_requirement.md) |
+| `CSUTLDTC` | `app/cbl/CSUTLDTC.cbl` | date-validation subroutine (shared, owned by S-01, D-0020; no S-01 caller) | FR-23, FR-24 | §5.4 catalogue | §7.4 commented DISPLAY/GOBACK; B-0015 CEEDAYS | [`programs/CSUTLDTC_functional_requirement.md`](programs/CSUTLDTC_functional_requirement.md) |
 
 Contract-only copybooks used: `COCOM01Y`, `COMEN02Y`, `CVACT01Y`, `CVCUS01Y`, `CVACT03Y`, `CSUSR01Y`, `CVCRD01Y`, `CSSTRPFY`, `CSDAT01Y`, `CSMSG01Y`, `CSMSG02Y`, `COTTL01Y`, `CSUTLDWY` (layout twin of the `CSUTLDTC` result), symbolic maps `COSGN00.CPY`, `COMEN01.CPY`, `COACTVW.CPY`.
 
