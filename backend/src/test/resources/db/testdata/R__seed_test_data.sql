@@ -1,6 +1,8 @@
 -- Test fixture (subset of app/data, values copied from the extracts; NOT loaded by the import profile).
--- Records: acctdata.txt rows 1-2, custdata.txt row 1, cardxref.txt rows 1-2, USRSEC records 1 and 6.
+-- Records: acctdata.txt rows 1-2, custdata.txt row 1, cardxref.txt rows 1-3, USRSEC records 1 and 6.
 -- Account 99999999999 / cards 4000000000000002 and 4000000000000001 are synthetic: the Q-04 two-card case.
+-- Wave 4 (append-only): xref 0923877193247330 (cardxref.txt:3) points at account 2, whose customer row
+-- is deliberately absent -> the E-11 CUSTDAT NOTFND branch of COACTVWC on real extract values.
 DELETE FROM card_xrefs;
 DELETE FROM accounts;
 DELETE FROM customers;
@@ -23,6 +25,7 @@ VALUES (1, 'Immanuel', 'Madeline', 'Kessler', '618 Deshaun Route', 'Apt. 802', '
 INSERT INTO card_xrefs (xref_card_number, xref_cust_id, xref_acct_id)
 VALUES ('0500024453765740', 50, 50),
        ('0683586198171516', 27, 27),
+       ('0923877193247330', 2, 2),
        ('4000000000000002', 1, 99999999999),
        ('4000000000000001', 1, 99999999999);
 

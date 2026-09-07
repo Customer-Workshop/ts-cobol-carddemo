@@ -36,7 +36,7 @@ into `accounts`, `customers`, `card_xrefs`, `users`, and enforces the Q-10 date 
 | `CSUTLDTC` | none (CALLed utility) | none — internal `DateValidationService` (B-0014) | wave 1: ported |
 | `COSGN00C` | `CC00` / `COSGN00` | `POST /api/auth/signon`, `GET /api/auth/session`, `POST /api/auth/signoff`, `GET /api/auth/header` (B-0030 header fields) | wave 2: ported (`AuthService`, `AuthController`) |
 | `COMEN01C` | `CM00` / `COMEN01` | `GET /api/menu` (header + 11 options), `POST /api/menu/select` (B-0010 dispatch) | wave 3: ported (`MenuService`, `MenuController`) |
-| `COACTVWC` | `CAVW` / `COACTVW` | `GET /api/accounts/{acctId}` | wave 3 (not yet) |
+| `COACTVWC` | `CAVW` / `COACTVW` | `GET /api/accounts/{acctId}`, `GET /api/accounts/` (blank filter) | wave 4: ported (`AccountViewService`, `AccountController`) |
 
 Wave 1 delivers no HTTP endpoints: only the data seams (Flyway `V1__account_view_schema.sql`, entities,
 repositories), the session-context model (`SessionContext`), the error model (`GlobalExceptionHandler`,
@@ -59,6 +59,20 @@ option gives 400 `Please enter a valid option number...` with the normalised 2-c
 (`'1 '`/`' 1'` -> `01`, blank -> `00`, `'A '` -> `0A`; COMEN01C.cbl:117-134). Both endpoints require the sign-on
 session and answer JSON 401 without it (B-0027); Exit reuses `POST /api/auth/signoff` (the menu PF3 XCTLs to
 COSGN00C without COMMAREA, so no thank-you text is displayed on this screen).
+
+Wave 4 (account view, `COACTVWC`): `GET /api/accounts/{acctId}` -> 200 `{header, accountNumber, infoMessage,
+account{10 fields}, customer{18 fields}}`, the painted map `CACTVWA` (COACTVWC.cbl:459-534) with money as
+`+ZZZ,ZZZ,ZZZ.99`, SSN as `nnn-nn-nnnn`, dates as the stored 10-character text (Q-10) and the full ZIP / phone
+values (DV-05). `infoMessage` is always the constant `Enter or update id of account to display`. Reads are
+xref (`CXACAIX`, lowest card number wins on a multi-card account, Q-04) -> account master -> customer master, in
+COBOL order. Errors carry the verbatim WS-RETURN-MSG text: 400 `No input received` (blank or `*`, hence the
+empty-path mapping), 400 `Account Filter must  be a non-zero 11 digit number` (non-numeric, not 11 digits, or
+zeroes; Q-02), 404 `Account:... not found in Cross ref file.  Resp:...`, 404 `Account:... not found in Acct
+Master file.Resp:...` (no account or customer block, and no customer read — DV-01), 404 `CustId:... not found in
+customer master.Resp: ...` **with** the account block in `account` (`AccountViewErrorResponse`), and 500
+`File Error: READ     on <file>   returned RESP ...` for any other datastore failure (D-0040). RESP/RESP2 digits
+are stable target values, not CICS bytes (Q-09). The endpoint requires the sign-on session (401 without it) and
+never rewrites the identity (DV-02); PF3 is the SPA's route back to `/menu` (B-0011).
 
 ## Layout
 
