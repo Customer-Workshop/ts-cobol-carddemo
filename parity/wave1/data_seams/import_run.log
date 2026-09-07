@@ -1,0 +1,45 @@
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v3.4.5)
+
+2026-09-07T07:02:34.673Z  INFO 8613 --- [carddemo] [           main] com.carddemo.CardDemoApplication         : Starting CardDemoApplication using Java 21.0.12 with PID 8613 (/home/ubuntu/repos/ts-cobol-carddemo/backend/target/classes started by ubuntu in /home/ubuntu/repos/ts-cobol-carddemo/backend)
+2026-09-07T07:02:34.674Z  INFO 8613 --- [carddemo] [           main] com.carddemo.CardDemoApplication         : The following 1 profile is active: "import"
+2026-09-07T07:02:34.945Z  INFO 8613 --- [carddemo] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-09-07T07:02:34.979Z  INFO 8613 --- [carddemo] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 30 ms. Found 4 JPA repository interfaces.
+2026-09-07T07:02:35.197Z  INFO 8613 --- [carddemo] [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2026-09-07T07:02:35.285Z  INFO 8613 --- [carddemo] [           main] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@352ed70d
+2026-09-07T07:02:35.286Z  INFO 8613 --- [carddemo] [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2026-09-07T07:02:35.302Z  INFO 8613 --- [carddemo] [           main] org.flywaydb.core.FlywayExecutor         : Database: jdbc:postgresql://localhost:5433/carddemo (PostgreSQL 16.15)
+2026-09-07T07:02:35.329Z  INFO 8613 --- [carddemo] [           main] o.f.c.i.s.JdbcTableSchemaHistory         : Schema history table "public"."flyway_schema_history" does not exist yet
+2026-09-07T07:02:35.331Z  INFO 8613 --- [carddemo] [           main] o.f.core.internal.command.DbValidate     : Successfully validated 1 migration (execution time 00:00.009s)
+2026-09-07T07:02:35.343Z  INFO 8613 --- [carddemo] [           main] o.f.c.i.s.JdbcTableSchemaHistory         : Creating Schema History table "public"."flyway_schema_history" ...
+2026-09-07T07:02:35.383Z  INFO 8613 --- [carddemo] [           main] o.f.core.internal.command.DbMigrate      : Current version of schema "public": << Empty Schema >>
+2026-09-07T07:02:35.392Z  INFO 8613 --- [carddemo] [           main] o.f.core.internal.command.DbMigrate      : Migrating schema "public" to version "1 - account view schema"
+2026-09-07T07:02:35.412Z  INFO 8613 --- [carddemo] [           main] o.f.core.internal.command.DbMigrate      : Successfully applied 1 migration to schema "public", now at version v1 (execution time 00:00.010s)
+2026-09-07T07:02:35.455Z  INFO 8613 --- [carddemo] [           main] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2026-09-07T07:02:35.476Z  INFO 8613 --- [carddemo] [           main] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.6.13.Final
+2026-09-07T07:02:35.491Z  INFO 8613 --- [carddemo] [           main] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
+2026-09-07T07:02:35.638Z  INFO 8613 --- [carddemo] [           main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-09-07T07:02:35.677Z  INFO 8613 --- [carddemo] [           main] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
+	Database driver: undefined/unknown
+	Database version: 16.15
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-09-07T07:02:36.066Z  INFO 8613 --- [carddemo] [           main] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-09-07T07:02:36.086Z  INFO 8613 --- [carddemo] [           main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-09-07T07:02:36.391Z  INFO 8613 --- [carddemo] [           main] com.carddemo.CardDemoApplication         : Started CardDemoApplication in 1.933 seconds (process running for 2.073)
+2026-09-07T07:02:36.569Z  INFO 8613 --- [carddemo] [           main] com.carddemo.data.ImportRunner           : Import complete: accounts=50 customers=50 card_xrefs=50 users=10
+2026-09-07T07:02:36.569Z  INFO 8613 --- [carddemo] [           main] com.carddemo.data.ImportRunner           : Q-10 date gate: 200 values checked, 0 offending
+2026-09-07T07:02:36.671Z  INFO 8613 --- [carddemo] [ionShutdownHook] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2026-09-07T07:02:36.672Z  INFO 8613 --- [carddemo] [ionShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2026-09-07T07:02:36.674Z  INFO 8613 --- [carddemo] [ionShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
+IMPORT_EXIT=0

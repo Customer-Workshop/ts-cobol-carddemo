@@ -1,0 +1,631 @@
+-[ RECORD 1 ]-----------------------------------------------------------------------------------------------------------------
+version | PostgreSQL 16.15 (Debian 16.15-1.pgdg13+2) on x86_64-pc-linux-gnu, compiled by gcc (Debian 14.2.0-19) 14.2.0, 64-bit
+
+-[ RECORD 1 ]--------------------
+version     | 1
+description | account view schema
+success     | t
+
+-[ RECORD 1 ]------------+-------------------------
+table_name               | accounts
+column_name              | acct_id
+data_type                | bigint
+character_maximum_length | 
+numeric_precision        | 64
+numeric_scale            | 0
+-[ RECORD 2 ]------------+-------------------------
+table_name               | accounts
+column_name              | acct_active_status
+data_type                | character varying
+character_maximum_length | 1
+numeric_precision        | 
+numeric_scale            | 
+-[ RECORD 3 ]------------+-------------------------
+table_name               | accounts
+column_name              | acct_curr_bal
+data_type                | numeric
+character_maximum_length | 
+numeric_precision        | 19
+numeric_scale            | 2
+-[ RECORD 4 ]------------+-------------------------
+table_name               | accounts
+column_name              | acct_credit_limit
+data_type                | numeric
+character_maximum_length | 
+numeric_precision        | 19
+numeric_scale            | 2
+-[ RECORD 5 ]------------+-------------------------
+table_name               | accounts
+column_name              | acct_cash_credit_limit
+data_type                | numeric
+character_maximum_length | 
+numeric_precision        | 19
+numeric_scale            | 2
+-[ RECORD 6 ]------------+-------------------------
+table_name               | accounts
+column_name              | acct_open_date
+data_type                | date
+character_maximum_length | 
+numeric_precision        | 
+numeric_scale            | 
+-[ RECORD 7 ]------------+-------------------------
+table_name               | accounts
+column_name              | acct_expiraion_date
+data_type                | date
+character_maximum_length | 
+numeric_precision        | 
+numeric_scale            | 
+-[ RECORD 8 ]------------+-------------------------
+table_name               | accounts
+column_name              | acct_reissue_date
+data_type                | date
+character_maximum_length | 
+numeric_precision        | 
+numeric_scale            | 
+-[ RECORD 9 ]------------+-------------------------
+table_name               | accounts
+column_name              | acct_curr_cyc_credit
+data_type                | numeric
+character_maximum_length | 
+numeric_precision        | 19
+numeric_scale            | 2
+-[ RECORD 10 ]-----------+-------------------------
+table_name               | accounts
+column_name              | acct_curr_cyc_debit
+data_type                | numeric
+character_maximum_length | 
+numeric_precision        | 19
+numeric_scale            | 2
+-[ RECORD 11 ]-----------+-------------------------
+table_name               | accounts
+column_name              | acct_addr_zip
+data_type                | character varying
+character_maximum_length | 10
+numeric_precision        | 
+numeric_scale            | 
+-[ RECORD 12 ]-----------+-------------------------
+table_name               | accounts
+column_name              | acct_group_id
+data_type                | character varying
+character_maximum_length | 10
+numeric_precision        | 
+numeric_scale            | 
+-[ RECORD 13 ]-----------+-------------------------
+table_name               | card_xrefs
+column_name              | xref_card_number
+data_type                | character varying
+character_maximum_length | 16
+numeric_precision        | 
+numeric_scale            | 
+-[ RECORD 14 ]-----------+-------------------------
+table_name               | card_xrefs
+column_name              | xref_cust_id
+data_type                | bigint
+character_maximum_length | 
+numeric_precision        | 64
+numeric_scale            | 0
+-[ RECORD 15 ]-----------+-------------------------
+table_name               | card_xrefs
+column_name              | xref_acct_id
+data_type                | bigint
+character_maximum_length | 
+numeric_precision        | 64
+numeric_scale            | 0
+-[ RECORD 16 ]-----------+-------------------------
+table_name               | customers
+column_name              | cust_id
+data_type                | bigint
+character_maximum_length | 
+numeric_precision        | 64
+numeric_scale            | 0
+-[ RECORD 17 ]-----------+-------------------------
+table_name               | customers
+column_name              | cust_first_name
+data_type                | character varying
+character_maximum_length | 25
+numeric_precision        | 
+numeric_scale            | 
+-[ RECORD 18 ]-----------+-------------------------
+table_name               | customers
+column_name              | cust_middle_name
+data_type                | character varying
+character_maximum_length | 25
+numeric_precision        | 
+numeric_scale            | 
+-[ RECORD 19 ]-----------+-------------------------
+table_name               | customers
+column_name              | cust_last_name
+data_type                | character varying
+character_maximum_length | 25
+numeric_precision        | 
+numeric_scale            | 
+-[ RECORD 20 ]-----------+-------------------------
+table_name               | customers
+column_name              | cust_addr_line_1
+data_type                | character varying
+character_maximum_length | 50
+numeric_precision        | 
+numeric_scale            | 
+-[ RECORD 21 ]-----------+-------------------------
+table_name               | customers
+column_name              | cust_addr_line_2
+data_type                | character varying
+character_maximum_length | 50
+numeric_precision        | 
+numeric_scale            | 
+-[ RECORD 22 ]-----------+-------------------------
+table_name               | customers
+column_name              | cust_addr_line_3
+data_type                | character varying
+character_maximum_length | 50
+numeric_precision        | 
+numeric_scale            | 
+-[ RECORD 23 ]-----------+-------------------------
+table_name               | customers
+column_name              | cust_addr_state_cd
+data_type                | character varying
+character_maximum_length | 2
+numeric_precision        | 
+numeric_scale            | 
+-[ RECORD 24 ]-----------+-------------------------
+table_name               | customers
+column_name              | cust_addr_country_cd
+data_type                | character varying
+character_maximum_length | 3
+numeric_precision        | 
+numeric_scale            | 
+-[ RECORD 25 ]-----------+-------------------------
+table_name               | customers
+column_name              | cust_addr_zip
+data_type                | character varying
+character_maximum_length | 10
+numeric_precision        | 
+numeric_scale            | 
+-[ RECORD 26 ]-----------+-------------------------
+table_name               | customers
+column_name              | cust_phone_num_1
+data_type                | character varying
+character_maximum_length | 15
+numeric_precision        | 
+numeric_scale            | 
+-[ RECORD 27 ]-----------+-------------------------
+table_name               | customers
+column_name              | cust_phone_num_2
+data_type                | character varying
+character_maximum_length | 15
+numeric_precision        | 
+numeric_scale            | 
+-[ RECORD 28 ]-----------+-------------------------
+table_name               | customers
+column_name              | cust_ssn
+data_type                | bigint
+character_maximum_length | 
+numeric_precision        | 64
+numeric_scale            | 0
+-[ RECORD 29 ]-----------+-------------------------
+table_name               | customers
+column_name              | cust_govt_issued_id
+data_type                | character varying
+character_maximum_length | 20
+numeric_precision        | 
+numeric_scale            | 
+-[ RECORD 30 ]-----------+-------------------------
+table_name               | customers
+column_name              | cust_dob_yyyy_mm_dd
+data_type                | date
+character_maximum_length | 
+numeric_precision        | 
+numeric_scale            | 
+-[ RECORD 31 ]-----------+-------------------------
+table_name               | customers
+column_name              | cust_eft_account_id
+data_type                | character varying
+character_maximum_length | 10
+numeric_precision        | 
+numeric_scale            | 
+-[ RECORD 32 ]-----------+-------------------------
+table_name               | customers
+column_name              | cust_pri_card_holder_ind
+data_type                | character varying
+character_maximum_length | 1
+numeric_precision        | 
+numeric_scale            | 
+-[ RECORD 33 ]-----------+-------------------------
+table_name               | customers
+column_name              | cust_fico_credit_score
+data_type                | integer
+character_maximum_length | 
+numeric_precision        | 32
+numeric_scale            | 0
+-[ RECORD 34 ]-----------+-------------------------
+table_name               | users
+column_name              | sec_usr_id
+data_type                | character varying
+character_maximum_length | 8
+numeric_precision        | 
+numeric_scale            | 
+-[ RECORD 35 ]-----------+-------------------------
+table_name               | users
+column_name              | sec_usr_fname
+data_type                | character varying
+character_maximum_length | 20
+numeric_precision        | 
+numeric_scale            | 
+-[ RECORD 36 ]-----------+-------------------------
+table_name               | users
+column_name              | sec_usr_lname
+data_type                | character varying
+character_maximum_length | 20
+numeric_precision        | 
+numeric_scale            | 
+-[ RECORD 37 ]-----------+-------------------------
+table_name               | users
+column_name              | sec_usr_pwd_hash
+data_type                | character varying
+character_maximum_length | 72
+numeric_precision        | 
+numeric_scale            | 
+-[ RECORD 38 ]-----------+-------------------------
+table_name               | users
+column_name              | sec_usr_pwd_legacy
+data_type                | character varying
+character_maximum_length | 8
+numeric_precision        | 
+numeric_scale            | 
+-[ RECORD 39 ]-----------+-------------------------
+table_name               | users
+column_name              | sec_usr_type
+data_type                | character varying
+character_maximum_length | 1
+numeric_precision        | 
+numeric_scale            | 
+
+-[ RECORD 1 ]--------------------------------------------------------------------------------------------------------
+indexname | flyway_schema_history_pk
+indexdef  | CREATE UNIQUE INDEX flyway_schema_history_pk ON public.flyway_schema_history USING btree (installed_rank)
+-[ RECORD 2 ]--------------------------------------------------------------------------------------------------------
+indexname | flyway_schema_history_s_idx
+indexdef  | CREATE INDEX flyway_schema_history_s_idx ON public.flyway_schema_history USING btree (success)
+-[ RECORD 3 ]--------------------------------------------------------------------------------------------------------
+indexname | idx_card_xrefs_acct_id
+indexdef  | CREATE INDEX idx_card_xrefs_acct_id ON public.card_xrefs USING btree (xref_acct_id)
+-[ RECORD 4 ]--------------------------------------------------------------------------------------------------------
+indexname | pk_accounts
+indexdef  | CREATE UNIQUE INDEX pk_accounts ON public.accounts USING btree (acct_id)
+-[ RECORD 5 ]--------------------------------------------------------------------------------------------------------
+indexname | pk_card_xrefs
+indexdef  | CREATE UNIQUE INDEX pk_card_xrefs ON public.card_xrefs USING btree (xref_card_number)
+-[ RECORD 6 ]--------------------------------------------------------------------------------------------------------
+indexname | pk_customers
+indexdef  | CREATE UNIQUE INDEX pk_customers ON public.customers USING btree (cust_id)
+-[ RECORD 7 ]--------------------------------------------------------------------------------------------------------
+indexname | pk_users
+indexdef  | CREATE UNIQUE INDEX pk_users ON public.users USING btree (sec_usr_id)
+
+-[ RECORD 1 ]-----
+t     | accounts
+count | 50
+-[ RECORD 2 ]-----
+t     | customers
+count | 50
+-[ RECORD 3 ]-----
+t     | card_xrefs
+count | 50
+-[ RECORD 4 ]-----
+t     | users
+count | 10
+
+-[ RECORD 1 ]----------+-----------
+acct_id                | 1
+acct_active_status     | Y
+acct_curr_bal          | 194.00
+acct_credit_limit      | 2020.00
+acct_cash_credit_limit | 1020.00
+acct_open_date         | 2014-11-20
+acct_expiraion_date    | 2025-05-20
+acct_reissue_date      | 2025-05-20
+acct_curr_cyc_credit   | 0.00
+acct_curr_cyc_debit    | 0.00
+acct_addr_zip          | 
+acct_group_id          | A000000000
+-[ RECORD 2 ]----------+-----------
+acct_id                | 2
+acct_active_status     | Y
+acct_curr_bal          | 158.00
+acct_credit_limit      | 6130.00
+acct_cash_credit_limit | 5448.00
+acct_open_date         | 2013-06-19
+acct_expiraion_date    | 2024-08-11
+acct_reissue_date      | 2024-08-11
+acct_curr_cyc_credit   | 0.00
+acct_curr_cyc_debit    | 0.00
+acct_addr_zip          | 
+acct_group_id          | A000000000
+-[ RECORD 3 ]----------+-----------
+acct_id                | 3
+acct_active_status     | Y
+acct_curr_bal          | 147.00
+acct_credit_limit      | 4909.00
+acct_cash_credit_limit | 538.00
+acct_open_date         | 2013-08-23
+acct_expiraion_date    | 2024-01-10
+acct_reissue_date      | 2024-01-10
+acct_curr_cyc_credit   | 0.00
+acct_curr_cyc_debit    | 0.00
+acct_addr_zip          | 
+acct_group_id          | A000000000
+-[ RECORD 4 ]----------+-----------
+acct_id                | 4
+acct_active_status     | Y
+acct_curr_bal          | 40.00
+acct_credit_limit      | 3503.00
+acct_cash_credit_limit | 2789.00
+acct_open_date         | 2012-11-17
+acct_expiraion_date    | 2023-12-16
+acct_reissue_date      | 2023-12-16
+acct_curr_cyc_credit   | 0.00
+acct_curr_cyc_debit    | 0.00
+acct_addr_zip          | 
+acct_group_id          | A000000000
+-[ RECORD 5 ]----------+-----------
+acct_id                | 5
+acct_active_status     | Y
+acct_curr_bal          | 345.00
+acct_credit_limit      | 3819.00
+acct_cash_credit_limit | 2430.00
+acct_open_date         | 2012-10-03
+acct_expiraion_date    | 2025-03-09
+acct_reissue_date      | 2025-03-09
+acct_curr_cyc_credit   | 0.00
+acct_curr_cyc_debit    | 0.00
+acct_addr_zip          | 
+acct_group_id          | A000000000
+
+-[ RECORD 1 ]------------+---------------------
+cust_id                  | 1
+cust_first_name          | Immanuel
+cust_middle_name         | Madeline
+cust_last_name           | Kessler
+cust_addr_line_1         | 618 Deshaun Route
+cust_addr_line_2         | Apt. 802
+cust_addr_line_3         | Altenwerthshire
+cust_addr_state_cd       | NC
+cust_addr_country_cd     | USA
+cust_addr_zip            | 12546
+cust_phone_num_1         | (908)119-8310
+cust_phone_num_2         | (373)693-8684
+cust_ssn                 | 20973888
+cust_govt_issued_id      | 00000000000049368437
+cust_dob_yyyy_mm_dd      | 1961-06-08
+cust_eft_account_id      | 0053581756
+cust_pri_card_holder_ind | Y
+cust_fico_credit_score   | 274
+-[ RECORD 2 ]------------+---------------------
+cust_id                  | 2
+cust_first_name          | Enrico
+cust_middle_name         | April
+cust_last_name           | Rosenbaum
+cust_addr_line_1         | 4917 Myrna Flats
+cust_addr_line_2         | Apt. 453
+cust_addr_line_3         | West Bernita
+cust_addr_state_cd       | IN
+cust_addr_country_cd     | USA
+cust_addr_zip            | 22770
+cust_phone_num_1         | (429)706-9510
+cust_phone_num_2         | (744)950-5272
+cust_ssn                 | 587518382
+cust_govt_issued_id      | 00000000000506210371
+cust_dob_yyyy_mm_dd      | 1961-10-08
+cust_eft_account_id      | 0069194009
+cust_pri_card_holder_ind | Y
+cust_fico_credit_score   | 268
+-[ RECORD 3 ]------------+---------------------
+cust_id                  | 3
+cust_first_name          | Larry
+cust_middle_name         | Cody
+cust_last_name           | Homenick
+cust_addr_line_1         | 362 Esta Parks
+cust_addr_line_2         | Apt. 390
+cust_addr_line_3         | New Gladys
+cust_addr_state_cd       | GA
+cust_addr_country_cd     | USA
+cust_addr_zip            | 19852-6716
+cust_phone_num_1         | (950)396-9024
+cust_phone_num_2         | (685)168-8826
+cust_ssn                 | 317460867
+cust_govt_issued_id      | 00000000000052419303
+cust_dob_yyyy_mm_dd      | 1987-11-30
+cust_eft_account_id      | 0006465789
+cust_pri_card_holder_ind | Y
+cust_fico_credit_score   | 616
+-[ RECORD 4 ]------------+---------------------
+cust_id                  | 4
+cust_first_name          | Delbert
+cust_middle_name         | Kaia
+cust_last_name           | Parisian
+cust_addr_line_1         | 638 Blanda Gateway
+cust_addr_line_2         | Apt. 076
+cust_addr_line_3         | Lake Virginie
+cust_addr_state_cd       | MI
+cust_addr_country_cd     | USA
+cust_addr_zip            | 39035-0455
+cust_phone_num_1         | (801)603-4121
+cust_phone_num_2         | (156)074-6837
+cust_ssn                 | 660354258
+cust_govt_issued_id      | 00000000000068579249
+cust_dob_yyyy_mm_dd      | 1985-01-13
+cust_eft_account_id      | 0040802739
+cust_pri_card_holder_ind | Y
+cust_fico_credit_score   | 776
+-[ RECORD 5 ]------------+---------------------
+cust_id                  | 5
+cust_first_name          | Treva
+cust_middle_name         | Manley
+cust_last_name           | Schowalter
+cust_addr_line_1         | 5653 Legros Plaza
+cust_addr_line_2         | Apt. 968
+cust_addr_line_3         | Alvinaport
+cust_addr_state_cd       | MI
+cust_addr_country_cd     | USA
+cust_addr_zip            | 02251-1698
+cust_phone_num_1         | (978)775-4633
+cust_phone_num_2         | (439)943-7644
+cust_ssn                 | 611264288
+cust_govt_issued_id      | 00000000000639799754
+cust_dob_yyyy_mm_dd      | 1971-09-29
+cust_eft_account_id      | 0006365573
+cust_pri_card_holder_ind | Y
+cust_fico_credit_score   | 529
+
+-[ RECORD 1 ]----+-----------------
+xref_card_number | 0500024453765740
+xref_cust_id     | 50
+xref_acct_id     | 50
+-[ RECORD 2 ]----+-----------------
+xref_card_number | 0683586198171516
+xref_cust_id     | 27
+xref_acct_id     | 27
+-[ RECORD 3 ]----+-----------------
+xref_card_number | 0923877193247330
+xref_cust_id     | 2
+xref_acct_id     | 2
+-[ RECORD 4 ]----+-----------------
+xref_card_number | 0927987108636232
+xref_cust_id     | 20
+xref_acct_id     | 20
+-[ RECORD 5 ]----+-----------------
+xref_card_number | 0982496213629795
+xref_cust_id     | 12
+xref_acct_id     | 12
+
+-[ RECORD 1 ]------+-----------
+sec_usr_id         | ADMIN001
+sec_usr_fname      | MARGARET
+sec_usr_lname      | GOLD
+sec_usr_pwd_hash   | 
+sec_usr_pwd_legacy | PASSWORD
+sec_usr_type       | A
+-[ RECORD 2 ]------+-----------
+sec_usr_id         | ADMIN002
+sec_usr_fname      | RUSSELL
+sec_usr_lname      | RUSSELL
+sec_usr_pwd_hash   | 
+sec_usr_pwd_legacy | PASSWORD
+sec_usr_type       | A
+-[ RECORD 3 ]------+-----------
+sec_usr_id         | ADMIN003
+sec_usr_fname      | RAYMOND
+sec_usr_lname      | WHITMORE
+sec_usr_pwd_hash   | 
+sec_usr_pwd_legacy | PASSWORD
+sec_usr_type       | A
+-[ RECORD 4 ]------+-----------
+sec_usr_id         | ADMIN004
+sec_usr_fname      | EMMANUEL
+sec_usr_lname      | CASGRAIN
+sec_usr_pwd_hash   | 
+sec_usr_pwd_legacy | PASSWORD
+sec_usr_type       | A
+-[ RECORD 5 ]------+-----------
+sec_usr_id         | ADMIN005
+sec_usr_fname      | GRANVILLE
+sec_usr_lname      | LACHAPELLE
+sec_usr_pwd_hash   | 
+sec_usr_pwd_legacy | PASSWORD
+sec_usr_type       | A
+-[ RECORD 6 ]------+-----------
+sec_usr_id         | USER0001
+sec_usr_fname      | LAWRENCE
+sec_usr_lname      | THOMAS
+sec_usr_pwd_hash   | 
+sec_usr_pwd_legacy | PASSWORD
+sec_usr_type       | U
+-[ RECORD 7 ]------+-----------
+sec_usr_id         | USER0002
+sec_usr_fname      | AJITH
+sec_usr_lname      | KUMAR
+sec_usr_pwd_hash   | 
+sec_usr_pwd_legacy | PASSWORD
+sec_usr_type       | U
+-[ RECORD 8 ]------+-----------
+sec_usr_id         | USER0003
+sec_usr_fname      | LAURITZ
+sec_usr_lname      | ALME
+sec_usr_pwd_hash   | 
+sec_usr_pwd_legacy | PASSWORD
+sec_usr_type       | U
+-[ RECORD 9 ]------+-----------
+sec_usr_id         | USER0004
+sec_usr_fname      | AVERARDO
+sec_usr_lname      | MAZZI
+sec_usr_pwd_hash   | 
+sec_usr_pwd_legacy | PASSWORD
+sec_usr_type       | U
+-[ RECORD 10 ]-----+-----------
+sec_usr_id         | USER0005
+sec_usr_fname      | LEE
+sec_usr_lname      | TING
+sec_usr_pwd_hash   | 
+sec_usr_pwd_legacy | PASSWORD
+sec_usr_type       | U
+
+(0 rows)
+
+-[ RECORD 1 ]------
+neg_bal    | 0
+neg_cyc_cr | 0
+neg_cyc_db | 0
+min        | 2.00
+max        | 843.00
+
+-[ RECORD 1 ]---------
+sec_usr_id  | ADMIN001
+has_legacy  | t
+has_hash    | f
+hash_prefix | 
+-[ RECORD 2 ]---------
+sec_usr_id  | ADMIN002
+has_legacy  | t
+has_hash    | f
+hash_prefix | 
+-[ RECORD 3 ]---------
+sec_usr_id  | ADMIN003
+has_legacy  | t
+has_hash    | f
+hash_prefix | 
+-[ RECORD 4 ]---------
+sec_usr_id  | ADMIN004
+has_legacy  | t
+has_hash    | f
+hash_prefix | 
+-[ RECORD 5 ]---------
+sec_usr_id  | ADMIN005
+has_legacy  | t
+has_hash    | f
+hash_prefix | 
+-[ RECORD 6 ]---------
+sec_usr_id  | USER0001
+has_legacy  | t
+has_hash    | f
+hash_prefix | 
+-[ RECORD 7 ]---------
+sec_usr_id  | USER0002
+has_legacy  | t
+has_hash    | f
+hash_prefix | 
+-[ RECORD 8 ]---------
+sec_usr_id  | USER0003
+has_legacy  | t
+has_hash    | f
+hash_prefix | 
+-[ RECORD 9 ]---------
+sec_usr_id  | USER0004
+has_legacy  | t
+has_hash    | f
+hash_prefix | 
+-[ RECORD 10 ]--------
+sec_usr_id  | USER0005
+has_legacy  | t
+has_hash    | f
+hash_prefix | 
+

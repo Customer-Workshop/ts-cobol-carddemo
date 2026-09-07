@@ -1,0 +1,36 @@
+## CORE
+PASS  CORE java.version 21
+PASS  CORE spring-boot-starter-parent
+PASS  CORE parent version 3.x
+PASS  CORE no lombok/mapstruct/modelmapper
+PASS  CORE no float/double in main
+PASS  CORE no @Autowired field injection
+-- DTOs are records:
+PASS  record backend/src/main/java/com/carddemo/api/ErrorResponse.java
+PASS  CORE no edits to legacy app/ vs origin/main
+## ONLINE
+-- controller mappings:
+-- README endpoint table rows: 4
+PASS  ONLINE no standalone:false
+PASS  ONLINE no @ngrx
+PASS  ONLINE @angular/material present
+PASS  ONLINE withCredentials: true
+## DATA / BOUNDARY
+PASS  DATA ddl-auto=validate
+PASS  DATA no h2 in application.properties
+PASS  DATA jdbc:postgresql
+PASS  DATA Flyway V*__*.sql exists
+PASS  DATA money columns precision 19 scale 2
+PASS  DATA no default-profile CommandLineRunner seeding
+PASS  DATA no @Transactional on controllers
+## Build/test steps of the skill
+backend: JAVA_HOME=/usr/lib/jvm/java-21-openjdk-amd64 mvn -q clean verify -> BACKEND_MVN_EXIT=0
+Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.669 s -- in com.carddemo.H2UnitProfileContextTest
+Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.035 s -- in com.carddemo.data.CobolFieldReaderTest
+Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.031 s -- in com.carddemo.data.LegacyExtractQ10GateTest
+Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 4.336 s -- in com.carddemo.repository.AccountViewRepositoriesIntegrationTest
+Tests run: 19, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.041 s -- in com.carddemo.service.DateValidationServiceTest
+frontend: npm ci && npm run build && npx ng test --watch=false --browsers=ChromeHeadless -> FRONTEND_EXIT=0
+[1A[2KChrome Headless 133.0.0.0 (Linux 0.0.0): Executed 6 of 6 SUCCESS (0.053 secs / 0.044 secs)
+TOTAL: 6 SUCCESS
+NOTE: 'controller mappings' list is empty and README endpoint table has 4 rows: wave 1 ships no controller (README: no HTTP endpoint in wave 1) -> informational, not a failing line.
