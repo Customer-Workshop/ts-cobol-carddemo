@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout :: layout('CardDemo', 'CT01', 'COTRN01C', ~{::content})}">
+<head>
+    <title>CardDemo</title>
+</head>
+<body>
+<!-- COTRN1A map (COTRN01.bms): element ids are the BMS field names
+     lowercased. Unmoved output fields render blank (LOW-VALUES) and every
+     detail field is FSET, so the shown values round-trip as hidden inputs
+     for the redisplay cases (S08-B3). -->
+<div th:fragment="content" class="tran-view">
+    <p class="view-title">View Transaction</p>
+    <form id="tran-view-form" method="post" th:action="@{/transactions/view}">
+        <input type="hidden" name="returnUrl" th:value="${returnUrl}">
+        <div class="form-row">
+            <label class="field-label" for="trnIdIn">Enter Tran ID:</label>
+            <input id="trnIdIn" name="trnIdIn" type="text" maxlength="16" size="16"
+                   autocomplete="off" autofocus th:value="${screen.tranIdIn}">
+        </div>
+        <div class="view-grid">
+            <div class="view-row">
+                <span class="view-cell">
+                    <span class="field-label">Transaction ID:</span>
+                    <span class="field-value" id="trnid" th:text="${screen.details?.tranId}"></span>
+                </span>
+                <span class="view-cell">
+                    <span class="field-label">Card Number:</span>
+                    <span class="field-value" id="cardnum" th:text="${screen.details?.cardNumber}"></span>
+                </span>
+            </div>
+            <div class="view-row">
+                <span class="view-cell">
+                    <span class="field-label">Type CD:</span>
+                    <span class="field-value" id="ttypcd" th:text="${screen.details?.typeCode}"></span>
+                </span>
+                <span class="view-cell">
+                    <span class="field-label">Category CD:</span>
+                    <span class="field-value" id="tcatcd" th:text="${screen.details?.categoryCode}"></span>
+                </span>
+                <span class="view-cell">
+                    <span class="field-label">Source:</span>
+                    <span class="field-value" id="trnsrc" th:text="${screen.details?.source}"></span>
+                </span>
+            </div>
+            <div class="view-row">
+                <span class="view-cell">
+                    <span class="field-label">Description:</span>
+                    <span class="field-value" id="tdesc" th:text="${screen.details?.description}"></span>
+                </span>
+            </div>
+            <div class="view-row">
+                <span class="view-cell">
+                    <span class="field-label">Amount:</span>
+                    <span class="field-value" id="trnamt" th:text="${screen.details?.amount}"></span>
+                </span>
+                <span class="view-cell">
+                    <span class="field-label">Orig Date:</span>
+                    <span class="field-value" id="torigdt" th:text="${screen.details?.originDate}"></span>
+                </span>
+                <span class="view-cell">
+                    <span class="field-label">Proc Date:</span>
+                    <span class="field-value" id="tprocdt" th:text="${screen.details?.processDate}"></span>
+                </span>
+            </div>
+            <div class="view-row">
+                <span class="view-cell">
+                    <span class="field-label">Merchant ID:</span>
+                    <span class="field-value" id="mid" th:text="${screen.details?.merchantId}"></span>
+                </span>
+                <span class="view-cell">
+                    <span class="field-label">Merchant Name:</span>
+                    <span class="field-value" id="mname" th:text="${screen.details?.merchantName}"></span>
+                </span>
+            </div>
+            <div class="view-row">
+                <span class="view-cell">
+                    <span class="field-label">Merchant City:</span>
+                    <span class="field-value" id="mcity" th:text="${screen.details?.merchantCity}"></span>
+                </span>
+                <span class="view-cell">
+                    <span class="field-label">Merchant Zip:</span>
+                    <span class="field-value" id="mzip" th:text="${screen.details?.merchantZip}"></span>
+                </span>
+            </div>
+        </div>
+        <input type="hidden" name="trnid" th:value="${screen.details?.tranId}">
+        <input type="hidden" name="cardnum" th:value="${screen.details?.cardNumber}">
+        <input type="hidden" name="ttypcd" th:value="${screen.details?.typeCode}">
+        <input type="hidden" name="tcatcd" th:value="${screen.details?.categoryCode}">
+        <input type="hidden" name="trnsrc" th:value="${screen.details?.source}">
+        <input type="hidden" name="tdesc" th:value="${screen.details?.description}">
+        <input type="hidden" name="trnamt" th:value="${screen.details?.amount}">
+        <input type="hidden" name="torigdt" th:value="${screen.details?.originDate}">
+        <input type="hidden" name="tprocdt" th:value="${screen.details?.processDate}">
+        <input type="hidden" name="mid" th:value="${screen.details?.merchantId}">
+        <input type="hidden" name="mname" th:value="${screen.details?.merchantName}">
+        <input type="hidden" name="mcity" th:value="${screen.details?.merchantCity}">
+        <input type="hidden" name="mzip" th:value="${screen.details?.merchantZip}">
+        <p class="key-hints">ENTER=Fetch  F3=Back  F4=Clear  F5=Browse Tran.</p>
+        <div class="form-actions">
+            <button type="submit" name="aid" value="ENTER">ENTER=Fetch</button>
+            <button type="submit" name="aid" value="PF3" formnovalidate>F3=Back</button>
+            <button type="submit" name="aid" value="PF4" formnovalidate>F4=Clear</button>
+            <button type="submit" name="aid" value="PF5" formnovalidate>F5=Browse Tran.</button>
+        </div>
+    </form>
+    <script>
+        // 3270 AID parity (COTRN01C.cbl:112-132): F3 backs out, F4 clears,
+        // F5 browses, every other function key redisplays invalid-key.
+        document.addEventListener('keydown', function (event) {
+            if (/^F([1-9]|1[0-2])$/.test(event.key)) {
+                event.preventDefault();
+                var form = document.getElementById('tran-view-form');
+                var aid = document.createElement('input');
+                aid.type = 'hidden';
+                aid.name = 'aid';
+                aid.value = event.key === 'F3' ? 'PF3'
+                        : event.key === 'F4' ? 'PF4'
+                        : event.key === 'F5' ? 'PF5'
+                        : event.key;
+                form.appendChild(aid);
+                form.submit();
+            }
+        });
+    </script>
+</div>
+</body>
+</html>

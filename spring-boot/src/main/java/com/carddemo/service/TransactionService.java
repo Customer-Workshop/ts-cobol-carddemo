@@ -11,6 +11,8 @@ import com.carddemo.model.CardXref;
 import com.carddemo.model.Transaction;
 import com.carddemo.repository.CardXrefRepository;
 import com.carddemo.repository.TransactionRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
@@ -25,6 +27,8 @@ import java.util.List;
 
 @Service
 public class TransactionService {
+    private static final Logger log = LoggerFactory.getLogger(TransactionService.class);
+
     public static final int COBOL_PAGE_SIZE = 10;
 
     private static final String DATE_MASK = "YYYY-MM-DD";
@@ -80,6 +84,74 @@ public class TransactionService {
         String id = requireTransactionId(transactionId);
         return transactionRepository.findById(id).map(this::response)
                 .orElseThrow(() -> notFound(CobolMessages.TRANSACTION_NOT_FOUND));
+    }
+
+    /**
+     * COTRN01C (tran CT01, map COTRN1A) first entry (:98-109): the
+     * CDEMO-CT01-TRN-SELECTED slot arrives as the {@code tranId} query
+     * parameter (S08-B2); a populated selection runs PROCESS-ENTER-KEY at
+     * once, anything else shows the empty map.
+     */
+    public TransactionViewScreen openView(String tranId) {
+        String field = TransactionViewScreen.tranIdField(tranId);
+        return field.isBlank() ? TransactionViewScreen.blank() : enterView(field, null);
+    }
+
+    /**
+     * PROCESS-ENTER-KEY (:144-192) on the view map. A blank Tran ID
+     * rejects with the shown details kept (:147-152); any other entry
+     * clears the detail fields before the keyed READ, so a NOTFND or
+     * store error displays an empty detail area (:158-173).
+     */
+    public TransactionViewScreen enterView(String tranIdIn,
+                                           TransactionViewScreen.Details displayed) {
+        String field = TransactionViewScreen.tranIdField(tranIdIn);
+        if (field.isBlank()) {
+            return TransactionViewScreen.retained(field,
+                    CobolMessages.TRANSACTION_ID_REQUIRED, null, displayed);
+        }
+        Transaction value;
+        try {
+            // READ TRANSACT keyed by TRAN-ID verbatim (:269-278, S08-B1):
+            // trailing blanks are key padding; no numeric edit, no
+            // zero-pad, no case fold — the REST path's
+            // requireTransactionId deliberately does not apply here.
+            value = transactionRepository.findById(field.stripTrailing()).orElse(null);
+        } catch (RuntimeException exception) {
+            // RESP other than NORMAL/NOTFND (:289-295); the DISPLAY
+            // 'RESP:'/'REAS:' diagnostics demote to a structured log.
+            log.warn("TRANSACT keyed read failed (S08-B1 other RESP)", exception);
+            return TransactionViewScreen.retained(field,
+                    CobolMessages.TRANSACTION_VIEW_LOOKUP_FAILED, null, null);
+        }
+        if (value == null) {
+            return TransactionViewScreen.retained(field,
+                    CobolMessages.TRANSACTION_NOT_FOUND, null, null);
+        }
+        return new TransactionViewScreen(field, null, null, toViewDetails(value));
+    }
+
+    // The thirteen moved fields (:176-191): id/card/type/category/
+    // source/zip verbatim, description and merchant name/city truncated
+    // to the map widths, the amount through the +99999999.99 edit (:49),
+    // dates as the first ten characters of the X(26) timestamps.
+    private TransactionViewScreen.Details toViewDetails(Transaction value) {
+        return new TransactionViewScreen.Details(
+                CobolFormat.truncate(value.getTranId(), 16),
+                CobolFormat.truncate(value.getTranCardNumber(), 16),
+                CobolFormat.truncate(value.getTranTypeCode(), 2),
+                value.getTranCategoryCode() == null ? ""
+                        : "%04d".formatted(value.getTranCategoryCode()),
+                CobolFormat.truncate(value.getTranSource(), 10),
+                CobolFormat.truncate(value.getTranDescription(), 60),
+                TransactionListService.formatAmount(value.getTranAmount()),
+                dateText(value.getTranOriginTimestamp()),
+                dateText(value.getTranProcessTimestamp()),
+                value.getTranMerchantId() == null ? ""
+                        : "%09d".formatted(value.getTranMerchantId()),
+                CobolFormat.truncate(value.getTranMerchantName(), 30),
+                CobolFormat.truncate(value.getTranMerchantCity(), 25),
+                CobolFormat.truncate(value.getTranMerchantZip(), 10));
     }
 
     /**

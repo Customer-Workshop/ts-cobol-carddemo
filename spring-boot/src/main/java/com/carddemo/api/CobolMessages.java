@@ -71,6 +71,9 @@ public final class CobolMessages {
         "Original values must be supplied for update.";
     public static final String TRANSACTION_ID_INVALID = "Tran ID must be Numeric...";
     public static final String TRANSACTION_NOT_FOUND = "Transaction ID NOT found...";
+    public static final String TRANSACTION_ID_REQUIRED = "Tran ID can NOT be empty...";
+    public static final String TRANSACTION_VIEW_LOOKUP_FAILED =
+        "Unable to lookup Transaction...";
     public static final String TRANSACTION_ACCOUNT_OR_CARD_REQUIRED =
         "Account or Card Number must be entered...";
     public static final String TRANSACTION_ACCOUNT_NOT_FOUND =

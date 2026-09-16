@@ -15,6 +15,7 @@ import com.carddemo.service.AuthService;
 import com.carddemo.service.MenuService;
 import com.carddemo.service.TransactionListService;
 import com.carddemo.service.TransactionService;
+import com.carddemo.service.TransactionViewScreen;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.core.Authentication;
@@ -364,5 +365,85 @@ public class UiController {
         model.addAttribute("message", screen.message());
         model.addAttribute("messageStyle", screen.messageStyle());
         return "transaction-add";
+    }
+
+    // COTRN01C web surface (tran CT01): one transaction by its verbatim
+    // Tran ID. First entry honors the CDEMO-CT01-TRN-SELECTED slot, which
+    // arrives as the tranId query parameter (S08-B2); a bare entry shows
+    // the empty map (COTRN01C.cbl:98-109).
+    @GetMapping("/transactions/view")
+    public String transactionView(
+            @RequestParam(name = "tranId", required = false) String tranId,
+            @RequestParam(name = "returnUrl", required = false) String returnUrl,
+            Model model) {
+        renderTransactionView(model, transactionService.openView(tranId), returnUrl);
+        return "transaction-view";
+    }
+
+    // AID map (COTRN01C.cbl:112-132): ENTER runs the keyed read, PF3
+    // exits to the caller (CDEMO-FROM-PROGRAM, the returnUrl slot) or the
+    // menu, PF4 clears the map, PF5 transfers to COTRN00C, any other key
+    // redisplays with the invalid-key message. Every detail field is
+    // FSET, so the posted fields rebuild the shown record — kept on a
+    // blank-id rejection, an invalid AID or the coming-soon fallback
+    // (:147-152, :128-131, S08-B4).
+    @PostMapping("/transactions/view")
+    public String submitTransactionView(
+            @RequestParam(name = "aid", defaultValue = "ENTER") String aid,
+            @RequestParam(name = "trnIdIn", required = false) String trnIdIn,
+            @RequestParam(name = "trnid", required = false) String trnid,
+            @RequestParam(name = "cardnum", required = false) String cardnum,
+            @RequestParam(name = "ttypcd", required = false) String ttypcd,
+            @RequestParam(name = "tcatcd", required = false) String tcatcd,
+            @RequestParam(name = "trnsrc", required = false) String trnsrc,
+            @RequestParam(name = "tdesc", required = false) String tdesc,
+            @RequestParam(name = "trnamt", required = false) String trnamt,
+            @RequestParam(name = "torigdt", required = false) String torigdt,
+            @RequestParam(name = "tprocdt", required = false) String tprocdt,
+            @RequestParam(name = "mid", required = false) String mid,
+            @RequestParam(name = "mname", required = false) String mname,
+            @RequestParam(name = "mcity", required = false) String mcity,
+            @RequestParam(name = "mzip", required = false) String mzip,
+            @RequestParam(name = "returnUrl", required = false) String returnUrl,
+            Model model) {
+        if ("PF3".equals(aid)) {
+            return "redirect:" + internalRoute(returnUrl);
+        }
+        if ("PF4".equals(aid)) {
+            renderTransactionView(model, TransactionViewScreen.blank(), returnUrl);
+            return "transaction-view";
+        }
+        TransactionViewScreen.Details displayed = TransactionViewScreen.Details.posted(
+                trnid, cardnum, ttypcd, tcatcd, trnsrc, tdesc, trnamt,
+                torigdt, tprocdt, mid, mname, mcity, mzip);
+        TransactionViewScreen screen;
+        switch (aid) {
+            case "ENTER" -> screen = transactionService.enterView(trnIdIn, displayed);
+            case "PF5" -> {
+                // XCTL COTRN00C (:120-124) resolved through the route
+                // registry (S08-B4): browsable -> /transactions/list,
+                // otherwise the coming-soon idiom, screen retained.
+                String route = menuService.uiRouteForProgram("COTRN00C");
+                if (route != null) {
+                    return "redirect:" + route;
+                }
+                screen = TransactionViewScreen.retained(trnIdIn,
+                        CobolMessages.optionComingSoon(
+                                menuService.programName("COTRN00C")),
+                        "info", displayed);
+            }
+            default -> screen = TransactionViewScreen.retained(trnIdIn,
+                    CobolMessages.INVALID_KEY_PRESSED, null, displayed);
+        }
+        renderTransactionView(model, screen, returnUrl);
+        return "transaction-view";
+    }
+
+    private void renderTransactionView(Model model, TransactionViewScreen screen,
+                                       String returnUrl) {
+        model.addAttribute("screen", screen);
+        model.addAttribute("message", screen.message());
+        model.addAttribute("messageStyle", screen.messageStyle());
+        model.addAttribute("returnUrl", internalRoute(returnUrl));
     }
 }

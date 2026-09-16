@@ -109,6 +109,7 @@ public class MenuService {
     private static final Map<String, String> UI_ROUTES = Map.of(
             "COCRDLIC", "/cards/list",
             "COTRN00C", "/transactions/list",
+            "COTRN01C", "/transactions/view",
             "COTRN02C", "/transactions/add",
             "COUSR00C", "/api/admin/users",
             "COUSR01C", "/api/admin/users",

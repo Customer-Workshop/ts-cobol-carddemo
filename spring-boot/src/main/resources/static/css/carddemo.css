@@ -458,3 +458,62 @@ body {
     margin-right: 1em;
     cursor: pointer;
 }
+
+
+/* COTRN1A (transaction view) — 3270-style label/value grid. */
+.tran-view .view-title {
+    color: #ff0;
+    text-align: center;
+}
+
+.tran-view .form-row {
+    margin: 1em 0;
+}
+
+.tran-view .view-grid {
+    display: flex;
+    flex-direction: column;
+}
+
+.tran-view .view-row {
+    display: flex;
+    min-height: 1.2em;
+}
+
+.tran-view .view-cell {
+    flex: 1;
+    white-space: pre;
+    min-width: 0;
+    overflow: hidden;
+}
+
+.tran-view .field-label {
+    white-space: pre;
+    color: #40e0d0;
+}
+
+.tran-view .field-value {
+    white-space: pre;
+    color: #0f0;
+}
+
+.tran-view input {
+    background: #000;
+    color: #0f0;
+    border: none;
+    border-bottom: 1px solid #0f0;
+    font: inherit;
+}
+
+.tran-view .key-hints {
+    color: #ff0;
+}
+
+.tran-view .form-actions button {
+    background: #000;
+    color: #0f0;
+    border: 1px solid #0f0;
+    font: inherit;
+    margin-right: 1em;
+    cursor: pointer;
+}

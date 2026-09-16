@@ -134,20 +134,17 @@ class TransactionListUiIntegrationTest {
     }
 
     @Test
-    void rowSelectionSShowsComingSoonUntilViewExists_frS0707() throws Exception {
-        // S07-B1: 'S' resolves COTRN01C through the route registry; with no UI
-        // route yet the coming-soon idiom renders in green, first word only
-        // (COMEN01C.cbl:172-176).
+    void rowSelectionSNavigatesToView_frS0707() throws Exception {
+        // S07-B1: 'S' resolves COTRN01C through the route registry; with the
+        // route now registered (S-08) the selection XCTLs to the view with
+        // the row's id as the pre-selection.
         MockHttpSession session = signon();
         mockMvc.perform(post("/transactions/list").session(session)
                         .param("aid", "ENTER")
                         .param("sel", "S", "", "", "", "", "", "", "", "", "")
                         .param("trnId", "0000000000000001", "", "", "", "", "", "", "", "", ""))
-                .andExpect(status().isOk())
-                .andExpect(view().name("transaction-list"))
-                .andExpect(model().attribute("message",
-                        "This option Transactionis coming soon ..."))
-                .andExpect(model().attribute("messageStyle", "info"));
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/transactions/view?tranId=0000000000000001"));
     }
 
     @Test
