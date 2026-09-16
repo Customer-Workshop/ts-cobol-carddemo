@@ -911,9 +911,12 @@ public class TranTypeService {
                     turn.action = TranTypeMaintState.SHOW;
                     turn.oldType = found.get().getTranType();
                     turn.oldDesc = found.get().getDescription();
-                    // Blocks the decide-action SHOW leg below from
-                    // promoting the fresh hit to a save confirmation.
+                    // A fresh hit displays the record — no edit-compare
+                    // (posted inputs vs the empty incoming old fields
+                    // would falsely flag CHANGES-NOT-OK) and the decide
+                    // leg's noChanges guard blocks SHOW->OK_NOT_CONFIRMED.
                     turn.noChanges = true;
+                    proceed = false;
                 }
             }
         } else if (TranTypeMaintState.OK_NOT_CONFIRMED.equals(action)) {

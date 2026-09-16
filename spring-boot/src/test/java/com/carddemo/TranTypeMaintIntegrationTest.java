@@ -239,6 +239,37 @@ class TranTypeMaintIntegrationTest {
     }
 
     @Test
+    void f2EntryWithExistingCodeDisplaysTheRecord_ui07() throws Exception {
+        MockHttpSession session = signon();
+        // F2 from the list enters CREATE (R) directly: the XCTL arrives as
+        // a fresh (not re-entered) state carrying fromProgram=COTRTLIC.
+        ObjectNode state = objectMapper.createObjectNode();
+        state.put("action", " ");
+        state.put("reenter", false);
+        state.put("fromProgram", "COTRTLIC");
+        ObjectNode request = objectMapper.createObjectNode();
+        request.put("aid", "ENTER");
+        request.set("state", state);
+        MvcResult entry = mockMvc.perform(post("/api/tran-types/maint")
+                        .session(session).contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsBytes(request)))
+                .andExpect(status().isOk()).andReturn();
+        JsonNode create = objectMapper.readTree(
+                entry.getResponse().getContentAsString());
+        assertThat(create.at("/state/action").asText()).isEqualTo("R");
+
+        // An existing key switches to SHOW with the record populated —
+        // not the edit-compare's "desc must be supplied" on the empty
+        // incoming old fields.
+        JsonNode hit = press(session, "ENTER", "01", null, create.get("state"));
+        assertThat(hit.at("/state/action").asText()).isEqualTo("S");
+        assertThat(hit.at("/screen/trtypcd").asText()).isEqualTo("01");
+        assertThat(hit.at("/screen/trtydsc").asText()).isEqualTo("TYPE1 DESC");
+        assertThat(hit.at("/screen/errorMessage").asText())
+                .doesNotContain("Desc must be supplied");
+    }
+
+    @Test
     void f12CancelsUpdateAndDeleteWithVerbatimMessages_frS2111() throws Exception {
         MockHttpSession session = signon();
         JsonNode hit = search(session, "01");
