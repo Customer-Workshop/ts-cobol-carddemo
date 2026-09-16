@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout :: layout('AWS Mainframe Modernization', 'CT02', 'COTRN02C', ~{::content})}">
+<head>
+    <title>Add Transaction</title>
+</head>
+<body>
+<!-- COTRN02A (app/bms/COTRN02.bms): the two key fields, a dashed separator,
+     then the eleven data fields with their BMS labels and hints, then the
+     AID legend. maxlength enforces the 3270 field width (S09-B6). -->
+<div th:fragment="content" class="tran-add">
+    <p class="screen-title">Add Transaction</p>
+    <form id="tran-add-form" method="post" th:action="@{/transactions/add}">
+        <div class="form-row">
+            <label class="field-label" for="accountId">Enter Acct #:</label>
+            <input id="accountId" name="accountId" type="text" maxlength="11" size="11"
+                   autocomplete="off" inputmode="numeric" th:value="${screen.accountId}"
+                   th:attr="autofocus=${screen.cursorField == 'accountId' ? 'autofocus' : null}">
+            <span class="field-hint">(or)</span>
+            <label class="field-label" for="cardNumber">Card #:</label>
+            <input id="cardNumber" name="cardNumber" type="text" maxlength="16" size="16"
+                   autocomplete="off" inputmode="numeric" th:value="${screen.cardNumber}"
+                   th:attr="autofocus=${screen.cursorField == 'cardNumber' ? 'autofocus' : null}">
+        </div>
+        <p class="separator">----------------------------------------------------------------------------</p>
+        <div class="form-row">
+            <label class="field-label" for="transactionTypeCode">Type CD :</label>
+            <input id="transactionTypeCode" name="transactionTypeCode" type="text" maxlength="2" size="2"
+                   autocomplete="off" inputmode="numeric" th:value="${screen.transactionTypeCode}"
+                   th:attr="autofocus=${screen.cursorField == 'transactionTypeCode' ? 'autofocus' : null}">
+            <label class="field-label" for="transactionCategoryCode">Category CD :</label>
+            <input id="transactionCategoryCode" name="transactionCategoryCode" type="text" maxlength="4" size="4"
+                   autocomplete="off" inputmode="numeric" th:value="${screen.transactionCategoryCode}"
+                   th:attr="autofocus=${screen.cursorField == 'transactionCategoryCode' ? 'autofocus' : null}">
+        </div>
+        <div class="form-row">
+            <label class="field-label" for="source">Source :</label>
+            <input id="source" name="source" type="text" maxlength="10" size="10"
+                   autocomplete="off" th:value="${screen.source}"
+                   th:attr="autofocus=${screen.cursorField == 'source' ? 'autofocus' : null}">
+            <label class="field-label" for="description">Description :</label>
+            <input id="description" name="description" type="text" maxlength="60" size="30"
+                   autocomplete="off" th:value="${screen.description}"
+                   th:attr="autofocus=${screen.cursorField == 'description' ? 'autofocus' : null}">
+        </div>
+        <div class="form-row">
+            <label class="field-label" for="amount">Amount :</label>
+            <input id="amount" name="amount" type="text" maxlength="12" size="12"
+                   autocomplete="off" th:value="${screen.amount}"
+                   th:attr="autofocus=${screen.cursorField == 'amount' ? 'autofocus' : null}">
+            <span class="field-hint">(-99999999.99)</span>
+            <label class="field-label" for="originDate">Orig Date :</label>
+            <input id="originDate" name="originDate" type="text" maxlength="10" size="10"
+                   autocomplete="off" th:value="${screen.originDate}"
+                   th:attr="autofocus=${screen.cursorField == 'originDate' ? 'autofocus' : null}">
+            <span class="field-hint">(YYYY-MM-DD)</span>
+        </div>
+        <div class="form-row">
+            <label class="field-label" for="processDate">Proc Date :</label>
+            <input id="processDate" name="processDate" type="text" maxlength="10" size="10"
+                   autocomplete="off" th:value="${screen.processDate}"
+                   th:attr="autofocus=${screen.cursorField == 'processDate' ? 'autofocus' : null}">
+            <span class="field-hint">(YYYY-MM-DD)</span>
+            <label class="field-label" for="merchantId">Merchant ID :</label>
+            <input id="merchantId" name="merchantId" type="text" maxlength="9" size="9"
+                   autocomplete="off" inputmode="numeric" th:value="${screen.merchantId}"
+                   th:attr="autofocus=${screen.cursorField == 'merchantId' ? 'autofocus' : null}">
+        </div>
+        <div class="form-row">
+            <label class="field-label" for="merchantName">Merchant Name :</label>
+            <input id="merchantName" name="merchantName" type="text" maxlength="30" size="30"
+                   autocomplete="off" th:value="${screen.merchantName}"
+                   th:attr="autofocus=${screen.cursorField == 'merchantName' ? 'autofocus' : null}">
+            <label class="field-label" for="merchantCity">Merchant City :</label>
+            <input id="merchantCity" name="merchantCity" type="text" maxlength="25" size="25"
+                   autocomplete="off" th:value="${screen.merchantCity}"
+                   th:attr="autofocus=${screen.cursorField == 'merchantCity' ? 'autofocus' : null}">
+        </div>
+        <div class="form-row">
+            <label class="field-label" for="merchantZip">Merchant Zip :</label>
+            <input id="merchantZip" name="merchantZip" type="text" maxlength="10" size="10"
+                   autocomplete="off" th:value="${screen.merchantZip}"
+                   th:attr="autofocus=${screen.cursorField == 'merchantZip' ? 'autofocus' : null}">
+            <label class="field-label" for="confirmation">Confirmation :</label>
+            <input id="confirmation" name="confirmation" type="text" maxlength="1" size="1"
+                   autocomplete="off" th:value="${screen.confirmation}"
+                   th:attr="autofocus=${screen.cursorField == 'confirmation' ? 'autofocus' : null}">
+            <span class="field-hint">(Y/N)</span>
+        </div>
+        <p class="key-hints">ENTER=Continue  F3=Back  F4=Clear  F5=Copy Last-Tran.</p>
+        <div class="form-actions">
+            <button type="submit" name="aid" value="ENTER">ENTER=Continue</button>
+            <button type="submit" name="aid" value="PF3" formnovalidate>F3=Back</button>
+            <button type="submit" name="aid" value="PF4" formnovalidate>F4=Clear</button>
+            <button type="submit" name="aid" value="PF5" formnovalidate>F5=Copy Last-Tran.</button>
+        </div>
+    </form>
+    <script>
+        // 3270 AID parity: F3 backs out, F4 clears, F5 copies the last
+        // transaction; other function keys are invalid AID keys.
+        document.addEventListener('keydown', function (event) {
+            if (/^F([1-9]|1[0-2])$/.test(event.key)) {
+                event.preventDefault();
+                var form = document.getElementById('tran-add-form');
+                var aid = document.createElement('input');
+                aid.type = 'hidden';
+                aid.name = 'aid';
+                aid.value = event.key === 'F3' ? 'PF3'
+                        : event.key === 'F4' ? 'PF4'
+                        : event.key === 'F5' ? 'PF5' : event.key;
+                form.appendChild(aid);
+                form.submit();
+            }
+        });
+    </script>
+</div>
+</body>
+</html>

@@ -7,9 +7,12 @@ import com.carddemo.api.CobolMessages;
 import com.carddemo.api.MenuResponse;
 import com.carddemo.api.MenuSelectRequest;
 import com.carddemo.api.MenuSelectionResponse;
+import com.carddemo.api.TransactionAddScreen;
+import com.carddemo.api.TransactionCreateRequest;
 import com.carddemo.service.AuthService;
 import com.carddemo.service.MenuService;
 import com.carddemo.service.TransactionListService;
+import com.carddemo.service.TransactionService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.core.Authentication;
@@ -40,12 +43,15 @@ public class UiController {
     private final AuthService authService;
     private final MenuService menuService;
     private final TransactionListService transactionListService;
+    private final TransactionService transactionService;
 
     public UiController(AuthService authService, MenuService menuService,
-                        TransactionListService transactionListService) {
+                        TransactionListService transactionListService,
+                        TransactionService transactionService) {
         this.authService = authService;
         this.menuService = menuService;
         this.transactionListService = transactionListService;
+        this.transactionService = transactionService;
     }
 
     @ModelAttribute
@@ -236,5 +242,78 @@ public class UiController {
             model.addAttribute("message", exception.getMessage());
         }
         return view;
+    }
+
+    // COTRN02C web surface (tran CT02). The COMMAREA card lands as the
+    // cardNumber query param and runs ENTER processing at once
+    // (COTRN02C.cbl:124-129); a bare entry shows the empty map.
+    @GetMapping("/transactions/add")
+    public String tranAdd(@RequestParam(name = "cardNumber", required = false) String cardNumber,
+                          Model model) {
+        TransactionAddScreen screen = TransactionAddScreen.blank();
+        if (cardNumber != null && !cardNumber.isBlank()) {
+            screen = transactionService.enter(new TransactionCreateRequest(
+                    null, cardNumber, null, null, null, null, null, null, null,
+                    null, null, null, null, null));
+        }
+        return tranAddView(screen, model);
+    }
+
+    // AID map (COTRN02C.cbl:133-152): ENTER validates and writes, PF3 backs
+    // out to the menu, PF4 clears the map, PF5 copies the last transaction,
+    // anything else redisplays with the invalid-key message.
+    @PostMapping("/transactions/add")
+    public String submitTranAdd(
+            @RequestParam(name = "aid", defaultValue = "ENTER") String aid,
+            @RequestParam(name = "accountId", required = false) String accountId,
+            @RequestParam(name = "cardNumber", required = false) String cardNumber,
+            @RequestParam(name = "transactionTypeCode", required = false) String typeCode,
+            @RequestParam(name = "transactionCategoryCode", required = false) String categoryCode,
+            @RequestParam(name = "source", required = false) String source,
+            @RequestParam(name = "description", required = false) String description,
+            @RequestParam(name = "amount", required = false) String amount,
+            @RequestParam(name = "originDate", required = false) String originDate,
+            @RequestParam(name = "processDate", required = false) String processDate,
+            @RequestParam(name = "merchantId", required = false) String merchantId,
+            @RequestParam(name = "merchantName", required = false) String merchantName,
+            @RequestParam(name = "merchantCity", required = false) String merchantCity,
+            @RequestParam(name = "merchantZip", required = false) String merchantZip,
+            @RequestParam(name = "confirmation", required = false) String confirmation,
+            Model model) {
+        if ("PF3".equals(aid)) {
+            return "redirect:/menu";
+        }
+        if ("PF4".equals(aid)) {
+            return tranAddView(TransactionAddScreen.blank(), model);
+        }
+        TransactionCreateRequest request = new TransactionCreateRequest(
+                accountId, cardNumber, typeCode, categoryCode, source, description,
+                amount, originDate, processDate, merchantId, merchantName,
+                merchantCity, merchantZip, confirmation);
+        TransactionAddScreen screen;
+        if ("ENTER".equals(aid)) {
+            screen = runTranAdd(request, transactionService::enter);
+        } else if ("PF5".equals(aid)) {
+            screen = runTranAdd(request, transactionService::copyLast);
+        } else {
+            screen = TransactionAddScreen.preserved(request, CobolMessages.INVALID_KEY_PRESSED);
+        }
+        return tranAddView(screen, model);
+    }
+
+    private TransactionAddScreen runTranAdd(TransactionCreateRequest request,
+            java.util.function.Function<TransactionCreateRequest, TransactionAddScreen> action) {
+        try {
+            return action.apply(request);
+        } catch (CobolApiException exception) {
+            return TransactionAddScreen.preserved(request, exception.getMessage());
+        }
+    }
+
+    private String tranAddView(TransactionAddScreen screen, Model model) {
+        model.addAttribute("screen", screen);
+        model.addAttribute("message", screen.message());
+        model.addAttribute("messageStyle", screen.messageStyle());
+        return "transaction-add";
     }
 }

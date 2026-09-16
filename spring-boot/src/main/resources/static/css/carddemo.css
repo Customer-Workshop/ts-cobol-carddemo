@@ -141,6 +141,62 @@ body {
     color: #0f0;
 }
 
+.tran-add .screen-title {
+    color: #ff0;
+    text-align: center;
+}
+
+.tran-add .form-row {
+    margin: 0.8em 0 0 4ch;
+}
+
+.tran-add .field-label {
+    white-space: pre;
+    color: #40e0d0;
+    margin-right: 0.5em;
+}
+
+.tran-add .field-label + input {
+    margin-right: 2em;
+}
+
+.tran-add .field-hint {
+    color: #40e0d0;
+    margin: 0 2em 0 0.5em;
+}
+
+.tran-add input {
+    background: #000;
+    color: #0f0;
+    border: none;
+    border-bottom: 1px solid #0f0;
+    font: inherit;
+}
+
+.tran-add .separator {
+    color: #40e0d0;
+    margin: 0.5em 0 0.5em 4ch;
+}
+
+.tran-add .key-hints {
+    color: #ff0;
+    margin-left: 4ch;
+}
+
+.tran-add .form-actions {
+    margin-left: 4ch;
+}
+
+.tran-add .form-actions button {
+    background: #000;
+    color: #0f0;
+    border: 1px solid #0f0;
+    font: inherit;
+    margin-right: 1em;
+    cursor: pointer;
+}
+
+
 .tran-list {
     font-family: inherit;
 }

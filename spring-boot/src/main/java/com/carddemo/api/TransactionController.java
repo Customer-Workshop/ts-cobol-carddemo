@@ -31,8 +31,19 @@ public class TransactionController {
         return service.detail(transactionId);
     }
 
+    /**
+     * ENTER on COTRN02A. Business rejections stay HTTP 200 with the COBOL
+     * message in the screen state — only structurally impossible input
+     * (over-width, S09-B6) maps to 400.
+     */
     @PostMapping
-    public TransactionResponse add(@RequestBody TransactionCreateRequest request) {
-        return service.add(request);
+    public TransactionAddScreen add(@RequestBody TransactionCreateRequest request) {
+        return service.enter(request);
+    }
+
+    /** PF5 on COTRN02A — COPY-LAST-TRAN-DATA then the ENTER tail. */
+    @PostMapping("/copy-last")
+    public TransactionAddScreen copyLast(@RequestBody TransactionCreateRequest request) {
+        return service.copyLast(request);
     }
 }

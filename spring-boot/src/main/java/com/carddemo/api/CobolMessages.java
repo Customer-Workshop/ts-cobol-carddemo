@@ -91,6 +91,26 @@ public final class CobolMessages {
         "Orig Date should be in format YYYY-MM-DD";
     public static final String TRANSACTION_PROC_DATE_INVALID =
         "Proc Date should be in format YYYY-MM-DD";
+    public static final String TRANSACTION_ACCOUNT_NUMERIC =
+        "Account ID must be Numeric...";
+    public static final String TRANSACTION_ACCOUNT_LOOKUP_FAILED =
+        "Unable to lookup Acct in XREF AIX file...";
+    public static final String TRANSACTION_CARD_LOOKUP_FAILED =
+        "Unable to lookup Card # in XREF file...";
+    public static final String TRANSACTION_AMOUNT_FORMAT =
+        "Amount should be in format -99999999.99";
+    public static final String TRANSACTION_ORIG_DATE_NOT_VALID =
+        "Orig Date - Not a valid date...";
+    public static final String TRANSACTION_PROC_DATE_NOT_VALID =
+        "Proc Date - Not a valid date...";
+    public static final String TRANSACTION_MERCHANT_ID_NUMERIC =
+        "Merchant ID must be Numeric...";
+    public static final String TRANSACTION_CONFIRM_INVALID =
+        "Invalid value. Valid values are (Y/N)...";
+    public static final String TRANSACTION_ADD_LOOKUP_FAILED =
+        "Unable to lookup Transaction...";
+    public static final String TRANSACTION_DUPLICATE = "Tran ID already exist...";
+    public static final String TRANSACTION_ADD_FAILED = "Unable to Add Transaction...";
     public static final String UPDATE_FAILED = "Update of record failed";
     public static final String ACCOUNT_NUMBER_INVALID =
         "Account number must be a non zero 11 digit number";
@@ -160,5 +180,10 @@ public final class CobolMessages {
 
     public static String unknownBatchJob(String jobName) {
         return "Unknown batch job: " + jobName;
+    }
+
+    // COTRN02C.cbl:728-733 — two spaces before "Your".
+    public static String transactionAdded(String tranId) {
+        return "Transaction added successfully.  Your Tran ID is " + tranId + ".";
     }
 }
