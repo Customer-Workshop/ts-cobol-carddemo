@@ -1,7 +1,7 @@
 # COCRDUPC — Program Functional Requirements (`!mf_program_fr_generation`)
 
 ## 1. Identity and role
-- Program: COCRDUPC — `app/cbl/COCRDUPC.cbl`. Stream S-06, single program (waves 1 backend / 2 frontend).
+- Program: COCRDUPC — `app/cbl/COCRDUPC.cbl`. Stream S-06, single program, single wave (order inside the wave: service/API → screen).
 - Role: entry / validator / updater — credit card detail update screen: search by account + card, edit name/status/expiry, confirm, rewrite with change detection.
 
 ## 2. Trigger / caller contract
@@ -56,9 +56,9 @@ Outputs: all map fields, INFOMSGO X(40), ERRMSGO X(80), attribute/colour bytes, 
 - Cursor: FOUND/NO-CHANGES → name; else first flagged field in order account, card, name, status, month, year; default account (`:1232-1244`).
 
 ## 6. Data access and boundaries
-- CARDDAT read by card number (S06-B1, DECIDED: shared Postgres `cards` + `ICardRepository.GetByCardNumberAsync`; store exception → COCRDUPC-12 template with RESP `000000017`).
-- CARDDAT READ UPDATE + compare + REWRITE (S06-B1, DECIDED: `ICardRepository.RewriteAsync` — `SELECT … FOR UPDATE` inside one transaction, caller-supplied compare-then-mutate; not found / exception on lock → COCRDUPC-24; exception on save or calendar-invalid date → COCRDUPC-25).
-- Inbound from list (S06-B2, DECIDED: query-parameter auto-fetch; return-to-list behind the disabled S-04 registry entry). Outbound to menu (S06-B3, DECIDED: `/menu`).
+- CARDDAT read by card number (S06-B1, DECIDED: shared Postgres `cards` + `CardRepository.findById`; `DataAccessException` → COCRDUPC-12 template with RESP `000000017`).
+- CARDDAT READ UPDATE + compare + REWRITE (S06-B1, DECIDED: `CardRepository` locked read (`@Lock(PESSIMISTIC_WRITE)` / `FOR UPDATE`) + compare + `save` inside one `@Transactional` `CardService` method; not found / lock failure → COCRDUPC-24; save failure or calendar-invalid date → COCRDUPC-25).
+- Inbound from list (S06-B2, DECIDED: `GET /cards/update?acctId=&cardNum=` auto-fetch; return-to-list unmigrated — no `UI_ROUTES` entry for COCRDLIC). Outbound to menu (S06-B3, DECIDED: redirect `/menu`).
 - **Deviation D1**: the legacy REWRITE stores CVV `000` (`CCUP-NEW-CVV-CD` never assigned, `:586`, `:1464-1465`) and the typed account id (`:1463`); target preserves stored CVV and account id (source defect, data-corrupting).
 - **Deviation D2**: CVV excluded from the change-detection compare (`:1507`); five displayed fields compared.
 - **Deviation D3 (storage)**: expiry stored as `date`; non-calendar month/day surfaces as COCRDUPC-25.
@@ -77,4 +77,4 @@ Delegates card listing (COCRDLIC) and menu rendering (COMEN01C); does not own ac
 RECEIVE/SEND MAP with `CURSOR` (`:579`, `:1329-1339`); `-1` length cursor protocol; DFHBMPRF/DFHBMFSE attribute bytes and DFHRED colours (`:1168-1307`); header init (`3100-SCREEN-INIT`); RETURN TRANSID (`:554-561`); `CDEMO-LAST-MAPSET`/`LAST-MAP` bookkeeping; `ABEND-ROUTINE` (`:1534-1560`).
 
 ## 10. Traceability
-COCRDUPC-01..29 ↔ FR-S06-01..29 (table §4) ↔ `backend/CardDemo.Tests/Cards/CardUpdateServiceTests.cs`, `CardUpdateIntegrationTests.cs`, `frontend/src/app/cards/card-update.component.spec.ts`.
+COCRDUPC-01..29 ↔ FR-S06-01..29 (table §4) ↔ `spring-boot/src/test/java/com/carddemo/service/CardUpdateServiceTest.java` (or `CardServiceTest`), `CardUpdateIntegrationTest.java` (Testcontainers), `CardUpdateUiIntegrationTest.java` (MockMvc).

@@ -5,16 +5,23 @@ Source of truth: `app/cbl/COACTUPC.cbl` (4,2xx lines), `app/bms/COACTUP.bms` (ma
 `CSSETATY.cpy` (attribute helper), `CVACT01Y.cpy` (ACCTDAT), `CVCUS01Y.cpy` (CUSTDAT), `CVACT03Y.cpy` (CXACAIX),
 `COCOM01Y.cpy` (COMMAREA), `app/csd/CARDDEMO.CSD` (CAUP/COACTUPC). Line cites are `file:line`.
 
+> Java-engagement note (2026-09-16): source-side analysis unchanged; target references below
+> were re-expressed for Java 21/Spring Boot (EF Core → Spring Data JPA, Angular → server-rendered
+> web UI, /api/v1 → /api, JWT → server session) at this engagement's STOP C. Target profiles:
+> CORE + ONLINE + DATA/BOUNDARY from `CardDemo_target_state.md`. Base: `spring-boot/` baseline on
+> `devin/1789516557-carddemo-java-engagement` — `AccountUpdateController` (`PUT /api/accounts/{accountId}`)
+> + `AccountUpdateService` exist as a single-shot save seam; the screen and full FR semantics are not yet ported.
+
 ## 1. Pinned stream
 | Item | Value |
 |---|---|
 | Stream | S-03 Account Update (ONLINE) — inventory row `functional/CARDDEMO/CardDemo_inventory.md` §5 |
 | Entry transaction | `CAUP` (COACTUPC.cbl:536; CSD) |
 | Program | `COACTUPC` (COACTUPC.cbl:534) |
-| Caller | `COMEN01C` / `CM00` option 02 "Account Update" (COACTUPC.cbl:557-560; menu registry `MenuRoutes.Main[1]`, `Enabled=false`) |
+| Caller | `COMEN01C` / `CM00` option 02 "Account Update" (COACTUPC.cbl:557-560; `MenuService` main-catalogue row 02 `COACTUPC`, no `UI_ROUTES` entry → `not installed` until this stream's flip) |
 | Map / mapset | `CACTUPA` / `COACTUP` (COACTUP.bms; COACTUPC.cbl:538-540) |
 | Files | `ACCTDAT` (read/update/rewrite), `CUSTDAT` (read/update/rewrite), `CXACAIX` (read by account id) — COACTUPC.cbl:568-575, 3650-3797, 3888-4105 |
-| Base branch | `devin/1787242078-carddemo-premigration` @ shared data layer `468e17ded0be830785246d6e3cf2d4ede915f609` |
+| Base branch | `devin/1789516557-carddemo-java-engagement` (spring-boot baseline: `accounts`/`customers`/`card_xrefs` in Flyway V2, JPA repositories + `DataSeeder`, `AccountUpdateController`/`AccountUpdateService` save path) |
 
 ## 2. Program inventory + leaf-first DAG
 Single program. No CALLs except the LE date service `CSUTLDTC` inside `CSUTLDPY` (EDIT-DATE-LE, CSUTLDPY.cpy:284-323) which is
@@ -76,11 +83,11 @@ Screen states (from `ACUP-CHANGE-ACTION`, COACTUPC.cbl:869-880 area of `WS-THIS-
 | Lock error / Failed | 'L' / 'F' | `Changes unsuccessful. Please try again` | user's values | ACCTSID editable (WHEN OTHER), details protected; F12 lit |
 
 ## 4. Data + field dictionary
-| Dataset | Copybook | Key | Access in COACTUPC | Target (shared layer @468e17d) |
+| Dataset | Copybook | Key | Access in COACTUPC | Target (baseline `spring-boot/`) |
 |---|---|---|---|---|
-| CXACAIX (xref by account) | CVACT03Y | acct id (11) | READ (9200:3650-3698) → gives `CDEMO-CUST-ID`, `CDEMO-CARD-NUM` | `card_xrefs`, `ICardXrefRepository.GetFirstByAccountIdAsync` |
-| ACCTDAT | CVACT01Y | acct id (11) | READ (9300), READ UPDATE + REWRITE (9600) | `accounts` / `Account` entity |
-| CUSTDAT | CVCUS01Y | cust id (9) | READ (9400), READ UPDATE + REWRITE (9600) | `customers` / `Customer` entity |
+| CXACAIX (xref by account) | CVACT03Y | acct id (11) | READ (9200:3650-3698) → gives `CDEMO-CUST-ID`, `CDEMO-CARD-NUM` | `card_xrefs`, `CardXrefRepository.findByXrefAcctId` |
+| ACCTDAT | CVACT01Y | acct id (11) | READ (9300), READ UPDATE + REWRITE (9600) | `accounts` / `Account` entity + `AccountRepository` (locked read on save) |
+| CUSTDAT | CVCUS01Y | cust id (9) | READ (9400), READ UPDATE + REWRITE (9600) | `customers` / `Customer` entity + `CustomerRepository` (locked read on save) |
 
 All fields the program reads/writes already exist on `Account` and `Customer` — no additive migration is required for S-03.
 Record→screen derivations (3202:2787-2867): money → `+ZZZ,ZZZ,ZZZ.99`; dates `YYYY-MM-DD` → (1:4),(6:2),(9:2); SSN 9 digits → 3/2/4;
@@ -90,16 +97,16 @@ phones re-stringed `(aaa)bbb-cccc`, money via `NUMVAL-C`.
 ## 5. Boundary table (headline) — S03-B1..S03-B5 (not written to `.migration/` by this stream; recorded here for the ledger owner)
 | ID | Class | Description | Cite | Decision taken in S-03 |
 |---|---|---|---|---|
-| S03-B1 | B5 outbound routing | PF3 XCTL to `CDEMO-TO-PROGRAM` (menu) | COACTUPC.cbl:927-960 | Angular `router.navigateByUrl('/menu')` via S01-B3 stable routes |
-| S03-B2 | B4 data-access leaf | READ UPDATE / REWRITE ACCTDAT + CUSTDAT with SYNCPOINT ROLLBACK on second REWRITE failure | COACTUPC.cbl:3888-4105 | One PostgreSQL transaction; `SELECT … FOR UPDATE NOWAIT` = CICS record lock; lock-not-available → `Could not lock … record for update`; any write failure → rollback + `Update of record failed` |
-| S03-B3 | B10 shared state | `WS-THIS-PROGCOMMAREA` (ACUP-OLD/NEW details, change action) carried in COMMAREA between pseudo-conversational turns | COACTUPC.cbl:656-849, 1007-1019 | Stateless API: the client (Angular) carries the fetched snapshot (`original`) and the edited snapshot (`updated`) back on validate/save, mirroring ACUP-OLD/ACUP-NEW; screen state machine lives in the component |
-| S03-B4 | B5 declared-but-unused targets | `COCRDUPC`/`COCRDLIC`/`COCRDSLC` literals | COACTUPC.cbl:542-566 | Out of scope; remain disabled in the menu registry |
-| S03-B5 | LE runtime | `CALL 'CSUTLDTC'` in `EDIT-DATE-LE` | CSUTLDPY.cpy:284-323 | Unreachable-error path (structural date checks precede it); not ported, documented |
+| S03-B1 | B5 outbound routing | PF3 XCTL to `CDEMO-TO-PROGRAM` (menu) | COACTUPC.cbl:927-960 | `UiController` PF3 → redirect `/menu` via the S01-B3 stable UI route |
+| S03-B2 | B4 data-access leaf | READ UPDATE / REWRITE ACCTDAT + CUSTDAT with SYNCPOINT ROLLBACK on second REWRITE failure | COACTUPC.cbl:3888-4105 | One `@Transactional` save; `SELECT … FOR UPDATE NOWAIT` row locks on `accounts` then `customers` = CICS READ UPDATE; lock timeout/contention → `Could not lock … record for update`; any write failure → rollback + `Update of record failed` |
+| S03-B3 | B10 shared state | `WS-THIS-PROGCOMMAREA` (ACUP-OLD/NEW details, change action) carried in COMMAREA between pseudo-conversational turns | COACTUPC.cbl:656-849, 1007-1019 | Stateless round-trip: `account-update.html` carries the fetched snapshot (`original`) and the edited snapshot (`updated`) as form fields on validate/save, mirroring ACUP-OLD/ACUP-NEW; the screen state machine lives in `UiController` + the template |
+| S03-B4 | B5 declared-but-unused targets | `COCRDUPC`/`COCRDLIC`/`COCRDSLC` literals | COACTUPC.cbl:542-566 | Out of scope; remain without `UI_ROUTES` entries (`not installed`) |
+| S03-B5 | LE runtime | `CALL 'CSUTLDTC'` in `EDIT-DATE-LE` | CSUTLDPY.cpy:284-323 | Unreachable-error path (structural date checks precede it); not ported here — S-09 owns the real CSUTLDTC port (`DateValidationService`) for the module |
 
 ## 6. Waves (leaf-first, from DAG depth)
 | Wave | Programs | Deliverables |
 |---|---|---|
-| 1 | COACTUPC | `CardDemo.Application/AccountUpdate` (fields record, edit rules, service), `IAccountUpdateRepository` + EF implementation, `AccountUpdateController` under `/api/v1/account-update`, Angular `account-update` standalone component + route `/accounts/update` (authGuard), unit + Testcontainers + Karma specs |
+| 1 | COACTUPC | `service/AccountUpdateService` (lookup / validate / save state machine + full CSUTLDPY date edits + `CSLKPCDY` lookup tables + `CSSETATY` field flagging), `@Transactional` save with `FOR UPDATE NOWAIT` row locks, `templates/account-update.html` + `UiController` `GET/POST /accounts/update` (server-session gate), `MenuService.UI_ROUTES` flip `COACTUPC → /accounts/update`, JUnit 5 + MockMvc + Testcontainers parity tests |
 
 ## 7. Risks
 1. Source quirks that would produce wrong results if ported literally (see FR doc §11 and program FR §7): customer-lock failure falls into the
@@ -112,4 +119,4 @@ phones re-stringed `(aaa)bbb-cccc`, money via `NUMVAL-C`.
 
 ## 8. Validation
 - `cobc -I app/cpy -fsign=EBCDIC -x app/cbl/COACTUPC.cbl` compile check (CICS statements are not compiled by GnuCOBOL; check is syntax-level only).
-- `dotnet test backend/CardDemo.slnx` (unit + Testcontainers Postgres 16), `npx ng test --watch=false --browsers=ChromeHeadless`, `npm run build`.
+- `mvn clean verify` in `spring-boot/` (JUnit 5 service tests on H2, MockMvc `UiController` tests, Testcontainers Postgres 16 integration), the `spring-boot` CI workflow green.

@@ -1,13 +1,17 @@
 # S-06 Card Update — Stream Analysis (`!mf_stream_analysis`)
 
-Status: complete (2026-09-02). Process type **ONLINE**. Batch A stream; built on the shared data layer landed on `devin/1787242078-carddemo-premigration` (commit 468e17d).
-Target profiles applied (read-only): CORE + ONLINE + DATA/BOUNDARY from `functional/CARDDEMO/CardDemo_target_state.md` (C#/.NET 8 + ASP.NET Core, Angular 18, PostgreSQL 16, single repo). S-01 conventions reused, never forked: JWT `SessionContext`, `authGuard`, menu route registry, exact message parity, Controller/Service/Repository layering.
+Status: complete (2026-09-02). Process type **ONLINE**. Built on the `spring-boot/` baseline on `devin/1789516557-carddemo-java-engagement`.
+Target profiles applied (read-only): CORE + ONLINE + DATA/BOUNDARY from `functional/CARDDEMO/CardDemo_target_state.md` (Java 21 / Spring Boot 3.4.5, Spring Data JPA, Thymeleaf server-rendered UI, PostgreSQL 16, single `spring-boot/` module). S-01 conventions reused, never forked: server session via Spring Security, `MenuService.UI_ROUTES` registry, `layout.html`/`aid`-field idiom, exact message parity, Controller/Service/Repository layering.
+
+> Java-engagement note (2026-09-16): source-side analysis unchanged; target references below
+> were re-expressed for Java 21/Spring Boot (EF Core → Spring Data JPA, Angular → server-rendered
+> web UI, /api/v1 → /api, JWT → server session) at this engagement's STOP C.
 
 ## 1. Pinned stream
 
 - **Entry point (proof)**: `CCUP -> COCRDUPC` (`app/csd/CARDDEMO.CSD:367-369`); program defined `:227`. Main-menu option 05 "Credit Card Update" (`app/cpy/COMEN02Y.cpy:52`), user type 'U' — **no admin restriction**.
 - **Inbound callers**: main menu COMEN01C (XCTL, S-01) and card list COCRDLIC (`app/cbl/COCRDLIC.cbl:204-206` XCTL with account/card keys in the COMMAREA; S-04, not migrated).
-- **Outbound XCTL (hard stop)**: PF3 → `CDEMO-FROM-PROGRAM` or `LIT-MENUPGM` COMEN01C (`COCRDUPC.cbl:435-478`); after a completed/failed update when the caller was the list → COCRDLIC (`:480-503`). Both are cross-stream edges: menu = S-01 route `/menu`; list = disabled route registry entry (S-04).
+- **Outbound XCTL (hard stop)**: PF3 → `CDEMO-FROM-PROGRAM` or `LIT-MENUPGM` COMEN01C (`COCRDUPC.cbl:435-478`); after a completed/failed update when the caller was the list → COCRDLIC (`:480-503`). Both are cross-stream edges: menu = S-01 route `/menu`; list = no `UI_ROUTES` entry (`not installed`, S-04's stream).
 - **Pseudo-conversational shape**: `EXEC CICS RETURN TRANSID(CCUP) COMMAREA(...)` (`:554-561`) carrying a program-private COMMAREA extension `WS-THIS-PROGCOMMAREA` (`:284-311`: change-action state, OLD and NEW card images).
 
 ## 2. Program inventory + DAG
@@ -72,36 +76,35 @@ Valid: ENTER, PF3 always; PF5 only in state `N`; PF12 only when details have bee
 
 ## 4. Data + field dictionary
 
-Dataset CARDDAT (`app/cpy/CVACT02Y.cpy`, RECLN 150), keyed by CARD-NUM; already ported by the shared data layer as `cards` (`CardDemo.Domain.Cards.Card`, `CardConfiguration`). No new columns or indexes are needed by this stream.
+Dataset CARDDAT (`app/cpy/CVACT02Y.cpy`, RECLN 150), keyed by CARD-NUM; already ported by the baseline as `cards` (`com.carddemo.model.Card`, `CardRepository`, `DataSeeder`). No new columns or indexes are needed by this stream.
 
 | COBOL field | PIC | Target | Used by COCRDUPC |
 |---|---|---|---|
-| CARD-NUM | X(16) | `Card.CardNumber` PK | key |
-| CARD-ACCT-ID | 9(11) | `Card.AccountId` | displayed / rewritten (see D1) |
-| CARD-CVV-CD | 9(03) | `Card.CvvCode` | concurrency compare / rewritten (see D1) |
-| CARD-EMBOSSED-NAME | X(50) | `Card.EmbossedName` | edited |
-| CARD-EXPIRAION-DATE | X(10) `yyyy-MM-dd` | `Card.ExpirationDate` (`DateOnly?`) | year/month edited, day carried |
-| CARD-ACTIVE-STATUS | X(01) | `Card.ActiveStatus` | edited |
+| CARD-NUM | X(16) | `Card.cardNumber` PK (`varchar(16)`) | key |
+| CARD-ACCT-ID | 9(11) | `Card.cardAcctId` | displayed / rewritten (see D1) |
+| CARD-CVV-CD | 9(03) | `Card.cardCvvCode` | concurrency compare / rewritten (see D1) |
+| CARD-EMBOSSED-NAME | X(50) | `Card.cardEmbossedName` | edited |
+| CARD-EXPIRAION-DATE | X(10) `yyyy-MM-dd` | `Card.cardExpirationDate` (`LocalDate`) | year/month edited, day carried |
+| CARD-ACTIVE-STATUS | X(01) | `Card.cardActiveStatus` | edited |
 
-Conversational state: `WS-THIS-PROGCOMMAREA` (`:284-311`) = change-action + OLD image + NEW image. Target: the Angular component holds this screen state and sends it with every request (stateless API), mirroring the COMMAREA round trip.
+Conversational state: `WS-THIS-PROGCOMMAREA` (`:284-311`) = change-action + OLD image + NEW image. Target: `card-update.html` round-trips the OLD/NEW images + change-action as form fields with every request (stateless API), mirroring the COMMAREA round trip.
 
 ## 5. Boundary table (headline) — S06-B1..S06-B4 (not written to `.migration/`, per scope rule)
 
 | ID | Class | Contract | Direction | Cite | Decision |
 |---|---|---|---|---|---|
-| S06-B1 | B4 data-access leaf | CICS READ / READ UPDATE / REWRITE on CARDDAT with RESP protocol; expiry stored as text `yyyy-MM-dd` | outbound | `:1382`, `:1427`, `:1478` | EF Core repository extension `ICardRepository.RewriteAsync` (row lock + compare-then-rewrite inside one transaction). Target `DateOnly` column rejects calendar-invalid month/day combinations the VSAM text field accepted → surfaced as the REWRITE-failure path ("Update of record failed"). Store exceptions on read render the legacy file-error template with RESP 17 (IOERR analogue), RESP2 0 |
-| S06-B2 | B5 inbound switch | COCRDLIC passes account + card in the COMMAREA and expects a return XCTL | inbound | `:483-503`, `:510-516`, `COCRDLIC.cbl:204-206` | Route `/cards/update?acctId=&cardNum=` auto-fetches (equivalent to the list-entry read). Return-to-list stays behind the disabled S-04 registry entry: exit goes to `/menu`, post-update ENTER resets the screen |
-| S06-B3 | B5 outbound switch | PF3 → COMEN01C | outbound | `:435-478` | S-01 route `/menu` |
-| S06-B4 | B10 shared data contract | CARDDAT is read by S-04/S-05 and written here and by batch | both | `CVACT02Y.cpy` | Shared `cards` table + repository; this stream is the only online writer; single-writer decision remains with the data-layer owner |
+| S06-B1 | B4 data-access leaf | CICS READ / READ UPDATE / REWRITE on CARDDAT with RESP protocol; expiry stored as text `yyyy-MM-dd` | outbound | `:1382`, `:1427`, `:1478` | `CardRepository.findById` (READ); locked read (`FOR UPDATE` / `@Lock(PESSIMISTIC_WRITE)`) + compare + `save` inside one `@Transactional` method = READ UPDATE/REWRITE. The `date` column rejects calendar-invalid month/day combinations the VSAM text field accepted → surfaced as the REWRITE-failure path ("Update of record failed"). `DataAccessException` on read renders the legacy file-error template with RESP `000000017` (IOERR analogue), RESP2 `000000000` |
+| S06-B2 | B5 inbound switch | COCRDLIC passes account + card in the COMMAREA and expects a return XCTL | inbound | `:483-503`, `:510-516`, `COCRDLIC.cbl:204-206` | UI route `GET /cards/update?acctId=&cardNum=` auto-fetches (equivalent to the list-entry read). Return-to-list stays unmigrated (S-04 has no `UI_ROUTES` entry): exit goes to `/menu`, post-update ENTER resets the screen |
+| S06-B3 | B5 outbound switch | PF3 → COMEN01C | outbound | `:435-478` | `UiController` PF3 → redirect to the S01-B3 stable UI route `/menu` |
+| S06-B4 | B10 shared data contract | CARDDAT is read by S-04/S-05 and written here and by batch | both | `CVACT02Y.cpy` | Shared `cards` table + `CardRepository` (V2 baseline); this stream is the only online writer; single-writer decision remains with the data-layer owner. Reserved Flyway range `V140x` unused |
 
 ## 6. Waves
 
 | Wave | Content | Repos touched |
 |---|---|---|
-| 1 | `ICardRepository.RewriteAsync` (lock + rewrite), `CardUpdateService` state machine + edits, `POST /api/v1/cards/update`, unit + Testcontainers tests | backend/ |
-| 2 | `CardUpdateComponent` (CCRDUPA), route `/cards/update` (authGuard), specs | frontend/ |
+| 1 | `CardService` update path: six-state screen machine + edits (name/status/month/year, `*`-blank, AID remap-to-ENTER), locked read + compare + `save` in one `@Transactional` (baseline `PUT /api/cards/{cardNumber}` extended), `templates/card-update.html` + `UiController` `GET/POST /cards/update` (server-session gate), `MenuService.UI_ROUTES` flip `COCRDUPC → /cards/update`, JUnit + MockMvc + Testcontainers parity tests | spring-boot/ |
 
-Both waves land in this one branch (single-program stream).
+Single wave, single PR into `devin/1789516557-carddemo-java-engagement`; execution detail in `S06_card_update_migration_plan.md`.
 
 ## 7. Risks / source quirks carried into FRs
 

@@ -1,13 +1,13 @@
 # CSUTLDTC — Program Functional Requirements (`!mf_program_fr_generation`)
 
 ## 1. Identity and role
-- Program: CSUTLDTC — `app/cbl/CSUTLDTC.cbl`. Stream S-09, **wave 1** (leaf). Shared utility: also CALLed by S-10 (`app/cbl/CORPT00C.cbl:392`); ported once here (`CardDemo_inventory.md` §6), owner S-09.
+- Program: CSUTLDTC — `app/cbl/CSUTLDTC.cbl`. Stream S-09 (leaf, first step of the single wave). Shared utility: also CALLed by S-10 (`app/cbl/CORPT00C.cbl:392`); ported once here (`CardDemo_inventory.md` §6), owner S-09.
 - Role: date-validity utility — wraps the Language Environment callable service `CEEDAYS` (`:116-120`) and translates its feedback code into a fixed 80-byte, human-readable result plus a numeric return code.
 
 ## 2. Trigger / caller contract
 - Static `CALL 'CSUTLDTC' USING date, format, result` (`COTRN02C.cbl:393-396, 413-416`); `PROCEDURE DIVISION USING LS-DATE X(10), LS-DATE-FORMAT X(10), LS-RESULT X(80)` (`:83-88`); `EXIT PROGRAM` with `RETURN-CODE` = severity (`:97-100`).
 - Callers in this estate pass mask `'YYYY-MM-DD'` (`COTRN02C.cbl:60`, `CORPT00C.cbl:72`).
-- Target (SUBTRANSACTION profile): in-process `CardDemo.Domain.Dates.DateValidationService.Validate(date, mask)` returning `DateValidationResult` (`Severity`, `MessageNumber`, `Verdict`, `ResultText` (80 chars), `IsValid`, `Date` as `DateOnly?`). No network hop; participates in the caller's scope.
+- Target (SUBTRANSACTION profile): in-process `com.carddemo.service.DateValidationService.validate(String date, String mask)` returning a `DateValidationResult` record (`severity` `9(4)` text, `messageNumber` `9(4)` text, `verdict` 15-char text, `resultText` exact 80-byte layout per §3, `valid` flag, `parsed` `LocalDate`). No network hop; participates in the caller's scope. Callers in this estate pass mask `"YYYY-MM-DD"`; a `null`/`Unsupp. Range` (2513) result is accepted by COTRN02C per its caller contract.
 
 ## 3. Inputs and outputs
 Inputs: date text X(10), mask X(10) — both passed to CEEDAYS as Vstrings of their full length (`:105-112`).
@@ -49,7 +49,7 @@ Message numbers are the low half-word of the feedback token (`X'09CB'`=2507 … 
 Pure classification, no state. Caller contract in this stream: valid ⇔ severity `0000`; additionally message `2513` is treated as acceptable by COTRN02C (`COTRN02C.cbl:397-400, 417-420`).
 
 ## 6. Data access and boundaries
-None (no files, no CICS). Boundary S09-B4: shared-utility contract consumed by S-09 and S-10 — ported once as `DateValidationService`.
+None (no files, no CICS). Boundary S09-B4: shared-utility contract consumed by S-09 and S-10 — ported once as `com.carddemo.service.DateValidationService` (S-09 owns it; S-10 reports call it later).
 
 ## 7. Error and edge behavior
 - CEEDAYS is an LE service without COBOL source; the target emulates its classification (assumption A-1, stream FR §11): mask tokens `YYYY`, `MM`, `DD` plus literal separators; other tokens → 2518; input shorter than the mask → 2507; non-digit where a digit is expected → 2520; month ∉ 1..12 → 2517; day ∉ 1..days-in-month → 2508; computed date before 1582-10-15 → 2513 (dates after 9999-12-31 cannot be expressed in a 4-digit year). Year `0000` with a valid month/day → 2513 (range), consistent with CEEDAYS' Lillian floor.
@@ -62,4 +62,4 @@ Callers own what to do with the verdict; CSUTLDTC never displays (the `DISPLAY` 
 Vstring length/text plumbing (`:25-40`, `:105-112`); `OUTPUT-LILLIAN` (computed but never returned, `:41`, `:114-119`); `INITIALIZE WS-MESSAGE` (`:90`); commented `GOBACK`/`DISPLAY` (`:96`, `:101`).
 
 ## 10. Traceability
-CSUTLDTC-01..11 ↔ FR-S09-16, 31, 32 ↔ `backend/CardDemo.Tests/Dates/DateValidationServiceTests.cs`; consumed by `TransactionAddService` (FR-S09-16).
+CSUTLDTC-01..11 ↔ FR-S09-16, 31, 32 ↔ `spring-boot/src/test/java/com/carddemo/service/DateValidationServiceTest.java`; consumed by `TransactionService.add`/`TransactionAddService` (FR-S09-16) and by `ReportService` when S-10 lands.

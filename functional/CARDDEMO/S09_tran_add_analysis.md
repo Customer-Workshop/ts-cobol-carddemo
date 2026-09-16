@@ -1,12 +1,17 @@
 # S-09 Transaction Add — Stream Analysis (`!mf_stream_analysis`)
 
 Status: complete (2026-09-02). Stream S-09 from the catalog (`CardDemo_inventory.md` §5, row S-09); process type **ONLINE**.
-Target profiles applied (read-only): CORE + ONLINE + SUBTRANSACTION + DATA/BOUNDARY from `functional/CARDDEMO/CardDemo_target_state.md` (C# 12 / .NET 8 + ASP.NET Core 8, Angular 18 standalone, PostgreSQL 16, single repo).
-Base: shared data layer (accounts/customers/cards/xref/transactions schema, EF entities, repositories, seed import) already landed on `devin/1787242078-carddemo-premigration`; S-01 shell (JWT `SessionContext`, menu route registry, AID parity helper) reused, never forked.
+Target profiles applied (read-only): CORE + ONLINE + SUBTRANSACTION + DATA/BOUNDARY from `functional/CARDDEMO/CardDemo_target_state.md` (Java 21 / Spring Boot 3.4.5, Spring Data JPA, Thymeleaf server-rendered UI, PostgreSQL 16, single `spring-boot/` Maven module).
+
+> Java-engagement note (2026-09-16): source-side analysis unchanged; target references below
+> were re-expressed for Java 21/Spring Boot (EF Core → Spring Data JPA, Angular → server-rendered
+> web UI, /api/v1 → /api, JWT → server session) at this engagement's STOP C.
+
+Base: `spring-boot/` baseline (adopted port): JPA entities + repositories + `DataSeeder` for `accounts`/`customers`/`cards`/`card_xrefs`/`transactions`/`transaction_types`/`transaction_categories` (V2 Flyway baseline); `TransactionController` (`GET`/`POST /api/transactions`) + `TransactionService` + `TransactionIdGenerator` exist; S-01 shell (server session via Spring Security, `MenuService.UI_ROUTES` registry, `layout.html` 3270 shell + `aid`-field AID idiom, unsigned-request bounce to `/signon`) reused, never forked.
 
 ## 1. Pinned stream
 
-- **Entry point (proof)**: `CT02 -> COTRN02C` (`app/csd/CARDDEMO.CSD:439-440`); program defined at `:271`. Reached from the main menu as option 08 `Transaction Add` (`app/cpy/COMEN02Y.cpy:71`, dispatched by `COMEN01C.cbl:185` — S-01 registry row `ProgramKey=COTRN02C`, flag disabled until integration).
+- **Entry point (proof)**: `CT02 -> COTRN02C` (`app/csd/CARDDEMO.CSD:439-440`); program defined at `:271`. Reached from the main menu as option 08 `Transaction Add` (`app/cpy/COMEN02Y.cpy:71`, dispatched by `COMEN01C.cbl:185` — S-01 `MenuService` main-catalogue row 08 `COTRN02C`, `UI_ROUTES` still pointed at the JSON list until this stream's flag flip).
 - **Hard stop**: every transfer out of COTRN02C is another stream's entry or the S-01 shell: `XCTL COSGN00C` when entered without COMMAREA (`COTRN02C.cbl:115-118`), `XCTL CDEMO-FROM-PROGRAM`/`COMEN01C` on PF3 (`:136-143`, `:497-511`). No other XCTL/LINK exists. Nothing past those transfers is implemented here.
 - **Shared utility ported by this stream**: `CSUTLDTC` (`app/cbl/CSUTLDTC.cbl`), CALLed at `COTRN02C.cbl:393,413` and by S-10 `CORPT00C.cbl:392` (`CardDemo_inventory.md` §6 row CSUTLDTC: "first of S-09/S-10 migrated owns it").
 - Pseudo-conversational shape: `EXEC CICS RETURN TRANSID(WS-TRANID) COMMAREA(CARDDEMO-COMMAREA)` (`:156-159`); every screen send ends the task (`SEND-TRNADD-SCREEN` → `EXEC CICS RETURN`, `:518-533`), so **the first failing edit is the only message a user ever sees** — this is the ordering contract the FRs pin.
@@ -58,9 +63,9 @@ Linkage `USING LS-DATE X(10), LS-DATE-FORMAT X(10), LS-RESULT X(80)` (`CSUTLDTC.
 
 | Dataset / structure | Copybook | Access in stream | Target (shared data layer) |
 |---|---|---|---|
-| CXACAIX (xref AIX by account) | `CVACT03Y.cpy` CARD-XREF-RECORD, key XREF-ACCT-ID 9(11) | READ EQUAL (:578-586) | `card_xref` index `ix_card_xref_xref_acct_id` → `ICardXrefRepository.GetFirstByAccountIdAsync` |
-| CCXREF (xref base) | same, key XREF-CARD-NUM X(16) | READ EQUAL (:611-619) | `card_xref` PK → `ICardXrefRepository.GetByCardNumberAsync` |
-| TRANSACT (KSDS, key TRAN-ID X(16)) | `CVTRA05Y.cpy` TRAN-RECORD (350 bytes) | STARTBR HIGH-VALUES / READPREV / ENDBR (:644-707), WRITE (:713-721) | `transactions` PK → `ITransactionRepository.GetLastAsync` (**added by S-09**) / `AddAsync` (**added by S-09**) |
+| CXACAIX (xref AIX by account) | `CVACT03Y.cpy` CARD-XREF-RECORD, key XREF-ACCT-ID 9(11) | READ EQUAL (:578-586) | `card_xrefs.xref_acct_id` → `CardXrefRepository.findByXrefAcctId` (baseline) |
+| CCXREF (xref base) | same, key XREF-CARD-NUM X(16) | READ EQUAL (:611-619) | `card_xrefs` PK `xref_card_number` → `CardXrefRepository.findById` (baseline) |
+| TRANSACT (KSDS, key TRAN-ID X(16)) | `CVTRA05Y.cpy` TRAN-RECORD (350 bytes) | STARTBR HIGH-VALUES / READPREV / ENDBR (:644-707), WRITE (:713-721) | `transactions` PK `tran_id` → `TransactionRepository.findTopByOrderByTranIdDesc` via `TransactionIdGenerator` (baseline) / `save` |
 | ACCTDAT | declared `WS-ACCTDAT-FILE` (:40) | **never accessed** | — |
 
 TRAN-RECORD population (`:450-465`), screen → record (COBOL MOVE widths):
@@ -72,7 +77,7 @@ TRAN-RECORD population (`:450-465`), screen → record (COBOL MOVE widths):
 | TRAN-CAT-CD 9(4) | TCATCDI | digits guaranteed by :329 |
 | TRAN-SOURCE X(10) | TRNSRCI | |
 | TRAN-DESC X(100) | TDESCI X(60) | space-padded |
-| TRAN-AMT S9(9)V99 | `NUMVAL-C(TRNAMTI)` (:456-458) | `decimal` in target |
+| TRAN-AMT S9(9)V99 | `NUMVAL-C(TRNAMTI)` (:456-458) | `BigDecimal` in target |
 | TRAN-MERCHANT-ID 9(9) | MIDI | digits guaranteed by :430 |
 | TRAN-MERCHANT-NAME X(50) | MNAMEI X(30) | |
 | TRAN-MERCHANT-CITY X(50) | MCITYI X(25) | |
@@ -87,24 +92,23 @@ Copy-last (`:480-494`) record → screen truncations: TDESC ← first 60 of TRAN
 
 | ID | Class | Contract | Direction | Cite | Decision taken in this stream |
 |---|---|---|---|---|---|
-| S09-B1 | B5 cross-program switch (inbound + return) | Entered by XCTL from COMEN01C with CARDDEMO-COMMAREA; PF3 returns to `CDEMO-FROM-PROGRAM`; no-COMMAREA entry bounces to COSGN00C | both | COTRN02C.cbl:115-118, 136-143, 497-511; COMEN02Y.cpy:71 | Angular route `/transactions/add` behind `authGuard` (COBOL has no admin gate); PF3 → `/menu`; unauthenticated → `/signin` via guard. Registry row 08 keeps `Enabled=false` (integration flips it) |
-| S09-B2 | B4 data-access leaf (read) | Keyed READ of CCXREF / CXACAIX; RESP 0 / NOTFND / other | outbound | :578-604, :611-637 | shared `ICardXrefRepository` as landed; NOTFND → not-found message, exception → store-error message |
-| S09-B3 | B4 data-access leaf (browse + write) | STARTBR HIGH-VALUES + READPREV for the highest TRAN-ID, then WRITE; RESP NORMAL / DUPKEY,DUPREC / other | outbound | :644-749 | additive `ITransactionRepository.GetLastAsync` + `AddAsync`; Postgres unique violation (23505) → `Tran ID already exist...`; other failures → `Unable to Add Transaction...`. Id generation is read-then-insert as in source; concurrent adders collide on the PK and receive the DUPREC message (same observable as a CICS DUPREC) |
-| S09-B4 | B10 shared utility | CSUTLDTC CALL contract (date, format, 80-byte result); consumed by S-10 too | both | CSUTLDTC.cbl:83-88; COTRN02C.cbl:388-428; CORPT00C.cbl:392 | ported once here as `CardDemo.Domain.Dates.DateValidationService` (SUBTRANSACTION profile: in-process class library, typed result, no magic codes). CEEDAYS feedback codes emulated per the 88-level table |
-| S09-B5 | B10 shared data contract | TRANSACT written here, read by S-07/S-08 online and by batch (CBTRN*) | both | CVTRA05Y.cpy | schema owned by the shared data layer; no schema change needed (all fields present) |
-| S09-B6 | B10 storage-type contract | TRAN-ORIG-TS/PROC-TS are X(26) free text; this program writes a 10-char date | outbound | :464-465 | target columns are `timestamp` (shared layer): the date is stored at midnight (`00:00:00`). Consequence: years `0000` accepted by source via the 2513 exemption cannot be represented → rejected with the source's own `... - Not a valid date...` message (recorded deviation D-2) |
+| S09-B1 | B5 cross-program switch (inbound + return) | Entered by XCTL from COMEN01C with CARDDEMO-COMMAREA; PF3 returns to `CDEMO-FROM-PROGRAM`; no-COMMAREA entry bounces to COSGN00C | both | COTRN02C.cbl:115-118, 136-143, 497-511; COMEN02Y.cpy:71 | Thymeleaf route `GET /transactions/add` behind the server session (COBOL has no admin gate); PF3 → `/menu`; unauthenticated → redirect to `/signon` via `SecurityConfig` entry point (the `EIBCALEN=0` bounce). `MenuService.UI_ROUTES["COTRN02C"]` retargeted from `/api/transactions` to `/transactions/add` by this stream's flag flip |
+| S09-B2 | B4 data-access leaf (read) | Keyed READ of CCXREF / CXACAIX; RESP 0 / NOTFND / other | outbound | :578-604, :611-637 | baseline `CardXrefRepository` (`findById` = CCXREF base, `findByXrefAcctId` = CXACAIX AIX); empty result → not-found message, `DataAccessException` → store-error message |
+| S09-B3 | B4 data-access leaf (browse + write) | STARTBR HIGH-VALUES + READPREV for the highest TRAN-ID, then WRITE; RESP NORMAL / DUPKEY,DUPREC / other | outbound | :644-749 | baseline `TransactionRepository.findTopByOrderByTranIdDesc` + `save` via `TransactionIdGenerator`; Postgres unique violation (23505, `DataIntegrityViolationException`) → `Tran ID already exist...`; other `DataAccessException` → `Unable to Add Transaction...`. Id generation is read-then-insert as in source; concurrent adders collide on the PK and receive the DUPREC message (same observable as a CICS DUPREC) |
+| S09-B4 | B10 shared utility | CSUTLDTC CALL contract (date, format, 80-byte result); consumed by S-10 too | both | CSUTLDTC.cbl:83-88; COTRN02C.cbl:388-428; CORPT00C.cbl:392 | ported once here as `com.carddemo.service.DateValidationService` returning a `DateValidationResult` record (SUBTRANSACTION profile: internal Spring service, typed result, no magic codes). CEEDAYS feedback codes emulated per the 88-level table; callers inspect `severity==0000` plus the `2513` exemption. Replaces the baseline's inlined `LocalDate.parse` (`TransactionService.parseDate`); S-10 (`ReportService.parse`) consumes it later |
+| S09-B5 | B10 shared data contract | TRANSACT written here, read by S-07/S-08 online and by batch (CBTRN*) | both | CVTRA05Y.cpy | `transactions` already in the V2 Flyway baseline; no schema change needed (all fields present). Reserved Flyway range `V170x` unused unless a new artifact appears |
+| S09-B6 | B10 storage-type contract | TRAN-ORIG-TS/PROC-TS are X(26) free text; this program writes a 10-char date | outbound | :464-465 | `tran_origin_timestamp`/`tran_process_timestamp` are `timestamp` (baseline V2): the validated `LocalDate` is stored at midnight (`00:00:00`). Consequence: years `0000` accepted by source via the 2513 exemption cannot be represented → rejected with the source's own `... - Not a valid date...` message (recorded deviation D-2) |
 
 All contracts resolved from source; **no unresolved-contract blockers**. No external enablement lead times.
 
 ## 6. Waves (leaf-first, from DAG depth)
 
-| Wave | Content | Repos touched |
-|---|---|---|
-| 1 | CSUTLDTC port (`DateValidationService` + unit tests); additive repository capabilities `GetLastAsync`/`AddAsync` with duplicate-key mapping | backend/ |
-| 2 | COTRN02C: `TransactionAddService` (state machine, exact messages, cursor), `POST /api/v1/transactions/add` (ENTER) and `POST /api/v1/transactions/add/copy-last` (PF5), Testcontainers integration tests | backend/ |
-| 3 | Angular `TranAddComponent` mirroring COTRN2A (field widths, message area, ENTER/F3/F4/F5, invalid-key parity), route in `app.routes.ts` (flag stays off in registry) | frontend/ |
+Single wave, leaf-first inside it — repo `spring-boot/` only (one PR):
 
-Single branch `devin/batch-a-s09-tran-add`; no PR opened by this stream.
+1. **Depth 0 — CSUTLDTC port**: `com.carddemo.service.DateValidationService` + `DateValidationResult` record + `DateValidationServiceTest` (mask + Lillian semantics per `programs/CSUTLDTC_functional_requirement.md`).
+2. **Depth 1 — COTRN02C**: `TransactionService`/`TransactionController` deltas (padded-field edits, `CardXrefRepository` xref resolution, `DateValidationService` calls, PF5 copy-last seam, verbatim `CobolMessages` + `cursorField`), `templates/tran-add.html` + `UiController` `GET/POST /transactions/add`, `MenuService.UI_ROUTES` flag flip `COTRN02C → /transactions/add`, FR parity tests (service unit + MockMvc UI + Testcontainers integration).
+
+No other repos; execution detail lives in `S09_tran_add_migration_plan.md`.
 
 ## 7. Risks
 
@@ -115,4 +119,4 @@ Single branch `devin/batch-a-s09-tran-add`; no PR opened by this stream.
 5. `Tran ID already exist...` positions the cursor on ACTIDIN (`:740`) — kept as-is.
 
 ## 8. Validation
-(1) all programs entry→hard stop inventoried (2/2, none absent; CEEDAYS is an LE service, contract decoded from CSUTLDTC); (2) wave order is a topological sort of the DAG (leaf CSUTLDTC first); (3) every claim cited `<file>:<line>`; (4) surfaces are ONLINE (one screen, AID set, edits) plus the SUBTRANSACTION utility; (5) all mechanical crossings are in the boundary table with full contracts; (6) data-access leaves S09-B2/B3 resolve to the shared Postgres data layer, additive extension only (`GetLastAsync`, `AddAsync`, no schema change, no migration).
+(1) all programs entry→hard stop inventoried (2/2, none absent; CEEDAYS is an LE service, contract decoded from CSUTLDTC); (2) wave order is a topological sort of the DAG (leaf CSUTLDTC first); (3) every claim cited `<file>:<line>`; (4) surfaces are ONLINE (one screen, AID set, edits) plus the SUBTRANSACTION utility; (5) all mechanical crossings are in the boundary table with full contracts; (6) data-access leaves S09-B2/B3 resolve to the baseline Postgres data layer (`findTopByOrderByTranIdDesc`, `save`, `findByXrefAcctId`, `findById` — all present; no schema change, no migration).

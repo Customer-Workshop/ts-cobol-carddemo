@@ -1,14 +1,14 @@
 # COTRN02C — Program Functional Requirements (`!mf_program_fr_generation`)
 
 ## 1. Identity and role
-- Program: COTRN02C — `app/cbl/COTRN02C.cbl`. Stream S-09, **wave 2** (consumes wave-1 CSUTLDTC port and repository seams).
+- Program: COTRN02C — `app/cbl/COTRN02C.cbl`. Stream S-09, **single wave** (consumes the same-wave `DateValidationService` port and repository seams; wave order inside the wave: utility → service/API → screen).
 - Role: entry/validator/writer — the add-transaction screen: resolves the account/card key through the card cross-reference, applies the field edits in a fixed order, asks for confirmation, allocates the next sequential transaction id and writes the record; also offers "copy last transaction" pre-fill.
 
 ## 2. Trigger / caller contract
 - CICS transaction `CT02` (`app/csd/CARDDEMO.CSD:439-440`), reached by `XCTL` from the main menu option 08 (`app/cpy/COMEN02Y.cpy:71`, `COMEN01C.cbl:185`) with `CARDDEMO-COMMAREA` (`app/cpy/COCOM01Y.cpy`) — `CDEMO-FROM-PROGRAM='COMEN01C'`.
 - `EIBCALEN = 0` ⇒ XCTL to COSGN00C (`:115-118`). First entry (`CDEMO-PGM-REENTER` off) clears the screen (`:120-130`); if `CDEMO-CT02-TRN-SELECTED` (`:80`) is non-blank it is moved to the Card # field and ENTER processing runs at once (`:124-129`).
 - Re-entered pseudo-conversationally with its own COMMAREA (`:156-159`); PF3 XCTLs back to `CDEMO-FROM-PROGRAM` (`COMEN01C` when blank) (`:136-143`, `:497-511`).
-- Target: route `/transactions/add` behind `authGuard`; `POST /api/v1/transactions/add` (ENTER) and `POST /api/v1/transactions/add/copy-last` (PF5); Exit → `/menu`; optional `cardNumber` query parameter = pre-selected card.
+- Target (Java 21 / Spring Boot): `UiController` `GET/POST /transactions/add` behind the server session; `POST /api/transactions` (ENTER) and `POST /api/transactions/copy-last` (PF5); Exit → `/menu`; optional `cardNumber` query parameter on the GET = pre-selected card (CDEMO-CT02-TRN-SELECTED analog).
 
 ## 3. Inputs and outputs
 Inputs (map COTRN2A / mapset COTRN02, `app/cpy-bms/COTRN02.CPY:60-138`): ACTIDINI X(11), CARDNINI X(16), TTYPCDI X(2), TCATCDI X(4), TRNSRCI X(10), TDESCI X(60), TRNAMTI X(12), TORIGDTI X(10), TPROCDTI X(10), MIDI X(9), MNAMEI X(30), MCITYI X(25), MZIPI X(10), CONFIRMI X(1); AID key (EIBAID).
@@ -63,9 +63,9 @@ Sequence (blocking, first failure wins — every error path ends the task inside
 Numeric class tests operate on the blank-padded BMS field, so partial-width entries (`1 `, `123        `) fail the numeric edits.
 
 ## 6. Data access and boundaries
-- CXACAIX / CCXREF keyed reads (S09-B2): shared `ICardXrefRepository`; RESP 0 / NOTFND / other → found / not-found message / store-error message.
-- TRANSACT highest-key browse + WRITE (S09-B3): `ITransactionRepository.GetLastAsync` + `AddAsync` (additive, this stream); ENDFILE (empty) ⇒ id zeros ⇒ first id `0000000000000001`; DUPKEY/DUPREC ⇒ Postgres unique violation.
-- Record mapping (`:450-465`): see stream FR §6; timestamps receive the 10-char dates only (S09-B6 → midnight `DateTime`).
+- CXACAIX / CCXREF keyed reads (S09-B2): shared `CardXrefRepository.findByXrefAcctId` / `findById`; RESP 0 / NOTFND / other → found / not-found message / store-error message.
+- TRANSACT highest-key browse + WRITE (S09-B3): `TransactionRepository.findTopByOrderByTranIdDesc` + `save` (additive, this stream); ENDFILE (empty) ⇒ id zeros ⇒ first id `0000000000000001`; DUPKEY/DUPREC ⇒ Postgres unique violation.
+- Record mapping (`:450-465`): see stream FR §6; timestamps receive the 10-char dates only (S09-B6 → `LocalDateTime` at midnight).
 - ACCTDAT is named (`:40`) but never read.
 - Deviations: D-1 midnight timestamps; D-2 year 0000 rejected; D-3 over-length input → HTTP 400 (stream FR §11).
 
@@ -84,4 +84,4 @@ Everything past the PF3 XCTL (menu shell, S-01) and past the no-COMMAREA bounce 
 Pseudo-conversational RETURN TRANSID (`:156-159`); COMMAREA copy/re-enter flag (`:119-122`); SEND/RECEIVE map plumbing (`:518-546`); cursor `MOVE -1 TO ...L` mechanics (carried to the target as `cursorField`); header population (`:548-568`); ENDBR (`:702-707`); dead `ERR-FLG-ON` field clearing (`:237-249`); unused working storage `WS-ACCTDAT-FILE`, `WS-TRAN-DATE`, `WS-USR-MODIFIED`, `WS-TRAN-AMT` (`:40, :47-57`).
 
 ## 10. Traceability
-COTRN02C-01..29 ↔ FR-S09-01..30, 32 (table §4) ↔ `backend/CardDemo.Tests/Transactions/TransactionAddServiceTests.cs`, `TransactionAddIntegrationTests.cs`, `TransactionAddApiIntegrationTests.cs`, `frontend/src/app/transactions/tran-add.component.spec.ts`.
+COTRN02C-01..29 ↔ FR-S09-01..30, 32 (table §4) ↔ `spring-boot/src/test/java/com/carddemo/service/TransactionAddServiceTest.java` (or `TransactionServiceTest`), `TransactionAddIntegrationTest.java` (Testcontainers), `TranAddUiIntegrationTest.java` (MockMvc), `DateValidationServiceTest.java`.

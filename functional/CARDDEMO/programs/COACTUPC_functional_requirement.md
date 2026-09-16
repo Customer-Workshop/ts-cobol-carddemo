@@ -1,7 +1,7 @@
 # COACTUPC — Program Functional Requirements (`!mf_program_fr_generation`)
 
 ## 1. Identity and role
-- Program: COACTUPC — `app/cbl/COACTUPC.cbl` (cites `:line`). Stream S-03, wave 1 (single program).
+- Program: COACTUPC — `app/cbl/COACTUPC.cbl` (cites `:line`). Stream S-03, single wave (single program; wave order inside: edit rules → service/API → screen).
 - Role: pseudo-conversational maintenance screen — fetch account + customer by account id, edit, validate, confirm (F5), atomic rewrite of ACCTDAT and CUSTDAT.
 
 ## 2. Trigger / caller contract
@@ -54,8 +54,8 @@ Rule details:
 - Concurrency `9700-CHECK-CHANGE-IN-REC`: same comparison rules applied between stored record and `ACUP-OLD-*` (:4109-4200).
 
 ## 6. Data access and boundaries
-- S03-B2 (B4 data-access): three keyed reads + two READ UPDATE/REWRITE in one CICS UOW; **DECIDED**: one PostgreSQL transaction in `AccountUpdateRepository`, row locks via `FOR UPDATE NOWAIT`, `SaveChanges` for both rows, rollback on any failure.
-- S03-B3 (B10 COMMAREA state): **DECIDED**: client carries `original`/`updated` snapshots; server is stateless and re-validates on save.
+- S03-B2 (B4 data-access): three keyed reads + two READ UPDATE/REWRITE in one CICS UOW; **DECIDED**: one `@Transactional` method in `AccountUpdateService.save`, row locks via JPA `FOR UPDATE` (`@Lock(PESSIMISTIC_WRITE)`, NOWAIT semantics) reads on `accounts` then `customers`, `save` for both rows, rollback on any failure.
+- S03-B3 (B10 COMMAREA state): **DECIDED**: the template carries `original`/`updated` snapshots as form fields; server is stateless and re-validates on save.
 - S03-B1 (B5 outbound PF3): **DECIDED**: navigate to `/menu`.
 - S03-B4: `COCRDUPC/COCRDLIC/COCRDSLC` literals unused; off-stream.
 
@@ -73,6 +73,5 @@ HANDLE ABEND / ABEND-ROUTINE (:4203-4222), SEND MAP ERASE/CURSOR (:3589-3603), a
 `CDEMO-LAST-MAP/MAPSET` bookkeeping.
 
 ## 10. Traceability
-Backend: `backend/CardDemo.Application/AccountUpdate/*`, `backend/CardDemo.Infrastructure/Persistence/AccountUpdateRepository.cs`,
-`backend/CardDemo.Api/Controllers/AccountUpdateController.cs`; tests `backend/CardDemo.Tests/AccountUpdate/*`.
-Frontend: `frontend/src/app/account-update/*`; route `accounts/update` in `frontend/src/app/app.routes.ts`.
+Service/API: `spring-boot/src/main/java/com/carddemo/service/AccountUpdateEditRules.java`, `AccountUpdateService.java`, `AccountUpdateController.java` (`POST /api/accounts/lookup`, `POST /api/accounts/validate`, baseline `PUT /api/accounts/{accountId}`); tests `spring-boot/src/test/java/com/carddemo/` `AccountUpdateEditRulesTest.java`, `AccountUpdateServiceTest.java`, `AccountUpdateIntegrationTest.java` (Testcontainers), `AccountUpdateUiIntegrationTest.java` (MockMvc).
+UI: `spring-boot/src/main/resources/templates/account-update.html` + `UiController` `GET/POST /accounts/update`; `MenuService.UI_ROUTES` entry `COACTUPC` → `/accounts/update`.

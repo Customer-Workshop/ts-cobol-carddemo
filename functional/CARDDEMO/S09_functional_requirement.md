@@ -3,6 +3,11 @@
 Status: complete (2026-09-02). Derived from `S09_tran_add_analysis.md` and source. Language: English (source labels are English).
 Encoding note: source is ASCII; no transcoding needed; cites are raw line numbers. Unqualified `:n` cites refer to `app/cbl/COTRN02C.cbl`.
 
+> Java-engagement note (2026-09-16): requirement rows and cites are source-side and unchanged; the
+> Covering-test column and §6/§9/§11 target references were re-expressed for Java 21/Spring Boot
+> (EF Core → Spring Data JPA, Angular → Thymeleaf + `UiController`, /api/v1 → /api, JWT → server
+> session) at this engagement's STOP C.
+
 ## 1. Purpose and scope
 Let a signed-on CardDemo user key a new transaction against an account (or card), validate every field with the legacy edits in the legacy order, confirm, and write it to the transaction file under the next sequential transaction id. Process type ONLINE. Trigger: CICS transaction CT02 (`app/csd/CARDDEMO.CSD:439-440`), main-menu option 08 (`app/cpy/COMEN02Y.cpy:71`). Includes the shared date utility CSUTLDTC (ported here, consumed later by S-10). Hard stop: PF3 return to the menu shell (S-01) and the no-COMMAREA bounce to sign-on; downstream readers of the written record (S-07/S-08 online, batch) are other streams.
 
@@ -36,7 +41,7 @@ Title: `Add Transaction` (bms:78-79). Legend: `ENTER=Continue  F3=Back  F4=Clear
 
 | ID | Flow | Business trigger | Observable result | Program(s) | Cite | Boundary | Covering test |
 |---|---|---|---|---|---|---|---|
-| FR-S09-01 | Screen display | First entry from the menu | Empty add-transaction screen, all 14 input fields blank, cursor on Acct #, no message | COTRN02C | :120-130, :762-779; bms | S09-B1 | `TranAddComponent` spec "renders the 14 COTRN2A input fields" |
+| FR-S09-01 | Screen display | First entry from the menu | Empty add-transaction screen, all 14 input fields blank, cursor on Acct #, no message | COTRN02C | :120-130, :762-779; bms | S09-B1 | `TranAddUiIntegrationTest.rendersThe14Cotrn2aInputFields_frS0901` |
 | FR-S09-02 | Key validation | ENTER with Acct # and Card # both blank | `Account or Card Number must be entered...`, cursor Acct # | COTRN02C | :224-229 | — | `TransactionAddServiceTests.KeyFields_BothBlank` |
 | FR-S09-03 | Key validation | Acct # present but not 11 digits | `Account ID must be Numeric...`, cursor Acct # | COTRN02C | :196-203 | — | `...AccountNotNumeric` |
 | FR-S09-04 | Key resolution | Acct # valid and found in xref AIX | Card # field replaced by the xref card number (account path takes precedence over any typed card); processing continues | COTRN02C | :204-209, :573-590 | S09-B2 | `...AccountFound_FillsCard`, integration `AccountLookup_*` |
@@ -109,11 +114,11 @@ Title: `Add Transaction` (bms:78-79). Legend: `ENTER=Continue  F3=Back  F4=Clear
 All message text is source-proven (working-storage literals or copybooks); no external message table.
 
 ## 6. Field and data derivations
-- **Padded-field semantics**: BMS delivers modified input left-justified and blank-padded to the field width (unmodified = LOW-VALUES). "Blank" = all spaces or all low-values (`:196,:252` etc.). `NUMERIC` class tests (`:197,:211,:323,:329,:430`) and the positional layout tests (`:339-381`) apply to the **whole padded field**: a 2-digit field with `1` typed is `1 ` and fails `Type CD must be Numeric...`; an amount `-100.00` is `-100.00     ` and fails the layout. Target: every value is right-padded with spaces to the BMS width before the edits run; values longer than the width cannot arise from the screen and are rejected at the API edge (HTTP 400 ProblemDetails, technical).
+- **Padded-field semantics**: BMS delivers modified input left-justified and blank-padded to the field width (unmodified = LOW-VALUES). "Blank" = all spaces or all low-values (`:196,:252` etc.). `NUMERIC` class tests (`:197,:211,:323,:329,:430`) and the positional layout tests (`:339-381`) apply to the **whole padded field**: a 2-digit field with `1` typed is `1 ` and fails `Type CD must be Numeric...`; an amount `-100.00` is `-100.00     ` and fails the layout. Target: every value is right-padded with spaces to the BMS width before the edits run; values longer than the width cannot arise from the screen and are rejected at the API edge (HTTP 400 `ErrorResponse` via `GlobalExceptionHandler`, technical).
 - **Account/card normalisation**: `NUMVAL` → `9(11)`/`9(16)` → back to the field (`:204-207,:218-221`), a no-op once the full-width digit test has passed; the xref lookup then fills the other key field (`:209,:223`).
-- **Amount**: `NUMVAL-C(TRNAMTI)` → `S9(9)V99` → `PIC +99999999.99` (`:383-386`, `:456-458`) — target `decimal` with 2 scale, echoed as sign + 8 zero-padded integer digits + `.` + 2 digits.
+- **Amount**: `NUMVAL-C(TRNAMTI)` → `S9(9)V99` → `PIC +99999999.99` (`:383-386`, `:456-458`) — target `BigDecimal` with 2 scale, echoed as sign + 8 zero-padded integer digits + `.` + 2 digits.
 - **Transaction id**: `WS-TRAN-ID-N 9(16)` = highest existing key + 1 (`:448-451`); empty file ⇒ `0000000000000001` (`:688-689`).
-- **Record mapping** (`:450-465`): TRAN-DESC X(100) ← 60-char description; MERCHANT-NAME X(50) ← 30 chars; MERCHANT-CITY X(50) ← 25 chars; TRAN-ORIG-TS/PROC-TS X(26) ← the 10-char dates (no time). Target: `Transaction.OriginalTimestamp/ProcessedTimestamp` = date at `00:00:00` (S09-B6).
+- **Record mapping** (`:450-465`): TRAN-DESC X(100) ← 60-char description; MERCHANT-NAME X(50) ← 30 chars; MERCHANT-CITY X(50) ← 25 chars; TRAN-ORIG-TS/PROC-TS X(26) ← the 10-char dates (no time). Target: `Transaction.tranOriginTimestamp`/`tranProcessTimestamp` = `LocalDateTime` of the date at `00:00:00` (S09-B6).
 - **Copy-last mapping** (`:480-494`): description truncated to 60, merchant name to 30, city to 25, timestamps to their first 10 characters, amount rendered `+99999999.99`.
 - **Header**: date/time from the system clock (`:548-568`) — cosmetic, not a requirement.
 
@@ -155,12 +160,12 @@ Pseudo-conversational RETURN TRANSID loop (`:156-159`); COMMAREA re-enter flag (
 - FR-S09-32: Given `1500-01-01`, Then `0003`/`2513`/`Unsupp. Range`, and COTRN02C accepts the date.
 
 ## 9. Traceability matrix
-FR-S09-01..30 → COTRN02C → cites §4 → `backend/CardDemo.Tests/Transactions/TransactionAddServiceTests.cs`, `TransactionAddIntegrationTests.cs`, `TransactionAddApiIntegrationTests.cs`, `frontend/src/app/transactions/tran-add.component.spec.ts`.
-FR-S09-16, 31, 32 → CSUTLDTC → `backend/CardDemo.Tests/Dates/DateValidationServiceTests.cs`.
+FR-S09-01..30 → COTRN02C → cites §4 → `spring-boot/src/test/java/com/carddemo/service/TransactionAddServiceTest.java`, `TransactionAddIntegrationTest.java` (Testcontainers), `TranAddUiIntegrationTest.java` (MockMvc over `UiController` + `templates/tran-add.html`, same idiom as `SignOnUiIntegrationTest`/`MenuUiIntegrationTest`).
+FR-S09-16, 31, 32 → CSUTLDTC → `spring-boot/src/test/java/com/carddemo/service/DateValidationServiceTest.java`.
 
-**FR-S09-29 target disposition**: same AID contract as S-01 (FR-S01-20 disposition): F3 = Exit, F4 = Clear, F5 = Copy Last, every other F1–F12 shows the invalid-key message with the screen state preserved (`frontend/src/app/shared/invalid-key.ts` reused; F4/F5 are classified by the component before delegating to the shared helper).
+**FR-S09-29 target disposition**: same AID contract as S-01 (FR-S01-20 disposition): the request's `aid` form field is classified by `UiController`/`TransactionService` — F3 = Exit, F4 = Clear, F5 = Copy Last, every other F1–F12 shows the invalid-key message with the screen state preserved (keydown handler pattern from `templates/menu.html` + `layout.html`).
 
-**Cursor placement**: every message row above names the field the COBOL positions the cursor on (`MOVE -1 TO <field>L`); the API returns it as `cursorField` and the component focuses that input.
+**Cursor placement**: every message row above names the field the COBOL positions the cursor on (`MOVE -1 TO <field>L`); the response/screen-state model carries it as `cursorField` and the template focuses that input.
 
 ## 10. Program index
 | Program | Role | Requirements | Program FR doc |
@@ -170,8 +175,8 @@ FR-S09-16, 31, 32 → CSUTLDTC → `backend/CardDemo.Tests/Dates/DateValidationS
 
 ## 11. Open questions and assumptions
 1. **A-1 CEEDAYS emulation**: the LE service has no source. The port classifies, in this order: non-digit where the mask expects digits → `2520`; month outside 1..12 → `2517`; day outside the month (incl. leap rules) → `2508`; Lillian range violation (before 1582-10-15, after 9999-12-31) → `2513`; unsupported mask tokens → `2518`; date shorter than the mask → `2507`. `2509`/`2521` (era conditions) are unreachable with `YYYY-MM-DD` masks and are kept only as recognised codes. Only well-formed `dddd-dd-dd` strings reach the utility from COTRN02C, so the reachable set is `0000`, `2508`, `2517`, `2513`.
-2. **D-1 storage type** (S09-B6): the shared layer types `tran_orig_ts`/`tran_proc_ts` as `timestamp`; the 10-char dates are stored at midnight. Equivalent when rendered as `yyyy-MM-dd` (which is all the source ever writes here).
-3. **D-2 year 0000**: source accepts `0000-mm-dd` (CEEDAYS `2513` exempted) and stores the text; `DateTime`/`timestamp` cannot hold year 0, so the target answers `Orig/Proc Date - Not a valid date...` for year 0000 only. Years 0001–1581 are accepted exactly like the source.
-4. **D-3 over-length input**: impossible on the 3270; rejected with HTTP 400 at the API edge rather than silently truncated (target-state "no silent PIC truncation").
-5. FR-S09-30 has no shipped caller (COMEN01C passes the base COMMAREA); implemented as an optional `cardNumber` route query parameter for parity with the live code path.
+2. **D-1 storage type** (S09-B6): the baseline schema types `tran_origin_timestamp`/`tran_process_timestamp` as `timestamp`; the 10-char dates are stored at midnight. Equivalent when rendered as `yyyy-MM-dd` (which is all the source ever writes here).
+3. **D-2 year 0000**: source accepts `0000-mm-dd` (CEEDAYS `2513` exempted) and stores the text; `LocalDateTime`/`timestamp` cannot hold year 0, so the target answers `Orig/Proc Date - Not a valid date...` for year 0000 only. Years 0001–1581 are accepted exactly like the source.
+4. **D-3 over-length input**: impossible on the 3270; rejected with HTTP 400 `ErrorResponse` at the API edge rather than silently truncated (target-state "no silent PIC truncation").
+5. FR-S09-30 has no shipped caller (COMEN01C passes the base COMMAREA); implemented as an optional `cardNumber` query parameter on `GET /transactions/add` for parity with the live code path.
 6. Id generation race (S09-B3) yields the source's own DUPREC message; no retry loop is added (none exists in the source).
