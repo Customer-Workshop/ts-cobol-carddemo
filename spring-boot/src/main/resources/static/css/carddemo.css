@@ -1,0 +1,31 @@
+body {
+    background-color: #000;
+    color: #0f0;
+    font-family: "Courier New", monospace;
+    margin: 0;
+    padding: 1em;
+}
+
+.screen {
+    max-width: 80ch;
+    margin: 0 auto;
+}
+
+.screen-header {
+    display: flex;
+    justify-content: space-between;
+    gap: 1em;
+    border-bottom: 1px solid #0f0;
+    padding-bottom: 0.25em;
+    margin-bottom: 1em;
+}
+
+.screen-body {
+    min-height: 20em;
+}
+
+.message-line {
+    color: #f00;
+    min-height: 1.2em;
+    margin-top: 1em;
+}

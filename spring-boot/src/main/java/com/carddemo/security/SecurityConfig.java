@@ -40,6 +40,7 @@ public class SecurityConfig {
                 .securityContext(context -> context.securityContextRepository(repository))
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED))
                 .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/", "/css/**").permitAll()
                         .requestMatchers("/api/auth/signon").permitAll()
                         .requestMatchers("/h2-console/**").hasRole("ADMIN")
                         .requestMatchers("/api/admin/**").hasRole("ADMIN")
