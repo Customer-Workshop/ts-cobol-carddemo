@@ -1,0 +1,28 @@
+flowchart BT
+  subgraph W1["Wave 1 — file seams (leaves)"]
+    V1["TRXFL KSDS card-keyed trans (job-local)\nCOSTM01.CPY; CREASTMT DELDEF01/STEP010/020"]
+    V2["CARDXREF KSDS sequential read\nCVACT03Y.cpy"]
+    V3["CUSTFILE + ACCTFILE KSDS keyed reads\nCUSTREC.cpy / CVACT01Y.cpy"]
+    F1["STATEMNT.PS output 80B\nCREASTMT STEP040 STMTFILE"]
+    F2["STATEMNT.HTML output 100B\nCREASTMT STEP040 HTMLFILE"]
+    UTIL["IDCAMS define + SORT reorder steps\nCREASTMT DELDEF01..STEP030"]
+  end
+  subgraph W2["Wave 2 — file-handler subroutine"]
+    M3B["CBSTM03B MVS file handler\nops O/C/R/K/W/Z, RC=file status\nCBSTM03B.CBL"]
+    LY["Statement layouts\nST-LINE0..15 + HTML 88-table\nCBSTM03A.CBL:85-223"]
+  end
+  subgraph W3["Wave 3 — statement writer + job shell"]
+    M3A["CBSTM03A statement driver\n2-D card x tran table, dual output\nCBSTM03A.CBL"]
+    J1["CREASTMT JCL (4 steps)\nCREASTMT.JCL"]
+    CH["Scheduler chain\nCLOSEFIL->CREASTMT->TXT2PDF1->WAITSTEP->OPENFIL\nCardDemo.ca7"]
+  end
+  M3B --> V1
+  M3B --> V2
+  M3B --> V3
+  M3A --> M3B
+  M3A --> LY
+  M3A --> F1
+  M3A --> F2
+  J1 --> UTIL
+  J1 --> M3A
+  CH --> J1

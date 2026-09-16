@@ -1,0 +1,34 @@
+flowchart BT
+  subgraph W1["Wave 1 — file seams (leaves)"]
+    V1["TRANSACT KSDS write seam\nTRAN-RECORD 350B\nPOSTTRAN.jcl TRANFILE"]
+    V2["CARDXREF KSDS keyed read\nCVACT03Y.cpy"]
+    V3["ACCTDATA KSDS I-O (bal + cyc credit/debit)\nCVACT01Y.cpy"]
+    V4["TCATBALF KSDS I-O (create-or-update)\nCVTRA01Y.cpy"]
+    F1["DALYTRAN PS input\nDALYTRAN-RECORD 350B\nCVTRA06Y.cpy"]
+    F2["DALYREJS GDG(+1) output 430B\nPOSTTRAN.jcl DALYREJS"]
+    WAIT["MVSWAIT assembler seam (B-002)\nCOBSWAIT.cbl:38"]
+  end
+  subgraph W2["Wave 2 — step programs"]
+    CB2["CBTRN02C posting program\nvalidate->post/reject, RC4\nCBTRN02C.cbl"]
+    CB1["CBTRN01C validation orphan\ndisplay-only, no caller\nCBTRN01C.cbl"]
+    CBW["COBSWAIT wait driver\nSYSIN centiseconds\nCOBSWAIT.cbl"]
+  end
+  subgraph W3["Wave 3 — job shell"]
+    J1["POSTTRAN JCL (STEP15)\nPOSTTRAN.jcl"]
+    J2["WAITSTEP JCL\nWAITSTEP.jcl"]
+    CH["Scheduler chain (B-008)\nCLOSEFIL->POSTTRAN->TRANBKP->WAITSTEP->OPENFIL\nCardDemo.controlm / CardDemo.ca7"]
+  end
+  CB2 --> F1
+  CB2 --> V1
+  CB2 --> V2
+  CB2 --> V3
+  CB2 --> V4
+  CB2 --> F2
+  CB1 --> F1
+  CB1 --> V2
+  CB1 --> V3
+  CBW --> WAIT
+  J1 --> CB2
+  J2 --> CBW
+  CH --> J1
+  CH --> J2

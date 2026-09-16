@@ -1,0 +1,24 @@
+flowchart BT
+  subgraph W1["Wave 1 — data + param seams (leaves)"]
+    V1["TCATBALF KSDS sequential read (grouped by acct)\nCVTRA01Y.cpy"]
+    V2["CARDXREF AIX path keyed read (acct->card)\nINTCALC.jcl XREFFIL1"]
+    V3["ACCTDATA KSDS read + REWRITE\nCVACT01Y.cpy"]
+    V4["DISCGRP KSDS keyed read, DEFAULT fallback\nCVTRA02Y.cpy"]
+    F1["SYSTRAN GDG(+1) output\nTRAN-RECORD 350B\nINTCALC.jcl TRANSACT"]
+    PRM["JCL PARM date seam\nPARM='yyyymmddhh'\nINTCALC.jcl STEP15"]
+  end
+  subgraph W2["Wave 2 — calc program"]
+    CB4["CBACT04C interest calculator\nrate lookup, /1200, interest txn write,\nacct update + cyc reset\nCBACT04C.cbl"]
+  end
+  subgraph W3["Wave 3 — job shell"]
+    J1["INTCALC JCL (STEP15)\nINTCALC.jcl"]
+    CH["Scheduler chain (B-008)\nCLOSEFIL->INTCALC->COMBTRAN->WAITSTEP->OPENFIL\nCardDemo.controlm MONTHLY"]
+  end
+  CB4 --> V1
+  CB4 --> V2
+  CB4 --> V3
+  CB4 --> V4
+  CB4 --> F1
+  CB4 --> PRM
+  J1 --> CB4
+  CH --> J1

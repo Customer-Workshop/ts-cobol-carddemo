@@ -1,0 +1,27 @@
+flowchart BT
+  subgraph W1["Wave 1 — data + submit seams (leaves)"]
+    V1["TRANSACT KSDS read seam\nTRAN-RECORD 350B\nTRANREPT.jcl STEP10R / CVTRA05Y.cpy"]
+    V2["CARDXREF KSDS keyed read (card->acct)\nCVACT03Y.cpy"]
+    V3["TRANTYPE + TRANCATG KSDS lookups\nCVTRA03Y.cpy / CVTRA04Y.cpy"]
+    SEAM1["TDQ 'JOBS' submit seam (B-001)\nCORPT00C.cbl:517; CSD:499-505"]
+    UTIL["CSUTLDTC date-check utility (shared, S-09-owned)\nCORPT00C.cbl:392-426"]
+    SESS["Session/COMMAREA seam\nCDEMO-* (S-01-owned)"]
+  end
+  subgraph W2["Wave 2 — report driver"]
+    RPT["TRANREPT JCL chain\nREPROC unload -> SORT filter/sort\nTRANREPT.jcl"]
+    CB3["CBTRN03C report program\nfilter/group/totals, 133-col print\nCBTRN03C.cbl"]
+  end
+  subgraph W3["Wave 3 — request surface"]
+    RQ["CORPT00C (CR00)\nreport-request screen CORPT0A\nCORPT00C.cbl"]
+  end
+  RPT --> V1
+  RPT --> SEAM1
+  CB3 --> V1
+  CB3 --> V2
+  CB3 --> V3
+  RQ --> SEAM1
+  RQ --> UTIL
+  RQ --> SESS
+  RPT --> CB3
+  RQ -- "submit JCL via TDQ\nCORPT00C.cbl:498-535" --> RPT
+  RQ -. "XCTL return CDEMO-TO-PROGRAM\nCORPT00C.cbl:540-551" .-> OUT1["menu/sign-on shell (S-01)"]
