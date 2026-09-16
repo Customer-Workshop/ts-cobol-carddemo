@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout :: layout('CardDemo', 'CU01', 'COUSR01C', ~{::content})}">
+<head>
+    <title>CardDemo</title>
+</head>
+<body>
+<!-- COUSR1A (app/bms/COUSR01.bms): the five data fields with their BMS
+     labels and hints, then the AID legend. maxlength enforces the 3270
+     field width; PASSWD is a dark (password-masked) field. PF12 is on the
+     footer but is an invalid key in the source (COUSR01C.cbl:98-102). -->
+<div th:fragment="content" class="user-form">
+    <p class="screen-title">Add User</p>
+    <form id="user-add-form" method="post" th:action="@{/admin/users/add}">
+        <div class="form-row">
+            <label class="field-label" for="fname">First Name:</label>
+            <input id="fname" name="fname" type="text" maxlength="20" size="20"
+                   autocomplete="off" th:value="${screen.firstName}"
+                   th:attr="autofocus=${screen.cursorField == 'fname' ? 'autofocus' : null}">
+            <label class="field-label" for="lname">Last Name:</label>
+            <input id="lname" name="lname" type="text" maxlength="20" size="20"
+                   autocomplete="off" th:value="${screen.lastName}"
+                   th:attr="autofocus=${screen.cursorField == 'lname' ? 'autofocus' : null}">
+        </div>
+        <div class="form-row">
+            <label class="field-label" for="userId">User ID:</label>
+            <input id="userId" name="userId" type="text" maxlength="8" size="8"
+                   autocomplete="off" th:value="${screen.userId}"
+                   th:attr="autofocus=${screen.cursorField == 'userid' ? 'autofocus' : null}">
+            <span class="field-hint">(8 Char)</span>
+            <label class="field-label" for="passwd">Password:</label>
+            <input id="passwd" name="passwd" type="password" maxlength="8" size="8"
+                   autocomplete="off" th:value="${screen.password}"
+                   th:attr="autofocus=${screen.cursorField == 'passwd' ? 'autofocus' : null}">
+            <span class="field-hint">(8 Char)</span>
+        </div>
+        <div class="form-row">
+            <label class="field-label" for="usrtype">User Type:</label>
+            <input id="usrtype" name="usrtype" type="text" maxlength="1" size="1"
+                   autocomplete="off" th:value="${screen.userType}"
+                   th:attr="autofocus=${screen.cursorField == 'usertype' ? 'autofocus' : null}">
+            <span class="field-hint">(A=Admin, U=User)</span>
+        </div>
+        <p class="key-hints">ENTER=Add User  F3=Back  F4=Clear  F12=Exit</p>
+        <div class="form-actions">
+            <button type="submit" name="aid" value="ENTER">ENTER=Add User</button>
+            <button type="submit" name="aid" value="PF3" formnovalidate>F3=Back</button>
+            <button type="submit" name="aid" value="PF4" formnovalidate>F4=Clear</button>
+            <button type="submit" name="aid" value="PF12" formnovalidate>F12=Exit</button>
+        </div>
+    </form>
+    <script>
+        // 3270 AID parity: F3 backs out, F4 clears; F12 and every other
+        // function key is an invalid AID despite the footer (COUSR01C).
+        document.addEventListener('keydown', function (event) {
+            if (/^F([1-9]|1[0-2])$/.test(event.key)) {
+                event.preventDefault();
+                var form = document.getElementById('user-add-form');
+                var aid = document.createElement('input');
+                aid.type = 'hidden';
+                aid.name = 'aid';
+                aid.value = event.key === 'F3' ? 'PF3'
+                        : event.key === 'F4' ? 'PF4'
+                        : event.key === 'F12' ? 'PF12'
+                        : event.key;
+                form.appendChild(aid);
+                form.submit();
+            }
+        });
+    </script>
+</div>
+</body>
+</html>

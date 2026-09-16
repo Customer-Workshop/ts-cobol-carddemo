@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout :: layout('CardDemo', 'CU00', 'COUSR00C', ~{::content})}">
+<head>
+    <title>CardDemo</title>
+</head>
+<body>
+<!-- COUSR0A (app/bms/COUSR00.bms): search input, the ten SEL/id/name/type
+     rows, the instruction line, the AID legend. Row fields are FSET, so the
+     displayed rows echo back as hidden inputs together with the COMMAREA
+     paging state (S12-B4). -->
+<div th:fragment="content" class="user-list">
+    <div class="user-list-header">
+        <p class="user-list-title">List Users</p>
+        <p class="user-list-page">Page: <span th:text="${page.pageDisplay}">00000001</span></p>
+    </div>
+    <form id="user-list-form" method="post" th:action="@{/admin/users}">
+        <div class="form-row">
+            <label class="field-label" for="usrIdIn">Search User ID:</label>
+            <input id="usrIdIn" name="usrIdIn" type="text" maxlength="8" size="8"
+                   autocomplete="off" th:value="${page.searchId}"
+                   th:attr="autofocus='autofocus'">
+        </div>
+        <table class="user-table">
+            <thead>
+            <tr class="user-heading">
+                <th>Sel</th>
+                <th> User ID </th>
+                <th>     First Name     </th>
+                <th>     Last Name      </th>
+                <th>Type</th>
+            </tr>
+            <tr class="user-heading-dash">
+                <td>---</td>
+                <td>--------</td>
+                <td>--------------------</td>
+                <td>--------------------</td>
+                <td>----</td>
+            </tr>
+            </thead>
+            <tbody>
+            <tr class="user-row" th:each="row, stat : ${page.rows}">
+                <td class="user-sel">
+                    <input class="sel-input" name="sel" type="text" maxlength="1" size="1"
+                           autocomplete="off" th:value="${page.selections[stat.index]}">
+                </td>
+                <td class="user-id" th:text="${row.userId}">&nbsp;</td>
+                <td class="user-fname" th:text="${row.firstName}">&nbsp;</td>
+                <td class="user-lname" th:text="${row.lastName}">&nbsp;</td>
+                <td class="user-type" th:text="${row.userType}">&nbsp;</td>
+                <td class="user-echo">
+                    <input type="hidden" name="usrId" th:value="${row.userId}">
+                    <input type="hidden" name="fname" th:value="${row.firstName}">
+                    <input type="hidden" name="lname" th:value="${row.lastName}">
+                    <input type="hidden" name="utype" th:value="${row.userType}">
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        <p class="user-instruction">Type 'U' to Update or 'D' to Delete a User from the list</p>
+        <!-- CDEMO-CU00-INFO paging state plus the displayed page number,
+             round-tripped by the client (S12-B4). -->
+        <input type="hidden" name="pageDisplay" th:value="${page.pageDisplay}">
+        <input type="hidden" name="firstId" th:value="${page.firstId}">
+        <input type="hidden" name="lastId" th:value="${page.lastId}">
+        <input type="hidden" name="pageNum" th:value="${page.pageNum}">
+        <input type="hidden" name="nextPage" th:value="${page.nextPage ? 'Y' : ''}">
+        <p class="key-hints">ENTER=Continue  F3=Back  F7=Backward  F8=Forward</p>
+        <div class="form-actions">
+            <button type="submit" name="aid" value="ENTER">ENTER=Continue</button>
+            <button type="submit" name="aid" value="PF3" formnovalidate>F3=Back</button>
+            <button type="submit" name="aid" value="PF7" formnovalidate>F7=Backward</button>
+            <button type="submit" name="aid" value="PF8" formnovalidate>F8=Forward</button>
+        </div>
+    </form>
+    <script>
+        // 3270 AID parity: F3 backs out, F7/F8 page, every other function key
+        // is an invalid AID and gets the invalid-key redisplay.
+        document.addEventListener('keydown', function (event) {
+            if (/^F([1-9]|1[0-2])$/.test(event.key)) {
+                event.preventDefault();
+                var form = document.getElementById('user-list-form');
+                var aid = document.createElement('input');
+                aid.type = 'hidden';
+                aid.name = 'aid';
+                aid.value = event.key === 'F3' ? 'PF3'
+                        : event.key === 'F7' ? 'PF7'
+                        : event.key === 'F8' ? 'PF8'
+                        : event.key;
+                form.appendChild(aid);
+                form.submit();
+            }
+        });
+    </script>
+</div>
+</body>
+</html>

@@ -184,7 +184,7 @@ class MenuUiIntegrationTest {
         mockMvc.perform(post("/admin/menu/select").session(session)
                         .param("aid", "ENTER").param("option", "1"))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/api/admin/users"));
+                .andExpect(redirectedUrl("/admin/users"));
         mockMvc.perform(post("/admin/menu/select").session(session)
                         .param("aid", "ENTER").param("option", "5"))
                 .andExpect(status().isOk())

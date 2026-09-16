@@ -106,16 +106,18 @@ public class MenuService {
     // the option's target answers GET on a concrete (non-templated) path
     // today. Everything else falls back to the not-installed idiom instead of
     // a dead link.
-    private static final Map<String, String> UI_ROUTES = Map.of(
-            "COCRDLIC", "/cards/list",
-            "COTRN00C", "/transactions/list",
-            "COTRN01C", "/transactions/view",
-            "COTRN02C", "/transactions/add",
-            "COUSR00C", "/api/admin/users",
-            "COUSR01C", "/api/admin/users",
-            "COCRDSLC", "/cards/view",
-            "COBIL00C", "/bill-payment",
-            "COACTVWC", "/accounts/view");
+    private static final Map<String, String> UI_ROUTES = Map.ofEntries(
+            Map.entry("COCRDLIC", "/cards/list"),
+            Map.entry("COTRN00C", "/transactions/list"),
+            Map.entry("COTRN01C", "/transactions/view"),
+            Map.entry("COTRN02C", "/transactions/add"),
+            Map.entry("COUSR00C", "/admin/users"),
+            Map.entry("COUSR01C", "/admin/users/add"),
+            Map.entry("COUSR02C", "/admin/users/update"),
+            Map.entry("COUSR03C", "/admin/users/delete"),
+            Map.entry("COCRDSLC", "/cards/view"),
+            Map.entry("COBIL00C", "/bill-payment"),
+            Map.entry("COACTVWC", "/accounts/view"));
 
     public String uiRoute(MenuSelectionResponse selection) {
         if (!selection.implemented() || !selection.available()) {

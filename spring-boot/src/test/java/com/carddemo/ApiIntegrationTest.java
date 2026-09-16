@@ -17,6 +17,7 @@ import org.springframework.mock.web.MockHttpSession;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.containsString;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -269,22 +270,25 @@ class ApiIntegrationTest {
                                  "password":"PASSWORD","userType":"U"}
                                 """))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.userId").value("NEWUSER1"));
+                .andExpect(jsonPath("$.userId").value("newuser1"));
     }
 
+    // S12-B2: values are stored as typed — sign-on's upper-casing lookup
+    // can never reach a lower-case user, matching USRSEC parity.
     @Test
-    void adminCreatedPasswordsUseSignonNormalization() throws Exception {
+    void adminCreatedUsersAreStoredAsTyped() throws Exception {
         MockHttpSession admin = signon("ADMIN001", "PASSWORD", "/api/admin/menu");
         mockMvc.perform(post("/api/admin/users").session(admin)
                         .contentType(MediaType.APPLICATION_JSON).content("""
                                 {"userId":"lower01","firstName":"Lower","lastName":"Case",
                                  "password":"lowerpas","userType":"U"}
                                 """))
-                .andExpect(status().isOk());
-        mockMvc.perform(post("/api/auth/signoff").session(admin))
-                .andExpect(status().isOk());
-
-        signon("LOWER01", "lowerpas", "/api/menu");
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.userId").value("lower01"));
+        SecurityUser stored = userRepository.findById("lower01").orElseThrow();
+        assertThat(stored.getFirstName()).isEqualTo("Lower");
+        assertThat(stored.getPassword()).isEqualTo("lowerpas");
+        assertThat(userRepository.findById("LOWER01")).isEmpty();
     }
 
     @Test

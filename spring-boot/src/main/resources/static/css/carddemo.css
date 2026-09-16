@@ -528,6 +528,158 @@ body {
     cursor: pointer;
 }
 
+/* COUSR0A–COUSR3A user admin screens (S-12) — same 3270 palette as the
+   transaction screens: turquoise labels/headers, green inputs, white row
+   data, yellow hints/titles (app/bms/COUSR0*.bms). */
+.user-list {
+    font-family: inherit;
+}
+
+.user-list .user-list-header {
+    display: flex;
+    justify-content: space-between;
+    max-width: 72ch;
+}
+
+.user-list .user-list-title {
+    margin: 0;
+}
+
+.user-list .user-list-page {
+    margin: 0;
+    color: #40e0d0;
+}
+
+.user-list .form-row {
+    margin: 1em 0;
+}
+
+.user-list .field-label {
+    color: #40e0d0;
+}
+
+.user-list input {
+    background: #000;
+    color: #0f0;
+    border: none;
+    border-bottom: 1px solid #0f0;
+    font: inherit;
+    text-transform: uppercase;
+}
+
+.user-list .user-table {
+    border-collapse: collapse;
+    color: #fff;
+}
+
+.user-list .user-heading th,
+.user-list .user-heading-dash td {
+    color: #40e0d0;
+    font-weight: normal;
+    text-align: left;
+    padding-right: 1ch;
+}
+
+.user-list .user-row td {
+    padding-right: 1ch;
+}
+
+.user-list .user-id,
+.user-list .user-fname,
+.user-list .user-lname,
+.user-list .user-type {
+    white-space: pre;
+}
+
+.user-list .sel-input {
+    width: 2ch;
+    text-transform: uppercase;
+}
+
+.user-list .user-echo {
+    display: none;
+}
+
+.user-list .user-instruction {
+    color: #ff0;
+    margin: 1em 0;
+}
+
+.user-list .key-hints {
+    color: #ff0;
+}
+
+.user-list .form-actions button {
+    background: #000;
+    color: #0f0;
+    border: 1px solid #0f0;
+    font: inherit;
+    margin-right: 1em;
+    cursor: pointer;
+}
+
+.user-form .screen-title {
+    color: #ff0;
+    text-align: center;
+}
+
+.user-form .form-row {
+    margin: 0.8em 0 0 4ch;
+}
+
+.user-form .field-label {
+    white-space: pre;
+    color: #40e0d0;
+    margin-right: 0.5em;
+}
+
+.user-form .field-label + input {
+    margin-right: 2em;
+}
+
+.user-form .field-echo {
+    color: #00f;
+    text-decoration: underline;
+    margin-right: 2em;
+    white-space: pre;
+}
+
+.user-form .field-hint {
+    color: #40e0d0;
+    margin: 0 2em 0 0.5em;
+}
+
+.user-form input {
+    background: #000;
+    color: #0f0;
+    border: none;
+    border-bottom: 1px solid #0f0;
+    font: inherit;
+}
+
+.user-form .separator {
+    color: #40e0d0;
+    margin: 0.5em 0 0.5em 4ch;
+}
+
+.user-form .key-hints {
+    color: #ff0;
+    margin-left: 4ch;
+}
+
+.user-form .form-actions {
+    margin-left: 4ch;
+}
+
+.user-form .form-actions button {
+    background: #000;
+    color: #0f0;
+    border: 1px solid #0f0;
+    font: inherit;
+    margin-right: 1em;
+    cursor: pointer;
+}
+
 
 /* COBIL0A (bill payment, S-11) — 3270 colours: green underlined inputs,
    turquoise labels, blue balance, red error / green success message line

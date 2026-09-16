@@ -30,8 +30,7 @@ public class AdminUserController {
     }
 
     @DeleteMapping("/{userId}")
-    public void delete(@PathVariable String userId,
-                       @RequestParam(defaultValue = "N") String confirmation) {
-        service.delete(userId, confirmation);
+    public void delete(@PathVariable String userId) {
+        service.delete(userId);
     }
 }
