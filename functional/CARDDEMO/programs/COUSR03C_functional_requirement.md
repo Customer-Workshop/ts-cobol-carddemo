@@ -36,4 +36,4 @@ Returns to COUSR00C or COADM01C only.
 Header population, SEND/RECEIVE, RETURN TRANSID (`:134-137`), `DISPLAY 'RESP:'`, cursor `-1` moves, `WS-USR-MODIFIED` flag declared but unused (`:45-47`).
 
 ## 10. Traceability
-COUSR03C-01..04 ↔ FR-S12-37..40 ↔ `UserAdminServiceTests` (FetchForDelete*/Delete*), `UserAdminIntegrationTests`, `user-delete.component.spec.ts`.
+COUSR03C-01..04 ↔ FR-S12-37..40 ↔ `UserAdminServiceTest` (FetchForDelete*/Delete*), `UserAdminIntegrationTest`, `UserDeleteUiIntegrationTest` (all under `spring-boot/src/test/java/com/carddemo/`).

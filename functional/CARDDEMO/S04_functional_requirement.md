@@ -4,6 +4,11 @@ Stream S-04, transaction `CCLI`, program `COCRDLIC` (`app/cbl/COCRDLIC.cbl`), ma
 Analysis: [S04_card_list_analysis.md](S04_card_list_analysis.md). Program FR: [programs/COCRDLIC_functional_requirement.md](programs/COCRDLIC_functional_requirement.md).
 Cites of the form `:nnn` refer to `COCRDLIC.cbl`; `bms:nnn` to `COCRDLI.bms`.
 
+> Java-engagement note (2026-09-15): source-side requirements unchanged; target references below
+> were re-expressed for Java 21/Spring Boot (EF Core → Spring Data JPA, Angular → server-rendered
+> Thymeleaf web UI, /api/v1 → /api, JWT → server session, NUnit tests → JUnit/MockMvc) at this
+> engagement's STOP C.
+
 ## 1. Purpose and scope
 Paged browse of the card master (`CARDDAT`, key card number) seven rows at a time, optionally filtered by an exact account id and/or exact card number, with per-row selection `S` (view detail) or `U` (update) that hands the chosen card to the downstream card programs. In scope: COCRDLIC only. Out of scope (behind the disabled route registry): COCRDSLC, COCRDUPC.
 
@@ -28,7 +33,7 @@ Any signed-on CardDemo user (admin or regular); the program performs no user-typ
 ## 4. Functional requirements (KEEP)
 | ID | Flow | Business trigger | Observable result | Cite | Boundary | Covering test |
 |---|---|---|---|---|---|---|
-| FR-S04-01 | Initial list | Entry from the menu (fresh context) | Page 1: the first 7 cards in card-number order, filters blank, info message shown | `:315-343`, `:458-482`, `:1123-1263` | — | CardListServiceTests / CardListIntegrationTests / component spec |
+| FR-S04-01 | Initial list | Entry from the menu (fresh context) | Page 1: the first 7 cards in card-number order, filters blank, info message shown | `:315-343`, `:458-482`, `:1123-1263` | — | CardListServiceTest / CardListIntegrationTest / component spec |
 | FR-S04-02 | Screen layout | Screen displayed | 7 result rows (Select 1 / Account 11 / Card 16 / Active 1), filters 11 and 16 wide, page number, 45-char info area, 78-char red error area, footer `F3=Exit F7=Backward F8=Forward` | bms:82-339 | — | component spec |
 | FR-S04-03 | Filter validation | Account filter present but not an 11-digit number | `ACCOUNT FILTER,IF SUPPLIED MUST BE A 11 DIGIT NUMBER`; field red with cursor; previously listed rows retained (no re-read); all Select fields protected | `:1017-1025`, `:431-435`, `:872-875`, `:752` | — | service + integration + spec |
 | FR-S04-04 | Filter validation | Card filter present but not a 16-digit number | `CARD ID FILTER,IF SUPPLIED MUST BE A 16 DIGIT NUMBER`; same redisplay as FR-S04-03. When both filters fail the account message wins | `:1052-1062` (`IF WS-ERROR-MSG-OFF`) | — | service + integration + spec |
@@ -104,7 +109,7 @@ CICS SEND/RECEIVE plumbing (`:938-983`), COMMAREA (de)serialization (`:326-331`,
 - FR-S04-23: Given no session token, When calling the list API or opening the route, Then 401 / redirect to sign-on.
 
 ## 9. Traceability matrix
-FR-S04-01..23 → COCRDLIC → cites §4 → `backend/CardDemo.Tests/Cards/CardListServiceTests.cs` (unit, all FRs), `backend/CardDemo.Tests/Cards/CardListIntegrationTests.cs` (Testcontainers PostgreSQL: 01, 03-08, 10, 14-16, 22, 23), `frontend/src/app/cards/card-list.component.spec.ts` (UI-owned: 02, 03, 06, 07, 09-13, 15-21).
+FR-S04-01..23 → COCRDLIC → cites §4 → `spring-boot/src/test/java/com/carddemo/service/CardListServiceTest.java` (unit, all FRs), `spring-boot/src/test/java/com/carddemo/CardListIntegrationTest.java` (Testcontainers PostgreSQL: 01, 03-08, 10, 14-16, 22, 23), `spring-boot/src/test/java/com/carddemo/CardListUiIntegrationTest.java` (UI-owned: 02, 03, 06, 07, 09-13, 15-21).
 
 ## 10. Program index
 | Program | Role | Requirements | Program FR doc |
@@ -116,4 +121,4 @@ FR-S04-01..23 → COCRDLIC → cites §4 → `backend/CardDemo.Tests/Cards/CardL
 2. **S04-B3 (FR-S04-18)**: COCRDLIC remaps unknown AIDs to ENTER instead of emitting `Invalid key pressed...`; the S-01 shared invalid-key helper is therefore not applicable to this screen (source-derived).
 3. **S04-B4 (FR-S04-22)**: RESP2 `90` for READPREV ENDFILE is taken from CICS documentation, not from source; RESP `20` = `DFHRESP(ENDFILE)`.
 4. The unfiltered look-ahead (FR-S04-07) can announce a next page that turns out empty under a filter; ported for parity.
-5. Header date/time (`mm/dd/yy`, `hh:mm:ss`) are rendered client-side from the browser clock — equivalent to `FUNCTION CURRENT-DATE` on the CICS region.
+5. Header date/time (`mm/dd/yy`, `hh:mm:ss`) are rendered server-side via the shared `@ModelAttribute` header helper — equivalent to `FUNCTION CURRENT-DATE` on the CICS region.

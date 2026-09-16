@@ -1,11 +1,15 @@
 # S-11 Bill Payment (ONLINE) — Stream Analysis (`!mf_stream_analysis`)
 
-Inputs: `CardDemo_inventory.md` §5 row S-11 (CB00 → COBIL00C), `CardDemo_target_state.md` (CORE + ONLINE + DATA/BOUNDARY, CONFIRMED at STOP A), S-01 shell artifacts (auth/menu/route-registry conventions), shared data layer landed at `468e17d` (accounts / card_xref / transactions tables, EF entities, repositories, seed import).
+Inputs: `CardDemo_inventory.md` §5 row S-11 (CB00 → COBIL00C), `CardDemo_target_state.md` (CORE + ONLINE + DATA/BOUNDARY, CONFIRMED at STOP A), S-01 shell artifacts (auth/menu/route-registry conventions), shared data layer (V2 baseline: accounts / card_xrefs / transactions tables, JPA entities, repositories, seed import).
+
+> Java-engagement note (2026-09-15): source-side analysis unchanged; target references below
+> were re-expressed for Java 21/Spring Boot (EF Core → Spring Data JPA, Angular → server-rendered
+> Thymeleaf web UI, /api/v1 → /api, JWT → server session) at this engagement's STOP C.
 
 ## 1. Pinned stream
 - Stream: **S-11 Bill Payment**, process type ONLINE, status active.
 - Entry transaction: `CB00` → program `COBIL00C` (`app/csd/CARDDEMO.CSD`: `DEFINE TRANSACTION(CB00) ... PROGRAM(COBIL00C)`).
-- Reached from the main menu option 10 "Bill Payment" (`app/cpy/COMEN02Y.cpy`, `CDEMO-MENU-OPT-PGMNAME(10) = 'COBIL00C'`); the S-01 route registry entry for option 10 stays `Enabled: false` until integration flips it.
+- Reached from the main menu option 10 "Bill Payment" (`app/cpy/COMEN02Y.cpy`, `CDEMO-MENU-OPT-PGMNAME(10) = 'COBIL00C'`); the S-01 route registry entry for option 10 (`MenuService` `UI_ROUTES["COBIL00C"]`) gains its UI route when the wave merges.
 - Single program, single screen, three VSAM datasets (ACCTDAT read/update, CXACAIX alternate-index read, TRANSACT browse + write). No batch, no called subprograms, no DB2/MQ.
 
 ## 2. Program inventory + leaf-first DAG
@@ -49,32 +53,37 @@ AID keys (:126-141): ENTER → PROCESS-ENTER-KEY; PF3 → return to caller (`CDE
 `Acct ID can NOT be empty...` (:161) · `Invalid value. Valid values are (Y/N)...` (:187) · `You have nothing to pay...` (:201) · `Confirm to make a bill payment...` (:236) · `Account ID NOT found...` (:360, :391, :425) · `Unable to lookup Account...` (:367) · `Unable to Update Account...` (:398) · `Unable to lookup XREF AIX file...` (:432) · `Transaction ID NOT found...` (:457) · `Unable to lookup Transaction...` (:463, :491) · `Tran ID already exist...` (:534) · `Unable to Add Bill pay Transaction...` (:540) · `Payment successful.  Your Transaction ID is <tran-id>.` (:526-530; note two spaces — `'Payment successful. '` followed by `' Your Transaction ID is '`) · `Invalid key pressed. Please see below...` (CSMSG01Y).
 
 ## 4. Data + field dictionary
-| Legacy | Copybook | Target (shared layer at `468e17d`) | Notes |
+| Legacy | Copybook | Target (Java baseline, V2 schema) | Notes |
 |---|---|---|---|
-| ACCTDAT `ACCT-ID 9(11)`, `ACCT-CURR-BAL S9(10)V99` | `app/cpy/CVACT01Y.cpy` | `accounts.acct_id` varchar(11) PK (C collation), `accounts.acct_curr_bal` numeric(12,2); `Account.AccountId`, `Account.CurrentBalance` | READ UPDATE + REWRITE → `SELECT ... FOR UPDATE` + `UPDATE` in one DB transaction |
-| CXACAIX (AIX on `XREF-ACCT-ID`, NONUNIQUEKEY) → `XREF-CARD-NUM X(16)` | `app/cpy/CVACT03Y.cpy` | `card_xref.xref_acct_id` index `ix_card_xref_xref_acct_id`; `ICardXrefRepository.GetFirstByAccountIdAsync` (ordered by card number = first AIX record) | reuse, no extension |
-| TRANSACT `TRAN-RECORD` (RECLN 350), key `TRAN-ID X(16)` | `app/cpy/CVTRA05Y.cpy` | `transactions` table, `Transaction` entity, `tran_id` C collation (byte order = VSAM key order) | new **write** path (first online writer of `transactions`) |
-| `WS-CURR-BAL PIC +9999999999.99` | COBIL00C.cbl:56 | `BillPaymentResult.CurrentBalance` string (14 chars, explicit sign) | formatting rule FR-S11-06 |
-| `WS-TRAN-ID-NUM 9(16)` | :57 | `long` → `D16` string | FR-S11-10 |
-| `WS-TIMESTAMP` `yyyy-MM-dd HH:mm:ss.000000` | `app/cpy/CSDAT01Y.cpy:42-55`, COBIL00C.cbl:249-267 | `TimeProvider.GetLocalNow()` truncated to seconds, microseconds `000000` | FR-S11-11 |
+| ACCTDAT `ACCT-ID 9(11)`, `ACCT-CURR-BAL S9(10)V99` | `app/cpy/CVACT01Y.cpy` | `accounts.acct_id` bigint PK, `accounts.acct_curr_bal` numeric(19,2); `Account#getAcctId`, `Account#getAcctCurrBal` | READ UPDATE + REWRITE → `SELECT ... FOR UPDATE` (`@Lock(PESSIMISTIC_WRITE)`) + `save` inside one `@Transactional` |
+| CXACAIX (AIX on `XREF-ACCT-ID`, NONUNIQUEKEY) → `XREF-CARD-NUM X(16)` | `app/cpy/CVACT03Y.cpy` | `card_xrefs.xref_acct_id`; `CardXrefRepository` first-by-account (ordered by card number = first AIX record) | reuse, no extension |
+| TRANSACT `TRAN-RECORD` (RECLN 350), key `TRAN-ID X(16)` | `app/cpy/CVTRA05Y.cpy` | `transactions` table, `Transaction` entity, `tran_id` varchar(16) (byte order = VSAM key order for digit ids) | baseline already writes `transactions` (first online writer) |
+| `WS-CURR-BAL PIC +9999999999.99` | COBIL00C.cbl:56 | `BillPaymentResult#currentBalance` string (14 chars, explicit sign) | formatting rule FR-S11-06 |
+| `WS-TRAN-ID-NUM 9(16)` | :57 | `long` → `String.format("%016d", n)` | FR-S11-10; `TransactionIdGenerator` in baseline |
+| `WS-TIMESTAMP` `yyyy-MM-dd HH:mm:ss.000000` | `app/cpy/CSDAT01Y.cpy:42-55`, COBIL00C.cbl:249-267 | injected `java.time.Clock` truncated to seconds, microseconds `000000` | FR-S11-11 |
 | `CDEMO-CB00-TRN-SELECTED X(16)` | COBIL00C.cbl:72 | optional route query parameter `accountId` | FR-S11-20 |
-| `CDEMO-FROM-PROGRAM` | `app/cpy/COCOM01Y.cpy` | Angular route `/menu` (S01-B3 contract) | FR-S11-16 |
+| `CDEMO-FROM-PROGRAM` | `app/cpy/COCOM01Y.cpy` | UI redirect to `/menu` (S01-B3 contract) | FR-S11-16 |
 
-Numeric mapping: `ACCT-CURR-BAL S9(10)V99` and `TRAN-AMT S9(09)V99` → `decimal`; the MOVE at :223 truncates the high-order digit when |balance| ≥ 1 000 000 000.00 (standard COBOL truncation) — replicated in FR-S11-11.
+Numeric mapping: `ACCT-CURR-BAL S9(10)V99` and `TRAN-AMT S9(09)V99` → `BigDecimal`; the MOVE at :223 truncates the high-order digit when |balance| ≥ 1 000 000 000.00 (standard COBOL truncation) — replicated in FR-S11-11.
+
+Account-key note (R3, baseline `acct_id` bigint): the source compares the as-typed 11-char key — `"123"` does
+**not** match `"00000000123"`. The Java seam keeps that compare by looking the typed value up against the
+`%011d` rendering of `acct_id`, not by numeric parse alone; non-numeric input → same `Account ID NOT found...`
+outcome.
 
 ## 5. Boundary table (headline) — S11-B1..S11-B6 (register append is owned by the integration stage; not edited here)
 | ID | Class | Description | Decision taken in this stream |
 |---|---|---|---|
-| S11-B1 | B4 leaf (write) | First online **write** to TRANSACT (`transactions`): WRITE keyed by TRAN-ID, DUPKEY/DUPREC → `Tran ID already exist...` | Stream-owned `IBillPaymentRepository.AddTransactionAsync` (EF insert); Postgres unique-violation (23505) → duplicate outcome; other → `Unable to Add Bill pay Transaction...` |
-| S11-B2 | B4 leaf (update) | ACCTDAT READ UPDATE + REWRITE of `ACCT-CURR-BAL` under the CICS record lock | `GetAccountForUpdateAsync` = `SELECT ... FOR UPDATE` inside an explicit DB transaction; `UpdateAccountAsync` rewrites and commits together with the transaction insert; 0 rows → `Account ID NOT found...` |
-| S11-B3 | B4 leaf (key allocation) | TRAN-ID allocation = last key (READPREV from HIGH-VALUES) + 1 | `MAX(tran_id)` under C collation + 1, `D16`; concurrent allocation collides on the PK → S11-B1 duplicate outcome (same as legacy DUPREC) |
-| S11-B4 | B5 in | Return routing (`CDEMO-FROM-PROGRAM` → caller, default COMEN01C) | Angular navigates to `/menu` (S01-B3 route contract); no COMMAREA |
+| S11-B1 | B4 leaf (write) | First online **write** to TRANSACT (`transactions`): WRITE keyed by TRAN-ID, DUPKEY/DUPREC → `Tran ID already exist...` | `TransactionRepository.save` inside the service `@Transactional`; Postgres unique-violation (23505 → `DataIntegrityViolationException`) → duplicate outcome; other → `Unable to Add Bill pay Transaction...` |
+| S11-B2 | B4 leaf (update) | ACCTDAT READ UPDATE + REWRITE of `ACCT-CURR-BAL` under the CICS record lock | `AccountRepository` `SELECT ... FOR UPDATE` (`@Lock(PESSIMISTIC_WRITE)`); balance rewrite commits together with the transaction insert in one DB transaction; miss → `Account ID NOT found...` |
+| S11-B3 | B4 leaf (key allocation) | TRAN-ID allocation = last key (READPREV from HIGH-VALUES) + 1 | `TransactionIdGenerator` (`findTopByOrderByTranIdDesc` + 1, `%016d`); concurrent allocation collides on the PK → S11-B1 duplicate outcome (same as legacy DUPREC) |
+| S11-B4 | B5 in | Return routing (`CDEMO-FROM-PROGRAM` → caller, default COMEN01C) | UI redirects to `/menu` (S01-B3 route contract); no COMMAREA |
 | S11-B5 | B5 in | Pre-selected account (`CDEMO-CB00-TRN-SELECTED`) on first entry | Optional `accountId` query param on `/bill-payment`: pre-fills Acct ID and processes ENTER immediately |
-| S11-B6 | B10 | Timestamp source (CICS ASKTIME/FORMATTIME) | `TimeProvider` injected into `BillPaymentService`; seconds precision, `.000000` microseconds, local wall clock |
+| S11-B6 | B10 | Timestamp source (CICS ASKTIME/FORMATTIME) | `java.time.Clock` injected into `BillingService`; seconds precision, `.000000` microseconds, local wall clock |
 No stored procedures, no external systems, no lead-time requests.
 
 ## 6. Waves (leaf-first)
-- **Wave 1 (only wave):** COBIL00C — backend `CardDemo.Application/BillPayment` (service, models, repository seam), `CardDemo.Infrastructure/Persistence/BillPaymentRepository`, `CardDemo.Api/Controllers/BillPaymentController` (`POST /api/v1/bill-payment`), Angular `BillPaymentComponent` at `/bill-payment` (authGuard), tests. Consumes S-01 seams (JWT, authGuard, `classifyAidKey`, menu route contract). Route registry flag for option 10 stays disabled.
+- **Wave 1 (only wave):** COBIL00C — `com.carddemo.service.BillingService` parity extension, `BillingController` (`POST /api/billing/payments`), Thymeleaf `bill-payment.html` at `/bill-payment` via the `ui/` web surface (session-guarded), tests. Consumes S-01 seams (server session, `UiController` aid dispatch, menu route contract). `MenuService` `UI_ROUTES` entry for option 10 flips to `/bill-payment` when the wave merges.
 
 ## 7. Risks
 - R1 Fall-through defect in the confirmed path (see §3) — resolved by deviation D1 (blocking + atomic); must be visible to sign-off.
@@ -84,4 +93,4 @@ No stored procedures, no external systems, no lead-time requests.
 
 ## 8. Validation
 - Program FR doc: `programs/COBIL00C_functional_requirement.md`. Stream FR doc: `S11_functional_requirement.md`. Plan: `S11_bill_pay_migration_plan.md`.
-- Every FR maps to at least one xUnit unit test, one Testcontainers integration test where persistence is involved, and one Angular spec where the UI owns the behaviour (traceability in FR doc §9).
+- Every FR maps to at least one JUnit unit test, one Testcontainers integration test where persistence is involved, and one MockMvc UI test where the UI owns the behaviour (traceability in FR doc §9).

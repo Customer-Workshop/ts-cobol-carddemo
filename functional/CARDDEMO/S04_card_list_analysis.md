@@ -4,12 +4,16 @@ Stream: **S-04 Card List** (ONLINE). Entry transaction **CCLI**, program **COCRD
 Sources: `app/cbl/COCRDLIC.cbl` (1,420 lines), `app/bms/COCRDLI.bms`, `app/cpy/CVCRD01Y.cpy`, `app/cpy/COCOM01Y.cpy`,
 `app/cpy/CVACT02Y.cpy`, `app/cpy/CSSTRPFY.cpy`, `app/csd/CARDDEMO.CSD:203,357-358`. Inventory row: `CardDemo_inventory.md:97`.
 
+> Java-engagement note (2026-09-15): source-side analysis unchanged; target references below
+> were re-expressed for Java 21/Spring Boot (EF Core → Spring Data JPA, Angular → server-rendered
+> Thymeleaf web UI, /api/v1 → /api, JWT → server session) at this engagement's STOP C.
+
 ## 1. Pinned stream
 | Item | Value | Cite |
 |---|---|---|
 | Transaction | `CCLI` → `PROGRAM(COCRDLIC)` | `CARDDEMO.CSD:357-358` |
 | Program literals | `LIT-THISPGM='COCRDLIC'`, `LIT-THISTRANID='CCLI'`, `LIT-THISMAPSET='COCRDLI'`, `LIT-THISMAP='CCRDLIA'` | `COCRDLIC.cbl:179-186` |
-| Upstream caller | COMEN01C main-menu option 03 "Credit Card List" (XCTL with `CARDDEMO-COMMAREA`) | `COCRDLIC.cbl:187-194`; registry `appsettings.json` Main[03] |
+| Upstream caller | COMEN01C main-menu option 03 "Credit Card List" (XCTL with `CARDDEMO-COMMAREA`) | `COCRDLIC.cbl:187-194`; `MenuService` main catalogue option 03 |
 | Downstream XCTL targets (off-stream) | COCRDSLC/CCDL (card detail), COCRDUPC/CCUP (card update), COMEN01C/CM00 (exit) | `:195-210`, `:402-405`, `:538-541`, `:566-569` |
 | Files | `CARDDAT` KSDS (key CARD-NUM X(16)), `CARDAIX` declared but **never used** | `:213-217`; STARTBR/READNEXT/READPREV only on `LIT-CARD-FILE` |
 | User-type restriction | none — the program only stamps `CDEMO-USRTYP-USER` into the COMMAREA, no gate | `:320`, `:388`, `:466` |
@@ -41,19 +45,19 @@ Out of stream (must remain behind the disabled route registry): COCRDSLC, COCRDU
 ## 4. Data + field dictionary
 | COBOL item | PIC | Role | Target |
 |---|---|---|---|
-| `CARD-NUM` | X(16) | KSDS key, row column, browse RID | `Card.CardNumber` (PK `card_num`, existing) |
-| `CARD-ACCT-ID` | 9(11) | row column, account filter comparand | `Card.AccountId` (idx `ix_cards_card_acct_id`, existing) |
-| `CARD-ACTIVE-STATUS` | X(1) | row column | `Card.ActiveStatus` (existing) |
-| `CC-ACCT-ID` / `-N` | X(11) / 9(11) | typed account filter; `NUMERIC` class test | `accountFilter` string, regex `^\d{11}$` |
-| `CC-CARD-NUM` / `-N` | X(16) / 9(16) | typed card filter | `cardFilter` string, regex `^\d{16}$` |
-| `WS-EDIT-SELECT(1..7)` | X(1) ×7 | selection codes; 88s `SELECT-OK`='S','U'; `SELECT-BLANK`=' ',LOW-VALUES | `selections[7]` |
-| `WS-CA-FIRST-CARD-NUM` / `WS-CA-LAST-CARD-NUM` | X(16) | page anchors carried in COMMAREA | `CardListPageState.FirstCardNumber/LastCardNumber` |
-| `WS-CA-SCREEN-NUM` | 9(1) | page number (single digit, wraps) | `CardListPageState.ScreenNumber` |
-| `WS-CA-LAST-PAGE-DISPLAYED` | 9(1) | 0 = last page shown, 9 = not shown | `CardListPageState.LastPageShown` |
-| `WS-CA-NEXT-PAGE-IND` | X(1) | 'Y' next page exists | `CardListPageState.NextPageExists` |
-| `WS-SCREEN-ROWS(1..7)` | 28 bytes ×7 | displayed rows carried in COMMAREA | `CardListPageState.Rows` |
-| `CDEMO-ACCT-ID`, `CDEMO-CARD-NUM` | 9(11), 9(16) | hand-off context to detail/update | `CardListNavigationTarget.AccountId/CardNumber` |
-Shared data layer already provides every column and index the program touches (`cards` table, `CardConfiguration`); **no schema extension is needed**. Only additive repository methods (raw key-ordered browse verbs) are required.
+| `CARD-NUM` | X(16) | KSDS key, row column, browse RID | `Card#getCardNumber` (PK `card_number`, existing) |
+| `CARD-ACCT-ID` | 9(11) | row column, account filter comparand | `Card#getCardAcctId` (`cards.card_acct_id`, existing) |
+| `CARD-ACTIVE-STATUS` | X(1) | row column | `Card#getCardActiveStatus` (existing) |
+| `CC-ACCT-ID` / `-N` | X(11) / 9(11) | typed account filter; `NUMERIC` class test | `accountFilter` `String`, regex `^\d{11}$` |
+| `CC-CARD-NUM` / `-N` | X(16) / 9(16) | typed card filter | `cardFilter` `String`, regex `^\d{16}$` |
+| `WS-EDIT-SELECT(1..7)` | X(1) ×7 | selection codes; 88s `SELECT-OK`='S','U'; `SELECT-BLANK`=' ',LOW-VALUES | `selections` `String[7]` on the request record |
+| `WS-CA-FIRST-CARD-NUM` / `WS-CA-LAST-CARD-NUM` | X(16) | page anchors carried in COMMAREA | `CardListPageState#firstCardNumber/lastCardNumber` |
+| `WS-CA-SCREEN-NUM` | 9(1) | page number (single digit, wraps) | `CardListPageState#screenNumber` |
+| `WS-CA-LAST-PAGE-DISPLAYED` | 9(1) | 0 = last page shown, 9 = not shown | `CardListPageState#lastPageShown` |
+| `WS-CA-NEXT-PAGE-IND` | X(1) | 'Y' next page exists | `CardListPageState#nextPageExists` |
+| `WS-SCREEN-ROWS(1..7)` | 28 bytes ×7 | displayed rows carried in COMMAREA | `CardListPageState#rows` |
+| `CDEMO-ACCT-ID`, `CDEMO-CARD-NUM` | 9(11), 9(16) | hand-off context to detail/update | hand-off route params `accountId`/`cardNumber` |
+Shared data layer already provides every column and index the program touches (`cards` table, `Card` entity, `CardRepository`); **no schema extension is needed**. Only additive repository methods (raw key-ordered browse verbs) are required.
 
 ## 5. Control flow (source-derived)
 1. Init: clear work areas, `WS-ERROR-MSG-OFF`; first entry (`EIBCALEN=0`) or entry from another program with `CDEMO-PGM-ENTER` resets the paging COMMAREA (page 1, last-page-not-shown, anchors = spaces) — `:300-343`.
@@ -74,7 +78,7 @@ Shared data layer already provides every column and index the program touches (`
 | S04-B4 | READPREV exhaustion emits a CICS `WS-FILE-ERROR-MESSAGE` with RESP/RESP2 | `:153-171`, `:1361-1369` | Ported with the same layout; RESP=ENDFILE(20), RESP2 90 taken from CICS documentation (not derivable from source). |
 
 ## 7. Waves
-Wave 1 (only): COCRDLIC — backend `CardListService` state machine + `CardsController` (`/api/v1/cards/list`), Angular `CardListComponent` at `/cards/list` (authGuard), tests. Registry flag `Main[03] COCRDLIC` stays **disabled** (integration stage flips it).
+Wave 1 (only): COCRDLIC — `CardService` browse state machine + `CardController` (`/api/cards`), Thymeleaf `card-list.html` screen at `/cards/list` via the `ui/` web surface (session-guarded), tests. `MenuService` `UI_ROUTES` entry for option 03 flips from `/api/cards` to `/cards/list` when the wave merges.
 
 ## 8. Risks
 - Page number is `PIC 9(1)`: `ADD +1` past 9 truncates to 0, `SUBTRACT 1` from 0 stores 1 (unsigned). Ported literally; visible only beyond 9 pages.

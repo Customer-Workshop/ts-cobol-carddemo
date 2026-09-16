@@ -1,13 +1,17 @@
 # S-12 User Admin — Stream Analysis (`!mf_stream_analysis`)
 
 Status: complete (2026-09-02). Process type **ONLINE**. Stream catalogue row: `functional/CARDDEMO/CardDemo_inventory.md` §5 (`S-12 | User Admin | ONLINE | CU00–CU03 | COUSR00C, COUSR01C, COUSR02C, COUSR03C`).
-Target profiles applied (read-only): CORE + ONLINE + DATA/BOUNDARY from `functional/CARDDEMO/CardDemo_target_state.md`. Built on the S-01 shell (JWT session, admin menu, route registry) and the shared data layer landed at commit `468e17d` (`users` table already present from S-01 wave 1).
+Target profiles applied (read-only): CORE + ONLINE + DATA/BOUNDARY from `functional/CARDDEMO/CardDemo_target_state.md`. Built on the S-01 shell (server session, admin menu, `MenuService` route registry) and the shared data layer (`users` table already present from V1).
+
+> Java-engagement note (2026-09-15): source-side analysis unchanged; target references below
+> were re-expressed for Java 21/Spring Boot (EF Core → Spring Data JPA, Angular → server-rendered
+> Thymeleaf web UI, /api/v1 → /api, JWT → server session) at this engagement's STOP C.
 
 ## 1. Pinned stream
 
 - **Entry points (proof)**: `CU00 -> COUSR00C`, `CU01 -> COUSR01C`, `CU02 -> COUSR02C`, `CU03 -> COUSR03C` (`app/csd/CARDDEMO.CSD:449`, `:459`, `:469`, `:479`). All four are reached from the admin menu COADM01C (`app/cpy/COADM02Y.cpy` options 01–04) — the admin menu is the only caller, so the stream is admin-gated by the shell, not by the programs themselves.
 - **Hard stop**: every `XCTL` leaving the four programs is either (a) the return to the caller `COADM01C` / `CDEMO-FROM-PROGRAM` (S-01 owned, already migrated), (b) the bounce to `COSGN00C` when `EIBCALEN = 0` (S-01 owned), or (c) within-stream navigation `COUSR00C -> COUSR02C/COUSR03C`. Nothing crosses into another stream.
-- **Exclusions**: none of the other admin options (COTRTLIC/COTRTUPC, S-21) are touched; the menu route registry flags for options 01–04 stay `Enabled: false` (integration stage flips them).
+- **Exclusions**: none of the other admin options (COTRTLIC/COTRTUPC, S-21) are touched; `MenuService` `UI_ROUTES` entries for COUSR00C–COUSR03C gain their `/admin/users*` UI routes when the wave merges.
 - Pseudo-conversational shape: every program ends `EXEC CICS RETURN TRANSID(WS-TRANID) COMMAREA(CARDDEMO-COMMAREA)` (`COUSR00C.cbl:141-144`, `COUSR01C.cbl:107-110`, `COUSR02C.cbl:135-138`, `COUSR03C.cbl:134-137`) and re-enters on `CDEMO-PGM-REENTER` (`COCOM01Y.cpy`).
 
 ## 2. Program inventory + leaf-first DAG
@@ -65,8 +69,8 @@ USRSEC KSDS `AWS.M2.CARDDEMO.USRSEC.VSAM.KSDS`, `KEYS(8,0)`, `RECORDSIZE(80,80)`
 | SEC-USR-ID | X(08) | `user_id` varchar(8) PK | browse key; case preserved as typed (no UPPER-CASE in any COUSR program) |
 | SEC-USR-FNAME | X(20) | `first_name` varchar(20) | |
 | SEC-USR-LNAME | X(20) | `last_name` varchar(20) | |
-| SEC-USR-PWD | X(08) | `password_hash` text | **hashed** in target (approved S-01 storage deviation, STOP C) |
-| SEC-USR-TYPE | X(01) | `user_type` char(1) via `UserType` enum ('A'/'U') | source accepts any non-blank char (S12-B1) |
+| SEC-USR-PWD | X(08) | `password` varchar(8) | **plaintext-compatible** storage (S-01 STOP C decision: `UsrsecPlaintextPasswordEncoder` matches the USRSEC fixture exactly) |
+| SEC-USR-TYPE | X(01) | `user_type` varchar(1) CHECK IN ('A','U') | source accepts any non-blank char (S12-B1) |
 | SEC-USR-FILLER | X(23) | not mapped | |
 
 COMMAREA extensions used (`COCOM01Y.cpy` + program-local `CDEMO-CU0n-INFO`): `CDEMO-CU00-USRID-FIRST/LAST` X(8), `CDEMO-CU00-PAGE-NUM` 9(8), `CDEMO-CU00-NEXT-PAGE-FLG` Y/N, `CDEMO-CU00-USR-SEL-FLG` X(1), `CDEMO-CU00-USR-SELECTED` X(8) (`COUSR00C.cbl:67-75`); COUSR02C/03C read `CDEMO-CU02-USR-SELECTED` / `CDEMO-CU03-USR-SELECTED` at the same offsets (`COUSR02C.cbl:51-58`, `COUSR03C.cbl:51-58`) — the selected user id travels from the list to update/delete.
@@ -77,25 +81,21 @@ No new tables, columns, or indexes are needed: the `users` PK supports keyed bro
 
 | ID | Boundary | Where | Decision (see migration plan §3) |
 |---|---|---|---|
-| S12-B1 | User type domain: source writes any non-blank X(1) (`COUSR01C.cbl:142-147, 158`); target `UserType` enum only admits 'A'/'U' | COUSR01C, COUSR02C | Keep shared enum; a code outside A/U fails the write and surfaces the source's OTHER-path message (`Unable to Add User...` / `Unable to Update User...`). Not a new validation message. |
-| S12-B2 | Password compare on update: source compares clear text `PASSWDI NOT = SEC-USR-PWD` (`COUSR02C.cbl:227-230`) and echoes stored password into the (dark) field on fetch (`:168`) | COUSR02C | Target never returns the stored password; fetch returns blank password; "modified" = supplied password does not verify against the stored hash. Consequence of the approved hashing deviation. |
+| S12-B1 | User type domain: source writes any non-blank X(1) (`COUSR01C.cbl:142-147, 158`); `users.user_type` CHECK admits only 'A'/'U' | COUSR01C, COUSR02C | Keep the CHECK constraint; a code outside A/U fails the write (constraint violation) and surfaces the source's OTHER-path message (`Unable to Add User...` / `Unable to Update User...`). Not a new validation message. |
+| S12-B2 | Password compare on update: source compares clear text `PASSWDI NOT = SEC-USR-PWD` (`COUSR02C.cbl:227-230`) and echoes stored password into the (dark) field on fetch (`:168`) | COUSR02C | Plaintext storage (S-01 decision) permits full parity: fetch echoes the stored password into a `type=password` input (DRK-equivalent mask); "modified" = supplied password differs byte-wise from stored. Supersedes the .NET-era hashing deviation. |
 | S12-B3 | Stale rows after STARTBR NOTFND / short backward page: BMS input/output overlay leaves previous rows on screen (`COUSR00C.cbl:292-296, 346-350`) | COUSR00C | Target renders exactly the rows returned (empty / partial list) with the same message and page number. Display-only artifact, not business behaviour. |
-| S12-B4 | Caller return: PF3 on COUSR02C/03C returns to `CDEMO-FROM-PROGRAM` (COUSR00C or COADM01C) | COUSR02C, COUSR03C | Frontend carries `from` in the route query string; backend has no navigation state. |
-| S12-B5 | Admin gate: programs do not check user type; only the admin menu (S-01) reaches CU00–CU03 | all | API requires JWT `userType='A'` (403 otherwise, same idiom as `/api/v1/menu?menu=admin`); routes use `adminGuard`. |
+| S12-B4 | Caller return: PF3 on COUSR02C/03C returns to `CDEMO-FROM-PROGRAM` (COUSR00C or COADM01C) | COUSR02C, COUSR03C | UI carries `from` in the route query string (`/admin/users/update?userId=..&from=..`); service has no navigation state. |
+| S12-B5 | Admin gate: programs do not check user type; only the admin menu (S-01) reaches CU00–CU03 | all | `SecurityConfig`: `/admin/**` and `/api/admin/**` require `ROLE_ADMIN` (403 otherwise, same idiom as the admin menu); S-01 admin-menu gate retained. |
 
 ## 6. Waves (leaf-first)
 
-1. **Wave 1 — COUSR01C** (add): repository `AddAsync` + duplicate detection; `POST /api/v1/admin/users/add`; Angular `user-add` screen.
-2. **Wave 2 — COUSR02C, COUSR03C** (update/delete leaves): `UpdateAsync`, `DeleteAsync`; fetch/update/delete commands; Angular `user-update`, `user-delete` screens.
-3. **Wave 3 — COUSR00C** (list): `BrowseForwardAsync`/`BrowseBackwardAsync` on the users repository; `POST /api/v1/admin/users/list`; Angular `user-list` screen with row selection → update/delete routes.
-
-All three waves ship together in this stream branch (single child session); the order above is the implementation order.
+**Wave 1 (only wave)** — all four programs in leaf-first implementation order COUSR01C, COUSR02C/03C, COUSR00C: `AdminUserService`/`AdminUserController` parity extension (`/api/admin/users`), keyed browse verbs on `SecurityUserRepository`, Thymeleaf `user-list` / `user-add` / `user-update` / `user-delete` screens under `/admin/users*` via the `ui/` web surface (`ROLE_ADMIN`), tests. `UI_ROUTES` entries for COUSR00C–03C flip to the UI routes when the wave merges.
 
 ## 7. Risks
 
 - Message text reuse: COUSR03C's DELETE OTHER path says `Unable to Update User...` (`COUSR03C.cbl:332`) — preserved verbatim (parity rule), flagged in the FR doc.
-- Paging semantics depend on key order of `user_id` (ordinal string compare) — Postgres collation must be byte/ordinal for parity with VSAM; the browse queries use `string.CompareTo` translated by Npgsql to text comparison under the database collation. Sample data is upper-case ASCII so ordering is identical; documented in the plan.
-- PF4 clear and PF12 cancel are frontend-only behaviours (no I/O) — covered by component specs.
+- Paging semantics depend on key order of `user_id` (ordinal byte compare) — Postgres `ORDER BY user_id` on `varchar(8)` matches VSAM key order for the all-upper-case-ASCII fixture ids; documented in the plan.
+- PF4 clear and PF12 cancel are UI-only behaviours (no I/O) — covered by MockMvc/UI tests.
 
 ## 8. Validation
 

@@ -48,4 +48,4 @@ Delegates update/delete to COUSR02C/COUSR03C (same stream) and returns to COADM0
 Header population, map send/receive, RETURN TRANSID (`:141-144`), ENDBR, `DISPLAY 'RESP:'`, cursor `-1` moves, row INITIALIZE/POPULATE unrolled paragraphs (`:380-560`).
 
 ## 10. Traceability
-COUSR00C-01..16 ↔ FR-S12-01..16 ↔ `UserAdminServiceTests` (List*), `UserAdminIntegrationTests` (paging), `user-list.component.spec.ts`.
+COUSR00C-01..16 ↔ FR-S12-01..16 ↔ `UserAdminServiceTest` (List*), `UserAdminIntegrationTest` (paging), `UserListUiIntegrationTest` (all under `spring-boot/src/test/java/com/carddemo/`).

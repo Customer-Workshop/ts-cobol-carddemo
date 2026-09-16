@@ -2,13 +2,18 @@
 
 Source of truth: `app/cbl/COBIL00C.cbl` (cites below are `COBIL00C.cbl:<line>` unless prefixed), `app/bms/COBIL00.bms`, `app/cpy-bms/COBIL00.CPY`, `app/cpy/CVTRA05Y.cpy`, `app/cpy/CVACT01Y.cpy`, `app/cpy/CVACT03Y.cpy`, `app/cpy/CSMSG01Y.cpy`, `app/csd/CARDDEMO.CSD`. Analysis: `S11_bill_pay_analysis.md`.
 
+> Java-engagement note (2026-09-15): source-side requirements unchanged; target references below
+> were re-expressed for Java 21/Spring Boot (EF Core → Spring Data JPA, Angular → server-rendered
+> Thymeleaf web UI, /api/v1 → /api, JWT/`authGuard`/`[Authorize]` → server session + `SecurityConfig`,
+> NUnit tests → JUnit/MockMvc) at this engagement's STOP C.
+
 ## 1. Purpose and scope
 Pay the **entire current balance** of one account in a single online step: the user keys an account id, sees the balance, confirms with `Y`, and the program writes a `BILL PAYMENT - ONLINE` transaction and zeroes the balance. In scope: transaction CB00 / program COBIL00C only. Out of scope: menu (S-01), other transaction programs, batch posting.
 
 ## 2. Actors and preconditions
 - Actor: any signed-on CardDemo user (no admin restriction in COBIL00C; menu option 10 is a `U` option in COMEN02Y).
-- Precondition: signed on (a call with `EIBCALEN = 0` is routed to the sign-on program, :107-109 → target: `authGuard` + `[Authorize]`).
-- Data: `accounts`, `card_xref`, `transactions` populated by the shared legacy import.
+- Precondition: signed on (a call with `EIBCALEN = 0` is routed to the sign-on program, :107-109 → target: server-session guard — UI redirects to `/signon`, API → 401).
+- Data: `accounts`, `card_xrefs`, `transactions` populated by the shared legacy import.
 
 ## 3. Surface specification
 ### Bill Payment screen COBIL0A (`app/bms/COBIL00.bms:26-136`)
@@ -23,26 +28,26 @@ Pay the **entire current balance** of one account in a single online step: the u
 ## 4. Functional requirements (KEEP)
 | ID | Flow | Business trigger | Observable result | Program | Cite | Boundary | Covering test |
 |---|---|---|---|---|---|---|---|
-| FR-S11-01 | Input validation | ENTER with blank Acct ID | `Acct ID can NOT be empty...`, cursor Acct ID; nothing read | COBIL00C | :158-166 | — | `BillPaymentServiceTests.BlankAccountId_*`; `bill-payment.component.spec` |
-| FR-S11-02 | Input validation | Acct ID present; Confirm not one of `Y y N n` blank | `Invalid value. Valid values are (Y/N)...`, cursor Confirm; no account lookup; previously displayed balance retained | COBIL00C | :173-191 | — | `BillPaymentServiceTests.InvalidConfirm_*`; component spec |
-| FR-S11-03 | Decline | Acct ID present; Confirm `N`/`n` | Screen cleared (Acct ID, balance, confirm, message blank), cursor Acct ID; no lookup, no payment | COBIL00C | :178-180, :552-566 | — | `BillPaymentServiceTests.DeclineN_*`; component spec |
-| FR-S11-04 | Account lookup | Confirm blank or `Y`; no account with the typed key | `Account ID NOT found...`, cursor Acct ID | COBIL00C | :343-364 | S11-B2 | `BillPaymentServiceTests.AccountNotFound_*`; `BillPaymentIntegrationTests` |
-| FR-S11-05 | Account lookup | Account store unavailable / other error | `Unable to lookup Account...`, cursor Acct ID | COBIL00C | :365-371 | S11-B2 | `BillPaymentServiceTests.AccountStoreError_*` |
-| FR-S11-06 | Balance display | Account read succeeds | Current balance shown as `+9999999999.99` / `-9999999999.99` (14 chars) | COBIL00C | :56, :193-194 | — | `BillPaymentServiceTests.BalanceFormat_*`; component spec |
-| FR-S11-07 | Nothing to pay | Account read; balance ≤ 0 | `You have nothing to pay...`, cursor Acct ID, balance displayed; no payment | COBIL00C | :197-206 | — | `BillPaymentServiceTests.NothingToPay_*`; integration |
-| FR-S11-08 | Confirmation prompt | Confirm blank; account read; balance > 0 | `Confirm to make a bill payment...`, cursor Confirm, balance displayed; nothing written | COBIL00C | :235-242 | — | `BillPaymentServiceTests.ConfirmRequired_*`; integration; component spec |
-| FR-S11-09 | Card resolution | Confirm `Y`; balance > 0; account has no card xref | `Account ID NOT found...`; other xref error → `Unable to lookup XREF AIX file...`; no payment | COBIL00C | :408-436 | reuse `ICardXrefRepository` | `BillPaymentServiceTests.XrefNotFound_*`, `XrefStoreError_*`; integration |
-| FR-S11-10 | Transaction id allocation | Payment confirmed | New id = highest existing TRAN-ID + 1, 16 digits zero-filled; empty file → `0000000000000001`; browse error → `Unable to lookup Transaction...` | COBIL00C | :211-217, :441-505 | S11-B3 | `BillPaymentServiceTests.TransactionId_*`; integration |
-| FR-S11-11 | Transaction content | Payment confirmed | Record: type `02`, category `0002`, source `POS TERM`, description `BILL PAYMENT - ONLINE`, amount = current balance (as `S9(09)V99`), card = first card of the account, merchant id `999999999`, name `BILL PAYMENT`, city `N/A`, zip `N/A`, orig/proc timestamp = now (`yyyy-MM-dd HH:mm:ss.000000`) | COBIL00C | :218-231, :249-267 | S11-B1, S11-B6 | `BillPaymentServiceTests.TransactionContent_*`; integration |
-| FR-S11-12 | Success | Transaction written and account updated | Fields cleared, cursor Acct ID, **green** message `Payment successful.  Your Transaction ID is <id>.` | COBIL00C | :522-531, :242 | — | service, integration, component spec |
+| FR-S11-01 | Input validation | ENTER with blank Acct ID | `Acct ID can NOT be empty...`, cursor Acct ID; nothing read | COBIL00C | :158-166 | — | `BillingServiceTest.BlankAccountId_*`; `BillPaymentUiIntegrationTest` |
+| FR-S11-02 | Input validation | Acct ID present; Confirm not one of `Y y N n` blank | `Invalid value. Valid values are (Y/N)...`, cursor Confirm; no account lookup; previously displayed balance retained | COBIL00C | :173-191 | — | `BillingServiceTest.InvalidConfirm_*`; UI test |
+| FR-S11-03 | Decline | Acct ID present; Confirm `N`/`n` | Screen cleared (Acct ID, balance, confirm, message blank), cursor Acct ID; no lookup, no payment | COBIL00C | :178-180, :552-566 | — | `BillingServiceTest.DeclineN_*`; UI test |
+| FR-S11-04 | Account lookup | Confirm blank or `Y`; no account with the typed key | `Account ID NOT found...`, cursor Acct ID | COBIL00C | :343-364 | S11-B2 | `BillingServiceTest.AccountNotFound_*`; `BillingIntegrationTest` |
+| FR-S11-05 | Account lookup | Account store unavailable / other error | `Unable to lookup Account...`, cursor Acct ID | COBIL00C | :365-371 | S11-B2 | `BillingServiceTest.AccountStoreError_*` |
+| FR-S11-06 | Balance display | Account read succeeds | Current balance shown as `+9999999999.99` / `-9999999999.99` (14 chars) | COBIL00C | :56, :193-194 | — | `BillingServiceTest.BalanceFormat_*`; UI test |
+| FR-S11-07 | Nothing to pay | Account read; balance ≤ 0 | `You have nothing to pay...`, cursor Acct ID, balance displayed; no payment | COBIL00C | :197-206 | — | `BillingServiceTest.NothingToPay_*`; integration |
+| FR-S11-08 | Confirmation prompt | Confirm blank; account read; balance > 0 | `Confirm to make a bill payment...`, cursor Confirm, balance displayed; nothing written | COBIL00C | :235-242 | — | `BillingServiceTest.ConfirmRequired_*`; integration; UI test |
+| FR-S11-09 | Card resolution | Confirm `Y`; balance > 0; account has no card xref | `Account ID NOT found...`; other xref error → `Unable to lookup XREF AIX file...`; no payment | COBIL00C | :408-436 | reuse `CardXrefRepository` | `BillingServiceTest.XrefNotFound_*`, `XrefStoreError_*`; integration |
+| FR-S11-10 | Transaction id allocation | Payment confirmed | New id = highest existing TRAN-ID + 1, 16 digits zero-filled; empty file → `0000000000000001`; browse error → `Unable to lookup Transaction...` | COBIL00C | :211-217, :441-505 | S11-B3 | `BillingServiceTest.TransactionId_*`; integration |
+| FR-S11-11 | Transaction content | Payment confirmed | Record: type `02`, category `0002`, source `POS TERM`, description `BILL PAYMENT - ONLINE`, amount = current balance (as `S9(09)V99`), card = first card of the account, merchant id `999999999`, name `BILL PAYMENT`, city `N/A`, zip `N/A`, orig/proc timestamp = now (`yyyy-MM-dd HH:mm:ss.000000`) | COBIL00C | :218-231, :249-267 | S11-B1, S11-B6 | `BillingServiceTest.TransactionContent_*`; integration |
+| FR-S11-12 | Success | Transaction written and account updated | Fields cleared, cursor Acct ID, **green** message `Payment successful.  Your Transaction ID is <id>.` | COBIL00C | :522-531, :242 | — | service, integration, UI test |
 | FR-S11-13 | Duplicate key | Allocated TRAN-ID already exists | `Tran ID already exist...`, cursor Acct ID; nothing persisted | COBIL00C | :532-537 | S11-B1 | service; integration |
 | FR-S11-14 | Write error | Transaction write fails for any other reason | `Unable to Add Bill pay Transaction...`, cursor Acct ID; nothing persisted | COBIL00C | :538-545 | S11-B1 | service |
 | FR-S11-15 | Account update | Payment confirmed | `ACCT-CURR-BAL := ACCT-CURR-BAL − TRAN-AMT` rewritten; rewrite not-found → `Account ID NOT found...`; other → `Unable to Update Account...` | COBIL00C | :232-233, :375-403 | S11-B2 | service; integration |
-| FR-S11-16 | Exit | PF3 | Return to the calling screen (main menu) | COBIL00C | :128-134, :273-284 | S11-B4 | component spec |
-| FR-S11-17 | Clear | PF4 | Acct ID, balance, confirm and message cleared, cursor Acct ID; no server call | COBIL00C | :135-136, :552-566 | — | component spec |
-| FR-S11-18 | Invalid key | Any AID other than ENTER/PF3/PF4 | `Invalid key pressed. Please see below...`, screen redisplayed unchanged | COBIL00C | :137-140; CSMSG01Y.cpy | — | component spec |
-| FR-S11-19 | Sign-on required | Entry without session (`EIBCALEN = 0`) | Routed to sign-on | COBIL00C | :107-109 | S01-B6 | route guard spec (`authGuard`), API `[Authorize]` (integration 401) |
-| FR-S11-20 | Pre-selected account | First entry with `CDEMO-CB00-TRN-SELECTED` populated | Acct ID pre-filled and ENTER processing performed immediately | COBIL00C | :112-122 | S11-B5 | component spec (`?accountId=`) |
+| FR-S11-16 | Exit | PF3 | Return to the calling screen (main menu) | COBIL00C | :128-134, :273-284 | S11-B4 | UI test |
+| FR-S11-17 | Clear | PF4 | Acct ID, balance, confirm and message cleared, cursor Acct ID; no server call | COBIL00C | :135-136, :552-566 | — | UI test |
+| FR-S11-18 | Invalid key | Any AID other than ENTER/PF3/PF4 | `Invalid key pressed. Please see below...`, screen redisplayed unchanged | COBIL00C | :137-140; CSMSG01Y.cpy | — | UI test |
+| FR-S11-19 | Sign-on required | Entry without session (`EIBCALEN = 0`) | Routed to sign-on | COBIL00C | :107-109 | S01-B6 | UI session-guard test (`/bill-payment` → `/signon` redirect), API 401 (integration) |
+| FR-S11-20 | Pre-selected account | First entry with `CDEMO-CB00-TRN-SELECTED` populated | Acct ID pre-filled and ENTER processing performed immediately | COBIL00C | :112-122 | S11-B5 | UI test (`?accountId=`) |
 
 ## 5. Validation and error catalogue
 | Message | Trigger | Cite | Blocking? | Cursor | Resulting state |
@@ -96,8 +101,8 @@ Pseudo-conversational RETURN TRANSID (:144-147); COMMAREA copy / `CDEMO-PGM-REEN
 - FR-S11-20: Given `/bill-payment?accountId=00000000001`, When the screen opens, Then Acct ID is pre-filled and ENTER processing has run (balance/prompt shown).
 
 ## 9. Traceability matrix
-FR-S11-01..15 → COBIL00C → `CardDemo.Application.BillPayment.BillPaymentService` → `CardDemo.Tests/BillPayment/BillPaymentServiceTests.cs` (unit, all FRs) + `CardDemo.Tests/BillPayment/BillPaymentIntegrationTests.cs` (Testcontainers Postgres: FR-S11-04, 07, 08, 09, 10, 11, 12, 13, 15, 19).
-FR-S11-01..03, 06..08, 12, 16..18, 20 (UI-owned rendering / keys) → `frontend/src/app/bill-payment/bill-payment.component.spec.ts`; FR-S11-19 → `frontend/src/app/app.routes.ts` (`authGuard`) + `MenuApiIntegrationTests`-style 401 check.
+FR-S11-01..15 → COBIL00C → `com.carddemo.service.BillingService` → `spring-boot/src/test/java/com/carddemo/service/BillingServiceTest.java` (unit, all FRs) + `spring-boot/src/test/java/com/carddemo/BillingIntegrationTest.java` (Testcontainers Postgres: FR-S11-04, 07, 08, 09, 10, 11, 12, 13, 15, 19).
+FR-S11-01..03, 06..08, 12, 16..18, 20 (UI-owned rendering / keys) → `spring-boot/src/test/java/com/carddemo/BillPaymentUiIntegrationTest.java` (MockMvc over `bill-payment.html`); FR-S11-19 → `SecurityConfig` session guard (UI redirect + API 401 integration check).
 
 ## 10. Program index
 | Program | Transaction | Map/Mapset | Files | Program FR doc |

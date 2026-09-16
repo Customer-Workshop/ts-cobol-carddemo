@@ -59,4 +59,4 @@ Owns listing, filtering, paging, selection edits, messaging and hand-off context
 SEND/RECEIVE plumbing, COMMAREA copy, AID copybook, header date/time formatting, attribute bytes, dead `'*'` marker branch (`:757-759`), `WS-CA-LAST-CARD-NUM` value after ENDFILE (never consumed).
 
 ## 10. Traceability
-COCRDLIC-01..23 ↔ FR-S04-01..23 ↔ `CardListServiceTests`, `CardListIntegrationTests`, `card-list.component.spec.ts`.
+COCRDLIC-01..23 ↔ FR-S04-01..23 ↔ `CardListServiceTest`, `CardListIntegrationTest`, `CardListUiIntegrationTest` (all under `spring-boot/src/test/java/com/carddemo/`).

@@ -43,11 +43,11 @@ Outputs: CURBALO X(14), ERRMSGO X(78) (RED default, GREEN on success :525), curs
 Sequence in PROCESS-ENTER-KEY (:154-244): Acct ID mandatory → confirm value edit (Y/y → confirmed; N/n → clear+stop; blank → lookup only; other → error) → account READ UPDATE → balance edit to CURBAL → balance ≤ 0 stop → confirmed ? (xref → last id + 1 → build → WRITE → subtract → REWRITE) : confirmation prompt. Blank/low-values are equivalent for both inputs (:159, :181-182). Acct ID has no numeric/length edit (:170).
 
 ## 6. Data access and boundaries
-- ACCTDAT read-for-update + rewrite (S11-B2): `IBillPaymentRepository.GetAccountForUpdateAsync` (`SELECT … FOR UPDATE`) + `UpdateAccountAsync` in one DB transaction.
-- CXACAIX first-record read (reuse shared `ICardXrefRepository.GetFirstByAccountIdAsync`, ordered by card number).
-- TRANSACT last-key + write (S11-B1/B3): `GetLastTransactionIdAsync` (`MAX(tran_id)`), `AddTransactionAsync`.
-- Clock (S11-B6): `TimeProvider`.
-- Outbound XCTLs to `COSGN00C`/`COMEN01C` are S-01 seams (`authGuard`, `/menu`).
+- ACCTDAT read-for-update + rewrite (S11-B2): `AccountRepository` `SELECT … FOR UPDATE` (`@Lock(PESSIMISTIC_WRITE)`) + `save` in one `@Transactional` scope.
+- CXACAIX first-record read (reuse shared `CardXrefRepository` first-by-account finder, ordered by card number).
+- TRANSACT last-key + write (S11-B1/B3): `TransactionIdGenerator` (`findTopByOrderByTranIdDesc` + 1), `TransactionRepository.save`.
+- Clock (S11-B6): `java.time.Clock` injected into `BillingService`.
+- Outbound XCTLs to `COSGN00C`/`COMEN01C` are S-01 seams (server-session guard, `/menu`).
 
 ## 7. Error and edge behavior
 - Invalid confirm value is rejected before any file access; the previously displayed balance stays on screen because CURBAL is FSET and echoed by RECEIVE.
@@ -63,4 +63,4 @@ Menu integration (route registry flag for option 10) and the S-01 shell programs
 RETURN TRANSID loop (:144-147); COMMAREA copy (:111); header population (:321-338); SEND/RECEIVE MAP plumbing (:289-314); RESP DISPLAY diagnostics; STARTBR/ENDBR plumbing; unused `CDEMO-CB00-TRNID-FIRST/LAST/PAGE-NUM/NEXT-PAGE-FLG/TRN-SEL-FLG` (:63-71).
 
 ## 10. Traceability
-COBIL00C-01..20 → FR-S11-01..20 → `BillPaymentService` / `BillPaymentController` / `BillPaymentComponent` → `BillPaymentServiceTests`, `BillPaymentIntegrationTests`, `bill-payment.component.spec.ts`.
+COBIL00C-01..20 → FR-S11-01..20 → `BillingService` / `BillingController` / `bill-payment.html` (`ui/`) → `BillingServiceTest`, `BillingIntegrationTest`, `BillPaymentUiIntegrationTest` (all under `spring-boot/src/test/java/com/carddemo/`).

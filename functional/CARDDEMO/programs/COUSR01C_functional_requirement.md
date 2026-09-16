@@ -26,7 +26,7 @@ Outputs: ERRMSG X(78) (green on success), cleared fields after a successful add;
 Blank = `SPACES OR LOW-VALUES` on each input (`:118-147`); no format, length or domain check on USRTYPE beyond non-blank (hint text `A=Admin, U=User` only). No upper-casing. Record fields copied verbatim (`:154-158`).
 
 ## 6. Data access and boundaries
-USRSEC WRITE keyed by SEC-USR-ID (`:240-248`). Boundary S12-B1: target `UserType` enum admits only A/U — other codes fall into the OTHER path message. Password stored hashed (approved S-01 deviation).
+USRSEC WRITE keyed by SEC-USR-ID (`:240-248`). Boundary S12-B1: `users.user_type` CHECK admits only A/U — other codes fall into the OTHER path message. Password stored as typed, plaintext-compatible (`UsrsecPlaintextPasswordEncoder`, S-01 STOP C decision matching the USRSEC fixture).
 
 ## 7. Error and edge behavior
 DUPKEY/DUPREC → `User ID already exist...` (`:260-266`); OTHER → `Unable to Add User...` (`:267-273`). Footer advertises `F12=Exit` but PF12 is handled as an invalid key (`:98-102`).
@@ -38,4 +38,4 @@ No outbound XCTL other than the return to COADM01C.
 Header population, SEND/RECEIVE, RETURN TRANSID (`:107-110`), `DISPLAY 'RESP:'`, cursor `-1` moves.
 
 ## 10. Traceability
-COUSR01C-01..07 ↔ FR-S12-17..23 ↔ `UserAdminServiceTests` (Add*), `UserAdminIntegrationTests`, `user-add.component.spec.ts`.
+COUSR01C-01..07 ↔ FR-S12-17..23 ↔ `UserAdminServiceTest` (Add*), `UserAdminIntegrationTest`, `UserAddUiIntegrationTest` (all under `spring-boot/src/test/java/com/carddemo/`).

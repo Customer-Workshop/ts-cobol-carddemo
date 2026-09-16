@@ -33,7 +33,7 @@ Outputs: populated fields after fetch (`:166-171`), ERRMSG X(78) (neutral prompt
 Fetch clears the four editable fields before READ (`:158-163`). Save re-reads the record (READ UPDATE `:322-331`) and compares FNAME/LNAME/PASSWD/USRTYPE to the stored values, setting USR-MODIFIED when any differs (`:219-234`); only then REWRITE (`:236-237`). USERID is the key and is not updatable.
 
 ## 6. Data access and boundaries
-USRSEC READ UPDATE + REWRITE. Boundary S12-B2: the stored password is hashed, so the fetch cannot echo it (`:168` in source) — target returns blank PASSWD; "modified" for the password = supplied value does not verify against the stored hash. S12-B1 applies to USRTYPE codes outside A/U (`Unable to Update User...`). S12-B4: caller return via `from` route param.
+USRSEC READ UPDATE + REWRITE. Boundary S12-B2 (re-decided for the Java engagement): passwords are stored plaintext-compatible (`UsrsecPlaintextPasswordEncoder`), so the fetch echoes the stored password into a `type=password` input (`:168` parity) and "modified" for the password = byte-wise compare vs stored — full source parity, superseding the .NET-era hashing deviation. S12-B1 applies to USRTYPE codes outside A/U (`Unable to Update User...`). S12-B4: caller return via `from` route param.
 
 ## 7. Error and edge behavior
 READ NOTFND / OTHER (`:340-352`); REWRITE NOTFND / OTHER (`:377-389`). PF3 performs UPDATE-USER-INFO and then RETURN-TO-PREV-SCREEN unconditionally (`:112-119`): whatever UPDATE-USER-INFO sent (validation message, `Please modify to update ...`, success) is superseded by the XCTL, so PF3 always leaves the screen; a valid change is saved, an invalid one is silently dropped. The target reproduces this: PF3 issues the save command and navigates back regardless of the outcome.
@@ -45,4 +45,4 @@ Returns to COUSR00C or COADM01C only.
 Header population, SEND/RECEIVE, RETURN TRANSID (`:135-138`), `DISPLAY 'RESP:'`, cursor `-1` moves.
 
 ## 10. Traceability
-COUSR02C-01..13 ↔ FR-S12-24..36 ↔ `UserAdminServiceTests` (FetchForUpdate*/Update*), `UserAdminIntegrationTests`, `user-update.component.spec.ts`.
+COUSR02C-01..13 ↔ FR-S12-24..36 ↔ `UserAdminServiceTest` (FetchForUpdate*/Update*), `UserAdminIntegrationTest`, `UserUpdateUiIntegrationTest` (all under `spring-boot/src/test/java/com/carddemo/`).

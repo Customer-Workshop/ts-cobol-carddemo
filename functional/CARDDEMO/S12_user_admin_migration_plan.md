@@ -1,61 +1,116 @@
 # S-12 User Admin — Migration Plan (`!mf_stream_migration_plan`)
 
-Status: complete (2026-09-02). Inputs: `S12_user_admin_analysis.md`, `S12_functional_requirement.md`, target state `CardDemo_target_state.md`, S-01 shell (`S01_SignonMenu_migration_plan.md`).
+> Java-engagement rewrite (2026-09-15): this plan supersedes the .NET plan for this stream. Structure and
+> conventions follow `S01_SignonMenu_migration_plan.md`; the target stack is the confirmed Java 21 / Spring Boot
+> 3.4.5 / Thymeleaf / PostgreSQL 16 baseline, not an assumed one.
+
+Inputs: [S12_user_admin_analysis.md](S12_user_admin_analysis.md), [S12_functional_requirement.md](S12_functional_requirement.md), [CardDemo_target_state.md](CardDemo_target_state.md), S-01 conventions ([S01_SignonMenu_migration_plan.md](S01_SignonMenu_migration_plan.md)).
 
 ## 1. Goal and scope
-Migrate COUSR00C/01C/02C/03C (CU00–CU03) to the .NET 8 + Angular 18 target on top of the S-01 shell and the shared data layer (`468e17d`), with source-derived parity for every FR-S12-01..40. The route registry flags for admin options 01–04 remain disabled; the integration stage flips them.
+Port COUSR00C/COUSR01C/COUSR02C/COUSR03C (transactions CU00–CU03) to the Java target with source parity for
+FR-S12-01..40. Four programs, one wave (leaf-first implementation order: COUSR01C, COUSR02C/03C, COUSR00C).
+
+**Baseline position (FACT, verified this engagement):** `spring-boot` already contains REST CRUD:
+`AdminUserController` `GET/POST /api/admin/users` + `PUT/DELETE /api/admin/users/{userId}` +
+`AdminUserService` over `SecurityUserRepository`; the admin gate exists (`SecurityConfig`: `/admin/**` and
+`/api/admin/**` require `ROLE_ADMIN`; `SecurityUserDetailsService` maps `user_type 'A'` → `ROLE_ADMIN`).
+`MenuService` `UI_ROUTES` points COUSR00C/COUSR01C at `/api/admin/users`. Parity gaps the wave closes:
+keyed browse (USRID-FIRST/LAST anchors, page number, NEXT-PAGE flag, look-ahead/look-behind) instead of
+offset paging; no upper-casing of id/password (baseline normalises — the source stores as typed);
+search-key restart; U/D row-selection dispatch with `from` context (S12-B4); fetch-then-act two-step
+update/delete (baseline PUT/DELETE are single-call); `Please modify to update ...` no-change check;
+PF3/PF4/PF5/PF12 AID semantics; verbatim message set (baseline adds a non-source `USER_TYPE_INVALID`
+message and uses a `confirmation` param instead of the PF5 flow); the four Thymeleaf screens.
+
+**S01-B5 closure (deferred single-writer decision — DECIDED this stream):** user CRUD writes go to
+PostgreSQL `users` — the baseline already does this and no coexistence path is needed for a demo fixture.
+USRSEC remains seed-only: `DataSeeder` imports `app/data/ASCII/usrsec.txt` into `users` at startup, and
+`UsersSeedParityIntegrationTest` continues to guard the fixture (row count + per-key compare for
+ADMIN001–005/USER0001–005). The orchestrator records this decision in `.migration/06_decisions.md`
+(off-limits to this child); this plan is the authoritative write-up for S-12.
 
 ## 2. Target-state mapping
-| Source | Target |
-|---|---|
-| USRSEC KSDS | existing `users` table (`CardDemoDbContext`, S-01 wave 1); no schema change |
-| STARTBR/READNEXT/READPREV | `IUserRepository.BrowseForwardAsync(startKey, inclusive, pageSize)` / `BrowseBackwardAsync(beforeKey, pageSize)` — `KeyedPage<User>` (same idiom as `ICardRepository.BrowseAsync`) |
-| WRITE / REWRITE / DELETE | `IUserRepository.AddAsync` (duplicate → `false`) / `UpdateAsync` (missing → `false`) / `DeleteAsync` (missing → `false`) |
-| COUSR00C..03C paragraphs | `CardDemo.Application/UserAdmin/UserAdminService` — one method per COBOL paragraph, returns outcome records with exact messages |
-| CU00..CU03 transactions | `UserAdminController` under `/api/v1/admin/users`: `POST list`, `POST add`, `POST update/fetch`, `POST update`, `POST delete/fetch`, `POST delete`; every action answers 200 with `{outcome, message, severity, ...}` (the screen is always re-sent in the source); admin-only via JWT `userType` claim (403 otherwise, S-01 idiom) |
-| COMMAREA CU00 paging state | request/response fields `pageNum`, `nextPage`, `firstUserId`, `lastUserId` held by the Angular list component (client-side COMMAREA) |
-| COMMAREA `CDEMO-CU02/03-USR-SELECTED` + `CDEMO-FROM-PROGRAM` | route query params `userId`, `from` on `/admin/users/update` and `/admin/users/delete` |
-| BMS maps COUSR0A..3A | standalone components `user-list`, `user-add`, `user-update`, `user-delete` under `frontend/src/app/user-admin/` with `maxlength` = BMS field lengths, 78-char message area, PF-key handling via `user-admin-screen.ts` (`functionKeyOf`, per-screen EVALUATE EIBAID) reusing the shared invalid-key message from `shared/invalid-key.ts` |
-| ERRMSG colour (red/green/neutral) | `severity`: `error` / `success` / `neutral` |
+Profiles applied: **CORE + ONLINE + DATA/BOUNDARY** from `CardDemo_target_state.md`.
 
-## 3. Boundary decision table
-| ID | Mode | Decision |
-|---|---|---|
-| S12-B1 user type domain | CONSTRAIN | Keep shared `UserType` enum. Non-A/U code → write failure surfaced as `Unable to Add User...` / `Unable to Update User...` (source OTHER path). No new message. |
-| S12-B2 password compare/echo | ADAPT (approved hashing deviation) | Fetch returns blank password; update treats password as modified iff it does not verify against the stored hash; passwords hashed with the S-01 `IPasswordHashingService`. |
-| S12-B3 stale rows | SIMPLIFY | Render exactly the returned rows. |
-| S12-B4 caller return | ADAPT | `from` query param (`COUSR00C` when navigated from the list); PF3 returns to `/admin/users` when `from=COUSR00C`, else `/admin`. |
-| S12-B5 admin gate | ADAPT | API 403 for non-admin JWT; Angular routes under `adminGuard`. |
+| Legacy | Target |
+|---|---|
+| CU00–CU03, pseudo-conversational COMMAREA | `GET/POST /api/admin/users`, `PUT/DELETE /api/admin/users/{userId}` + Thymeleaf screens under `/admin/users` (list/add/update/delete) via `com.carddemo.ui`; server-session + `ROLE_ADMIN` |
+| STARTBR/READNEXT/READPREV/ENDBR USRSEC | additive `SecurityUserRepository` browse verbs: forward (`user_id >= key`, limit 11 for look-ahead), backward (`user_id < key` desc, limit 11); read-only |
+| WRITE/REWRITE/DELETE USRSEC | `SecurityUserRepository.save`/`deleteById` inside service transactions; 23505 duplicate → `User ID already exist...` |
+| XCTL COUSR02C/COUSR03C from COUSR00C | `ui/` redirects to `/admin/users/update?userId=&from=list` / `/admin/users/delete?userId=&from=list` (S12-B4) |
+| XCTL COADM01C (PF3/PF12/exit) | redirect `/admin/menu` |
+| Maps COUSR0A–COUSR3A | `templates/user-list.html`, `user-add.html`, `user-update.html`, `user-delete.html` on `layout.html`; verbatim footers (`ENTER=Continue F3=Back F7=Backward F8=Forward`; `ENTER=Add User F3=Back F4=Clear F12=Exit`; `ENTER=Fetch F3=Save&Exit F4=Clear F5=Save F12=Cancel`; `ENTER=Fetch F3=Back F4=Clear F5=Delete`) |
+| AID keys | `aid` field: ENTER/PF3/PF4/PF5/PF12 per program; unmapped → `Invalid key pressed. Please see below...` |
+| PASSWD DRK fields | `type=password` inputs; update fetch echoes the stored password (S12-B2 plaintext parity) |
+| COMMAREA `CDEMO-CU00-*` / `CDEMO-CU0n-USR-SELECTED` | `pageState` (first/last anchors, page num, next flag) + `userId`/`from` params round-tripped per request |
+
+## 3. Boundary decision table (decide mode over S12-B1..B5 + S01-B5 closure)
+| ID | Class | Decision | Seam in target | Error/idempotency | Owner | Lead-time request | Routing point / cutover |
+|---|---|---|---|---|---|---|---|
+| S12-B1 | domain constraint | **DECIDED** — keep `user_type` CHECK ('A','U'); out-of-domain value fails the write (constraint violation) → source OTHER-path message (`Unable to Add User...`/`Unable to Update User...`); no new message | `AdminUserService` maps `DataIntegrityViolationException` on save to the verbatim message | write fails atomically; nothing persisted | stream | none | n/a |
+| S12-B2 | field behaviour | **DECIDED (re-decided)** — plaintext storage permits full parity: fetch echoes stored password into a `type=password` input; "modified" = byte-wise compare vs stored | `AdminUserService` fetch-for-update returns `password`; update compares fields incl. password | read-only fetch; compare in service | stream | none | supersedes .NET hash deviation; flagged if hardening reintroduces hashing |
+| S12-B3 | display artifact | **DECIDED — parity of data, not the artifact**: render exactly the rows returned (empty/partial) with the same message + page number | `user-list.html` renders the returned row set; no retained rows | read-only, idempotent | stream | none | n/a |
+| S12-B4 | XCTL in-stream | **DECIDED** — `from` route param carries caller (`list`/`admin menu`); `userId` param drives immediate fetch (CDEMO-CU0n-USR-SELECTED parity) | `ui/` controller entry params → service fetch path | navigation only; idempotent | stream | none | cutover at wave merge |
+| S12-B5 | auth gate | **DECIDED** — `SecurityConfig` `/admin/**`, `/api/admin/**` → `ROLE_ADMIN` (403 otherwise); S-01 admin-menu gate retained; programs themselves stay ungated per source | existing `SecurityConfig` + `SecurityUserDetailsService` role mapping | n/a | stream | none | already enforced in baseline |
+| S01-B5 | data-writer ownership (deferred from S-01) | **DECIDED — closed**: Postgres `users` is the single writer for user CRUD; USRSEC is seed-only input to `DataSeeder`; no dual-write, no read-back | `SecurityUserRepository` write path (already live); `UsersSeedParityIntegrationTest` guards the fixture | CRUD writes commit in service transactions | stream (recorded here; orchestrator logs in `.migration/06_decisions.md`) | none | closed at wave merge |
 
 ## 4. Data and persistence
-No migration. Ordering for browse: `ORDER BY user_id` with `string.CompareTo` (Npgsql → text comparison). Sample USRSEC ids are upper-case alphanumerics, so collation ordering equals VSAM byte order. Password hash column is unbounded text.
+No schema change expected. `users` (`user_id varchar(8) PK`, `first_name varchar(20)`,
+`last_name varchar(20)`, `password varchar(8)`, `user_type varchar(1) CHECK IN ('A','U')`) exists from V1
+and supports keyed browse in both directions; fixture ids are upper-case ASCII so `ORDER BY user_id`
+matches VSAM key order. **Reserved Flyway range V200x (V2000–V2009)** — ALTER only if a genuine gap
+appears; otherwise untouched.
 
-## 5. Waves
-1. COUSR01C add (leaf) — repository `AddAsync`, `AddAsync` service, `/add`, `UserAddComponent`.
-2. COUSR02C/COUSR03C (leaves) — `UpdateAsync`/`DeleteAsync`, fetch/update/delete service methods, `UserUpdateComponent`, `UserDeleteComponent`.
-3. COUSR00C list — browse repository methods, `ListAsync`, `UserListComponent` with selection → update/delete navigation.
+## 5. Phase 0 scaffolding deltas
+**None.** Reuses the S-01 shell: `layout.html`/`carddemo.css`, `UiController` aid idiom, `SecurityConfig`
+admin seam, `MenuService` registry, `CobolMessages`, Flyway/Testcontainers CI.
 
-All waves delivered in the single stream branch `devin/batch-a-s12-user-admin`.
+## 6. Waves (from analysis DAG, leaf-first; one child session per wave, sequential)
+| Wave | Programs/seams | Repo area | Consumes FR docs | Boundary seams | Strict edge to next |
+|---|---|---|---|---|---|
+| 1 | COUSR01C → COUSR02C + COUSR03C → COUSR00C (leaf-first order, one wave): `AdminUserService`/`AdminUserController` parity extension; keyed browse verbs on `SecurityUserRepository`; `ui/` controllers + `user-list`/`user-add`/`user-update`/`user-delete` templates; `CobolMessages` verbatim additions; `UI_ROUTES` flips for COUSR00C/01C/02C/03C to `/admin/users*` | `spring-boot` (single repo) | `programs/COUSR00C_functional_requirement.md`, `COUSR01C`, `COUSR02C`, `COUSR03C` | S12-B1..B5, S01-B5 closure | none |
 
-## 6. Per-program FR generation
-`programs/COUSR00C_functional_requirement.md`, `COUSR01C_…`, `COUSR02C_…`, `COUSR03C_…` — same template as S-01 (identity, trigger contract, I/O, owned FRs with cites, rules, data/boundaries, errors, hard stop, demoted mechanics, traceability).
+## 7. Per-program FR generation
+The four program FR docs already exist and are updated to Java target refs in this artifact set — no
+generation step needed.
 
-## 7. Testing and verification
-- Unit (`CardDemo.Tests/UserAdmin/UserAdminServiceTests.cs`): in-memory `IUserRepository` double, every FR with a message or outcome, store-error paths via a throwing double.
-- Integration (`UserAdminIntegrationTests.cs`, Testcontainers `postgres:16`): add/duplicate, fetch/update/no-change/not-found, delete, forward/backward paging over 12+ seeded users, search-beyond-end.
-- API (`UserAdminApiIntegrationTests.cs`, `WebApplicationFactory`): admin vs regular vs anonymous access on `/api/v1/admin/users/*`.
-- Frontend specs per component: field lengths, display of backend messages with severity (blank-field validation is backend-owned; the UI renders the returned message), PF3/PF4/PF5/PF7/PF8/PF12 handling, invalid-key parity, selection precedence, navigation with `userId`/`from`, auto-fetch on entry.
-- Commands: `dotnet test backend/CardDemo.slnx`, `npx ng test --watch=false --browsers=ChromeHeadless`, `npm run build` (frontend/).
+## 8. Testing and verification
+- Unit: `spring-boot/src/test/java/com/carddemo/service/UserAdminServiceTest.java` — fake repository;
+  every FR-S12 row (edit order, modified-check, AID branches).
+- Integration: `spring-boot/src/test/java/com/carddemo/UserAdminIntegrationTest.java` — Testcontainers
+  Postgres seeded from `app/data/ASCII/usrsec.txt`; browse/paging both directions, duplicate add →
+  `User ID already exist...`, delete, 401/403 seams; `UserAdminApiIntegrationTest` for the REST surface.
+- UI: `UserListUiIntegrationTest`, `UserAddUiIntegrationTest`, `UserUpdateUiIntegrationTest`,
+  `UserDeleteUiIntegrationTest` — MockMvc over the four screens; footers, AID, messages, password echo,
+  `from`/`userId` prefill.
+- `UsersSeedParityIntegrationTest` keeps guarding the USRSEC→`users` fixture (unchanged).
+- Stream e2e: admin menu → option 01 (list) → select `U`/`D` → update/delete screens → PF3 back; option 02
+  (add); PF7/PF8 paging.
+- Optional `!mf_online_ui_testing` recorded pass (UI-bearing stream).
+- CI: `mvn -q clean verify` green on the wave PR.
 
-## 8. Sign-off gate
-Stream branch pushed; no PR; `.migration/` untouched; report to the orchestrator with FR ids, test counts, boundaries S12-B1..B5 and the S12-B2 deviation.
+## 9. Sign-off gate
+`!mf_stream_signoff` over FR-S12-01..40 acceptance criteria: every row covered by a green test; verbatim
+messages byte-equal (incl. `Unable to Update User...` on COUSR03C DELETE error); admin gate enforced;
+menu flags flipped; S01-B5 closure recorded.
 
-## 9. Risks
-- Hash-based "modified" detection means an operator retyping the same password with different case (source: byte compare, case-sensitive) is treated as changed only if the hasher rejects it — identical to source since the hasher is case-sensitive.
-- Text collation vs byte order for ids containing lower-case or punctuation (S-12 never upper-cases). Sample data is not affected.
+## 10. Risks
+- COUSR03C DELETE OTHER path text `Unable to Update User...` preserved verbatim — flagged, not a bug.
+- Baseline `AdminUserService` upper-cases id/password and adds a non-source `USER_TYPE_INVALID` message —
+  superseded by this wave (store as typed; out-of-domain type rides the OTHER-path message); noted for the
+  wave owner.
+- S12-B2 parity now echoes stored passwords into a `type=password` input — secure presentation matches the
+  DRK field, but a future hardening decision that reintroduces hashing must re-open this boundary.
+- `user_id` browse order relies on all-upper-case ASCII fixture ids; documented, no collation work needed.
 
-## 10. Effort and sequencing
-Single session: docs → backend (repository, service, controller, tests) → frontend (4 components, specs, routes) → test runs → push.
+## 11. Effort and sequencing
+1 wave, one child session, single repo, single PR. No external lead times; sequenced after S-01 (done).
+The four programs ship together; implementation order inside the wave is leaf-first
+(COUSR01C → COUSR02C/03C → COUSR00C) so the list lands on already-migrated leaves.
 
 ## Validation
-All 40 FRs mapped to tests in §7; all five boundaries decided in §3; no `.migration/` edits.
+Waves match the analysis DAG (leaves + depth-1 dispatcher collapsed into the agreed single wave; internal
+leaf-first order preserved). Every FR-S12-01..40 is covered by wave 1. Every boundary — including the
+deferred S01-B5 — has decision, seam, owner, and cutover flag; no external lead-time requests required.
+Scaffolding deltas explicit (none — Phase 0 complete at S-01). Plan matches the ONLINE surface profile and
+cites it in §2. Shared programs: none ported on behalf of other streams.

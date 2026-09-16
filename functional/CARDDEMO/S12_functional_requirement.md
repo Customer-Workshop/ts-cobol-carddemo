@@ -2,12 +2,18 @@
 
 Status: complete (2026-09-02). Source of truth: `app/cbl/COUSR00C.cbl`, `COUSR01C.cbl`, `COUSR02C.cbl`, `COUSR03C.cbl`; maps `app/bms/COUSR00.bms`..`COUSR03.bms`; record `app/cpy/CSUSR01Y.cpy`; COMMAREA `app/cpy/COCOM01Y.cpy`; shared message `app/cpy/CSMSG01Y.cpy`. Line cites are `<PGM>.cbl:<from>-<to>` (bare `:n` = same program as the row).
 
+> Java-engagement note (2026-09-15): source-side requirements unchanged; target references below
+> were re-expressed for Java 21/Spring Boot (EF Core → Spring Data JPA, Angular → server-rendered
+> Thymeleaf web UI, /api/v1 → /api, JWT → server session, NUnit tests → JUnit/MockMvc) at this
+> engagement's STOP C. S12-B2 is re-decided: plaintext-compatible password storage (S-01 decision)
+> restores full echo/compare parity; the .NET-era hashing deviation is superseded.
+
 ## 1. Purpose and scope
 Administrative maintenance of the USRSEC security file: list/browse users (COUSR00C), add a user (COUSR01C), update a user (COUSR02C), delete a user (COUSR03C). In scope: the four programs, their screens, validations, messages, file access and PF-key behaviour. Out of scope: the admin menu that reaches them (S-01), sign-on (S-01), any other admin option.
 
 ## 2. Actors and preconditions
 - Actor: an administrator signed on through COSGN00C with `SEC-USR-TYPE = 'A'` and routed via COADM01C (options 01–04). The programs themselves do not check the user type; the target enforces the admin gate at the API and route level (S12-B5).
-- Precondition for every program: a populated COMMAREA. `EIBCALEN = 0` bounces to COSGN00C (`COUSR00C.cbl:110-112`, `COUSR01C.cbl:78-80`, `COUSR02C.cbl:90-92`, `COUSR03C.cbl:90-92`) — in the target this is the `authGuard` redirect to `/signin`.
+- Precondition for every program: a populated COMMAREA. `EIBCALEN = 0` bounces to COSGN00C (`COUSR00C.cbl:110-112`, `COUSR01C.cbl:78-80`, `COUSR02C.cbl:90-92`, `COUSR03C.cbl:90-92`) — in the target this is the server-session guard redirect to `/signon` (API → 401/403).
 
 ## 3. Surface specification
 ### User list COUSR0A (`app/bms/COUSR00.bms`)
@@ -58,7 +64,7 @@ USRIDIN X(8), FNAME X(20), LNAME X(20), USRTYPE X(1) (display), ERRMSG X(78). Fo
 | FR-S12-23 | Add | any other AID (incl. PF12 despite footer) | `Invalid key pressed. Please see below...` | COUSR01C | :98-102 | — | ui |
 | FR-S12-24 | Update | entry with `CDEMO-CU02-USR-SELECTED` populated (from COUSR00C) | that user is fetched immediately as if ENTER were pressed | COUSR02C | :96-105 | S12-B4 | ui |
 | FR-S12-25 | Update | ENTER with USRIDIN blank | `User ID can NOT be empty...` | COUSR02C | :146-151 | — | unit+ui |
-| FR-S12-26 | Update | ENTER, user found | FNAME/LNAME/USRTYPE populated (PASSWD blank in target, S12-B2); neutral `Press PF5 key to save your updates ...` | COUSR02C | :152-172, :334-339 | S12-B2 | unit+int |
+| FR-S12-26 | Update | ENTER, user found | FNAME/LNAME/USRTYPE populated; stored password echoed into the dark (password-masked) PASSWD field (S12-B2); neutral `Press PF5 key to save your updates ...` | COUSR02C | :152-172, :334-339 | S12-B2 | unit+int |
 | FR-S12-27 | Update | ENTER, user not found | `User ID NOT found...` | COUSR02C | :340-345 | — | unit+int |
 | FR-S12-28 | Update | READ other error | `Unable to lookup User...` | COUSR02C | :346-352 | — | unit |
 | FR-S12-29 | Update | PF5/PF3 save, validation | in order: USRIDIN → `User ID can NOT be empty...`; FNAME → `First Name can NOT be empty...`; LNAME → `Last Name can NOT be empty...`; PASSWD → `Password can NOT be empty...`; USRTYPE → `User Type can NOT be empty...` | COUSR02C | :180-209 | — | unit+ui |
@@ -112,7 +118,7 @@ USRIDIN X(8), FNAME X(20), LNAME X(20), USRTYPE X(1) (display), ERRMSG X(78). Fo
 - No upper-casing or trimming beyond BMS padding in any of the four programs.
 
 ## 7. Mechanics (demoted, cited)
-Header population (`POPULATE-HEADER-INFO`), map SEND/RECEIVE with ERASE/CURSOR, `EXEC CICS RETURN TRANSID`, `DISPLAY 'RESP:'` diagnostics, COMMAREA copy in/out, ENDBR, `-1` cursor-length moves. Not requirements; realised by the HTTP/JSON transport and Angular focus handling.
+Header population (`POPULATE-HEADER-INFO`), map SEND/RECEIVE with ERASE/CURSOR, `EXEC CICS RETURN TRANSID`, `DISPLAY 'RESP:'` diagnostics, COMMAREA copy in/out, ENDBR, `-1` cursor-length moves. Not requirements; realised by the HTTP transport and the Thymeleaf screens' focus handling.
 
 ## 8. Acceptance criteria (Given/When/Then) — one per FR
 - FR-S12-01: Given ≥11 users, When the list is entered, Then users 1–10 in key order, page 1, next-page available.
@@ -139,7 +145,7 @@ Header population (`POPULATE-HEADER-INFO`), map SEND/RECEIVE with ERASE/CURSOR, 
 - FR-S12-26/38: Given an existing id, When ENTER, Then names/type shown and the PF5 prompt message.
 - FR-S12-27/38: Given an unknown id, When ENTER, Then `User ID NOT found...`.
 - FR-S12-28: Given the store unavailable, When ENTER, Then `Unable to lookup User...`.
-- FR-S12-29: Given fetched user with PASSWD blank, When PF5, Then `Password can NOT be empty...`.
+- FR-S12-29: Given fetched user with the password field cleared, When PF5, Then `Password can NOT be empty...`.
 - FR-S12-30: Given fetched user, same names/type and the current password, When PF5, Then `Please modify to update ...` and no write.
 - FR-S12-31: Given a changed last name, When PF5, Then the store reflects it and `User <id> has been updated ...`.
 - FR-S12-32: Given the user deleted meanwhile, When PF5, Then `User ID NOT found...`.
@@ -148,11 +154,11 @@ Header population (`POPULATE-HEADER-INFO`), map SEND/RECEIVE with ERASE/CURSOR, 
 - FR-S12-40: Given the delete screen, When PF3 / PF12 / PF4 / F6, Then caller / admin menu / cleared form / invalid-key message.
 
 ## 9. Traceability matrix
-FR-S12-01..16 → COUSR00C → `UserAdminService.ListAsync` (+ `UserListComponent`) → `UserAdminServiceTests` / `UserAdminIntegrationTests` / `user-list.component.spec.ts`.
-FR-S12-17..23 → COUSR01C → `UserAdminService.AddAsync` (+ `UserAddComponent`) → same test files / `user-add.component.spec.ts`.
-FR-S12-24..36 → COUSR02C → `UserAdminService.FetchForUpdateAsync` / `UpdateAsync` (+ `UserUpdateComponent`) → `user-update.component.spec.ts`.
-FR-S12-37..40 → COUSR03C → `UserAdminService.FetchForDeleteAsync` / `DeleteAsync` (+ `UserDeleteComponent`) → `user-delete.component.spec.ts`.
-API surface: `POST /api/v1/admin/users/list|add|update/fetch|update|delete/fetch|delete` (`UserAdminController`), admin-only (403 otherwise) — `UserAdminApiIntegrationTests`.
+FR-S12-01..16 → COUSR00C → `AdminUserService` list/browse verbs (+ `user-list.html`) → `spring-boot/src/test/java/com/carddemo/service/UserAdminServiceTest.java` / `UserAdminIntegrationTest.java` / `UserListUiIntegrationTest.java`.
+FR-S12-17..23 → COUSR01C → `AdminUserService` add verb (+ `user-add.html`) → same test files / `UserAddUiIntegrationTest.java`.
+FR-S12-24..36 → COUSR02C → `AdminUserService` fetch/update verbs (+ `user-update.html`) → `UserUpdateUiIntegrationTest.java`.
+FR-S12-37..40 → COUSR03C → `AdminUserService` fetch/delete verbs (+ `user-delete.html`) → `UserDeleteUiIntegrationTest.java`.
+API surface: `GET/POST /api/admin/users`, `PUT/DELETE /api/admin/users/{userId}` (`AdminUserController`), admin-only (403 otherwise) — `UserAdminApiIntegrationTest.java`. All under `spring-boot/src/test/java/com/carddemo/`.
 
 ## 10. Program index
 | Program | Role | FRs | Program FR doc |
@@ -163,8 +169,8 @@ API surface: `POST /api/v1/admin/users/list|add|update/fetch|update|delete/fetch
 | COUSR03C | user delete | FR-S12-37..40 | [programs/COUSR03C_functional_requirement.md](programs/COUSR03C_functional_requirement.md) |
 
 ## 11. Open questions and assumptions
-1. **Password storage (approved S-01 deviation, S12-B2)**: passwords are hashed; the update screen cannot echo the stored password, so PASSWD is returned blank on fetch and the operator must retype it (validation FR-S12-29 already requires it). "Unchanged" is decided by hash verification. Behavioural outcomes (`Please modify to update ...` vs `has been updated`) are preserved.
-2. **User type domain (S12-B1)**: the shared `UserType` enum admits only `A`/`U`. A value such as `X`, which the source would write verbatim, fails the write in the target and surfaces the source's OTHER-path message (`Unable to Add User...` / `Unable to Update User...`). No new message invented.
+1. **Password storage (S12-B2, re-decided this engagement)**: `users.password` stores the value as typed (plaintext-compatible `UsrsecPlaintextPasswordEncoder`, S-01 STOP C decision matching the USRSEC fixture). The update fetch echoes the stored password into a `type=password` input — the DRK-field equivalent — and "unchanged" is a byte-wise compare, exactly like the source's `PASSWDI NOT = SEC-USR-PWD`. Supersedes the .NET-era hashing deviation; flagged if a future hardening decision reintroduces hashing.
+2. **User type domain (S12-B1)**: `users.user_type` CHECK admits only `A`/`U`. A value such as `X`, which the source would write verbatim, fails the write in the target (constraint violation) and surfaces the source's OTHER-path message (`Unable to Add User...` / `Unable to Update User...`). No new message invented.
 3. **Stale rows (S12-B3)**: the target renders exactly the rows returned; the source's stale-row overlay on NOTFND/short backward pages is a BMS artifact.
 4. **COUSR03C DELETE error text** `Unable to Update User...` is preserved verbatim.
 5. **F12 on the add screen**: footer advertises `F12=Exit` but the program treats PF12 as an invalid key (`COUSR01C.cbl:98-102`); the target follows the program.
