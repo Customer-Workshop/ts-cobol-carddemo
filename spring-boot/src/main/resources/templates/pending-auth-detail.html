@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout :: layout('CardDemo', 'CPVD', 'COPAUS1C', ~{::content})}">
+<head>
+    <title>CardDemo</title>
+</head>
+<body>
+<div th:fragment="content" class="pending-auth-detail">
+    <div class="list-title-row">
+        <span class="list-title">View Authorization Details</span>
+    </div>
+    <form id="pending-auth-detail-form" method="post"
+          th:action="@{/ui/pending-auth/{acct}/{key}(acct=${screen.acctId}, key=${screen.authKey})}">
+        <div class="context-block">
+            <div class="form-row">
+                <span class="field-label">Card #:</span>
+                <span class="field-value" th:text="${screen.cardNum}"></span>
+                <span class="field-label">Auth Date:</span>
+                <span class="field-value" th:text="${screen.authDate}"></span>
+                <span class="field-label">Auth Time:</span>
+                <span class="field-value" th:text="${screen.authTime}"></span>
+            </div>
+            <div class="form-row">
+                <span class="field-label">Auth Resp:</span>
+                <span class="field-value"
+                      th:classappend="${screen.authRespDeclined} ? 'field-error' : 'resp-ok'"
+                      th:text="${screen.authResp}"></span>
+                <span class="field-label">Resp Reason:</span>
+                <span class="field-value" th:text="${screen.authReason}"></span>
+                <span class="field-label">Auth Code:</span>
+                <span class="field-value" th:text="${screen.authCode}"></span>
+            </div>
+            <div class="form-row">
+                <span class="field-label">Amount:</span>
+                <span class="field-value" th:text="${screen.amount}"></span>
+                <span class="field-label">POS Entry Mode:</span>
+                <span class="field-value" th:text="${screen.posEntryMode}"></span>
+                <span class="field-label">Source   :</span>
+                <span class="field-value" th:text="${screen.messageSource}"></span>
+            </div>
+            <div class="form-row">
+                <span class="field-label">MCC Code:</span>
+                <span class="field-value" th:text="${screen.mccCode}"></span>
+                <span class="field-label">Card Exp. Date:</span>
+                <span class="field-value" th:text="${screen.cardExpDate}"></span>
+                <span class="field-label">Auth Type:</span>
+                <span class="field-value" th:text="${screen.authType}"></span>
+            </div>
+            <div class="form-row">
+                <span class="field-label">Tran Id:</span>
+                <span class="field-value" th:text="${screen.transactionId}"></span>
+                <span class="field-label">Match Status:</span>
+                <span class="field-value" th:text="${screen.matchStatus}"></span>
+                <span class="field-label">Fraud Status:</span>
+                <span class="field-value" th:text="${screen.fraudStatus}"></span>
+            </div>
+            <div class="form-row">
+                <span class="field-value">Merchant Details ----------------------------------------------------</span>
+            </div>
+            <div class="form-row">
+                <span class="field-label">Name:</span>
+                <span class="field-value" th:text="${screen.merchantName}"></span>
+                <span class="field-label">Merchant ID:</span>
+                <span class="field-value" th:text="${screen.merchantId}"></span>
+            </div>
+            <div class="form-row">
+                <span class="field-label">City:</span>
+                <span class="field-value" th:text="${screen.merchantCity}"></span>
+                <span class="field-label">State:</span>
+                <span class="field-value" th:text="${screen.merchantState}"></span>
+                <span class="field-label">Zip:</span>
+                <span class="field-value" th:text="${screen.merchantZip}"></span>
+            </div>
+        </div>
+
+        <p class="error-line" th:text="${screen.message}"></p>
+        <p class="key-hints"> F3=Back  F5=Mark/Remove Fraud  F8=Next Auth</p>
+        <div class="form-actions">
+            <button type="submit" name="aid" value="PF3" formnovalidate>F3=Back</button>
+            <button type="submit" name="aid" value="PF5" formnovalidate>F5=Mark/Remove Fraud</button>
+            <button type="submit" name="aid" value="PF8" formnovalidate>F8=Next Auth</button>
+        </div>
+    </form>
+    <script>
+        // 3270 AID parity (COPAUS1C.cbl:183-194): F3 backs out, F5 toggles
+        // fraud, F8 moves to the next authorization.
+        document.addEventListener('keydown', function (event) {
+            if (/^F([1-9]|1[0-2])$/.test(event.key)) {
+                event.preventDefault();
+                var form = document.getElementById('pending-auth-detail-form');
+                var aid = document.createElement('input');
+                aid.type = 'hidden';
+                aid.name = 'aid';
+                aid.value = event.key === 'F3' ? 'PF3'
+                        : event.key === 'F5' ? 'PF5'
+                        : event.key === 'F8' ? 'PF8' : event.key;
+                form.appendChild(aid);
+                form.submit();
+            }
+        });
+    </script>
+</div>
+</body>
+</html>

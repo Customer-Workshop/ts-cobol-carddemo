@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout :: layout('CardDemo', 'CPVS', 'COPAUS0C', ~{::content})}">
+<head>
+    <title>CardDemo</title>
+</head>
+<body>
+<div th:fragment="content" class="pending-auth">
+    <div class="list-title-row">
+        <span class="list-title">View Authorizations</span>
+        <span class="page-number" th:if="${screen.pageNum > 0}">Page <span th:text="${screen.pageNum}">1</span></span>
+    </div>
+    <form id="pending-auth-form" method="post" th:action="@{/ui/pending-auth}">
+        <!-- CDEMO-CPVS-INFO COMMAREA round-trips as hidden inputs so the
+             server stays stateless between AID presses (S19-B8). -->
+        <input type="hidden" name="stateAcct" th:value="${pageState.acctId}">
+        <input type="hidden" name="pageNum" th:value="${pageState.pageNum}">
+        <input type="hidden" name="lastKey" th:value="${pageState.lastKey}">
+        <input type="hidden" name="nextPage" th:value="${pageState.nextPage}">
+        <input type="hidden" name="prevKey" th:each="key : ${pageState.prevPageKeys}" th:value="${key}">
+
+        <div class="form-row">
+            <label class="field-label" for="acctid">Enter Acct ID:</label>
+            <input id="acctid" name="acctid" type="text" maxlength="11" size="11"
+                   autocomplete="off" inputmode="numeric" th:value="${screen.acctIdInput}"
+                   autofocus>
+        </div>
+
+        <div class="context-block">
+            <div class="form-row">
+                <span class="field-label">Name:</span>
+                <span class="field-value" th:text="${screen.custName}"></span>
+                <span class="field-label">Customer Id:</span>
+                <span class="field-value" th:text="${screen.custId}"></span>
+            </div>
+            <div class="form-row">
+                <span class="field-label">Addr:</span>
+                <span class="field-value" th:text="${screen.addr1}"></span>
+                <span class="field-label">Acct Status:</span>
+                <span class="field-value" th:text="${screen.acctStatus}"></span>
+            </div>
+            <div class="form-row">
+                <span class="field-value" th:text="${screen.addr2}"></span>
+            </div>
+            <div class="form-row">
+                <span class="field-label">Phone:</span>
+                <span class="field-value" th:text="${screen.phone1}"></span>
+                <span class="field-label">Approval # :</span>
+                <span class="field-value" th:text="${screen.apprCnt}"></span>
+                <span class="field-label">Decline #:</span>
+                <span class="field-value" th:text="${screen.declCnt}"></span>
+            </div>
+            <div class="form-row">
+                <span class="field-label">Credit Lim:</span>
+                <span class="field-value" th:text="${screen.creditLimit}"></span>
+                <span class="field-label">Cash Lim:</span>
+                <span class="field-value" th:text="${screen.cashLimit}"></span>
+                <span class="field-label">Appr Amt:</span>
+                <span class="field-value" th:text="${screen.apprAmt}"></span>
+            </div>
+            <div class="form-row">
+                <span class="field-label">Credit Bal:</span>
+                <span class="field-value" th:text="${screen.creditBal}"></span>
+                <span class="field-label">Cash Bal:</span>
+                <span class="field-value" th:text="${screen.cashBal}"></span>
+                <span class="field-label">Decl Amt:</span>
+                <span class="field-value" th:text="${screen.declAmt}"></span>
+            </div>
+        </div>
+
+        <table class="card-rows">
+            <thead>
+                <tr>
+                    <th>Sel</th>
+                    <th> Transaction ID </th>
+                    <th>  Date  </th>
+                    <th>  Time  </th>
+                    <th>Type </th>
+                    <th>A/D</th>
+                    <th>STS</th>
+                    <th>   Amount   </th>
+                </tr>
+                <tr class="row-underline">
+                    <td>---</td>
+                    <td>----------------</td>
+                    <td>--------</td>
+                    <td>--------</td>
+                    <td>----</td>
+                    <td>---</td>
+                    <td>---</td>
+                    <td>------------</td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="row, stat : ${screen.rows}">
+                    <td>
+                        <input type="text" name="sel" maxlength="1" size="1"
+                               th:value="${row == null ? '' : row.select}" autocomplete="off"
+                               th:readonly="${row == null}">
+                        <input type="hidden" name="rowKey" th:value="${row == null ? '' : row.key}">
+                    </td>
+                    <td th:text="${row == null ? '' : row.transactionId}"></td>
+                    <td th:text="${row == null ? '' : row.date}"></td>
+                    <td th:text="${row == null ? '' : row.time}"></td>
+                    <td th:text="${row == null ? '' : row.type}"></td>
+                    <td th:text="${row == null ? '' : row.approveDecline}"></td>
+                    <td th:text="${row == null ? '' : row.matchStatus}"></td>
+                    <td th:text="${row == null ? '' : row.amount}"></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <p class="info-line">Type 'S' to View Authorization details from the list</p>
+        <p class="error-line" th:text="${screen.message}"></p>
+        <p class="key-hints">ENTER=Continue  F3=Back  F7=Backward  F8=Forward</p>
+        <div class="form-actions">
+            <button type="submit" name="aid" value="ENTER">ENTER=Continue</button>
+            <button type="submit" name="aid" value="PF3" formnovalidate>F3=Back</button>
+            <button type="submit" name="aid" value="PF7" formnovalidate>F7=Backward</button>
+            <button type="submit" name="aid" value="PF8" formnovalidate>F8=Forward</button>
+        </div>
+    </form>
+    <script>
+        // 3270 AID parity (COPAUS0C.cbl:221-252): F3 exits, F7/F8 page, and
+        // any other AID gets the invalid-key redisplay.
+        document.addEventListener('keydown', function (event) {
+            if (/^F([1-9]|1[0-2])$/.test(event.key)) {
+                event.preventDefault();
+                var form = document.getElementById('pending-auth-form');
+                var aid = document.createElement('input');
+                aid.type = 'hidden';
+                aid.name = 'aid';
+                aid.value = event.key === 'F3' ? 'PF3'
+                        : event.key === 'F7' ? 'PF7'
+                        : event.key === 'F8' ? 'PF8' : event.key;
+                form.appendChild(aid);
+                form.submit();
+            }
+        });
+    </script>
+</div>
+</body>
+</html>

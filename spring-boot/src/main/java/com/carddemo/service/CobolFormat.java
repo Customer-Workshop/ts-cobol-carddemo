@@ -51,6 +51,20 @@ public final class CobolFormat {
         return value.length() <= width ? value : value.substring(0, width);
     }
 
+    // PIC '-z...z9.99' — floating-minus, zero-suppressed integer, fixed two
+    // decimals, no grouping commas (WS-AUTH-AMT/WS-DISPLAY-AMT9/AMT12 in
+    // COPAUS0C.cbl:55-57; COPAUS1C.cbl WS-AUTH-AMT).
+    public static String editSuppressedAmount(BigDecimal value) {
+        if (value == null) {
+            return "";
+        }
+        String sign = value.signum() < 0 ? "-" : "";
+        BigDecimal magnitude = value.abs();
+        long integer = magnitude.setScale(0, RoundingMode.DOWN).longValue();
+        int cents = magnitude.remainder(BigDecimal.ONE).movePointRight(2).intValue();
+        return sign + integer + "." + "%02d".formatted(cents);
+    }
+
     // CUST-SSN X(9) -> nnn-nn-nnnn (COACTVWC.cbl:496-504; FR-S02-09).
     public static String ssn(Long value) {
         if (value == null) {

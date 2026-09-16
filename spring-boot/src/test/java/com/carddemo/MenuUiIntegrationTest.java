@@ -77,8 +77,7 @@ class MenuUiIntegrationTest {
                 .andExpect(content().string(containsString("11. Pending Authorization View")))
                 .andExpect(content().string(containsString("Please select an option :")))
                 .andExpect(content().string(containsString("name=\"option\"")))
-                .andExpect(content().string(containsString("ENTER=Continue  F3=Exit")))
-                .andExpect(content().string(containsString("not installed")));
+                .andExpect(content().string(containsString("ENTER=Continue  F3=Exit")));
     }
 
     @Test
@@ -120,14 +119,14 @@ class MenuUiIntegrationTest {
     }
 
     @Test
-    void pendingAuthorizationShowsNotInstalledMessage_frS0114() throws Exception {
+    void pendingAuthorizationRoutesToScreen_frS0114() throws Exception {
         MockHttpSession session = signon("USER0001", "PASSWORD", "/menu");
+        // S-19 flipped the catalogue flag: option 11 now resolves its UI
+        // route instead of the not-installed idiom.
         mockMvc.perform(post("/menu/select").session(session)
                         .param("aid", "ENTER").param("option", "11"))
-                .andExpect(status().isOk())
-                .andExpect(view().name("menu"))
-                .andExpect(model().attribute("message",
-                        "This option Pending Authorization View is not installed..."));
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/ui/pending-auth"));
     }
 
     @Test

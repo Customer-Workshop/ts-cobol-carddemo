@@ -263,6 +263,69 @@ public final class CobolMessages {
         return "Transaction added successfully.  Your Tran ID is " + tranId + ".";
     }
 
+    // COPAUS0C/COPAUS1C/COPAUS2C verbatim messages (S-19).
+    public static final String PENDING_AUTH_ACCT_REQUIRED = "Please enter Acct Id...";
+    public static final String PENDING_AUTH_ACCT_NUMERIC = "Acct Id must be Numeric ...";
+    public static final String PENDING_AUTH_LAST_AUTH =
+        "Already at the last Authorization...";
+    public static final String PENDING_AUTH_FRAUD_MARKED = "AUTH MARKED FRAUD...";
+    public static final String PENDING_AUTH_FRAUD_REMOVED = "AUTH FRAUD REMOVED...";
+    public static final String PENDING_AUTH_ADD_SUCCESS = "ADD SUCCESS";
+    public static final String PENDING_AUTH_UPDT_SUCCESS = "UPDT SUCCESS";
+
+    // COPAUS0C STRING messages (:833-960): RESP/RESP2 render as 9(09).
+    // NOTFND uses fixed RESP 13/REAS 0; store errors use the S02-B2 IOERR
+    // convention (RESP 17, RESP2 120) since a relational read has no RESP.
+    public static String pendingAuthXrefNotFound(String acctId) {
+        return "Account:" + acctId + " not found in XREF file. Resp:000000013"
+                + " Reas:000000000";
+    }
+
+    public static String pendingAuthAcctNotFound(String acctId) {
+        return "Account:" + acctId + " not found in ACCT file. Resp:000000013"
+                + " Reas:000000000";
+    }
+
+    public static String pendingAuthCustNotFound(String custId) {
+        return "Customer:" + custId + " not found in CUST file. Resp:000000013"
+                + " Reas:000000000";
+    }
+
+    public static String pendingAuthXrefError(String acctId) {
+        return "Account:" + acctId + " System error while reading XREF file."
+                + " Resp:000000017 Reas:000000120";
+    }
+
+    public static String pendingAuthAcctError(String acctId) {
+        return "Account:" + acctId + " System error while reading ACCT file."
+                + " Resp:000000017 Reas:000000120";
+    }
+
+    public static String pendingAuthCustError(String custId) {
+        return "Customer:" + custId + " System error while reading CUST file."
+                + " Resp:000000017 Reas:000000120";
+    }
+
+    // IMS DIBSTAT has no relational equivalent; a failed store read reports
+    // code 'EX' in place of the two-character status (COPAUS0C.cbl:476-514,
+    // COPAUS1C.cbl:455-485).
+    public static String pendingAuthSummaryError(String code) {
+        return " System error while reading AUTH Summary: Code:" + code;
+    }
+
+    public static String pendingAuthDetailsError(String code) {
+        return " System error while reading AUTH Details: Code:" + code;
+    }
+
+    public static String pendingAuthFraudTagError(String code) {
+        return " System error while FRAUD Tagging, ROLLBACK||" + code;
+    }
+
+    // COPAUS2C.cbl:206-213, :234-241 — SQLCODE/SQLSTATE text for the journal.
+    public static String pendingAuthDb2Error(String code, String state) {
+        return " SYSTEM ERROR DB2: CODE:" + code + ", STATE: " + state;
+    }
+
     // COUSR01C.cbl:255-258, COUSR02C.cbl:366-371, COUSR03C.cbl:319-324 —
     // 'User ' + SEC-USR-ID DELIMITED BY SPACE + ' has been <verb> ...'.
     public static String userAdded(String userId) {

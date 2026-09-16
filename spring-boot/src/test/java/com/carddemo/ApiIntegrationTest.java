@@ -93,8 +93,8 @@ class ApiIntegrationTest {
         mockMvc.perform(post("/api/menu/select").session(session)
                         .contentType(MediaType.APPLICATION_JSON).content("{\"option\":\"11\"}"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.implemented").value(false))
-                .andExpect(jsonPath("$.message").value(containsString("not installed")));
+                .andExpect(jsonPath("$.implemented").value(true))
+                .andExpect(jsonPath("$.endpoint").value("/api/pending-auth/{acctId}"));
 
         mockMvc.perform(get("/api/accounts/00000000001").session(session))
                 .andExpect(status().isOk())
@@ -384,7 +384,9 @@ class ApiIntegrationTest {
                 .andExpect(jsonPath("$.options[1].implemented").value(true))
                 .andExpect(jsonPath("$.options[9].endpoint").value("/api/billing/payments"))
                 .andExpect(jsonPath("$.options[9].implemented").value(true))
-                .andExpect(jsonPath("$.options[10].implemented").value(false));
+                .andExpect(jsonPath("$.options[10].endpoint")
+                        .value("/api/pending-auth/{acctId}"))
+                .andExpect(jsonPath("$.options[10].implemented").value(true));
         mockMvc.perform(get("/api/admin/menu").session(admin))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.options[0].endpoint").value("/api/admin/users"))
