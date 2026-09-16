@@ -9,7 +9,7 @@ parity pass, and sign-off under this engagement. Prior .NET-engagement statuses 
 
 | Stream | Type | Entry point | Status | Last update | Notes |
 |---|---|---|---|---|---|
-| S-01 Sign-on + menu shell | ONLINE | CC00/CM00/CA00 | sign-off pending (audit running) | 2026-09-16 | W1-W3 + UI evidence merged (PRs #100-103); UI test 10/10 pass; independent audit running; STOP E next |
+| S-01 Sign-on + menu shell | ONLINE | CC00/CM00/CA00 | signed off — STOP E awaiting merge auth | 2026-09-16 | Audit PASS w/ 4 LOW + 4 INFO findings (none blocking); 69 tests green; Postgres smoke live-verified; evidence in functional/CARDDEMO/evidence/s01/; sign-off+audit docs committed |
 | S-02 Account View | ONLINE | CAVW | baseline ported — pre-STOP C | 2026-09-15 | AccountController/AccountViewService in baseline |
 | S-03 Account Update | ONLINE | CAUP | baseline ported — pre-STOP C | 2026-09-15 | AccountUpdateController/Service in baseline |
 | S-04 Card List | ONLINE | CCLI | baseline ported — pre-STOP C | 2026-09-15 | CardController (list) in baseline |
