@@ -9,6 +9,8 @@ import com.carddemo.api.MenuSelectRequest;
 import com.carddemo.api.MenuSelectionResponse;
 import com.carddemo.api.TransactionAddScreen;
 import com.carddemo.api.TransactionCreateRequest;
+import com.carddemo.service.AccountViewScreen;
+import com.carddemo.service.AccountViewService;
 import com.carddemo.service.AuthService;
 import com.carddemo.service.MenuService;
 import com.carddemo.service.TransactionListService;
@@ -42,14 +44,17 @@ public class UiController {
 
     private final AuthService authService;
     private final MenuService menuService;
+    private final AccountViewService accountViewService;
     private final TransactionListService transactionListService;
     private final TransactionService transactionService;
 
     public UiController(AuthService authService, MenuService menuService,
+                        AccountViewService accountViewService,
                         TransactionListService transactionListService,
                         TransactionService transactionService) {
         this.authService = authService;
         this.menuService = menuService;
+        this.accountViewService = accountViewService;
         this.transactionListService = transactionListService;
         this.transactionService = transactionService;
     }
@@ -242,6 +247,50 @@ public class UiController {
             model.addAttribute("message", exception.getMessage());
         }
         return view;
+    }
+
+    // COACTVWC web surface (tran CAVW): view an account plus its customer.
+    // First display is the fixed prompt with an empty field
+    // (COACTVWC.cbl:353-360); the info line is always the prompt because
+    // WS-INFORM-OUTPUT is never SET in this program.
+    @GetMapping("/accounts/view")
+    public String accountView(@RequestParam(name = "returnUrl", required = false) String returnUrl,
+                              Model model) {
+        renderAccountView(model, accountViewService.initialScreen(), returnUrl);
+        return "account-view";
+    }
+
+    // AID handling (COACTVWC.cbl:306-352): PF3 exits to the caller
+    // (CDEMO-FROM-PROGRAM) or the main menu; S02-B1 — every other AID is
+    // forced to ENTER and re-submits. There is no invalid-key redisplay in
+    // this program.
+    @PostMapping("/accounts/view")
+    public String submitAccountView(
+            @RequestParam(name = "aid", defaultValue = "ENTER") String aid,
+            @RequestParam(name = "acctId", required = false) String acctId,
+            @RequestParam(name = "returnUrl", required = false) String returnUrl,
+            Model model) {
+        if ("PF3".equals(aid)) {
+            return "redirect:" + internalRoute(returnUrl);
+        }
+        renderAccountView(model, accountViewService.viewScreen(acctId), returnUrl);
+        return "account-view";
+    }
+
+    private void renderAccountView(Model model, AccountViewScreen screen, String returnUrl) {
+        model.addAttribute("screen", screen);
+        model.addAttribute("message", screen.errorMessage());
+        model.addAttribute("returnUrl", internalRoute(returnUrl));
+    }
+
+    // B-012: PF3 returns to the caller route — internal paths only, so an
+    // external returnUrl cannot redirect off-site; the fallback is the main
+    // menu (the only registry caller today).
+    private String internalRoute(String returnUrl) {
+        if (returnUrl != null && returnUrl.startsWith("/") && !returnUrl.startsWith("//")) {
+            return returnUrl;
+        }
+        return "/menu";
     }
 
     // COTRN02C web surface (tran CT02). The COMMAREA card lands as the

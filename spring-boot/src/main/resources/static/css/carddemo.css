@@ -141,6 +141,84 @@ body {
     color: #0f0;
 }
 
+/* CACTVWA (account view) — two-column 3270-style grid. */
+.account-view .view-title {
+    color: #ff0;
+    text-align: center;
+}
+
+.account-view .view-section {
+    color: #ff0;
+    margin: 1em 0 0.5em 0;
+    text-align: center;
+}
+
+.account-view .view-grid {
+    display: flex;
+    flex-direction: column;
+}
+
+.account-view .view-row {
+    display: flex;
+    min-height: 1.2em;
+}
+
+.account-view .view-cell {
+    flex: 0 0 50%;
+    white-space: pre;
+    min-width: 0;
+    overflow: hidden;
+}
+
+.account-view .name-labels,
+.account-view .name-values {
+    display: flex;
+    gap: 2ch;
+}
+
+.account-view .field-label {
+    white-space: pre;
+    color: #40e0d0;
+}
+
+.account-view .field-value {
+    white-space: pre;
+    color: #0f0;
+    text-decoration: underline;
+    text-decoration-color: #0f0;
+}
+
+.account-view input {
+    background: #000;
+    color: #0f0;
+    border: none;
+    border-bottom: 1px solid #0f0;
+    font: inherit;
+}
+
+.account-view input.field-red {
+    color: #f00;
+    border-bottom-color: #f00;
+}
+
+.account-view .info-line {
+    color: #40e0d0;
+    margin-top: 1.5em;
+}
+
+.account-view .key-hints {
+    color: #ff0;
+}
+
+.account-view .form-actions button {
+    background: #000;
+    color: #0f0;
+    border: 1px solid #0f0;
+    font: inherit;
+    margin-right: 1em;
+    cursor: pointer;
+}
+
 .tran-add .screen-title {
     color: #ff0;
     text-align: center;

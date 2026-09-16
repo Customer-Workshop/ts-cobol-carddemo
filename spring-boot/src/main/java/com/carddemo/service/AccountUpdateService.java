@@ -88,7 +88,7 @@ public class AccountUpdateService {
         customer.setCustPrimaryCardHolderIndicator(normalizeStatus(
                 request.primaryCardHolderIndicator()));
         customerRepository.save(customer);
-        return accountViewService.view(Long.toString(accountId));
+        return accountViewService.view("%011d".formatted(accountId));
     }
 
     private void validate(AccountUpdateRequest request) {

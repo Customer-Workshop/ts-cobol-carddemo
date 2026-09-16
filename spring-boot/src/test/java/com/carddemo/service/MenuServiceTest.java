@@ -102,9 +102,11 @@ class MenuServiceTest {
                 service.selectMain(new MenuSelectRequest("3"), authentication)));
         assertEquals("/transactions/list", service.uiRoute(
                 service.selectMain(new MenuSelectRequest("6"), authentication)));
-        // Templated or POST-only endpoints have no browsable route today.
-        assertNull(service.uiRoute(
+        assertEquals("/accounts/view", service.uiRoute(
                 service.selectMain(new MenuSelectRequest("1"), authentication)));
+        // POST-only or unimplemented endpoints have no browsable route today.
+        assertNull(service.uiRoute(
+                service.selectMain(new MenuSelectRequest("2"), authentication)));
         assertNull(service.uiRoute(
                 service.selectMain(new MenuSelectRequest("10"), authentication)));
         assertNull(service.uiRoute(

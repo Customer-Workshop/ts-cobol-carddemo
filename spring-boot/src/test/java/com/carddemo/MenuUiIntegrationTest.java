@@ -105,14 +105,18 @@ class MenuUiIntegrationTest {
                         .param("aid", "ENTER").param("option", "6"))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/transactions/list"));
+        mockMvc.perform(post("/menu/select").session(session)
+                        .param("aid", "ENTER").param("option", "1"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/accounts/view"));
         // Implemented target without a browsable route yet: the menu
         // redisplays the not-installed idiom instead of a dead link.
         mockMvc.perform(post("/menu/select").session(session)
-                        .param("aid", "ENTER").param("option", "1"))
+                        .param("aid", "ENTER").param("option", "2"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("menu"))
                 .andExpect(model().attribute("message",
-                        "This option Account View is not installed..."));
+                        "This option Account Update is not installed..."));
     }
 
     @Test

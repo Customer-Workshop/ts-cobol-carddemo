@@ -99,9 +99,12 @@ class ApiIntegrationTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.currentBalance").value(194.00))
                 .andExpect(jsonPath("$.ssn").value("123-45-6789"));
+        // COACTVWC's edit demands exactly 11 digits (FR-S02-03): a
+        // shorter-but-numeric id is the filter error, not a lookup.
         mockMvc.perform(get("/api/accounts/1").session(session))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.accountId").value(1));
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message").value(
+                        "Account Filter must  be a non-zero 11 digit number"));
         mockMvc.perform(get("/api/accounts/00000000002").session(session))
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.message").value(containsString("Cross ref file")));
@@ -150,7 +153,7 @@ class ApiIntegrationTest {
     void accountUpdateRejectsConcurrentChange() throws Exception {
         MockHttpSession session = signon("ADMIN001", "PASSWORD", "/api/admin/menu");
         JsonNode view = objectMapper.readTree(mockMvc.perform(
-                        get("/api/accounts/1").session(session))
+                        get("/api/accounts/00000000001").session(session))
                 .andExpect(status().isOk()).andReturn().getResponse().getContentAsString());
         ObjectNode update = accountUpdate(view);
         ((ObjectNode) update.get("original")).put("currentBalance", "999999.99");
@@ -171,7 +174,7 @@ class ApiIntegrationTest {
         customer.setCustPhoneNum2("(212)555-0101");
         customerRepository.save(customer);
         JsonNode view = objectMapper.readTree(mockMvc.perform(
-                        get("/api/accounts/1").session(session))
+                        get("/api/accounts/00000000001").session(session))
                 .andExpect(status().isOk()).andReturn().getResponse().getContentAsString());
         ObjectNode request = accountUpdate(view);
         ObjectNode original = (ObjectNode) request.get("original");
@@ -197,7 +200,7 @@ class ApiIntegrationTest {
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.message").value("Original values must be supplied for update."));
         JsonNode view = objectMapper.readTree(mockMvc.perform(
-                        get("/api/accounts/1").session(session))
+                        get("/api/accounts/00000000001").session(session))
                 .andExpect(status().isOk()).andReturn().getResponse().getContentAsString());
         ObjectNode request = accountUpdate(view);
         request.remove("original");

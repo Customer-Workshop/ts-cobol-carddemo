@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout :: layout('CardDemo', 'CAVW', 'COACTVWC', ~{::content})}">
+<head>
+    <title>CardDemo</title>
+</head>
+<body>
+<!-- CACTVWA map (COACTVW.bms): element ids are the BMS field names
+     lowercased. Unmoved output fields render blank (LOW-VALUES). -->
+<div th:fragment="content" class="account-view">
+    <p class="view-title">View Account</p>
+    <form id="account-view-form" method="post" th:action="@{/accounts/view}">
+        <input type="hidden" name="returnUrl" th:value="${returnUrl}">
+        <div class="view-grid">
+            <div class="view-row">
+                <span class="view-cell">
+                    <label class="field-label" for="acctsid">Account Number :</label>
+                    <input id="acctsid" name="acctId" type="text" maxlength="11" size="11"
+                           autocomplete="off" inputmode="numeric" autofocus
+                           th:value="${screen.accountEcho}"
+                           th:classappend="${screen.accountFieldRed} ? 'field-red'">
+                </span>
+                <span class="view-cell">
+                    <span class="field-label">Active Y/N: </span>
+                    <span class="field-value" id="acsttus" th:text="${screen.account?.activeStatus}"></span>
+                </span>
+            </div>
+            <div class="view-row">
+                <span class="view-cell">
+                    <span class="field-label">Opened:</span>
+                    <span class="field-value" id="adtopen" th:text="${screen.account?.openDate}"></span>
+                </span>
+                <span class="view-cell">
+                    <span class="field-label">Credit Limit        :</span>
+                    <span class="field-value" id="acrdlim" th:text="${screen.account?.creditLimit}"></span>
+                </span>
+            </div>
+            <div class="view-row">
+                <span class="view-cell">
+                    <span class="field-label">Expiry:</span>
+                    <span class="field-value" id="aexpdt" th:text="${screen.account?.expirationDate}"></span>
+                </span>
+                <span class="view-cell">
+                    <span class="field-label">Cash credit Limit   :</span>
+                    <span class="field-value" id="acshlim" th:text="${screen.account?.cashCreditLimit}"></span>
+                </span>
+            </div>
+            <div class="view-row">
+                <span class="view-cell">
+                    <span class="field-label">Reissue:</span>
+                    <span class="field-value" id="areisdt" th:text="${screen.account?.reissueDate}"></span>
+                </span>
+                <span class="view-cell">
+                    <span class="field-label">Current Balance     :</span>
+                    <span class="field-value" id="acurbal" th:text="${screen.account?.currentBalance}"></span>
+                </span>
+            </div>
+            <div class="view-row">
+                <span class="view-cell"></span>
+                <span class="view-cell">
+                    <span class="field-label">Current Cycle Credit:</span>
+                    <span class="field-value" id="acrcycr" th:text="${screen.account?.currentCycleCredit}"></span>
+                </span>
+            </div>
+            <div class="view-row">
+                <span class="view-cell">
+                    <span class="field-label">Account Group:</span>
+                    <span class="field-value" id="aaddgrp" th:text="${screen.account?.accountGroup}"></span>
+                </span>
+                <span class="view-cell">
+                    <span class="field-label">Current Cycle Debit :</span>
+                    <span class="field-value" id="acrcydb" th:text="${screen.account?.currentCycleDebit}"></span>
+                </span>
+            </div>
+        </div>
+
+        <p class="view-section">Customer Details</p>
+        <div class="view-grid">
+            <div class="view-row">
+                <span class="view-cell">
+                    <span class="field-label">Customer id  :</span>
+                    <span class="field-value" id="acstnum" th:text="${screen.customer?.customerId}"></span>
+                </span>
+                <span class="view-cell">
+                    <span class="field-label">SSN:</span>
+                    <span class="field-value" id="acstssn" th:text="${screen.customer?.ssn}"></span>
+                </span>
+            </div>
+            <div class="view-row">
+                <span class="view-cell">
+                    <span class="field-label">Date of birth:</span>
+                    <span class="field-value" id="acstdob" th:text="${screen.customer?.dateOfBirth}"></span>
+                </span>
+                <span class="view-cell">
+                    <span class="field-label">FICO Score:</span>
+                    <span class="field-value" id="acstfco" th:text="${screen.customer?.ficoScore}"></span>
+                </span>
+            </div>
+            <div class="view-row">
+                <span class="view-cell name-labels">
+                    <span class="field-label">First Name</span>
+                    <span class="field-label">Middle Name: </span>
+                    <span class="field-label">Last Name : </span>
+                </span>
+            </div>
+            <div class="view-row">
+                <span class="view-cell name-values">
+                    <span class="field-value" id="acsfnam" th:text="${screen.customer?.firstName}"></span>
+                    <span class="field-value" id="acsmnam" th:text="${screen.customer?.middleName}"></span>
+                    <span class="field-value" id="acslnam" th:text="${screen.customer?.lastName}"></span>
+                </span>
+            </div>
+            <div class="view-row">
+                <span class="view-cell">
+                    <span class="field-label">Address:</span>
+                    <span class="field-value" id="acsadl1" th:text="${screen.customer?.addressLine1}"></span>
+                </span>
+                <span class="view-cell">
+                    <span class="field-label">State </span>
+                    <span class="field-value" id="acsstte" th:text="${screen.customer?.stateCode}"></span>
+                </span>
+            </div>
+            <div class="view-row">
+                <span class="view-cell">
+                    <span class="field-value" id="acsadl2" th:text="${screen.customer?.addressLine2}"></span>
+                </span>
+                <span class="view-cell">
+                    <span class="field-label">Zip</span>
+                    <span class="field-value" id="acszipc" th:text="${screen.customer?.zip}"></span>
+                </span>
+            </div>
+            <div class="view-row">
+                <span class="view-cell">
+                    <span class="field-label">City </span>
+                    <span class="field-value" id="acscity" th:text="${screen.customer?.city}"></span>
+                </span>
+                <span class="view-cell">
+                    <span class="field-label">Country</span>
+                    <span class="field-value" id="acsctry" th:text="${screen.customer?.countryCode}"></span>
+                </span>
+            </div>
+            <div class="view-row">
+                <span class="view-cell">
+                    <span class="field-label">Phone 1:</span>
+                    <span class="field-value" id="acsphn1" th:text="${screen.customer?.phoneNumber1}"></span>
+                </span>
+                <span class="view-cell">
+                    <span class="field-label">Government Issued Id Ref    : </span>
+                    <span class="field-value" id="acsgovt" th:text="${screen.customer?.governmentIssuedId}"></span>
+                </span>
+            </div>
+            <div class="view-row">
+                <span class="view-cell">
+                    <span class="field-label">Phone 2:</span>
+                    <span class="field-value" id="acsphn2" th:text="${screen.customer?.phoneNumber2}"></span>
+                </span>
+                <span class="view-cell">
+                    <span class="field-label">EFT Account Id: </span>
+                    <span class="field-value" id="acseftc" th:text="${screen.customer?.eftAccountId}"></span>
+                    <span class="field-label">Primary Card Holder Y/N:</span>
+                    <span class="field-value" id="acspflg" th:text="${screen.customer?.primaryCardHolderIndicator}"></span>
+                </span>
+            </div>
+        </div>
+
+        <p class="info-line" id="infomsg"
+           th:text="${T(com.carddemo.api.CobolMessages).ACCOUNT_VIEW_PROMPT}"></p>
+        <p class="key-hints">F3=Exit</p>
+        <div class="form-actions">
+            <button type="submit" name="aid" value="ENTER">ENTER=Submit</button>
+            <button type="submit" name="aid" value="PF3" formnovalidate>F3=Exit</button>
+        </div>
+    </form>
+    <script>
+        // 3270 AID parity (S02-B1, FR-S02-12): F3 exits; any other function
+        // key submits as its own aid and the program treats it as ENTER —
+        // no invalid-key message exists on this screen.
+        document.addEventListener('keydown', function (event) {
+            if (/^F([1-9]|1[0-2])$/.test(event.key)) {
+                event.preventDefault();
+                var form = document.getElementById('account-view-form');
+                var aid = document.createElement('input');
+                aid.type = 'hidden';
+                aid.name = 'aid';
+                aid.value = event.key === 'F3' ? 'PF3' : event.key;
+                form.appendChild(aid);
+                form.submit();
+            }
+        });
+    </script>
+</div>
+</body>
+</html>
