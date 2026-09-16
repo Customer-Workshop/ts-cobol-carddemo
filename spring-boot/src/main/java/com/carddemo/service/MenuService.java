@@ -116,6 +116,7 @@ public class MenuService {
             Map.entry("COUSR02C", "/admin/users/update"),
             Map.entry("COUSR03C", "/admin/users/delete"),
             Map.entry("COCRDSLC", "/cards/view"),
+            Map.entry("COCRDUPC", "/cards/update"),
             Map.entry("COBIL00C", "/bill-payment"),
             Map.entry("COPAUS0C", "/ui/pending-auth"),
             Map.entry("COACTVWC", "/accounts/view"));

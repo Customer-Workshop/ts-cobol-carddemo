@@ -45,4 +45,18 @@ public class CardController {
                                @RequestBody CardUpdateRequest request) {
         return service.update(accountId, cardNumber, request);
     }
+
+    // COCRDUPC REST surface (S-06): one call per AID press of the
+    // lookup-then-update screen, commarea echoed verbatim. lookup covers
+    // the search/fetch turns; validate covers the edit/confirm turns. The
+    // write itself is still the PUT above.
+    @PostMapping("/lookup")
+    public CardUpdateScreen lookup(@RequestBody CardUpdateForm request) {
+        return service.cardUpdate(request);
+    }
+
+    @PostMapping("/validate")
+    public CardUpdateScreen validate(@RequestBody CardUpdateForm request) {
+        return service.cardUpdate(request);
+    }
 }

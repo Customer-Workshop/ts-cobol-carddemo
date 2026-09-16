@@ -157,6 +157,31 @@ public final class CobolMessages {
     public static final String CARD_FILE_ERROR_READ =
         "File Error: READ     on CARDDAT   returned RESP 000000020 ,RESP2 000000090 ";
 
+    // COCRDUPC verbatim messages (S-06; COCRDUPC.cbl:146-212). The
+    // WS-FILE-ERROR-MESSAGE layout (:133-152) renders READ on CARDDAT with
+    // the fixed IOERR codes — RESP/RESP2 have no target equivalent
+    // (FR-S06-12 assumption: 000000017 / 000000000).
+    public static final String CARD_ACCOUNT_NOT_PROVIDED =
+        "Account number not provided";
+    public static final String CARD_NUMBER_NOT_PROVIDED =
+        "Card number not provided";
+    public static final String CARD_COULD_NOT_LOCK =
+        "Could not lock record for update";
+    public static final String CARD_UPDATE_FILE_ERROR_READ =
+        "File Error: READ     on CARDDAT   returned RESP 000000017 ,RESP2 000000000 ";
+    public static final String CARD_UPDATE_PROMPT_KEYS =
+        "Please enter Account and Card Number";
+    public static final String CARD_UPDATE_DETAILS_SHOWN =
+        "Details of selected card shown above";
+    public static final String CARD_UPDATE_PROMPT_CHANGES =
+        "Update card details presented above.";
+    public static final String CARD_UPDATE_PROMPT_CONFIRM =
+        "Changes validated.Press F5 to save";
+    public static final String CARD_UPDATE_COMMITTED =
+        "Changes committed to database";
+    public static final String CARD_UPDATE_UNSUCCESSFUL =
+        "Changes unsuccessful. Please try again";
+
     // COUSR00C–COUSR03C verbatim messages (S-12; the STRING-delimited forms
     // use SEC-USR-ID DELIMITED BY SPACE, so the id stops at its first blank).
     public static final String USER_INVALID_SELECTION =

@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout :: layout('CardDemo', 'CCUP', 'COCRDUPC', ~{::content})}">
+<head>
+    <title>CardDemo</title>
+</head>
+<body>
+<div th:fragment="content" class="card-update">
+    <p class="screen-title">Update Credit Card Details</p>
+    <form id="card-update-form" method="post" th:action="@{/cards/update}">
+        <!-- WS-THIS-PROGCOMMAREA (COCRDUPC.cbl:274-313) round-trips as hidden
+             inputs so the server stays stateless between AID presses. -->
+        <input type="hidden" name="changeAction" th:value="${screen.commarea.changeAction}">
+        <input type="hidden" name="oldAcctId" th:value="${screen.commarea.accountId}">
+        <input type="hidden" name="oldCardNum" th:value="${screen.commarea.cardNumber}">
+        <input type="hidden" name="oldName" th:value="${screen.commarea.embossedName}">
+        <input type="hidden" name="oldStatus" th:value="${screen.commarea.activeStatus}">
+        <input type="hidden" name="oldYear" th:value="${screen.commarea.expiryYear}">
+        <input type="hidden" name="oldMonth" th:value="${screen.commarea.expiryMonth}">
+        <input type="hidden" name="oldDay" th:value="${screen.commarea.expiryDay}">
+
+        <div class="form-row">
+            <label class="field-label" for="acctsid">Account Number    :</label>
+            <input id="acctsid" name="acctsid" type="text" maxlength="11" size="11"
+                   autocomplete="off" inputmode="numeric" th:value="${screen.accountId}"
+                   th:readonly="${!screen.searchEditable}"
+                   th:classappend="${screen.accountInvalid} ? 'field-error'"
+                   th:attr="autofocus=${screen.cursorField == 'acctsid' ? 'autofocus' : null}">
+        </div>
+        <div class="form-row">
+            <label class="field-label" for="cardsid">Card Number       :</label>
+            <input id="cardsid" name="cardsid" type="text" maxlength="16" size="16"
+                   autocomplete="off" inputmode="numeric" th:value="${screen.cardNumber}"
+                   th:readonly="${!screen.searchEditable}"
+                   th:classappend="${screen.cardInvalid} ? 'field-error'"
+                   th:attr="autofocus=${screen.cursorField == 'cardsid' ? 'autofocus' : null}">
+        </div>
+        <div class="form-row">
+            <label class="field-label" for="crdname">Name on card      :</label>
+            <input id="crdname" name="crdname" type="text" maxlength="50" size="50"
+                   autocomplete="off" th:value="${screen.embossedName}"
+                   th:readonly="${!screen.detailEditable}"
+                   th:classappend="${screen.nameInvalid} ? 'field-error'"
+                   th:attr="autofocus=${screen.cursorField == 'crdname' ? 'autofocus' : null}">
+        </div>
+        <div class="form-row">
+            <label class="field-label" for="crdstcd">Card Active Y/N   : </label>
+            <input id="crdstcd" name="crdstcd" type="text" maxlength="1" size="1"
+                   autocomplete="off" th:value="${screen.activeStatus}"
+                   th:readonly="${!screen.detailEditable}"
+                   th:classappend="${screen.statusInvalid} ? 'field-error'"
+                   th:attr="autofocus=${screen.cursorField == 'crdstcd' ? 'autofocus' : null}">
+        </div>
+        <div class="form-row expiry-row">
+            <span class="field-label">Expiry Date       : </span>
+            <input id="expmon" name="expmon" type="text" maxlength="2" size="2"
+                   autocomplete="off" inputmode="numeric" th:value="${screen.expiryMonth}"
+                   th:readonly="${!screen.detailEditable}"
+                   th:classappend="${screen.monthInvalid} ? 'field-error'"
+                   th:attr="autofocus=${screen.cursorField == 'expmon' ? 'autofocus' : null}">
+            <span class="field-sep">/</span>
+            <input id="expyear" name="expyear" type="text" maxlength="4" size="4"
+                   autocomplete="off" inputmode="numeric" th:value="${screen.expiryYear}"
+                   th:readonly="${!screen.detailEditable}"
+                   th:classappend="${screen.yearInvalid} ? 'field-error'"
+                   th:attr="autofocus=${screen.cursorField == 'expyear' ? 'autofocus' : null}">
+            <!-- EXPDAY is DRK PROT (COCRDUP.bms:139): displayed but never
+                 editable; the posted value only feeds the OLD-image echo. -->
+            <input id="expday" name="expday" type="text" maxlength="2" size="2"
+                   autocomplete="off" readonly class="day-field" th:value="${screen.expiryDay}">
+        </div>
+
+        <p class="info-line" th:text="${screen.infoMessage}"></p>
+        <p class="error-line" th:text="${screen.errorMessage}"></p>
+        <p class="key-hints">ENTER=Process F3=Exit<span class="key-hints-confirm"
+              th:if="${screen.confirmPending}"> F5=Save F12=Cancel</span></p>
+        <div class="form-actions">
+            <button type="submit" name="aid" value="ENTER">ENTER</button>
+            <button type="submit" name="aid" value="PF3" formnovalidate>F3=Exit</button>
+            <button type="submit" name="aid" value="PF5" formnovalidate
+                    th:if="${screen.confirmPending}">F5=Save</button>
+            <button type="submit" name="aid" value="PF12" formnovalidate
+                    th:if="${screen.confirmPending}">F12=Cancel</button>
+        </div>
+    </form>
+    <script>
+        // 3270 AID parity (COCRDUPC.cbl:413-424): F3 exits, F5 saves and
+        // F12 cancels only while awaiting confirmation, and every other
+        // key is remapped to ENTER by the service.
+        document.addEventListener('keydown', function (event) {
+            if (/^F([1-9]|1[0-2])$/.test(event.key)) {
+                event.preventDefault();
+                var form = document.getElementById('card-update-form');
+                var aid = document.createElement('input');
+                aid.type = 'hidden';
+                aid.name = 'aid';
+                aid.value = event.key === 'F3' ? 'PF3'
+                        : event.key === 'F5' ? 'PF5'
+                        : event.key === 'F12' ? 'PF12' : event.key;
+                form.appendChild(aid);
+                form.submit();
+            }
+        });
+    </script>
+</div>
+</body>
+</html>

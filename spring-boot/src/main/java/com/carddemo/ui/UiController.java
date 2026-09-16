@@ -3,6 +3,9 @@ package com.carddemo.ui;
 import com.carddemo.api.AuthRequest;
 import com.carddemo.api.AuthResponse;
 import com.carddemo.api.BillPaymentScreen;
+import com.carddemo.api.CardUpdateCommarea;
+import com.carddemo.api.CardUpdateForm;
+import com.carddemo.api.CardUpdateScreen;
 import com.carddemo.api.CobolApiException;
 import com.carddemo.api.CobolMessages;
 import com.carddemo.api.MenuResponse;
@@ -258,6 +261,66 @@ public class UiController {
             model.addAttribute("message", exception.getMessage());
         }
         return view;
+    }
+
+    // COCRDUPC web surface (tran CCUP): lookup-then-update of a credit
+    // card (S-06). First display is the empty search screen — the source
+    // sends the map without receiving one (COCRDUPC.cbl:502-511), so a
+    // bare GET never runs the search edits. The list-entry seam (S06-B2)
+    // pre-fetches when the keys arrive on the URL; the plan spells them
+    // acctId/cardNum, COCRDLIC's U-select spells accountId/cardNumber.
+    @GetMapping("/cards/update")
+    public String cardUpdate(
+            @RequestParam(name = "acctId", required = false) String acctId,
+            @RequestParam(name = "cardNum", required = false) String cardNum,
+            @RequestParam(name = "accountId", required = false) String accountId,
+            @RequestParam(name = "cardNumber", required = false) String cardNumber,
+            Model model) {
+        String acct = acctId != null ? acctId : accountId;
+        String card = cardNum != null ? cardNum : cardNumber;
+        CardUpdateScreen screen = acct == null || acct.isBlank()
+                || card == null || card.isBlank()
+                ? cardService.initialCardUpdate()
+                : cardService.cardUpdate(CardUpdateForm.search(acct, card));
+        model.addAttribute("screen", screen);
+        return "card-update";
+    }
+
+    // One AID press (COCRDUPC.cbl:429-543): PF3 transfers to the menu
+    // (S06-B3); every other AID posts the map fields plus the echoed
+    // WS-THIS-PROGCOMMAREA through the six-state machine. PF5/PF12
+    // validity and the remap-to-ENTER live in the service (:413-424).
+    @PostMapping("/cards/update")
+    public String submitCardUpdate(
+            @RequestParam(name = "aid", defaultValue = "ENTER") String aid,
+            @RequestParam(name = "acctsid", required = false) String acctsid,
+            @RequestParam(name = "cardsid", required = false) String cardsid,
+            @RequestParam(name = "crdname", required = false) String crdname,
+            @RequestParam(name = "crdstcd", required = false) String crdstcd,
+            @RequestParam(name = "expmon", required = false) String expmon,
+            @RequestParam(name = "expyear", required = false) String expyear,
+            @RequestParam(name = "expday", required = false) String expday,
+            @RequestParam(name = "changeAction", required = false) String changeAction,
+            @RequestParam(name = "oldAcctId", required = false) String oldAcctId,
+            @RequestParam(name = "oldCardNum", required = false) String oldCardNum,
+            @RequestParam(name = "oldName", required = false) String oldName,
+            @RequestParam(name = "oldStatus", required = false) String oldStatus,
+            @RequestParam(name = "oldYear", required = false) String oldYear,
+            @RequestParam(name = "oldMonth", required = false) String oldMonth,
+            @RequestParam(name = "oldDay", required = false) String oldDay,
+            Model model) {
+        if ("PF3".equals(aid) || "F3".equals(aid)) {
+            return "redirect:/menu";
+        }
+        CardUpdateCommarea commarea = changeAction == null
+                ? CardUpdateCommarea.fresh()
+                : new CardUpdateCommarea(changeAction, oldAcctId, oldCardNum,
+                        oldName, oldStatus, oldYear, oldMonth, oldDay);
+        CardUpdateScreen screen = cardService.cardUpdate(new CardUpdateForm(
+                aid, acctsid, cardsid, crdname, crdstcd, expmon, expyear, expday,
+                commarea));
+        model.addAttribute("screen", screen);
+        return "card-update";
     }
 
     // COACTVWC web surface (tran CAVW): view an account plus its customer.

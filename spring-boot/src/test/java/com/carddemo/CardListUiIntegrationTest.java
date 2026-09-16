@@ -286,11 +286,12 @@ class CardListUiIntegrationTest {
                 .andExpect(redirectedUrl(
                         "/cards/view?accountId=1&cardNumber=0000000000000001"));
 
+        // COCRDUPC is migrated (S-06): the U-select resolves through the
+        // registry into a redirect carrying the row's keys (S06-B2).
         press(session, "ENTER", state, null, null, "", "", "U", "", "", "", "")
-                .andExpect(status().isOk())
-                .andExpect(view().name("card-list"))
-                .andExpect(model().attribute("message",
-                        "This option Creditis coming soon ..."));
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl(
+                        "/cards/update?accountId=1&cardNumber=" + key(3)));
     }
 
     @Test

@@ -1,11 +1,14 @@
 package com.carddemo.repository;
 import com.carddemo.model.Card;
+import jakarta.persistence.LockModeType;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Lock;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import java.util.List;
+import java.util.Optional;
 public interface CardRepository extends JpaRepository<Card, String> {
     List<Card> findByCardAcctId(Long cardAcctId);
     Page<Card> findByCardAcctId(Long cardAcctId, Pageable pageable);
@@ -42,4 +45,10 @@ public interface CardRepository extends JpaRepository<Card, String> {
     @Query("select c from Card c where c.cardNumber > :cardNumber "
             + "order by c.cardNumber asc")
     List<Card> nextAfter(@Param("cardNumber") String cardNumber, Pageable pageable);
+
+    // COCRDUPC READ UPDATE (S06-B1, COCRDUPC.cbl:1427-1436): the save path
+    // takes a FOR UPDATE lock on the row inside one @Transactional method.
+    @Lock(LockModeType.PESSIMISTIC_WRITE)
+    @Query("select c from Card c where c.cardNumber = :cardNumber")
+    Optional<Card> findForUpdate(@Param("cardNumber") String cardNumber);
 }

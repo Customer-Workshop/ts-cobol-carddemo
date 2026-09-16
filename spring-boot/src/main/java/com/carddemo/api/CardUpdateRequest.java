@@ -11,6 +11,7 @@ public record CardUpdateRequest(
             String embossedName,
             String activeStatus,
             Integer expiryMonth,
-            Integer expiryYear) {
+            Integer expiryYear,
+            Integer expiryDay) {
     }
 }

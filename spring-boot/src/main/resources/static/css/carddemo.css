@@ -528,6 +528,80 @@ body {
     cursor: pointer;
 }
 
+/* COCRDUPA (card update) — search keys then protected-able detail rows. */
+.card-update .screen-title {
+    color: #ff0;
+    text-align: center;
+}
+
+.card-update .form-row {
+    margin: 1em 0 0 4ch;
+}
+
+.card-update .field-label {
+    white-space: pre;
+    color: #40e0d0;
+}
+
+.card-update input {
+    background: #000;
+    color: #0f0;
+    border: none;
+    border-bottom: 1px solid #0f0;
+    font: inherit;
+}
+
+.card-update input[readonly] {
+    border-bottom: none;
+    color: #666;
+}
+
+.card-update input.field-error {
+    color: #f00;
+    border-bottom: 1px solid #f00;
+}
+
+/* EXPDAY is dark on the real map — shown but never editable. */
+.card-update input.day-field {
+    color: #333;
+    margin-left: 3ch;
+}
+
+.card-update .expiry-row .field-sep {
+    color: #40e0d0;
+}
+
+.card-update .info-line {
+    color: #0f0;
+    margin-left: 4ch;
+    min-height: 1.2em;
+}
+
+.card-update .error-line {
+    color: #f00;
+    margin-left: 4ch;
+    min-height: 1.2em;
+}
+
+.card-update .key-hints {
+    color: #ff0;
+    margin-left: 4ch;
+    white-space: pre;
+}
+
+.card-update .form-actions {
+    margin-left: 4ch;
+}
+
+.card-update .form-actions button {
+    background: #000;
+    color: #0f0;
+    border: 1px solid #0f0;
+    font: inherit;
+    margin-right: 1em;
+    cursor: pointer;
+}
+
 /* COUSR0A–COUSR3A user admin screens (S-12) — same 3270 palette as the
    transaction screens: turquoise labels/headers, green inputs, white row
    data, yellow hints/titles (app/bms/COUSR0*.bms). */
