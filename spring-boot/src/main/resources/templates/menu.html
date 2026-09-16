@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout :: layout('CardDemo', 'CM00', 'COMEN01C', ~{::content})}">
+<head>
+    <title>CardDemo</title>
+</head>
+<body>
+<div th:fragment="content" class="menu">
+    <p class="menu-title">Main Menu</p>
+    <div class="menu-options">
+        <div class="menu-option" th:each="option : ${menu.options}">
+            <span class="option-text"
+                  th:text="|${#numbers.formatInteger(option.number, 2)}. ${option.name}|">01. Account View</span>
+            <span class="option-not-installed" th:if="${!option.implemented}">not installed</span>
+            <span class="option-coming-soon" th:if="${option.implemented and !option.available}">coming soon</span>
+        </div>
+    </div>
+    <form id="menu-form" method="post" th:action="@{/menu/select}">
+        <div class="form-row">
+            <label class="field-label" for="option">Please select an option :</label>
+            <input id="option" name="option" type="text" maxlength="2" size="2"
+                   autocomplete="off" inputmode="numeric" autofocus th:value="${selectedOption}">
+        </div>
+        <p class="key-hints">ENTER=Continue  F3=Exit</p>
+        <div class="form-actions">
+            <button type="submit" name="aid" value="ENTER">ENTER=Continue</button>
+            <button type="submit" name="aid" value="PF3" formnovalidate>F3=Exit</button>
+        </div>
+    </form>
+    <script>
+        // 3270 AID parity (FR-S01-20): F3 exits, other function keys are
+        // invalid AID keys and get the invalid-key redisplay.
+        document.addEventListener('keydown', function (event) {
+            if (/^F([1-9]|1[0-2])$/.test(event.key)) {
+                event.preventDefault();
+                var form = document.getElementById('menu-form');
+                var aid = document.createElement('input');
+                aid.type = 'hidden';
+                aid.name = 'aid';
+                aid.value = event.key === 'F3' ? 'PF3' : event.key;
+                form.appendChild(aid);
+                form.submit();
+            }
+        });
+    </script>
+</div>
+</body>
+</html>

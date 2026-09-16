@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:fragment="layout(title, tranName, programName, body)">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${title}">CardDemo</title>
+    <link rel="stylesheet" th:href="@{/css/carddemo.css}">
+</head>
+<body>
+<div class="screen">
+    <div class="screen-header">
+        <span class="header-field">Tran: <span th:text="${tranName}">CC00</span></span>
+        <span class="header-field">Prog: <span th:text="${programName}">COSGN00C</span></span>
+        <span class="header-field app-title" th:text="${title}">CardDemo</span>
+        <span class="header-field"><span th:text="${currentDate}">01/01/26</span></span>
+        <span class="header-field"><span th:text="${currentTime}">00:00:00</span></span>
+    </div>
+    <main class="screen-body" th:insert="${body}">
+        <p>Screen body</p>
+    </main>
+    <div class="message-line" th:classappend="${messageStyle}" th:text="${message == null ? '' : message}"></div>
+</div>
+</body>
+</html>

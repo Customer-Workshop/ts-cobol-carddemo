@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout :: layout('CardDemo', 'CC00', 'COSGN00C', ~{::content})}">
+<head>
+    <title>CardDemo</title>
+</head>
+<body>
+<div th:fragment="content" class="signon">
+    <p class="signon-tagline">This is a Credit Card Demo Application for Mainframe Modernization</p>
+    <pre class="signon-art">+========================================+
+|%%%%%%%  NATIONAL RESERVE NOTE  %%%%%%%%|
+|%(1)  THE UNITED STATES OF KICSLAND (1)%|
+|%$$              ___       ********  $$%|
+|%$    {x}       (o o)                 $%|
+|%$     ******  (  V  )      O N E     $%|
+|%(1)          ---m-m---             (1)%|
+|%%~~~~~~~~~~~ ONE DOLLAR ~~~~~~~~~~~~~%%|
++========================================+</pre>
+    <p class="signon-instruction">Type your User ID and Password, then press ENTER:</p>
+    <form id="signon-form" method="post" th:action="@{/signon}">
+        <div class="form-row">
+            <label class="field-label" for="userid">User ID     :</label>
+            <input id="userid" name="userid" type="text" maxlength="8" size="8"
+                   autocomplete="off" autocapitalize="characters" autofocus th:value="${userId}">
+            <span class="field-hint">(8 Char)</span>
+        </div>
+        <div class="form-row">
+            <label class="field-label" for="passwd">Password    :</label>
+            <input id="passwd" name="passwd" type="password" maxlength="8" size="8"
+                   autocomplete="off">
+            <span class="field-hint">(8 Char)</span>
+        </div>
+        <p class="key-hints">ENTER=Sign-on  F3=Exit</p>
+        <div class="form-actions">
+            <button type="submit" name="aid" value="ENTER">ENTER=Sign-on</button>
+            <button type="submit" name="aid" value="PF3" formnovalidate>F3=Exit</button>
+        </div>
+    </form>
+    <script>
+        // 3270 AID parity (FR-S01-20): F3 exits, other function keys are
+        // invalid AID keys and get the invalid-key redisplay.
+        document.addEventListener('keydown', function (event) {
+            if (/^F([1-9]|1[0-2])$/.test(event.key)) {
+                event.preventDefault();
+                var form = document.getElementById('signon-form');
+                var aid = document.createElement('input');
+                aid.type = 'hidden';
+                aid.name = 'aid';
+                aid.value = event.key === 'F3' ? 'PF3' : event.key;
+                form.appendChild(aid);
+                form.submit();
+            }
+        });
+    </script>
+</div>
+</body>
+</html>
