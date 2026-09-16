@@ -10,6 +10,7 @@ import com.carddemo.model.TransactionCategory;
 import com.carddemo.model.TransactionCategoryBalance;
 import com.carddemo.model.TransactionType;
 import com.carddemo.repository.*;
+import com.carddemo.data.CobolFieldFormatter;
 import com.carddemo.service.Db2ErrorFormatter;
 import com.carddemo.service.TransactionIdGenerator;
 import org.springframework.dao.DataAccessException;
@@ -61,6 +62,18 @@ public class BatchJobService {
      * cbtrn01Job is an orphan validation utility — deliberately not in the chain.
      */
     public static final List<String> DAILY_POSTING_CHAIN = List.of("cbtrn02Job", "waitStepJob");
+
+    /**
+     * Documented statement chain order (S16-B5/B7), replacing the scheduler
+     * chain CLOSEFIL→CREASTMT→TXT2PDF1→WAITSTEP→OPENFIL (controlm statement
+     * folder; app/scheduler/CardDemo.ca7:468-520): the statement write runs,
+     * then the wait. CLOSEFIL/OPENFIL are no-ops in the target store, TXT2PDF1's
+     * PDF step is dropped per STOP C (S16-B6 — STATEMNT.PS+HTML parity is the
+     * contract), and CREASTMT's PARM='12' is vestigial (never read — S16-B4).
+     * Operators launch each job via POST /api/admin/jobs/{jobName} only after
+     * the previous one completes; rerun overwrites the outputs (S16-B3).
+     */
+    public static final List<String> STATEMENT_CHAIN = List.of("cbstm03Job", "waitStepJob");
     private final AccountRepository accounts;
     private final CardRepository cards;
     private final CardXrefRepository xrefs;
@@ -204,78 +217,192 @@ public class BatchJobService {
         transactions.saveAll(work.transactions());
     }
 
+    /**
+     * CBSTM03A.cbl:317-330 — one statement per XREFFILE row: keyed CUSTFILE then
+     * ACCTFILE reads via the CBSTM03B handler, then the card's transactions in
+     * TRXFL (card+id) order. A keyed-read miss abends (RC ≠ 00/04 → CEE3ABD), so
+     * a missing customer or account fails the step instead of skipping the card
+     * (FR-S16-12, S16-B8). CBSTM03B itself is demoted to repositories (S16-B9).
+     * Legacy preloaded transactions into a 51-card × 10-txn table with no bounds
+     * check — that overrun defect is intentionally not preserved (FR-S16-11);
+     * the stream read covers every card and every transaction.
+     */
     public CardStatement statementFor(CardXref xref) {
+        Customer customer = customers.findById(xref.getXrefCustId()).orElseThrow(() ->
+                new IllegalStateException("ERROR READING CUSTFILE RC: cust " + xref.getXrefCustId()));
+        Account account = accounts.findById(xref.getXrefAcctId()).orElseThrow(() ->
+                new IllegalStateException("ERROR READING ACCTFILE RC: acct " + xref.getXrefAcctId()));
         Card card = cards.findById(xref.getXrefCardNumber()).orElse(null);
-        Account account = accounts.findById(xref.getXrefAcctId()).orElse(null);
-        Customer customer = account == null ? null : customers.findById(xref.getXrefCustId()).orElse(null);
         List<Transaction> tx = transactions.findByTranCardNumberOrderByTranIdAsc(
                 xref.getXrefCardNumber());
         return new CardStatement(card, account, customer, tx);
     }
 
+    /**
+     * STATEMNT.PS block per card — byte parity with the ST-LINE0..15 layouts
+     * (CBSTM03A.cbl:86-146 + COSTM01, written at :458-502 and :675-720,
+     * :434-437). Every line is one 80-byte record. Name and the third address
+     * line follow the COBOL STRING DELIMITED BY ' ' build (first word of each
+     * field, single-space joined). Cards with no transactions emit an empty
+     * summary and the zero-suppressed total.
+     */
     public String statementPlain(CardStatement statement) {
-        if (statement.account() == null || statement.customer() == null) return "";
+        Account account = statement.account();
+        Customer customer = statement.customer();
+        String acct = BatchFileSupport.pad(String.format("%011d", account.getAcctId()), 20);
+        String fico = BatchFileSupport.pad(
+                String.format("%03d", customer.getCustFicoCreditScore()), 20);
         StringBuilder out = new StringBuilder();
-        out.append("Bank of XYZ\n")
-                .append("410 Terry Ave N\n")
-                .append("Seattle WA 99999\n")
-                .append("Account ID         : ").append(statement.account().getAcctId()).append('\n')
-                .append("Customer Name      : ").append(statement.customer().getCustFirstName()).append(' ')
-                .append(statement.customer().getCustLastName()).append('\n')
-                .append("Address            : ").append(statement.customer().getCustAddrLine1()).append('\n')
-                .append("                   ").append(statement.customer().getCustAddrLine2()).append('\n')
-                .append("                   ").append(statement.customer().getCustAddrLine3()).append('\n')
-                .append("Current Balance    : ").append(statement.account().getAcctCurrBal()).append('\n')
-                .append("FICO Score         : ").append(statement.customer().getCustFicoCreditScore()).append('\n')
+        out.append("*".repeat(31)).append("START OF STATEMENT").append("*".repeat(31)).append('\n')
+                .append(BatchFileSupport.pad(
+                        BatchFileSupport.pad(statementName(customer), 75), 80)).append('\n')
+                .append(BatchFileSupport.pad(
+                        BatchFileSupport.pad(customer.getCustAddrLine1(), 50), 80)).append('\n')
+                .append(BatchFileSupport.pad(
+                        BatchFileSupport.pad(customer.getCustAddrLine2(), 50), 80)).append('\n')
+                .append(BatchFileSupport.pad(statementAddress3(customer), 80)).append('\n')
                 .append("-".repeat(80)).append('\n')
-                .append("                   TRANSACTION SUMMARY\n")
+                .append(" ".repeat(33)).append(BatchFileSupport.pad("Basic Details", 14))
+                .append(" ".repeat(33)).append('\n')
                 .append("-".repeat(80)).append('\n')
-                .append("Tran ID         Tran Details                                      Tran Amount\n");
+                .append("Account ID         :").append(acct).append(" ".repeat(40)).append('\n')
+                .append("Current Balance    :")
+                .append(CobolFieldFormatter.trailingSign(account.getAcctCurrBal(), 9, 2, false))
+                .append(" ".repeat(47)).append('\n')
+                .append("FICO Score         :").append(fico).append(" ".repeat(40)).append('\n')
+                .append("-".repeat(80)).append('\n')
+                .append(" ".repeat(30)).append(BatchFileSupport.pad("TRANSACTION SUMMARY ", 20))
+                .append(" ".repeat(30)).append('\n')
+                .append("-".repeat(80)).append('\n')
+                .append(BatchFileSupport.pad("Tran ID", 16))
+                .append(BatchFileSupport.pad("Tran Details", 51))
+                .append("  Tran Amount").append('\n')
+                .append("-".repeat(80)).append('\n');
         BigDecimal total = BigDecimal.ZERO;
         for (Transaction tx : statement.transactions()) {
-            out.append("%-16s %-50s $%10.2f%n".formatted(tx.getTranId(),
-                    trim(tx.getTranDescription(), 50), zero(tx.getTranAmount())));
+            out.append(BatchFileSupport.pad(tx.getTranId(), 16)).append(' ')
+                    .append(BatchFileSupport.pad(tx.getTranDescription(), 49)).append('$')
+                    .append(CobolFieldFormatter.trailingSign(tx.getTranAmount(), 9, 2, true))
+                    .append('\n');
             total = total.add(zero(tx.getTranAmount()));
         }
-        return out.append("Total EXP: ").append(total).append('\n')
-                .append("********************************END OF STATEMENT********************************\n")
+        // No trailing newline: FlatFileItemWriter appends the record separator.
+        return out.append("-".repeat(80)).append('\n')
+                .append("Total EXP:").append(" ".repeat(56)).append('$')
+                .append(CobolFieldFormatter.trailingSign(total, 9, 2, true)).append('\n')
+                .append("*".repeat(32)).append("END OF STATEMENT").append("*".repeat(32))
                 .toString();
     }
 
+    /**
+     * STATEMNT.HTML block per card — record parity with the HTML-L01..L80
+     * literals (CBSTM03A.cbl:148-233, written at :506-669, :681-721, :439-454).
+     * Legacy repeats the full DOCTYPE..</html> skeleton per statement and each
+     * write is one 100-byte record. Interpolated fields keep their fixed
+     * offsets (L11-ACCT X(20), name/addr lines DELIMITED BY '  ', tran lines at
+     * X(16)/X(49)/Z(9).99-); values are HTML-escaped on top of the fixed-width
+     * text — the only deliberate deviation from raw STRING concatenation, kept
+     * so migrated statements cannot inject markup.
+     */
     public String statementHtml(CardStatement statement) {
-        StringBuilder out = new StringBuilder("""
-                <!DOCTYPE html>
-                <html lang="en">
-                <head>
-                <meta charset="utf-8">
-                <title>HTML Table Layout</title>
-                </head>
-                <body style="margin:0px;">
-                <table  align="center" frame="box" style="width:70%; font:12px Segoe UI,sans-serif;">
-                """);
-        out.append("<tr><td colspan=\"3\"><h3>Statement for Account Number: ")
-                .append(escapeHtml(statement.account() == null ? "" :
-                        String.valueOf(statement.account().getAcctId())))
-                .append("</h3></td></tr>");
-        if (statement.customer() != null) {
-            out.append("<tr><td colspan=\"3\"><p style=\"font-size:16px\">")
-                    .append(escapeHtml(statement.customer().getCustFirstName())).append(' ')
-                    .append(escapeHtml(statement.customer().getCustLastName()))
-                    .append("</p></td></tr>");
-        }
-        out.append("<tr><td colspan=\"3\"><p style=\"font-size:16px\">Transaction Summary</p></td></tr>")
-                .append("<tr><td>Tran ID</td><td>Tran Details</td><td>Amount</td></tr>");
-        BigDecimal total = BigDecimal.ZERO;
+        Account account = statement.account();
+        Customer customer = statement.customer();
+        String acct = BatchFileSupport.pad(String.format("%011d", account.getAcctId()), 20);
+        String fico = BatchFileSupport.pad(
+                String.format("%03d", customer.getCustFicoCreditScore()), 20);
+        String balance = CobolFieldFormatter.trailingSign(account.getAcctCurrBal(), 9, 2, false);
+        List<String> lines = new ArrayList<>(List.of(
+                "<!DOCTYPE html>",
+                "<html lang=\"en\">",
+                "<head>",
+                "<meta charset=\"utf-8\">",
+                "<title>HTML Table Layout</title>",
+                "</head>",
+                "<body style=\"margin:0px;\">",
+                "<table  align=\"center\" frame=\"box\" style=\"width:70%; font:12px Segoe UI,sans-serif;\">",
+                "<tr>",
+                "<td colspan=\"3\" style=\"padding:0px 5px;background-color:#1d1d96b3;\">",
+                "<h3>Statement for Account Number: " + escapeHtml(acct) + "</h3>",
+                "</td>",
+                "</tr>",
+                "<tr>",
+                "<td colspan=\"3\" style=\"padding:0px 5px;background-color:#FFAF33;\">",
+                "<p style=\"font-size:16px\">Bank of XYZ</p>",
+                "<p>410 Terry Ave N</p>",
+                "<p>Seattle WA 99999</p>",
+                "</td>",
+                "</tr>",
+                "<tr>",
+                "<td colspan=\"3\" style=\"padding:0px 5px;background-color:#f2f2f2;\">",
+                "<p style=\"font-size:16px\">"
+                        + escapeHtml(htmlField(BatchFileSupport.pad(statementName(customer), 50)))
+                        + "  </p>",
+                "<p>" + escapeHtml(htmlField(BatchFileSupport.pad(customer.getCustAddrLine1(), 50)))
+                        + "  </p>",
+                "<p>" + escapeHtml(htmlField(BatchFileSupport.pad(customer.getCustAddrLine2(), 50)))
+                        + "  </p>",
+                "<p>" + escapeHtml(htmlField(BatchFileSupport.pad(statementAddress3(customer), 80)))
+                        + "  </p>",
+                "</td>",
+                "</tr>",
+                "<tr>",
+                "<td colspan=\"3\" style=\"padding:0px 5px;background-color:#33FFD1; text-align:center;\">",
+                "<p style=\"font-size:16px\">Basic Details</p>",
+                "</td>",
+                "</tr>",
+                "<tr>",
+                "<td colspan=\"3\" style=\"padding:0px 5px;background-color:#f2f2f2;\">",
+                "<p>Account ID         : " + escapeHtml(acct) + "</p>",
+                "<p>Current Balance    : " + escapeHtml(balance) + "</p>",
+                "<p>FICO Score         : " + escapeHtml(fico) + "</p>",
+                "</td>",
+                "</tr>",
+                "<tr>",
+                "<td colspan=\"3\" style=\"padding:0px 5px;background-color:#33FFD1; text-align:center;\">",
+                "<p style=\"font-size:16px\">Transaction Summary</p>",
+                "</td>",
+                "</tr>",
+                "<tr>",
+                "<td style=\"width:25%; padding:0px 5px; background-color:#33FF5E; text-align:left;\">",
+                "<p style=\"font-size:16px\">Tran ID</p>",
+                "</td>",
+                "<td style=\"width:55%; padding:0px 5px; background-color:#33FF5E; text-align:left;\">",
+                "<p style=\"font-size:16px\">Tran Details</p>",
+                "</td>",
+                "<td style=\"width:20%; padding:0px 5px; background-color:#33FF5E; text-align:right;\">",
+                "<p style=\"font-size:16px\">Amount</p>",
+                "</td>",
+                "</tr>"));
         for (Transaction tx : statement.transactions()) {
-            out.append("<tr><td>").append(escapeHtml(tx.getTranId())).append("</td><td>")
-                    .append(escapeHtml(tx.getTranDescription())).append("</td><td>")
-                    .append(escapeHtml(String.valueOf(zero(tx.getTranAmount()))))
-                    .append("</td></tr>");
-            total = total.add(zero(tx.getTranAmount()));
+            lines.addAll(List.of(
+                    "<tr>",
+                    "<td style=\"width:25%; padding:0px 5px; background-color:#f2f2f2; text-align:left;\">",
+                    "<p>" + escapeHtml(BatchFileSupport.pad(tx.getTranId(), 16)) + "</p>",
+                    "</td>",
+                    "<td style=\"width:55%; padding:0px 5px; background-color:#f2f2f2; text-align:left;\">",
+                    "<p>" + escapeHtml(BatchFileSupport.pad(tx.getTranDescription(), 49)) + "</p>",
+                    "</td>",
+                    "<td style=\"width:20%; padding:0px 5px; background-color:#f2f2f2; text-align:right;\">",
+                    "<p>" + escapeHtml(CobolFieldFormatter.trailingSign(
+                            tx.getTranAmount(), 9, 2, true)) + "</p>",
+                    "</td>",
+                    "</tr>"));
         }
-        return out.append("<tr><td colspan=\"3\">Total EXP: ").append(total)
-                .append("</td></tr><tr><td colspan=\"3\"><h3>End of Statement</h3></td></tr>")
-                .append("</table></body></html>\n").toString();
+        lines.addAll(List.of(
+                "<tr>",
+                "<td colspan=\"3\" style=\"padding:0px 5px;background-color:#1d1d96b3;\">",
+                "<h3>End of Statement</h3>",
+                "</td>",
+                "</tr>",
+                "</table>",
+                "</body>",
+                "</html>"));
+        // No trailing newline: FlatFileItemWriter appends the record separator.
+        StringBuilder out = new StringBuilder();
+        for (String line : lines) {
+            out.append(line.length() < 100 ? BatchFileSupport.pad(line, 100) : line).append('\n');
+        }
+        return out.deleteCharAt(out.length() - 1).toString();
     }
 
     public String exportRecord(Object value, long sequence) {
@@ -596,6 +723,38 @@ public class BatchJobService {
     private static LocalDateTime timestamp(String[] f, int i) { return empty(f, i) == null ? null : LocalDateTime.parse(f[i]); }
     private static BigDecimal zero(BigDecimal value) { return value == null ? BigDecimal.ZERO : value; }
     private static String trim(String value, int width) { String text = value == null ? "" : value; return text.length() <= width ? text : text.substring(0, width); }
+
+    // ST-NAME (CBSTM03A.cbl:462-469): STRING CUST-FIRST/MIDDLE/LAST-NAME each
+    // DELIMITED BY ' ' (first word), joined with single spaces.
+    private static String statementName(Customer customer) {
+        return firstWord(customer.getCustFirstName()) + " "
+                + firstWord(customer.getCustMiddleName()) + " "
+                + firstWord(customer.getCustLastName());
+    }
+
+    // ST-ADD3 (CBSTM03A.cbl:472-481): addr-3 + state + country + zip, each
+    // DELIMITED BY ' ' (first word), single-space joined.
+    private static String statementAddress3(Customer customer) {
+        return firstWord(customer.getCustAddrLine3()) + " "
+                + firstWord(customer.getCustAddrStateCode()) + " "
+                + firstWord(customer.getCustAddrCountryCode()) + " "
+                + firstWord(customer.getCustAddrZip());
+    }
+
+    // COBOL STRING ... DELIMITED BY ' ': content up to the first space.
+    private static String firstWord(String value) {
+        String text = value == null ? "" : value;
+        int end = text.indexOf(' ');
+        return end < 0 ? text : text.substring(0, end);
+    }
+
+    // COBOL STRING ... DELIMITED BY '  ' (two spaces): content up to the first
+    // double-space — applied to the space-padded fixed-width field, so it is
+    // the trimmed value unless the data itself contains a double space.
+    private static String htmlField(String padded) {
+        int end = padded.indexOf("  ");
+        return end < 0 ? padded : padded.substring(0, end);
+    }
 
     public record PostResult(String reject, DailyTransactionRecord posted) {}
     public record ReportLine(Transaction transaction, Long accountId, String type, String category) {}

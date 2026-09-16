@@ -67,8 +67,6 @@ public class Cbstm03JobConfiguration {
                 .name("cbstm03HtmlWriter")
                 .resource(new FileSystemResource(service.output("STATEMNT.HTML")))
                 .lineAggregator(service::statementHtml)
-                .headerCallback(writer -> writer.write(""))
-                .footerCallback(writer -> writer.write(""))
                 .shouldDeleteIfExists(true)
                 .build();
     }

@@ -42,6 +42,39 @@ public final class CobolFieldFormatter {
     }
 
     /**
+     * Renders a trailing-sign edited numeric field — the {@code 9(i).<s digits>-}
+     * and {@code Z(i).<s digits>-} pictures used in report/statement layouts
+     * (e.g. CBSTM03A's ST-CURR-BAL 9(9).99- and ST-TRANAMT/ST-TOTAL-TRAMT
+     * Z(9).99-). Integer digits are zero-filled ({@code 9}) or zero-suppressed
+     * to spaces ({@code Z}), the decimal point is fixed, and the sign prints as
+     * a trailing '-' for negatives, a space otherwise. High-order overflow keeps
+     * the low-order digits (COBOL numeric-move truncation); extra fraction
+     * digits truncate toward zero.
+     */
+    public static String trailingSign(BigDecimal value, int integerDigits, int scale,
+                                      boolean zeroSuppress) {
+        BigDecimal scaled = (value == null ? BigDecimal.ZERO : value)
+                .setScale(scale, RoundingMode.DOWN);
+        boolean negative = scaled.signum() < 0;
+        String digits = scaled.unscaledValue().abs().toString();
+        int width = integerDigits + scale;
+        if (digits.length() > width) {
+            digits = digits.substring(digits.length() - width);
+        } else {
+            digits = "0".repeat(width - digits.length()) + digits;
+        }
+        String integer = digits.substring(0, integerDigits);
+        if (zeroSuppress) {
+            int leading = 0;
+            while (leading < integer.length() && integer.charAt(leading) == '0') {
+                leading++;
+            }
+            integer = " ".repeat(leading) + integer.substring(leading);
+        }
+        return integer + "." + digits.substring(integerDigits) + (negative ? "-" : " ");
+    }
+
+    /**
      * Renders an alphanumeric {@code PIC X(length)} field: left-justified, space-padded
      * on the right, truncated on the right when overlong (COBOL MOVE semantics).
      */

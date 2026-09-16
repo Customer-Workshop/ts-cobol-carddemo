@@ -256,7 +256,9 @@ class BatchJobIntegrationTest {
         account.setAcctId(1L);
         Customer customer = new Customer();
         customer.setCustFirstName("<First>");
+        customer.setCustMiddleName("M");
         customer.setCustLastName("\"Last\"");
+        customer.setCustFicoCreditScore(800);
         Transaction transaction = new Transaction();
         transaction.setTranId("1<&");
         transaction.setTranDescription("<script>alert('x')</script>");
@@ -265,7 +267,7 @@ class BatchJobIntegrationTest {
         String html = service.statementHtml(new BatchJobService.CardStatement(
                 null, account, customer, List.of(transaction)));
 
-        assertTrue(html.contains("&lt;First&gt; &quot;Last&quot;"));
+        assertTrue(html.contains("&lt;First&gt; M &quot;Last&quot;"));
         assertTrue(html.contains("1&lt;&amp;"));
         assertTrue(html.contains("&lt;script&gt;alert(&#39;x&#39;)&lt;/script&gt;"));
         assertTrue(!html.contains("<script>alert('x')</script>"));
