@@ -9,18 +9,18 @@ parity pass, and sign-off under this engagement. Prior .NET-engagement statuses 
 
 | Stream | Type | Entry point | Status | Last update | Notes |
 |---|---|---|---|---|---|
-| S-01 Sign-on + menu shell | ONLINE | CC00/CM00/CA00 | SIGNED OFF — merge to main pending human merge of PR #105 | 2026-09-16 | Audit PASS w/ 4 LOW + 4 INFO findings (none blocking); 69 tests green; Postgres smoke live-verified; evidence in functional/CARDDEMO/evidence/s01/; owner authorized ("go ahead") but main merges need a human click |
+| S-01 Sign-on + menu shell | ONLINE | CC00/CM00/CA00 | SIGNED OFF — MERGED to devin/carddemo-java-test (PR #105) | 2026-09-16 | Audit PASS w/ 4 LOW + 4 INFO findings (none blocking); 69 tests green; Postgres smoke live-verified; evidence in functional/CARDDEMO/evidence/s01/ |
 | S-02 Account View | ONLINE | CAVW | baseline ported — pre-STOP C | 2026-09-15 | AccountController/AccountViewService in baseline |
 | S-03 Account Update | ONLINE | CAUP | baseline ported — pre-STOP C | 2026-09-15 | AccountUpdateController/Service in baseline |
-| S-04 Card List | ONLINE | CCLI | baseline ported — pre-STOP C | 2026-09-15 | CardController (list) in baseline |
+| S-04 Card List | ONLINE | CCLI | planned — Java docs merged (PR #107) | 2026-09-16 | CardController (list) in baseline; boundaries S04-B1..B4 decided; Flyway V120x |
 | S-05 Card View | ONLINE | CCDL | baseline ported — pre-STOP C | 2026-09-15 | CardController (view) in baseline |
 | S-06 Card Update | ONLINE | CCUP | baseline ported — pre-STOP C | 2026-09-15 | CardController (update) in baseline |
 | S-07 Transaction List | ONLINE | CT00 | baseline ported — pre-STOP C | 2026-09-15 | TransactionController (list) in baseline |
 | S-08 Transaction View | ONLINE | CT01 | baseline ported — pre-STOP C | 2026-09-15 | TransactionController (view) in baseline |
 | S-09 Transaction Add | ONLINE | CT02 | baseline ported — pre-STOP C | 2026-09-15 | TransactionController (add) + TransactionIdGenerator; CSUTLDTC parity gap: date validation is LocalDate.parse, not the Lillian/mask port (S09-B4) |
 | S-10 Reports (online→batch) | ONLINE+BATCH | CR00 + TRANREPT | baseline ported — pre-STOP C | 2026-09-15 | ReportController + Cbtrn03JobConfiguration; CSUTLDTC shared (same gap) |
-| S-11 Bill Payment | ONLINE | CB00 | baseline ported — pre-STOP C | 2026-09-15 | BillingController/Service in baseline |
-| S-12 User Admin | ONLINE | CU00–CU03 | baseline ported — pre-STOP C | 2026-09-15 | AdminUserController/Service in baseline |
+| S-11 Bill Payment | ONLINE | CB00 | planned — Java docs merged (PR #107) | 2026-09-16 | BillingController/Service in baseline; boundaries S11-B1..B6 decided; Flyway V190x |
+| S-12 User Admin | ONLINE | CU00–CU03 | planned — Java docs merged (PR #107) | 2026-09-16 | AdminUserController/Service in baseline; boundaries S12-B1..B5 decided; S01-B5 closed (Postgres users = single writer); Flyway V200x |
 | S-13 Card Detail (security) | ONLINE | CDV1 | BLOCKED — descoped | 2026-09-15 | COCRDSEC source absent (B-011); menu route registered disabled; needs an outside request, deferred per owner instruction |
 | S-14 Daily posting chain | BATCH | Control-M DAILY | baseline ported — pre-STOP C | 2026-09-15 | Cbtrn02JobConfiguration (POSTTRAN) + Cbtrn01JobConfiguration (orphan CBTRN01C bonus); COBSWAIT/MVSWAIT seam not yet ported (B-002) |
 | S-15 Interest calc chain | BATCH | Control-M MONTHLY | baseline ported — pre-STOP C | 2026-09-15 | Cbact04JobConfiguration (INTCALC); shares the wait-step seam |
@@ -32,7 +32,7 @@ parity pass, and sign-off under this engagement. Prior .NET-engagement statuses 
 | S-21 Tran-type maintenance (ext) | ONLINE+BATCH | CTLI/CTTU + MNTTRDB2 | not started | 2026-09-15 | DB2 extension -> Postgres tables + JPA (B-006) |
 | S-22 VSAM-MQ demo (ext) | SUBTRANSACTION | CDRA/CDRD (MQ) | not started | 2026-09-15 | MQ request/reply demo -> in-process queue seam (B-007) |
 
-Operating mode (2026-09-16, owner): sequential plan order is the spine; independent streams run in parallel — one child per stream, reconciled on the engagement branch; Flyway ranges pre-allocated per stream (S-02→V100x … S-22→V290x) to prevent migration collisions; STOP C/E batched across streams. Doc-authoring children running: S-02/05/07/08, S-09/03/06, S-04/11/12, S-10/14/15/16, S-17/18, S-19..22.
+Operating mode (2026-09-16, owner): sequential plan order is the spine; independent streams run in parallel — one child per stream, reconciled on the engagement branch; Flyway ranges pre-allocated per stream (S-02→V100x … S-22→V290x) to prevent migration collisions; STOP C/E batched across streams. Doc-authoring children: S-04/11/12 MERGED (PR #107); running: S-02/05/07/08, S-09/03/06, S-10/14/15/16, S-17/18, S-19..22.
 
 Cross-cutting gaps vs target state (tracked for Phase 0/1):
 - ~~Persistence is H2~~ — DONE (S-01 W1): Postgres profile + docker-compose + Flyway V1-V3.
