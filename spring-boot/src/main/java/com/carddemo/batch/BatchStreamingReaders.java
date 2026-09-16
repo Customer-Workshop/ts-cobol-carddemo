@@ -3,6 +3,7 @@ package com.carddemo.batch;
 import com.carddemo.model.Account;
 import com.carddemo.model.TransactionCategoryBalance;
 import com.carddemo.repository.AccountRepository;
+import com.carddemo.service.TransactionIdGenerator;
 import org.springframework.batch.item.ExecutionContext;
 import org.springframework.batch.item.file.FlatFileItemReader;
 import org.springframework.batch.item.ItemStreamReader;
@@ -107,16 +108,19 @@ class AccountInterestReader implements ItemStreamReader<BatchJobService.Interest
     private final ItemStreamReader<TransactionCategoryBalance> delegate;
     private final AccountRepository accounts;
     private final BatchJobService service;
+    private final InterestTransactionIds tranIds;
     private Long accountId;
     private final List<TransactionCategoryBalance> group = new ArrayList<>();
     private TransactionCategoryBalance lookahead;
     private boolean exhausted;
 
     AccountInterestReader(ItemStreamReader<TransactionCategoryBalance> delegate,
-                          AccountRepository accounts, BatchJobService service) {
+                          AccountRepository accounts, BatchJobService service,
+                          String parmDate, TransactionIdGenerator ids) {
         this.delegate = delegate;
         this.accounts = accounts;
         this.service = service;
+        this.tranIds = new InterestTransactionIds(parmDate, ids);
     }
 
     @Override
@@ -150,19 +154,16 @@ class AccountInterestReader implements ItemStreamReader<BatchJobService.Interest
         if (group.isEmpty()) {
             return null;
         }
-        Account account = accounts.findById(accountId).orElse(null);
+        // 1100-GET-ACCT-DATA (CBACT04C.cbl:372-391): the keyed ACCTFILE read at
+        // each account break. INVALID KEY (status 23) displays 'ACCOUNT NOT
+        // FOUND' and abends — a missing account fails the step (S15-B7).
+        Account account = accounts.findById(accountId).orElseThrow(() ->
+                new InterestAbendException("ACCOUNT NOT FOUND: " + accountId
+                        + " - ACCTFILE read status 23"));
         List<TransactionCategoryBalance> balances = new ArrayList<>(group);
         group.clear();
         accountId = null;
-        return account == null ? readUnchecked() : service.calculateInterest(account, balances);
-    }
-
-    private BatchJobService.InterestWork readUnchecked() {
-        try {
-            return read();
-        } catch (Exception exception) {
-            throw new IllegalStateException(exception);
-        }
+        return service.calculateInterest(account, balances, tranIds::next);
     }
 
     @Override

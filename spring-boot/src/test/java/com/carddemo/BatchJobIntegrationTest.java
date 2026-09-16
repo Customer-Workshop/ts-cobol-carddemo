@@ -98,7 +98,11 @@ class BatchJobIntegrationTest {
                 .addString("startDate", "2022-01-01")
                 .addString("endDate", "2030-12-31")
                 .addLong("run", 3L).toJobParameters());
-        launch("cbact04Job", params("run", "4"));
+        // cbact04Job requires parmDate (yyyymmddhh, S15-B4); the seeded
+        // tcatbal row resolves its rate through the DEFAULT disclosure group
+        // because the account's own group has no (type,cat) rate.
+        saveDisclosure("DEFAULT", "01", 1);
+        launch("cbact04Job", params("parmDate", "2022071800"));
         launch("cbstm03Job", params("run", "5"));
         launch("cbexportJob", params("run", "6"));
         launch("cbimportJob", params("run", "7"));
@@ -201,7 +205,11 @@ class BatchJobIntegrationTest {
             return disclosures.existsById(fallback);
         }).count();
 
-        launch("cbact04Job", params("run", "interest-" + System.nanoTime()));
+        // The seeded cat-1 balance resolves through DEFAULT as well; a
+        // distinct parmDate keeps this run's TRAN-IDs from colliding with the
+        // sweep test above (legacy suffixes restart at 1 per run).
+        saveDisclosure("DEFAULT", "01", 1);
+        launch("cbact04Job", params("parmDate", "2022071900"));
 
         var interest = transactions.findAll().stream()
                 .filter(transaction -> "System".equals(transaction.getTranSource())

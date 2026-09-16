@@ -3,7 +3,10 @@ package com.carddemo.batch;
 import com.carddemo.model.TransactionCategoryBalance;
 import com.carddemo.repository.AccountRepository;
 import com.carddemo.repository.TransactionCategoryBalanceRepository;
+import com.carddemo.service.TransactionIdGenerator;
 import org.springframework.batch.core.Job;
+import org.springframework.batch.core.JobParameters;
+import org.springframework.batch.core.JobParametersInvalidException;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.batch.core.job.builder.JobBuilder;
@@ -16,6 +19,7 @@ import org.springframework.batch.item.ItemWriter;
 import org.springframework.batch.item.data.RepositoryItemReader;
 import org.springframework.batch.item.data.builder.RepositoryItemReaderBuilder;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.domain.Sort;
@@ -24,12 +28,40 @@ import org.springframework.transaction.PlatformTransactionManager;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+/**
+ * INTCALC (CBACT04C): monthly interest sweep over transaction-category
+ * balances — DISCGRP rate resolution with 'DEFAULT' fallback, interest
+ * transactions inserted directly (COMBTRAN eliminated), account balances and
+ * cycle totals updated at each account break. Keyed-read misses abend the job
+ * with exit code 999, matching the legacy CEE3ABD contract.
+ */
 @Configuration
 public class Cbact04JobConfiguration {
     @Bean
     public Job cbact04Job(JobRepository repository, Step cbact04Step) {
         return new JobBuilder("cbact04Job", repository)
-                .incrementer(new RunIdIncrementer()).start(cbact04Step).build();
+                .incrementer(new RunIdIncrementer())
+                .listener(new Abend999JobListener())
+                .validator(this::validateParmDate)
+                .start(cbact04Step).build();
+    }
+
+    // S15-B4: INTCALC supplies PARM='yyyymmddhh' (INTCALC.jcl:3) — a JES-side
+    // PARM error surfaces before the job runs, so the equivalent here is a
+    // parameter rejection rather than a runtime failure.
+    private void validateParmDate(JobParameters parameters) throws JobParametersInvalidException {
+        String parmDate = parameters == null ? null : parameters.getString("parmDate");
+        if (parmDate == null || !parmDate.matches("\\d{10}")) {
+            throw new JobParametersInvalidException(
+                    "cbact04Job requires a parmDate parameter in yyyymmddhh format (INTCALC PARM)");
+        }
+        int month = Integer.parseInt(parmDate.substring(4, 6));
+        int day = Integer.parseInt(parmDate.substring(6, 8));
+        int hour = Integer.parseInt(parmDate.substring(8, 10));
+        if (month < 1 || month > 12 || day < 1 || day > 31 || hour > 23) {
+            throw new JobParametersInvalidException(
+                    "cbact04Job parmDate must be a plausible yyyymmddhh date-hour: " + parmDate);
+        }
     }
 
     @Bean
@@ -51,8 +83,11 @@ public class Cbact04JobConfiguration {
     @StepScope
     public ItemStreamReader<BatchJobService.InterestWork> cbact04Reader(
             RepositoryItemReader<TransactionCategoryBalance> cbact04BalanceReader,
-            AccountRepository accounts, BatchJobService service) {
-        return new AccountInterestReader(cbact04BalanceReader, accounts, service);
+            AccountRepository accounts, BatchJobService service,
+            TransactionIdGenerator ids,
+            @Value("#{jobParameters['parmDate']}") String parmDate) {
+        return new AccountInterestReader(cbact04BalanceReader, accounts, service,
+                parmDate, ids);
     }
 
     @Bean

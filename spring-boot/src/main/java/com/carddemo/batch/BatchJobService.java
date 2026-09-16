@@ -31,6 +31,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.Supplier;
 
 @Service
 public class BatchJobService {
@@ -62,6 +63,17 @@ public class BatchJobService {
      * cbtrn01Job is an orphan validation utility — deliberately not in the chain.
      */
     public static final List<String> DAILY_POSTING_CHAIN = List.of("cbtrn02Job", "waitStepJob");
+
+    /**
+     * Documented monthly interest order (S15-B5), replacing the Control-M
+     * MONTHLY-InterestCalculation chain CLOSEFIL→INTCALC→COMBTRAN→WAITSTEP→OPENFIL
+     * (app/scheduler/CardDemo.controlm:64-90): interest runs, then the wait
+     * step. CLOSEFIL/OPENFIL are no-ops (the target store is always on) and
+     * COMBTRAN is eliminated — interest transactions insert directly through
+     * cbact04Job's writer (S15-B3).
+     */
+    public static final List<String> MONTHLY_INTEREST_CHAIN =
+            List.of("cbact04Job", "waitStepJob");
 
     /**
      * Documented statement chain order (S16-B5/B7), replacing the scheduler
@@ -171,39 +183,63 @@ public class BatchJobService {
         return new ReportLine(transaction, account, type, category);
     }
 
-    public InterestWork calculateInterest(Account account, List<TransactionCategoryBalance> group) {
+    /**
+     * CBACT04C per-account interest pass. `tranIds` supplies TRAN-IDs for the
+     * whole run — the step-scoped {@link InterestTransactionIds} derives
+     * PARM-DATE+9(06) suffixes (CBACT04C.cbl:473-480).
+     */
+    public InterestWork calculateInterest(Account account,
+                                          List<TransactionCategoryBalance> group,
+                                          Supplier<String> tranIds) {
+        // 1110-GET-XREF-DATA (CBACT04C.cbl:393-413): keyed read through the
+        // XREFFIL1 acct-id alternate index. INVALID KEY (status 23) displays
+        // 'ACCOUNT NOT FOUND' and abends — a card-less account fails the step
+        // rather than silently skipping its interest rows (S15-B2, STOP C).
+        String cardNumber = xrefs.findByXrefAcctId(account.getAcctId()).stream().findFirst()
+                .map(CardXref::getXrefCardNumber)
+                .orElseThrow(() -> new InterestAbendException(
+                        "ACCOUNT NOT FOUND: " + account.getAcctId()
+                                + " - XREFFIL1 read status 23"));
         BigDecimal total = BigDecimal.ZERO;
         List<Transaction> interestTransactions = new ArrayList<>();
-        Card card = xrefs.findByXrefAcctId(account.getAcctId()).stream().findFirst()
-                .flatMap(xref -> cards.findById(xref.getXrefCardNumber())).orElse(null);
-        String nextInterestId = card == null ? null : ids.nextId();
         for (TransactionCategoryBalance balance : group) {
             DisclosureGroup disclosure = disclosure(account, balance);
             if (disclosure == null) {
+                // 1200-A-GET-DEFAULT-INT-RATE miss (:455): 'ERROR READING
+                // DEFAULT DISCLOSURE GROUP' -> abend. Missing rate data is
+                // fatal in legacy, including for the fallback key.
+                throw new InterestAbendException(
+                        "ERROR READING DEFAULT DISCLOSURE GROUP - group "
+                                + account.getAcctGroupId() + " and DEFAULT both missing"
+                                + " rate for tran " + balance.getId().getTypeCode()
+                                + " cat " + balance.getId().getCategoryCode());
+            }
+            // DIS-INT-RATE = 0 skips 1300-COMPUTE-INTEREST entirely (:214-216):
+            // no accumulation and no SYSTRAN write for that category.
+            if (zero(disclosure.getInterestRate()).signum() == 0) {
                 continue;
             }
+            // COBOL COMPUTE has no ROUNDED clause, so the result truncates at
+            // the S9(09)V99 target: (TRAN-CAT-BAL × DIS-INT-RATE) / 1200 at 2dp.
             BigDecimal interest = zero(balance.getBalance())
                     .multiply(zero(disclosure.getInterestRate()))
-                    .divide(BigDecimal.valueOf(1200), 2, RoundingMode.HALF_UP);
+                    .divide(BigDecimal.valueOf(1200), 2, RoundingMode.DOWN);
             total = total.add(interest);
-            if (card != null) {
-                Transaction transaction = new Transaction();
-                transaction.setTranId(nextInterestId);
-                nextInterestId = ids.nextIdAfter(nextInterestId);
-                transaction.setTranTypeCode("01");
-                transaction.setTranCategoryCode(5);
-                transaction.setTranSource("System");
-                transaction.setTranDescription("Int. for a/c " + account.getAcctId());
-                transaction.setTranAmount(interest);
-                transaction.setTranMerchantId(0L);
-                transaction.setTranMerchantName("");
-                transaction.setTranMerchantCity("");
-                transaction.setTranMerchantZip("");
-                transaction.setTranCardNumber(card.getCardNumber());
-                transaction.setTranOriginTimestamp(LocalDateTime.now());
-                transaction.setTranProcessTimestamp(transaction.getTranOriginTimestamp());
-                interestTransactions.add(transaction);
-            }
+            Transaction transaction = new Transaction();
+            transaction.setTranId(tranIds.get());
+            transaction.setTranTypeCode("01");
+            transaction.setTranCategoryCode(5);
+            transaction.setTranSource("System");
+            transaction.setTranDescription("Int. for a/c " + account.getAcctId());
+            transaction.setTranAmount(interest);
+            transaction.setTranMerchantId(0L);
+            transaction.setTranMerchantName("");
+            transaction.setTranMerchantCity("");
+            transaction.setTranMerchantZip("");
+            transaction.setTranCardNumber(cardNumber);
+            transaction.setTranOriginTimestamp(LocalDateTime.now());
+            transaction.setTranProcessTimestamp(transaction.getTranOriginTimestamp());
+            interestTransactions.add(transaction);
         }
         return new InterestWork(account, total, interestTransactions);
     }
