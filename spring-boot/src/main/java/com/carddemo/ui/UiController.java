@@ -2,6 +2,7 @@ package com.carddemo.ui;
 
 import com.carddemo.api.AuthRequest;
 import com.carddemo.api.AuthResponse;
+import com.carddemo.api.BillPaymentScreen;
 import com.carddemo.api.CobolApiException;
 import com.carddemo.api.CobolMessages;
 import com.carddemo.api.MenuResponse;
@@ -12,6 +13,7 @@ import com.carddemo.api.TransactionCreateRequest;
 import com.carddemo.service.AccountViewScreen;
 import com.carddemo.service.AccountViewService;
 import com.carddemo.service.AuthService;
+import com.carddemo.service.BillingService;
 import com.carddemo.service.MenuService;
 import com.carddemo.service.TransactionListService;
 import com.carddemo.service.TransactionService;
@@ -48,16 +50,19 @@ public class UiController {
     private final AccountViewService accountViewService;
     private final TransactionListService transactionListService;
     private final TransactionService transactionService;
+    private final BillingService billingService;
 
     public UiController(AuthService authService, MenuService menuService,
                         AccountViewService accountViewService,
                         TransactionListService transactionListService,
-                        TransactionService transactionService) {
+                        TransactionService transactionService,
+                        BillingService billingService) {
         this.authService = authService;
         this.menuService = menuService;
         this.accountViewService = accountViewService;
         this.transactionListService = transactionListService;
         this.transactionService = transactionService;
+        this.billingService = billingService;
     }
 
     @ModelAttribute
@@ -366,6 +371,53 @@ public class UiController {
         model.addAttribute("messageStyle", screen.messageStyle());
         return "transaction-add";
     }
+
+    // COBIL00C web surface (tran CB00): the first display is the empty map
+    // (COBIL00C.cbl:112-122); a CDEMO-CB00-TRN-SELECTED lands as the
+    // accountId query param and runs ENTER processing at once (S11-B5).
+    // Unsigned access is bounced to sign-on by the security entry point
+    // (EIBCALEN=0, :107-109).
+    @GetMapping("/bill-payment")
+    public String billPayment(@RequestParam(name = "accountId", required = false) String accountId,
+                              Model model) {
+        BillPaymentScreen screen = BillPaymentScreen.blank();
+        if (accountId != null && !accountId.isBlank()) {
+            screen = billingService.enter(accountId, null, null);
+        }
+        return billPaymentView(screen, model);
+    }
+
+    // AID map (COBIL00C.cbl:126-141): ENTER runs PROCESS-ENTER-KEY, PF3
+    // transfers back to the menu (S11-B4), PF4 clears the map, and every
+    // other key redisplays the screen unchanged with the invalid-key
+    // message — this program does emit it, unlike COACTVWC.
+    @PostMapping("/bill-payment")
+    public String submitBillPayment(
+            @RequestParam(name = "aid", defaultValue = "ENTER") String aid,
+            @RequestParam(name = "acctId", required = false) String acctId,
+            @RequestParam(name = "currentBalance", required = false) String currentBalance,
+            @RequestParam(name = "confirmation", required = false) String confirmation,
+            Model model) {
+        if ("PF3".equals(aid)) {
+            return "redirect:/menu";
+        }
+        if ("PF4".equals(aid)) {
+            return billPaymentView(BillPaymentScreen.blank(), model);
+        }
+        BillPaymentScreen screen = "ENTER".equals(aid)
+                ? billingService.enter(acctId, confirmation, currentBalance)
+                : BillPaymentScreen.preserved(acctId, currentBalance, confirmation,
+                        CobolMessages.INVALID_KEY_PRESSED);
+        return billPaymentView(screen, model);
+    }
+
+    private String billPaymentView(BillPaymentScreen screen, Model model) {
+        model.addAttribute("screen", screen);
+        model.addAttribute("message", screen.message());
+        model.addAttribute("messageStyle", screen.messageStyle());
+        return "bill-payment";
+    }
+
 
     // COTRN01C web surface (tran CT01): one transaction by its verbatim
     // Tran ID. First entry honors the CDEMO-CT01-TRN-SELECTED slot, which

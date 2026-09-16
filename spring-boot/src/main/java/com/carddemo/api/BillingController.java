@@ -13,7 +13,7 @@ public class BillingController {
     }
 
     @PostMapping("/payments")
-    public BillPaymentResponse pay(@RequestBody BillPaymentRequest request) {
-        return service.pay(request);
+    public BillPaymentScreen pay(@RequestBody BillPaymentRequest request) {
+        return service.enter(request.accountId(), request.confirmation(), null);
     }
 }

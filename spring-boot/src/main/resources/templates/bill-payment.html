@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout :: layout('AWS Mainframe Modernization', 'CB00', 'COBIL00C', ~{::content})}">
+<head>
+    <title>Bill Payment</title>
+</head>
+<body>
+<!-- COBIL0A (app/bms/COBIL00.bms): the Acct ID input, a dashed separator,
+     the read-only balance line, the Y/N confirm, and the AID legend.
+     maxlength enforces the 3270 field widths; CURBAL round-trips as a
+     hidden FSET field so rejections before the account read keep the
+     previously displayed balance (COBIL00C.cbl:44-56, :173-191). -->
+<div th:fragment="content" class="bill-pay">
+    <p class="screen-title">Bill Payment</p>
+    <form id="bill-pay-form" method="post" th:action="@{/bill-payment}">
+        <div class="form-row">
+            <label class="field-label" for="acctId">Enter Acct ID:</label>
+            <input id="acctId" name="acctId" type="text" maxlength="11" size="11"
+                   autocomplete="off" inputmode="numeric" th:value="${screen.accountId}"
+                   th:attr="autofocus=${screen.cursorField == 'accountId' ? 'autofocus' : null}">
+        </div>
+        <p class="separator">----------------------------------------------------------------------</p>
+        <div class="form-row">
+            <span class="field-label">Your current balance is:</span>
+            <span class="curbal" th:text="${screen.currentBalance}"></span>
+            <input type="hidden" name="currentBalance" th:value="${screen.currentBalance}">
+        </div>
+        <div class="form-row">
+            <label class="field-label" for="confirmation">Do you want to pay your balance now. Please confirm:</label>
+            <input id="confirmation" name="confirmation" type="text" maxlength="1" size="1"
+                   autocomplete="off" th:value="${screen.confirmation}"
+                   th:attr="autofocus=${screen.cursorField == 'confirmation' ? 'autofocus' : null}">
+            <span class="field-hint">(Y/N)</span>
+        </div>
+        <p class="key-hints">ENTER=Continue  F3=Back  F4=Clear</p>
+        <div class="form-actions">
+            <button type="submit" name="aid" value="ENTER">ENTER=Continue</button>
+            <button type="submit" name="aid" value="PF3" formnovalidate>F3=Back</button>
+            <button type="submit" name="aid" value="PF4" formnovalidate>F4=Clear</button>
+        </div>
+    </form>
+    <script>
+        // 3270 AID parity: F3 backs out, F4 clears; every other function
+        // key is submitted raw and redisplays with the invalid-key
+        // message (COBIL00C.cbl:126-141).
+        document.addEventListener('keydown', function (event) {
+            if (/^F([1-9]|1[0-2])$/.test(event.key)) {
+                event.preventDefault();
+                var form = document.getElementById('bill-pay-form');
+                var aid = document.createElement('input');
+                aid.type = 'hidden';
+                aid.name = 'aid';
+                aid.value = event.key === 'F3' ? 'PF3'
+                        : event.key === 'F4' ? 'PF4' : event.key;
+                form.appendChild(aid);
+                form.submit();
+            }
+        });
+    </script>
+</div>
+</body>
+</html>

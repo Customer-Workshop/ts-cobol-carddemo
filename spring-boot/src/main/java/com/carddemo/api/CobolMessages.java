@@ -157,6 +157,17 @@ public final class CobolMessages {
     public static final String CARD_FILE_ERROR_READ =
         "File Error: READ     on CARDDAT   returned RESP 000000020 ,RESP2 000000090 ";
 
+    // COBIL00C verbatim messages (S-11; COBIL00C.cbl:161-540).
+    public static final String BILL_ACCOUNT_EMPTY = "Acct ID can NOT be empty...";
+    public static final String BILL_ACCOUNT_LOOKUP_FAILED =
+        "Unable to lookup Account...";
+    public static final String BILL_XREF_LOOKUP_FAILED =
+        "Unable to lookup XREF AIX file...";
+    public static final String BILL_TRANSACTION_ADD_FAILED =
+        "Unable to Add Bill pay Transaction...";
+    public static final String BILL_ACCOUNT_UPDATE_FAILED =
+        "Unable to Update Account...";
+
     private CobolMessages() {
     }
 
@@ -222,5 +233,11 @@ public final class CobolMessages {
     // COTRN02C.cbl:728-733 — two spaces before "Your".
     public static String transactionAdded(String tranId) {
         return "Transaction added successfully.  Your Tran ID is " + tranId + ".";
+    }
+
+    // COBIL00C.cbl:526-530 — 'Payment successful. ' + ' Your Transaction ID
+    // is ' + TRAN-ID + '.', so two spaces before "Your".
+    public static String billPaymentSuccess(String tranId) {
+        return "Payment successful.  Your Transaction ID is " + tranId + ".";
     }
 }

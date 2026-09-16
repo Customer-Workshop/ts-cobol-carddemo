@@ -238,8 +238,8 @@ class ApiIntegrationTest {
                 .andExpect(jsonPath("$.transactionCategoryCode").value("0001"));
         mockMvc.perform(post("/api/billing/payments").session(admin)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"accountId\":\"1\",\"confirmation\":\"N\"}"))
-                .andExpect(status().isBadRequest())
+                        .content("{\"accountId\":\"00000000001\",\"confirmation\":\"\"}"))
+                .andExpect(status().isOk())
                 .andExpect(jsonPath("$.message").value("Confirm to make a bill payment..."));
         mockMvc.perform(post("/api/reports").session(admin)
                         .contentType(MediaType.APPLICATION_JSON).content("""

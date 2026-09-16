@@ -460,6 +460,69 @@ body {
 }
 
 
+/* COBIL0A (bill payment, S-11) — 3270 colours: green underlined inputs,
+   turquoise labels, blue balance, red error / green success message line
+   (app/bms/COBIL00.bms). */
+.bill-pay .screen-title {
+    color: #ff0;
+    text-align: center;
+}
+
+.bill-pay .form-row {
+    margin: 0.8em 0 0 4ch;
+}
+
+.bill-pay .field-label {
+    white-space: pre;
+    color: #40e0d0;
+    margin-right: 0.5em;
+}
+
+.bill-pay .field-label + input {
+    margin-right: 2em;
+}
+
+.bill-pay .curbal {
+    color: #00f;
+}
+
+.bill-pay .field-hint {
+    color: #40e0d0;
+    margin: 0 2em 0 0.5em;
+}
+
+.bill-pay input {
+    background: #000;
+    color: #0f0;
+    border: none;
+    border-bottom: 1px solid #0f0;
+    font: inherit;
+}
+
+.bill-pay .separator {
+    color: #40e0d0;
+    margin: 0.5em 0 0.5em 4ch;
+}
+
+.bill-pay .key-hints {
+    color: #ff0;
+    margin-left: 4ch;
+}
+
+.bill-pay .form-actions {
+    margin-left: 4ch;
+}
+
+.bill-pay .form-actions button {
+    background: #000;
+    color: #0f0;
+    border: 1px solid #0f0;
+    font: inherit;
+    margin-right: 1em;
+    cursor: pointer;
+}
+
+
 /* COTRN1A (transaction view) — 3270-style label/value grid. */
 .tran-view .view-title {
     color: #ff0;
