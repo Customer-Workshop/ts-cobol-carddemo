@@ -528,6 +528,91 @@ body {
     cursor: pointer;
 }
 
+/* COACTUPC web surface (S-03): same map chrome as the account-view screen,
+   plus readonly ASKIP fields and dimmed F5/F12 key indicators. */
+.account-update .view-title {
+    color: #ff0;
+    text-align: center;
+}
+
+.account-update .view-section {
+    color: #ff0;
+    margin: 1em 0 0.5em 0;
+    text-align: center;
+}
+
+.account-update .view-grid {
+    display: flex;
+    flex-direction: column;
+}
+
+.account-update .view-row {
+    display: flex;
+    min-height: 1.2em;
+}
+
+.account-update .view-cell {
+    flex: 0 0 50%;
+    white-space: pre;
+    min-width: 0;
+    overflow: hidden;
+}
+
+.account-update .name-labels,
+.account-update .name-values {
+    display: flex;
+    gap: 2ch;
+}
+
+.account-update .field-label {
+    white-space: pre;
+    color: #40e0d0;
+}
+
+.account-update input {
+    background: #000;
+    color: #0f0;
+    border: none;
+    border-bottom: 1px solid #0f0;
+    font: inherit;
+    padding: 0;
+}
+
+.account-update input.field-prot {
+    border-bottom-color: transparent;
+}
+
+.account-update input.field-red {
+    color: #f00;
+    border-bottom-color: #f00;
+}
+
+.account-update .info-line {
+    color: #40e0d0;
+    margin-top: 1.5em;
+}
+
+.account-update .key-hints {
+    color: #ff0;
+}
+
+.account-update .key-hints .dim {
+    color: #555;
+}
+
+.account-update .key-hints .lit {
+    color: #ff0;
+}
+
+.account-update .form-actions button {
+    background: #000;
+    color: #0f0;
+    border: 1px solid #0f0;
+    font: inherit;
+    margin-right: 1em;
+    cursor: pointer;
+}
+
 /* COCRDUPA (card update) — search keys then protected-able detail rows. */
 .card-update .screen-title {
     color: #ff0;

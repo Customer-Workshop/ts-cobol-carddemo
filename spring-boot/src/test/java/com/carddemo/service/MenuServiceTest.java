@@ -104,13 +104,15 @@ class MenuServiceTest {
                 service.selectMain(new MenuSelectRequest("6"), authentication)));
         assertEquals("/accounts/view", service.uiRoute(
                 service.selectMain(new MenuSelectRequest("1"), authentication)));
-        // POST-only or unimplemented endpoints have no browsable route today.
-        assertNull(service.uiRoute(
+        assertEquals("/accounts/update", service.uiRoute(
                 service.selectMain(new MenuSelectRequest("2"), authentication)));
         assertEquals("/bill-payment", service.uiRoute(
                 service.selectMain(new MenuSelectRequest("10"), authentication)));
         assertEquals("/ui/pending-auth", service.uiRoute(
                 service.selectMain(new MenuSelectRequest("11"), authentication)));
+        // Implemented but unported: no browsable route today.
+        assertNull(service.uiRoute(
+                service.selectMain(new MenuSelectRequest("9"), authentication)));
         assertEquals("/admin/users", service.uiRoute(
                 service.selectAdmin(new MenuSelectRequest("1"))));
         assertEquals("/ui/tran-types", service.uiRoute(

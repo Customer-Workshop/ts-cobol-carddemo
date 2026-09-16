@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout :: layout('CardDemo', 'CAUP', 'COACTUPC', ~{::content})}">
+<head>
+    <title>CardDemo</title>
+</head>
+<body>
+<!-- CACTUPA map (COACTUP.bms): element ids are the BMS field names
+     lowercased, input names are the AccountUpdateForm components. The
+     hidden `state` field carries ACUP-CHANGE-ACTION and the `orig.*`
+     fields carry the fetched snapshot (S03-B3). -->
+<div th:fragment="content" class="account-update">
+    <p class="view-title">Update Account</p>
+    <form id="account-update-form" method="post" th:action="@{/accounts/update}">
+        <input type="hidden" name="screenState" th:value="${screen.state}">
+        <th:block th:if="${screen.original != null}">
+            <input type="hidden" name="orig.accountId" th:value="${screen.original.accountId}">
+            <input type="hidden" name="orig.activeStatus" th:value="${screen.original.activeStatus}">
+            <input type="hidden" name="orig.currentBalance" th:value="${screen.original.currentBalance}">
+            <input type="hidden" name="orig.creditLimit" th:value="${screen.original.creditLimit}">
+            <input type="hidden" name="orig.cashCreditLimit" th:value="${screen.original.cashCreditLimit}">
+            <input type="hidden" name="orig.openDate" th:value="${screen.original.openDate}">
+            <input type="hidden" name="orig.expirationDate" th:value="${screen.original.expirationDate}">
+            <input type="hidden" name="orig.reissueDate" th:value="${screen.original.reissueDate}">
+            <input type="hidden" name="orig.currentCycleCredit" th:value="${screen.original.currentCycleCredit}">
+            <input type="hidden" name="orig.currentCycleDebit" th:value="${screen.original.currentCycleDebit}">
+            <input type="hidden" name="orig.accountGroup" th:value="${screen.original.accountGroup}">
+            <input type="hidden" name="orig.customerId" th:value="${screen.original.customerId}">
+            <input type="hidden" name="orig.ssn" th:value="${screen.original.ssn}">
+            <input type="hidden" name="orig.dateOfBirth" th:value="${screen.original.dateOfBirth}">
+            <input type="hidden" name="orig.ficoScore" th:value="${screen.original.ficoScore}">
+            <input type="hidden" name="orig.firstName" th:value="${screen.original.firstName}">
+            <input type="hidden" name="orig.middleName" th:value="${screen.original.middleName}">
+            <input type="hidden" name="orig.lastName" th:value="${screen.original.lastName}">
+            <input type="hidden" name="orig.addressLine1" th:value="${screen.original.addressLine1}">
+            <input type="hidden" name="orig.addressLine2" th:value="${screen.original.addressLine2}">
+            <input type="hidden" name="orig.addressLine3" th:value="${screen.original.addressLine3}">
+            <input type="hidden" name="orig.stateCode" th:value="${screen.original.stateCode}">
+            <input type="hidden" name="orig.zip" th:value="${screen.original.zip}">
+            <input type="hidden" name="orig.countryCode" th:value="${screen.original.countryCode}">
+            <input type="hidden" name="orig.phoneNumber1" th:value="${screen.original.phoneNumber1}">
+            <input type="hidden" name="orig.phoneNumber2" th:value="${screen.original.phoneNumber2}">
+            <input type="hidden" name="orig.governmentIssuedId" th:value="${screen.original.governmentIssuedId}">
+            <input type="hidden" name="orig.eftAccountId" th:value="${screen.original.eftAccountId}">
+            <input type="hidden" name="orig.primaryCardHolderIndicator" th:value="${screen.original.primaryCardHolderIndicator}">
+        </th:block>
+
+        <div class="view-grid">
+            <div class="view-row">
+                <span class="view-cell">
+                    <label class="field-label" for="acctsid">Account Number :</label>
+                    <input id="acctsid" name="acctId" type="text" maxlength="11" size="11"
+                           autocomplete="off" inputmode="numeric"
+                           th:value="${screen.accountEcho}"
+                           th:readonly="${!screen.accountIdEditable}"
+                           th:classappend="${screen.accountFieldRed} ? 'field-red' : (!screen.accountIdEditable ? 'field-prot' : '')">
+                </span>
+                <span class="view-cell">
+                    <label class="field-label" for="acsttus">Active Y/N: </label>
+                    <input id="acsttus" name="activeStatus" type="text" maxlength="1" size="1"
+                           autocomplete="off"
+                           th:value="${screen.value('acsttus', screen.fields.activeStatus)}"
+                           th:readonly="${!screen.fieldsEditable}"
+                           th:classappend="${screen.flagged('acsttus')} ? 'field-red' : (!screen.fieldsEditable ? 'field-prot' : '')">
+                </span>
+            </div>
+            <div class="view-row">
+                <span class="view-cell">
+                    <span class="field-label">Opened :</span>
+                    <input id="opnyear" name="openYear" type="text" maxlength="4" size="4" autocomplete="off"
+                           th:value="${screen.value('opnyear', screen.fields.openYear)}"
+                           th:readonly="${!screen.fieldsEditable}"
+                           th:classappend="${screen.flagged('opnyear')} ? 'field-red' : (!screen.fieldsEditable ? 'field-prot' : '')"><span class="field-label">-</span><input id="opnmon" name="openMon" type="text" maxlength="2" size="2" autocomplete="off"
+                           th:value="${screen.value('opnmon', screen.fields.openMon)}"
+                           th:readonly="${!screen.fieldsEditable}"
+                           th:classappend="${screen.flagged('opnmon')} ? 'field-red' : (!screen.fieldsEditable ? 'field-prot' : '')"><span class="field-label">-</span><input id="opnday" name="openDay" type="text" maxlength="2" size="2" autocomplete="off"
+                           th:value="${screen.value('opnday', screen.fields.openDay)}"
+                           th:readonly="${!screen.fieldsEditable}"
+                           th:classappend="${screen.flagged('opnday')} ? 'field-red' : (!screen.fieldsEditable ? 'field-prot' : '')">
+                </span>
+                <span class="view-cell">
+                    <label class="field-label" for="acrdlim">Credit Limit        :</label>
+                    <input id="acrdlim" name="creditLimit" type="text" maxlength="15" size="15" autocomplete="off"
+                           th:value="${screen.value('acrdlim', screen.fields.creditLimit)}"
+                           th:readonly="${!screen.fieldsEditable}"
+                           th:classappend="${screen.flagged('acrdlim')} ? 'field-red' : (!screen.fieldsEditable ? 'field-prot' : '')">
+                </span>
+            </div>
+            <div class="view-row">
+                <span class="view-cell">
+                    <span class="field-label">Expiry :</span>
+                    <input id="expyear" name="expYear" type="text" maxlength="4" size="4" autocomplete="off"
+                           th:value="${screen.value('expyear', screen.fields.expYear)}"
+                           th:readonly="${!screen.fieldsEditable}"
+                           th:classappend="${screen.flagged('expyear')} ? 'field-red' : (!screen.fieldsEditable ? 'field-prot' : '')"><span class="field-label">-</span><input id="expmon" name="expMon" type="text" maxlength="2" size="2" autocomplete="off"
+                           th:value="${screen.value('expmon', screen.fields.expMon)}"
+                           th:readonly="${!screen.fieldsEditable}"
+                           th:classappend="${screen.flagged('expmon')} ? 'field-red' : (!screen.fieldsEditable ? 'field-prot' : '')"><span class="field-label">-</span><input id="expday" name="expDay" type="text" maxlength="2" size="2" autocomplete="off"
+                           th:value="${screen.value('expday', screen.fields.expDay)}"
+                           th:readonly="${!screen.fieldsEditable}"
+                           th:classappend="${screen.flagged('expday')} ? 'field-red' : (!screen.fieldsEditable ? 'field-prot' : '')">
+                </span>
+                <span class="view-cell">
+                    <label class="field-label" for="acshlim">Cash credit Limit   :</label>
+                    <input id="acshlim" name="cashCreditLimit" type="text" maxlength="15" size="15" autocomplete="off"
+                           th:value="${screen.value('acshlim', screen.fields.cashCreditLimit)}"
+                           th:readonly="${!screen.fieldsEditable}"
+                           th:classappend="${screen.flagged('acshlim')} ? 'field-red' : (!screen.fieldsEditable ? 'field-prot' : '')">
+                </span>
+            </div>
+            <div class="view-row">
+                <span class="view-cell">
+                    <span class="field-label">Reissue:</span>
+                    <input id="risyear" name="risYear" type="text" maxlength="4" size="4" autocomplete="off"
+                           th:value="${screen.value('risyear', screen.fields.risYear)}"
+                           th:readonly="${!screen.fieldsEditable}"
+                           th:classappend="${screen.flagged('risyear')} ? 'field-red' : (!screen.fieldsEditable ? 'field-prot' : '')"><span class="field-label">-</span><input id="rismon" name="risMon" type="text" maxlength="2" size="2" autocomplete="off"
+                           th:value="${screen.value('rismon', screen.fields.risMon)}"
+                           th:readonly="${!screen.fieldsEditable}"
+                           th:classappend="${screen.flagged('rismon')} ? 'field-red' : (!screen.fieldsEditable ? 'field-prot' : '')"><span class="field-label">-</span><input id="risday" name="risDay" type="text" maxlength="2" size="2" autocomplete="off"
+                           th:value="${screen.value('risday', screen.fields.risDay)}"
+                           th:readonly="${!screen.fieldsEditable}"
+                           th:classappend="${screen.flagged('risday')} ? 'field-red' : (!screen.fieldsEditable ? 'field-prot' : '')">
+                </span>
+                <span class="view-cell">
+                    <label class="field-label" for="acurbal">Current Balance     :</label>
+                    <input id="acurbal" name="currentBalance" type="text" maxlength="15" size="15" autocomplete="off"
+                           th:value="${screen.value('acurbal', screen.fields.currentBalance)}"
+                           th:readonly="${!screen.fieldsEditable}"
+                           th:classappend="${screen.flagged('acurbal')} ? 'field-red' : (!screen.fieldsEditable ? 'field-prot' : '')">
+                </span>
+            </div>
+            <div class="view-row">
+                <span class="view-cell">
+                    <label class="field-label" for="aaddgrp">Account Group:</label>
+                    <input id="aaddgrp" name="accountGroup" type="text" maxlength="10" size="10" autocomplete="off"
+                           th:value="${screen.value('aaddgrp', screen.fields.accountGroup)}"
+                           th:readonly="${!screen.fieldsEditable}"
+                           th:classappend="${screen.flagged('aaddgrp')} ? 'field-red' : (!screen.fieldsEditable ? 'field-prot' : '')">
+                </span>
+                <span class="view-cell">
+                    <label class="field-label" for="acrcycr">Current Cycle Credit:</label>
+                    <input id="acrcycr" name="currentCycleCredit" type="text" maxlength="15" size="15" autocomplete="off"
+                           th:value="${screen.value('acrcycr', screen.fields.currentCycleCredit)}"
+                           th:readonly="${!screen.fieldsEditable}"
+                           th:classappend="${screen.flagged('acrcycr')} ? 'field-red' : (!screen.fieldsEditable ? 'field-prot' : '')">
+                </span>
+            </div>
+            <div class="view-row">
+                <span class="view-cell"></span>
+                <span class="view-cell">
+                    <label class="field-label" for="acrcydb">Current Cycle Debit :</label>
+                    <input id="acrcydb" name="currentCycleDebit" type="text" maxlength="15" size="15" autocomplete="off"
+                           th:value="${screen.value('acrcydb', screen.fields.currentCycleDebit)}"
+                           th:readonly="${!screen.fieldsEditable}"
+                           th:classappend="${screen.flagged('acrcydb')} ? 'field-red' : (!screen.fieldsEditable ? 'field-prot' : '')">
+                </span>
+            </div>
+        </div>
+
+        <p class="view-section">Customer Details</p>
+        <div class="view-grid">
+            <div class="view-row">
+                <span class="view-cell">
+                    <label class="field-label" for="acstnum">Customer id  :</label>
+                    <input id="acstnum" name="custId" type="text" maxlength="9" size="9" autocomplete="off"
+                           th:value="${screen.fields.custId}" readonly class="field-prot">
+                </span>
+                <span class="view-cell">
+                    <span class="field-label">SSN:</span>
+                    <input id="actssn1" name="ssn1" type="text" maxlength="3" size="3" autocomplete="off"
+                           th:value="${screen.value('actssn1', screen.fields.ssn1)}"
+                           th:readonly="${!screen.fieldsEditable}"
+                           th:classappend="${screen.flagged('actssn1')} ? 'field-red' : (!screen.fieldsEditable ? 'field-prot' : '')"><span class="field-label">-</span><input id="actssn2" name="ssn2" type="text" maxlength="2" size="2" autocomplete="off"
+                           th:value="${screen.value('actssn2', screen.fields.ssn2)}"
+                           th:readonly="${!screen.fieldsEditable}"
+                           th:classappend="${screen.flagged('actssn2')} ? 'field-red' : (!screen.fieldsEditable ? 'field-prot' : '')"><span class="field-label">-</span><input id="actssn3" name="ssn3" type="text" maxlength="4" size="4" autocomplete="off"
+                           th:value="${screen.value('actssn3', screen.fields.ssn3)}"
+                           th:readonly="${!screen.fieldsEditable}"
+                           th:classappend="${screen.flagged('actssn3')} ? 'field-red' : (!screen.fieldsEditable ? 'field-prot' : '')">
+                </span>
+            </div>
+            <div class="view-row">
+                <span class="view-cell">
+                    <span class="field-label">Date of birth:</span>
+                    <input id="dobyear" name="dobYear" type="text" maxlength="4" size="4" autocomplete="off"
+                           th:value="${screen.value('dobyear', screen.fields.dobYear)}"
+                           th:readonly="${!screen.fieldsEditable}"
+                           th:classappend="${screen.flagged('dobyear')} ? 'field-red' : (!screen.fieldsEditable ? 'field-prot' : '')"><span class="field-label">-</span><input id="dobmon" name="dobMon" type="text" maxlength="2" size="2" autocomplete="off"
+                           th:value="${screen.value('dobmon', screen.fields.dobMon)}"
+                           th:readonly="${!screen.fieldsEditable}"
+                           th:classappend="${screen.flagged('dobmon')} ? 'field-red' : (!screen.fieldsEditable ? 'field-prot' : '')"><span class="field-label">-</span><input id="dobday" name="dobDay" type="text" maxlength="2" size="2" autocomplete="off"
+                           th:value="${screen.value('dobday', screen.fields.dobDay)}"
+                           th:readonly="${!screen.fieldsEditable}"
+                           th:classappend="${screen.flagged('dobday')} ? 'field-red' : (!screen.fieldsEditable ? 'field-prot' : '')">
+                </span>
+                <span class="view-cell">
+                    <label class="field-label" for="acstfco">FICO Score:</label>
+                    <input id="acstfco" name="ficoScore" type="text" maxlength="3" size="3" autocomplete="off"
+                           th:value="${screen.value('acstfco', screen.fields.ficoScore)}"
+                           th:readonly="${!screen.fieldsEditable}"
+                           th:classappend="${screen.flagged('acstfco')} ? 'field-red' : (!screen.fieldsEditable ? 'field-prot' : '')">
+                </span>
+            </div>
+            <div class="view-row">
+                <span class="view-cell name-labels">
+                    <span class="field-label">First Name</span>
+                    <span class="field-label">Middle Name: </span>
+                    <span class="field-label">Last Name : </span>
+                </span>
+            </div>
+            <div class="view-row">
+                <span class="view-cell name-values">
+                    <input id="acsfnam" name="firstName" type="text" maxlength="25" size="25" autocomplete="off"
+                           th:value="${screen.value('acsfnam', screen.fields.firstName)}"
+                           th:readonly="${!screen.fieldsEditable}"
+                           th:classappend="${screen.flagged('acsfnam')} ? 'field-red' : (!screen.fieldsEditable ? 'field-prot' : '')">
+                    <input id="acsmnam" name="middleName" type="text" maxlength="25" size="25" autocomplete="off"
+                           th:value="${screen.value('acsmnam', screen.fields.middleName)}"
+                           th:readonly="${!screen.fieldsEditable}"
+                           th:classappend="${screen.flagged('acsmnam')} ? 'field-red' : (!screen.fieldsEditable ? 'field-prot' : '')">
+                    <input id="acslnam" name="lastName" type="text" maxlength="25" size="25" autocomplete="off"
+                           th:value="${screen.value('acslnam', screen.fields.lastName)}"
+                           th:readonly="${!screen.fieldsEditable}"
+                           th:classappend="${screen.flagged('acslnam')} ? 'field-red' : (!screen.fieldsEditable ? 'field-prot' : '')">
+                </span>
+            </div>
+            <div class="view-row">
+                <span class="view-cell">
+                    <label class="field-label" for="acsadl1">Address:</label>
+                    <input id="acsadl1" name="addrLine1" type="text" maxlength="50" size="30" autocomplete="off"
+                           th:value="${screen.value('acsadl1', screen.fields.addrLine1)}"
+                           th:readonly="${!screen.fieldsEditable}"
+                           th:classappend="${screen.flagged('acsadl1')} ? 'field-red' : (!screen.fieldsEditable ? 'field-prot' : '')">
+                </span>
+                <span class="view-cell">
+                    <label class="field-label" for="acsstte">State </label>
+                    <input id="acsstte" name="state" type="text" maxlength="2" size="2" autocomplete="off"
+                           th:value="${screen.value('acsstte', screen.fields.state)}"
+                           th:readonly="${!screen.fieldsEditable}"
+                           th:classappend="${screen.flagged('acsstte')} ? 'field-red' : (!screen.fieldsEditable ? 'field-prot' : '')">
+                </span>
+            </div>
+            <div class="view-row">
+                <span class="view-cell">
+                    <input id="acsadl2" name="addrLine2" type="text" maxlength="50" size="30" autocomplete="off"
+                           th:value="${screen.value('acsadl2', screen.fields.addrLine2)}"
+                           th:readonly="${!screen.fieldsEditable}"
+                           th:classappend="${screen.flagged('acsadl2')} ? 'field-red' : (!screen.fieldsEditable ? 'field-prot' : '')">
+                </span>
+                <span class="view-cell">
+                    <label class="field-label" for="acszipc">Zip</label>
+                    <input id="acszipc" name="zip" type="text" maxlength="5" size="5" autocomplete="off"
+                           th:value="${screen.value('acszipc', screen.fields.zip)}"
+                           th:readonly="${!screen.fieldsEditable}"
+                           th:classappend="${screen.flagged('acszipc')} ? 'field-red' : (!screen.fieldsEditable ? 'field-prot' : '')">
+                </span>
+            </div>
+            <div class="view-row">
+                <span class="view-cell">
+                    <label class="field-label" for="acscity">City </label>
+                    <input id="acscity" name="city" type="text" maxlength="50" size="30" autocomplete="off"
+                           th:value="${screen.value('acscity', screen.fields.city)}"
+                           th:readonly="${!screen.fieldsEditable}"
+                           th:classappend="${screen.flagged('acscity')} ? 'field-red' : (!screen.fieldsEditable ? 'field-prot' : '')">
+                </span>
+                <span class="view-cell">
+                    <label class="field-label" for="acsctry">Country</label>
+                    <input id="acsctry" name="country" type="text" maxlength="3" size="3" autocomplete="off"
+                           th:value="${screen.fields.country}" readonly class="field-prot">
+                </span>
+            </div>
+            <div class="view-row">
+                <span class="view-cell">
+                    <span class="field-label">Phone 1:</span>
+                    <input id="acsph1a" name="phone1a" type="text" maxlength="3" size="3" autocomplete="off"
+                           th:value="${screen.value('acsph1a', screen.fields.phone1a)}"
+                           th:readonly="${!screen.fieldsEditable}"
+                           th:classappend="${screen.flagged('acsph1a')} ? 'field-red' : (!screen.fieldsEditable ? 'field-prot' : '')">
+                    <input id="acsph1b" name="phone1b" type="text" maxlength="3" size="3" autocomplete="off"
+                           th:value="${screen.value('acsph1b', screen.fields.phone1b)}"
+                           th:readonly="${!screen.fieldsEditable}"
+                           th:classappend="${screen.flagged('acsph1b')} ? 'field-red' : (!screen.fieldsEditable ? 'field-prot' : '')">
+                    <input id="acsph1c" name="phone1c" type="text" maxlength="4" size="4" autocomplete="off"
+                           th:value="${screen.value('acsph1c', screen.fields.phone1c)}"
+                           th:readonly="${!screen.fieldsEditable}"
+                           th:classappend="${screen.flagged('acsph1c')} ? 'field-red' : (!screen.fieldsEditable ? 'field-prot' : '')">
+                </span>
+                <span class="view-cell">
+                    <label class="field-label" for="acsgovt">Government Issued Id Ref    : </label>
+                    <input id="acsgovt" name="governmentId" type="text" maxlength="20" size="20" autocomplete="off"
+                           th:value="${screen.value('acsgovt', screen.fields.governmentId)}"
+                           th:readonly="${!screen.fieldsEditable}"
+                           th:classappend="${screen.flagged('acsgovt')} ? 'field-red' : (!screen.fieldsEditable ? 'field-prot' : '')">
+                </span>
+            </div>
+            <div class="view-row">
+                <span class="view-cell">
+                    <span class="field-label">Phone 2:</span>
+                    <input id="acsph2a" name="phone2a" type="text" maxlength="3" size="3" autocomplete="off"
+                           th:value="${screen.value('acsph2a', screen.fields.phone2a)}"
+                           th:readonly="${!screen.fieldsEditable}"
+                           th:classappend="${screen.flagged('acsph2a')} ? 'field-red' : (!screen.fieldsEditable ? 'field-prot' : '')">
+                    <input id="acsph2b" name="phone2b" type="text" maxlength="3" size="3" autocomplete="off"
+                           th:value="${screen.value('acsph2b', screen.fields.phone2b)}"
+                           th:readonly="${!screen.fieldsEditable}"
+                           th:classappend="${screen.flagged('acsph2b')} ? 'field-red' : (!screen.fieldsEditable ? 'field-prot' : '')">
+                    <input id="acsph2c" name="phone2c" type="text" maxlength="4" size="4" autocomplete="off"
+                           th:value="${screen.value('acsph2c', screen.fields.phone2c)}"
+                           th:readonly="${!screen.fieldsEditable}"
+                           th:classappend="${screen.flagged('acsph2c')} ? 'field-red' : (!screen.fieldsEditable ? 'field-prot' : '')">
+                </span>
+                <span class="view-cell">
+                    <label class="field-label" for="acseftc">EFT Account Id: </label>
+                    <input id="acseftc" name="eftAccountId" type="text" maxlength="10" size="10" autocomplete="off"
+                           th:value="${screen.value('acseftc', screen.fields.eftAccountId)}"
+                           th:readonly="${!screen.fieldsEditable}"
+                           th:classappend="${screen.flagged('acseftc')} ? 'field-red' : (!screen.fieldsEditable ? 'field-prot' : '')">
+                    <label class="field-label" for="acspflg">Primary Card Holder Y/N:</label>
+                    <input id="acspflg" name="priCardHolder" type="text" maxlength="1" size="1" autocomplete="off"
+                           th:value="${screen.value('acspflg', screen.fields.priCardHolder)}"
+                           th:readonly="${!screen.fieldsEditable}"
+                           th:classappend="${screen.flagged('acspflg')} ? 'field-red' : (!screen.fieldsEditable ? 'field-prot' : '')">
+                </span>
+            </div>
+        </div>
+
+        <p class="info-line" id="infomsg" th:text="${screen.infoMessage}"></p>
+        <p class="key-hints">ENTER=Process F3=Exit<span id="f5key" th:classappend="${screen.f5Lit} ? 'lit' : 'dim'"> F5=Save</span><span id="f12key" th:classappend="${screen.f12Lit} ? 'lit' : 'dim'"> F12=Cancel</span></p>
+        <div class="form-actions">
+            <button type="submit" name="aid" value="ENTER">ENTER=Process</button>
+            <button type="submit" name="aid" value="PF5" formnovalidate>F5=Save</button>
+            <button type="submit" name="aid" value="PF12" formnovalidate>F12=Cancel</button>
+            <button type="submit" name="aid" value="PF3" formnovalidate>F3=Exit</button>
+        </div>
+    </form>
+    <script>
+        // 3270 AID parity: function keys submit as their own aid and the
+        // program decides whether the key is valid in the current state.
+        document.addEventListener('keydown', function (event) {
+            if (/^F([1-9]|1[0-2])$/.test(event.key)) {
+                event.preventDefault();
+                var form = document.getElementById('account-update-form');
+                var aid = document.createElement('input');
+                aid.type = 'hidden';
+                aid.name = 'aid';
+                aid.value = 'PF' + event.key.substring(1);
+                form.appendChild(aid);
+                form.submit();
+            }
+        });
+    </script>
+</div>
+</body>
+</html>

@@ -55,7 +55,7 @@ class MenuUiCatalogueIntegrationTest {
                             "/api/admin/task", "A", true, true),
                     new MenuOption(3, "Future Feature", "DUMMY001",
                             "/api/future", "U", true, false),
-                    new MenuOption(4, "Templated Route", "COACTUPC",
+                    new MenuOption(4, "Templated Route", "CORPT00C",
                             "/api/accounts/{acctId}", "U", true, true));
             return new MenuService(userRepository, main, List.of());
         }

@@ -1,67 +1,14 @@
 package com.carddemo.api;
 
-import java.math.BigDecimal;
-import java.time.LocalDate;
+import com.carddemo.service.AccountUpdateForm;
+import com.carddemo.service.AccountUpdateSnapshot;
 
+/**
+ * The round-trip body for the update flow: `updated` carries the raw screen
+ * inputs (the ACUP-NEW-* values), `original` the fetched snapshot that stands
+ * in for WS-THIS-PROGCOMMAREA (S03-B3).
+ */
 public record AccountUpdateRequest(
-        String activeStatus,
-        BigDecimal currentBalance,
-        BigDecimal creditLimit,
-        BigDecimal cashCreditLimit,
-        LocalDate openDate,
-        LocalDate expirationDate,
-        LocalDate reissueDate,
-        BigDecimal currentCycleCredit,
-        BigDecimal currentCycleDebit,
-        String accountGroup,
-        Long customerId,
-        String ssn,
-        LocalDate dateOfBirth,
-        Integer ficoScore,
-        String firstName,
-        String middleName,
-        String lastName,
-        String addressLine1,
-        String addressLine2,
-        String addressLine3,
-        String stateCode,
-        String zip,
-        String countryCode,
-        String phoneNumber1,
-        String phoneNumber2,
-        String governmentIssuedId,
-        String eftAccountId,
-        String primaryCardHolderIndicator,
-        AccountSnapshot original) {
-
-    public record AccountSnapshot(
-            String activeStatus,
-            BigDecimal currentBalance,
-            BigDecimal creditLimit,
-            BigDecimal cashCreditLimit,
-            LocalDate openDate,
-            LocalDate expirationDate,
-            LocalDate reissueDate,
-            BigDecimal currentCycleCredit,
-            BigDecimal currentCycleDebit,
-            String accountGroup,
-            Long customerId,
-            String ssn,
-            LocalDate dateOfBirth,
-            Integer ficoScore,
-            String firstName,
-            String middleName,
-            String lastName,
-            String addressLine1,
-            String addressLine2,
-            String addressLine3,
-            String stateCode,
-            String zip,
-            String countryCode,
-            String phoneNumber1,
-            String phoneNumber2,
-            String governmentIssuedId,
-            String eftAccountId,
-            String primaryCardHolderIndicator) {
-    }
+        AccountUpdateForm updated,
+        AccountUpdateSnapshot original) {
 }

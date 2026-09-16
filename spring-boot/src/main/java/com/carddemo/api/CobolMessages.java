@@ -157,6 +157,26 @@ public final class CobolMessages {
     public static final String CARD_FILE_ERROR_READ =
         "File Error: READ     on CARDDAT   returned RESP 000000020 ,RESP2 000000090 ";
 
+    // COACTUPC verbatim (S-03; cbl:471-528 and 3250-SETUP-INFOMSG :2955-2982).
+    public static final String ACCOUNT_UPDATE_PROMPT =
+        "Enter or update id of account to update";
+    public static final String ACCOUNT_UPDATE_DETAILS =
+        "Update account details presented above.";
+    public static final String ACCOUNT_UPDATE_CONFIRM =
+        "Changes validated.Press F5 to save";
+    public static final String ACCOUNT_UPDATE_COMMITTED =
+        "Changes committed to database";
+    public static final String ACCOUNT_UPDATE_UNSUCCESSFUL =
+        "Changes unsuccessful. Please try again";
+    // 1210-EDIT-ACCOUNT (cbl:1798-1805).
+    public static final String ACCOUNT_UPDATE_ID_INVALID =
+        "Account Number if supplied must be a 11 digit Non-Zero Number";
+    // 9600-WRITE-PROCESSING (cbl:3917-3918, :3940-3941).
+    public static final String COULD_NOT_LOCK_ACCOUNT =
+        "Could not lock account record for update";
+    public static final String COULD_NOT_LOCK_CUSTOMER =
+        "Could not lock customer record for update";
+
     // COTRTLIC verbatim messages (S-21; COTRTLIC.cbl:236-262, :1115-1117,
     // :1253-1265, :1534-1548, :1867-1938).
     public static final String TRTYPE_FILTER_INVALID =

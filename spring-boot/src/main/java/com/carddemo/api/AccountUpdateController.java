@@ -1,6 +1,8 @@
 package com.carddemo.api;
 
+import com.carddemo.service.AccountUpdateScreen;
 import com.carddemo.service.AccountUpdateService;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -16,9 +18,23 @@ public class AccountUpdateController {
         this.service = service;
     }
 
+    @PostMapping("/lookup")
+    public AccountUpdateScreen lookup(@RequestBody AccountLookupRequest request) {
+        return service.lookup(request.accountId());
+    }
+
+    @PostMapping("/validate")
+    public AccountUpdateScreen validate(@RequestBody AccountUpdateRequest request) {
+        return service.validate(request.original(), request.updated());
+    }
+
     @PutMapping("/{accountId}")
-    public AccountViewResponse update(@PathVariable String accountId,
+    public AccountUpdateScreen update(@PathVariable String accountId,
                                       @RequestBody AccountUpdateRequest request) {
-        return service.update(accountId, request);
+        try {
+            return service.update(accountId, request);
+        } catch (AccountUpdateService.ScreenRollbackException e) {
+            return e.screen();
+        }
     }
 }

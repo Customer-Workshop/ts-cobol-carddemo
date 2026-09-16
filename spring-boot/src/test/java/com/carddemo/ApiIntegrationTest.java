@@ -168,16 +168,15 @@ class ApiIntegrationTest {
     @Test
     void accountUpdateRejectsConcurrentChange() throws Exception {
         MockHttpSession session = signon("ADMIN001", "PASSWORD", "/api/admin/menu");
-        JsonNode view = objectMapper.readTree(mockMvc.perform(
-                        get("/api/accounts/00000000001").session(session))
-                .andExpect(status().isOk()).andReturn().getResponse().getContentAsString());
-        ObjectNode update = accountUpdate(view);
+        JsonNode lookup = accountUpdateLookup(session);
+        ObjectNode update = accountUpdate(lookup);
         ((ObjectNode) update.get("original")).put("currentBalance", "999999.99");
         mockMvc.perform(put("/api/accounts/1").session(session)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsBytes(update)))
-                .andExpect(status().isConflict())
-                .andExpect(jsonPath("$.message").value(
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.state").value("DETAILS"))
+                .andExpect(jsonPath("$.errorMessage").value(
                         "Record changed by some one else. Please review"));
     }
 
@@ -189,19 +188,23 @@ class ApiIntegrationTest {
         customer.setCustAddrLine3("Boston");
         customer.setCustPhoneNum2("(212)555-0101");
         customerRepository.save(customer);
-        JsonNode view = objectMapper.readTree(mockMvc.perform(
-                        get("/api/accounts/00000000001").session(session))
-                .andExpect(status().isOk()).andReturn().getResponse().getContentAsString());
-        ObjectNode request = accountUpdate(view);
+        JsonNode lookup = accountUpdateLookup(session);
+        ObjectNode request = accountUpdate(lookup);
         ObjectNode original = (ObjectNode) request.get("original");
         original.put("currentBalance", "194.0");
-        request.put("phoneNumber2", "2125550101");
-        request.put("ficoScore", 801);
+        ObjectNode updated = (ObjectNode) request.get("updated");
+        updated.put("phone2a", "212");
+        updated.put("phone2b", "555");
+        updated.put("phone2c", "0101");
         mockMvc.perform(put("/api/accounts/1").session(session)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsBytes(request)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.ficoScore").value(801));
+                .andExpect(jsonPath("$.state").value("DONE"));
+        assertThat(customerRepository.findById(1L).orElseThrow()
+                .getCustFicoCreditScore()).isEqualTo(801);
+        assertThat(customerRepository.findById(1L).orElseThrow()
+                .getCustPhoneNum2()).isEqualTo("(212)555-0101");
     }
 
     @Test
@@ -215,10 +218,8 @@ class ApiIntegrationTest {
                                 """))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.message").value("Original values must be supplied for update."));
-        JsonNode view = objectMapper.readTree(mockMvc.perform(
-                        get("/api/accounts/00000000001").session(session))
-                .andExpect(status().isOk()).andReturn().getResponse().getContentAsString());
-        ObjectNode request = accountUpdate(view);
+        JsonNode lookup = accountUpdateLookup(session);
+        ObjectNode request = accountUpdate(lookup);
         request.remove("original");
         mockMvc.perform(put("/api/accounts/1").session(session)
                         .contentType(MediaType.APPLICATION_JSON)
@@ -439,66 +440,40 @@ class ApiIntegrationTest {
         return request;
     }
 
-    private ObjectNode accountUpdate(JsonNode view) {
+    // S-03 contract: lookup returns the DETAILS screen; the save body is
+    // {updated: <screen fields>, original: <fetched snapshot>} — the
+    // stateless WS-THIS-PROGCOMMAREA round-trip (S03-B3).
+    private JsonNode accountUpdateLookup(MockHttpSession session) throws Exception {
+        return objectMapper.readTree(mockMvc.perform(
+                        post("/api/accounts/lookup").session(session)
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content("{\"accountId\":\"00000000001\"}"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.state").value("DETAILS"))
+                .andReturn().getResponse().getContentAsString());
+    }
+
+    private ObjectNode accountUpdate(JsonNode lookup) {
         ObjectNode request = objectMapper.createObjectNode();
-        request.put("activeStatus", view.get("activeStatus").asText());
-        request.put("currentBalance", view.get("currentBalance").asText());
-        request.put("creditLimit", view.get("creditLimit").asText());
-        request.put("cashCreditLimit", view.get("cashCreditLimit").asText());
-        request.put("openDate", view.get("openDate").asText());
-        request.put("expirationDate", view.get("expirationDate").asText());
-        request.put("reissueDate", view.get("reissueDate").asText());
-        request.put("currentCycleCredit", view.get("currentCycleCredit").asText());
-        request.put("currentCycleDebit", view.get("currentCycleDebit").asText());
-        request.put("accountGroup", view.get("accountGroup").asText());
-        request.put("customerId", view.get("customerId").asLong());
-        request.put("ssn", view.get("ssn").asText());
-        request.put("dateOfBirth", view.get("dateOfBirth").asText());
-        request.put("ficoScore", 300);
-        request.put("firstName", view.get("firstName").asText());
-        request.put("middleName", view.get("middleName").asText());
-        request.put("lastName", view.get("lastName").asText());
-        request.put("addressLine1", view.get("addressLine1").asText());
-        request.put("addressLine2", view.get("addressLine2").asText());
-        request.put("addressLine3", view.get("addressLine3").asText());
-        request.put("stateCode", view.get("stateCode").asText());
-        request.put("zip", view.get("zip").asText());
-        request.put("countryCode", view.get("countryCode").asText());
-        request.put("phoneNumber1", "2125550100");
-        request.put("phoneNumber2", "2125550101");
-        request.put("governmentIssuedId", view.get("governmentIssuedId").asText());
-        request.put("eftAccountId", "1234567890");
-        request.put("primaryCardHolderIndicator", view.get("primaryCardHolderIndicator").asText());
-        ObjectNode original = objectMapper.createObjectNode();
-        original.put("activeStatus", view.get("activeStatus").asText());
-        original.put("currentBalance", view.get("currentBalance").asText());
-        original.put("creditLimit", view.get("creditLimit").asText());
-        original.put("cashCreditLimit", view.get("cashCreditLimit").asText());
-        original.put("openDate", view.get("openDate").asText());
-        original.put("expirationDate", view.get("expirationDate").asText());
-        original.put("reissueDate", view.get("reissueDate").asText());
-        original.put("currentCycleCredit", view.get("currentCycleCredit").asText());
-        original.put("currentCycleDebit", view.get("currentCycleDebit").asText());
-        original.put("accountGroup", view.get("accountGroup").asText());
-        original.put("customerId", view.get("customerId").asLong());
-        original.put("ssn", view.get("ssn").asText());
-        original.put("dateOfBirth", view.get("dateOfBirth").asText());
-        original.put("ficoScore", view.get("ficoScore").asInt());
-        original.put("firstName", view.get("firstName").asText());
-        original.put("middleName", view.get("middleName").asText());
-        original.put("lastName", view.get("lastName").asText());
-        original.put("addressLine1", view.get("addressLine1").asText());
-        original.put("addressLine2", view.get("addressLine2").asText());
-        original.put("addressLine3", view.get("addressLine3").asText());
-        original.put("stateCode", view.get("stateCode").asText());
-        original.put("zip", view.get("zip").asText());
-        original.put("countryCode", view.get("countryCode").asText());
-        original.put("phoneNumber1", view.get("phoneNumber1").asText());
-        original.put("phoneNumber2", view.get("phoneNumber2").asText());
-        original.put("governmentIssuedId", view.get("governmentIssuedId").asText());
-        original.put("eftAccountId", view.get("eftAccountId").asText());
-        original.put("primaryCardHolderIndicator", view.get("primaryCardHolderIndicator").asText());
-        request.set("original", original);
+        ObjectNode updated = lookup.get("fields").deepCopy();
+        // Seed values would fail the ladder (MA/02108 zip combo, phone
+        // "555", eft "EFT") — substitute ladder-passing values as a real
+        // update would, plus a FICO change so the write is observable.
+        updated.put("zip", "10100");
+        updated.put("eftAccountId", "1234567890");
+        updated.put("phone1a", "201");
+        updated.put("phone1b", "555");
+        updated.put("phone1c", "1212");
+        updated.put("phone2a", "");
+        updated.put("phone2b", "");
+        updated.put("phone2c", "");
+        updated.put("dobYear", "1950");
+        updated.put("dobMon", "12");
+        updated.put("dobDay", "10");
+        updated.put("city", "Boston");
+        updated.put("ficoScore", "801");
+        request.set("updated", updated);
+        request.set("original", lookup.get("original").deepCopy());
         return request;
     }
 

@@ -13,6 +13,10 @@ import com.carddemo.api.MenuSelectRequest;
 import com.carddemo.api.MenuSelectionResponse;
 import com.carddemo.api.TransactionAddScreen;
 import com.carddemo.api.TransactionCreateRequest;
+import com.carddemo.service.AccountUpdateForm;
+import com.carddemo.service.AccountUpdateScreen;
+import com.carddemo.service.AccountUpdateService;
+import com.carddemo.service.AccountUpdateSnapshot;
 import com.carddemo.service.AccountViewScreen;
 import com.carddemo.service.AccountViewService;
 import com.carddemo.service.AuthService;
@@ -33,8 +37,11 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Map;
 import java.util.function.Supplier;
 
 /**
@@ -53,6 +60,7 @@ public class UiController {
     private final AuthService authService;
     private final MenuService menuService;
     private final AccountViewService accountViewService;
+    private final AccountUpdateService accountUpdateService;
     private final TransactionListService transactionListService;
     private final TransactionService transactionService;
     private final BillingService billingService;
@@ -60,6 +68,7 @@ public class UiController {
 
     public UiController(AuthService authService, MenuService menuService,
                         AccountViewService accountViewService,
+                        AccountUpdateService accountUpdateService,
                         TransactionListService transactionListService,
                         TransactionService transactionService,
                         BillingService billingService,
@@ -67,6 +76,7 @@ public class UiController {
         this.authService = authService;
         this.menuService = menuService;
         this.accountViewService = accountViewService;
+        this.accountUpdateService = accountUpdateService;
         this.transactionListService = transactionListService;
         this.transactionService = transactionService;
         this.billingService = billingService;
@@ -412,6 +422,181 @@ public class UiController {
             return returnUrl;
         }
         return "/menu";
+    }
+
+    // COACTUPC web surface (tran CAUP): lookup-then-update two-stage flow
+    // driven by the hidden `state` field (ACUP-CHANGE-ACTION) and the
+    // `orig.*` snapshot fields that stand in for WS-THIS-PROGCOMMAREA
+    // (S03-B3 — the screen is stateless). First display is the Search state.
+    @GetMapping("/accounts/update")
+    public String accountUpdate(Model model) {
+        model.addAttribute("screen", accountUpdateService.initialScreen());
+        return "account-update";
+    }
+
+    // AID map (COACTUPC.cbl:690-910): PF3 exits to the menu; ENTER acts per
+    // state (Search -> lookup, Details/Errors -> compare+edits, Confirm ->
+    // redisplay, Done -> re-fetch per D3, Failed -> validate per D4); PF5 is
+    // accepted only on the confirm screen; PF12 re-reads the record in any
+    // fetched state; anything else redisplays with the invalid-key message.
+    @PostMapping("/accounts/update")
+    public String submitAccountUpdate(
+            @RequestParam(name = "aid", defaultValue = "ENTER") String aid,
+            @RequestParam Map<String, String> params,
+            Model model) {
+        if ("PF3".equals(aid)) {
+            return "redirect:/menu";
+        }
+        // `screenState` — `state` is taken by the address-state map field.
+        AccountUpdateScreen.State state = updateState(params.get("screenState"));
+        AccountUpdateForm form = updateForm(params);
+        AccountUpdateSnapshot original = updateSnapshot(params);
+        AccountUpdateScreen screen;
+        try {
+            screen = dispatchUpdate(aid, state, form, original);
+        } catch (CobolApiException exception) {
+            screen = accountUpdateService.invalidAid(state, form, original,
+                    exception.getMessage());
+        }
+        model.addAttribute("screen", screen);
+        model.addAttribute("message", screen.errorMessage());
+        return "account-update";
+    }
+
+    private AccountUpdateScreen dispatchUpdate(String aid,
+                                               AccountUpdateScreen.State state,
+                                               AccountUpdateForm form,
+                                               AccountUpdateSnapshot original) {
+        return switch (aid) {
+            case "ENTER" -> switch (state) {
+                case SEARCH -> accountUpdateService.lookup(form.acctId());
+                case DONE -> accountUpdateService.cancel(original);   // D3
+                default -> accountUpdateService.validate(original, form);
+            };
+            case "PF5" -> state == AccountUpdateScreen.State.CONFIRM
+                    ? saveOrFailed(original, form)
+                    : accountUpdateService.invalidAid(state, form, original,
+                            CobolMessages.INVALID_KEY_PRESSED);
+            case "PF12" -> state != AccountUpdateScreen.State.SEARCH
+                    ? accountUpdateService.cancel(original)
+                    : accountUpdateService.invalidAid(state, form, original,
+                            CobolMessages.INVALID_KEY_PRESSED);
+            default -> accountUpdateService.invalidAid(state, form, original,
+                    CobolMessages.INVALID_KEY_PRESSED);
+        };
+    }
+
+    // A write failure crosses the transaction boundary as an exception so
+    // the proxy rolls back; unwrap the FAILED screen for display.
+    private AccountUpdateScreen saveOrFailed(AccountUpdateSnapshot original,
+                                             AccountUpdateForm form) {
+        try {
+            return accountUpdateService.save(original, form);
+        } catch (AccountUpdateService.ScreenRollbackException e) {
+            return e.screen();
+        }
+    }
+
+    private static AccountUpdateScreen.State updateState(String raw) {
+        try {
+            return raw == null ? AccountUpdateScreen.State.SEARCH
+                    : AccountUpdateScreen.State.valueOf(raw);
+        } catch (IllegalArgumentException exception) {
+            return AccountUpdateScreen.State.SEARCH;
+        }
+    }
+
+    // ACUP-NEW-* fields — one HTTP parameter per map field, named after the
+    // AccountUpdateForm components.
+    private AccountUpdateForm updateForm(Map<String, String> p) {
+        return new AccountUpdateForm(
+                p.get("acctId"), p.get("activeStatus"),
+                p.get("openYear"), p.get("openMon"), p.get("openDay"),
+                p.get("creditLimit"),
+                p.get("expYear"), p.get("expMon"), p.get("expDay"),
+                p.get("cashCreditLimit"),
+                p.get("risYear"), p.get("risMon"), p.get("risDay"),
+                p.get("currentBalance"), p.get("accountGroup"),
+                p.get("currentCycleCredit"), p.get("currentCycleDebit"),
+                p.get("custId"),
+                p.get("ssn1"), p.get("ssn2"), p.get("ssn3"),
+                p.get("dobYear"), p.get("dobMon"), p.get("dobDay"),
+                p.get("ficoScore"),
+                p.get("firstName"), p.get("middleName"), p.get("lastName"),
+                p.get("addrLine1"), p.get("addrLine2"), p.get("city"),
+                p.get("state"), p.get("zip"), p.get("country"),
+                p.get("phone1a"), p.get("phone1b"), p.get("phone1c"),
+                p.get("phone2a"), p.get("phone2b"), p.get("phone2c"),
+                p.get("governmentId"), p.get("eftAccountId"),
+                p.get("priCardHolder"));
+    }
+
+    // The `orig.*` hidden fields ride the form back as the fetched snapshot.
+    private AccountUpdateSnapshot updateSnapshot(Map<String, String> p) {
+        if (p.get("orig.accountId") == null) {
+            return null;
+        }
+        return new AccountUpdateSnapshot(
+                longOrNull(p.get("orig.accountId")),
+                p.get("orig.activeStatus"),
+                moneyOrNull(p.get("orig.currentBalance")),
+                moneyOrNull(p.get("orig.creditLimit")),
+                moneyOrNull(p.get("orig.cashCreditLimit")),
+                dateOrNull(p.get("orig.openDate")),
+                dateOrNull(p.get("orig.expirationDate")),
+                dateOrNull(p.get("orig.reissueDate")),
+                moneyOrNull(p.get("orig.currentCycleCredit")),
+                moneyOrNull(p.get("orig.currentCycleDebit")),
+                p.get("orig.accountGroup"),
+                longOrNull(p.get("orig.customerId")),
+                longOrNull(p.get("orig.ssn")),
+                dateOrNull(p.get("orig.dateOfBirth")),
+                intOrNull(p.get("orig.ficoScore")),
+                p.get("orig.firstName"), p.get("orig.middleName"),
+                p.get("orig.lastName"),
+                p.get("orig.addressLine1"), p.get("orig.addressLine2"),
+                p.get("orig.addressLine3"),
+                p.get("orig.stateCode"), p.get("orig.zip"),
+                p.get("orig.countryCode"),
+                p.get("orig.phoneNumber1"), p.get("orig.phoneNumber2"),
+                p.get("orig.governmentIssuedId"), p.get("orig.eftAccountId"),
+                p.get("orig.primaryCardHolderIndicator"));
+    }
+
+    private static Long longOrNull(String value) {
+        try {
+            return value == null || value.isBlank() ? null
+                    : Long.valueOf(value.trim());
+        } catch (NumberFormatException exception) {
+            return null;
+        }
+    }
+
+    private static Integer intOrNull(String value) {
+        try {
+            return value == null || value.isBlank() ? null
+                    : Integer.valueOf(value.trim());
+        } catch (NumberFormatException exception) {
+            return null;
+        }
+    }
+
+    private static BigDecimal moneyOrNull(String value) {
+        try {
+            return value == null || value.isBlank() ? null
+                    : new BigDecimal(value.trim());
+        } catch (NumberFormatException exception) {
+            return null;
+        }
+    }
+
+    private static LocalDate dateOrNull(String value) {
+        try {
+            return value == null || value.isBlank() ? null
+                    : LocalDate.parse(value.trim());
+        } catch (RuntimeException exception) {
+            return null;
+        }
     }
 
     // COTRN02C web surface (tran CT02). The COMMAREA card lands as the

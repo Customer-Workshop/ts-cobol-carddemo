@@ -119,6 +119,7 @@ public class MenuService {
             Map.entry("COCRDUPC", "/cards/update"),
             Map.entry("COBIL00C", "/bill-payment"),
             Map.entry("COPAUS0C", "/ui/pending-auth"),
+            Map.entry("COACTUPC", "/accounts/update"),
             Map.entry("COACTVWC", "/accounts/view"),
             Map.entry("COTRTLIC", "/ui/tran-types"),
             Map.entry("COTRTUPC", "/ui/tran-types/maint"));
