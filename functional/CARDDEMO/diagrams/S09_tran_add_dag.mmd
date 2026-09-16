@@ -1,0 +1,16 @@
+flowchart BT
+  subgraph W1["Wave 1 — leaf utility + data seams"]
+    DTC["CSUTLDTC (CALLed)\nCEEDAYS wrapper, date validity\nCSUTLDTC.cbl:116-120"]
+    XREF["CCXREF / CXACAIX keyed READ seam\n(shared ICardXrefRepository)\nCOTRN02C.cbl:578-586, 611-619"]
+    TRN["TRANSACT browse-last + WRITE seam\n(ITransactionRepository.GetLastAsync/AddAsync)\nCOTRN02C.cbl:644-721"]
+  end
+  subgraph W2["Wave 2 — screen program"]
+    ADD["COTRN02C (CT02)\nadd-transaction screen COTRN2A"]
+  end
+  ADD -- "CALL CSUTLDTC\nCOTRN02C.cbl:393,413" --> DTC
+  ADD --> XREF
+  ADD --> TRN
+  MENU["COMEN01C option 08 (S-01 shell)"] -. "XCTL COTRN02C (inbound, S09-B1)\nCOMEN01C.cbl:185" .-> ADD
+  ADD -. "PF3 XCTL CDEMO-FROM-PROGRAM (return, S09-B1)\nCOTRN02C.cbl:136-143" .-> MENU
+  ADD -. "EIBCALEN=0 XCTL COSGN00C\nCOTRN02C.cbl:115-118" .-> SGN["COSGN00C (S-01 shell)"]
+  RPT["CORPT00C (S-10)"] -. "CALL CSUTLDTC (shared, S09-B4)\nCORPT00C.cbl:392" .-> DTC

@@ -1,0 +1,40 @@
+flowchart TB
+  subgraph ONLINE["ONLINE (CICS)"]
+    CC00["CC00 COSGN00C\nSign-on"] --> CM00["CM00 COMEN01C\nMain Menu (11 opts)"]
+    CC00 --> CA00["CA00 COADM01C\nAdmin Menu (6 opts)"]
+    CM00 --> O1["COACTVWC Acct View (CAVW)"]
+    CM00 --> O2["COACTUPC Acct Update (CAUP)"]
+    CM00 --> O3["COCRDLIC Card List (CCLI)"]
+    CM00 --> O4["COCRDSLC Card View (CCDL)"]
+    CM00 --> O5["COCRDUPC Card Update (CCUP)"]
+    CM00 --> O6["COTRN00C Tran List (CT00)"]
+    CM00 --> O7["COTRN01C Tran View (CT01)"]
+    CM00 --> O8["COTRN02C Tran Add (CT02)"]
+    CM00 --> O9["CORPT00C Reports (CR00)"]
+    CM00 --> O10["COBIL00C Bill Pay (CB00)"]
+    CM00 --> O11["COPAUS0C Pending Auth (CPVS)\n[ext: IMS/DB2/MQ]"]
+    CA00 --> A1["COUSR00C/01C/02C/03C\nUser Admin (CU00-CU03)"]
+    CA00 --> A2["COTRTLIC/COTRTUPC\nTran Type Db2 (CTLI/CTTU)"]
+    O11 --> S1["COPAUS1C detail (CPVD)\nCOPAUS2C"]
+    O8 -. CALL .-> UTL["CSUTLDTC (shared date util)"]
+    O9 -. CALL .-> UTL
+    O9 -. INTRDR submit .-> TRANREPT
+    ABS["COCRDSEC (CDV1)\nSOURCE ABSENT"]:::risk
+  end
+  subgraph MQ["MQ-triggered (extensions)"]
+    CP00["COPAUA0C auth processor (CP00)"]
+    CDR["COACCT01 (CDRA)\nCODATE01 (CDRD)"]
+  end
+  subgraph BATCH["BATCH (Control-M / CA-7)"]
+    CLOSEFIL --> POSTTRAN["POSTTRAN: CBTRN02C\ndaily posting"]
+    POSTTRAN --> TRANBKP --> WAITSTEP["WAITSTEP: COBSWAIT->MVSWAIT"] --> OPENFIL
+    CLOSEFIL2["CLOSEFIL"] --> INTCALC["INTCALC: CBACT04C\ninterest calc"] --> COMBTRAN
+    TRANREPT["TRANREPT: CBTRN03C\ntran report + TXT2PDF"]
+    CREASTMT["CREASTMT: CBSTM03A->CBSTM03B\nstatements"]
+    EXPIMP["CBEXPORT / CBIMPORT\nbranch export-import"]
+    READS["READACCT CBACT01C (->COBDATFT)\nREADCARD CBACT02C\nREADXREF CBACT03C\nREADCUST CBCUS01C"]
+    SETUP["Setup/refresh jobs (IDCAMS/IEBGENER only):\nACCTFILE CARDFILE XREFFILE CUSTFILE TRANFILE\nTRANCATG TRANTYPE DISCGRP TCATBALF DUSRSECJ\nDEFCUST DEFGDG* TRANIDX REPTFILE PRTCATBL\nDALYREJS ESDSRRDS INTRDRJ* FTPJCL TXT2PDF1 CBADMCDJ"]
+    EXTB["ext batch: CBPAUP0J CBPAUP0C purge\nMNTTRDB2 COBTUPDT\nTRANEXTR (DSNTIAUL)\nIMS load/unload PAUDBLOD PAUDBUNL DBUNLDGS"]
+    DEAD["CBTRN01C\nno JCL / scheduler ref (UNREACHABLE)"]:::risk
+  end
+  classDef risk fill:#fdd,stroke:#c00;
