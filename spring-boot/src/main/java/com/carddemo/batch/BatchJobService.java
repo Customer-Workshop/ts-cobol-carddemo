@@ -171,16 +171,26 @@ public class BatchJobService {
         return new PostResult(null, record);
     }
 
+    // CBTRN03C lookup chain (:181-195): XREFFILE/TRANTYPE/TRANCATG keyed
+    // reads — INVALID KEY abends the step (CEE3ABD 999, S10-B7), so a
+    // missing row is an exception here, not a blank column.
     public ReportLine reportLine(Transaction transaction) {
-        CardXref xref = xrefs.findById(transaction.getTranCardNumber()).orElse(null);
-        Long account = xref == null ? null : xref.getXrefAcctId();
+        CardXref xref = xrefs.findById(transaction.getTranCardNumber()).orElseThrow(
+                () -> new IllegalStateException(
+                        "INVALID CARD NUMBER : " + transaction.getTranCardNumber()));
         String type = types.findById(transaction.getTranTypeCode())
-                .map(value -> value.getDescription()).orElse("");
+                .map(value -> value.getDescription()).orElseThrow(
+                        () -> new IllegalStateException("INVALID TRANSACTION TYPE : "
+                                + transaction.getTranTypeCode()));
         TransactionCategory.Id key = new TransactionCategory.Id();
         key.setTranTypeCode(transaction.getTranTypeCode());
         key.setTranCategoryCode(transaction.getTranCategoryCode());
-        String category = categories.findById(key).map(value -> value.getDescription()).orElse("");
-        return new ReportLine(transaction, account, type, category);
+        String category = categories.findById(key)
+                .map(value -> value.getDescription()).orElseThrow(
+                        () -> new IllegalStateException("INVALID TRAN CATG KEY : "
+                                + transaction.getTranTypeCode()
+                                + transaction.getTranCategoryCode()));
+        return new ReportLine(transaction, xref.getXrefAcctId(), type, category);
     }
 
     /**

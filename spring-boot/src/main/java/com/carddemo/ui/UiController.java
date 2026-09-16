@@ -11,6 +11,8 @@ import com.carddemo.api.CobolMessages;
 import com.carddemo.api.MenuResponse;
 import com.carddemo.api.MenuSelectRequest;
 import com.carddemo.api.MenuSelectionResponse;
+import com.carddemo.api.ReportForm;
+import com.carddemo.api.ReportScreen;
 import com.carddemo.api.TransactionAddScreen;
 import com.carddemo.api.TransactionCreateRequest;
 import com.carddemo.service.AccountUpdateForm;
@@ -24,6 +26,7 @@ import com.carddemo.service.BillingService;
 import com.carddemo.service.CardService;
 import com.carddemo.service.CardViewScreen;
 import com.carddemo.service.MenuService;
+import com.carddemo.service.ReportService;
 import com.carddemo.service.TransactionListService;
 import com.carddemo.service.TransactionService;
 import com.carddemo.service.TransactionViewScreen;
@@ -65,6 +68,7 @@ public class UiController {
     private final TransactionService transactionService;
     private final BillingService billingService;
     private final CardService cardService;
+    private final ReportService reportService;
 
     public UiController(AuthService authService, MenuService menuService,
                         AccountViewService accountViewService,
@@ -72,7 +76,8 @@ public class UiController {
                         TransactionListService transactionListService,
                         TransactionService transactionService,
                         BillingService billingService,
-                        CardService cardService) {
+                        CardService cardService,
+                        ReportService reportService) {
         this.authService = authService;
         this.menuService = menuService;
         this.accountViewService = accountViewService;
@@ -81,6 +86,7 @@ public class UiController {
         this.transactionService = transactionService;
         this.billingService = billingService;
         this.cardService = cardService;
+        this.reportService = reportService;
     }
 
     @ModelAttribute
@@ -716,6 +722,50 @@ public class UiController {
         model.addAttribute("message", screen.message());
         model.addAttribute("messageStyle", screen.messageStyle());
         return "bill-payment";
+    }
+
+    // CORPT00C web surface (tran CR00): the first display is the empty map
+    // (CORPT00C.cbl:179-181); unsigned access is bounced to sign-on by the
+    // security entry point (EIBCALEN=0, :172-174).
+    @GetMapping("/reports")
+    public String reportRequest(Model model) {
+        return reportView(ReportScreen.blank(), model);
+    }
+
+    // AID map (CORPT00C.cbl:184-194): ENTER runs PROCESS-ENTER-KEY, PF3
+    // transfers to COMEN01C, every other key redisplays the map unchanged
+    // with the invalid-key message.
+    @PostMapping("/reports")
+    public String submitReportRequest(
+            @RequestParam(name = "aid", defaultValue = "ENTER") String aid,
+            @RequestParam(name = "monthly", required = false) String monthly,
+            @RequestParam(name = "yearly", required = false) String yearly,
+            @RequestParam(name = "custom", required = false) String custom,
+            @RequestParam(name = "sdtmm", required = false) String sdtmm,
+            @RequestParam(name = "sdtdd", required = false) String sdtdd,
+            @RequestParam(name = "sdtyyyy", required = false) String sdtyyyy,
+            @RequestParam(name = "edtmm", required = false) String edtmm,
+            @RequestParam(name = "edtdd", required = false) String edtdd,
+            @RequestParam(name = "edtyyyy", required = false) String edtyyyy,
+            @RequestParam(name = "confirm", required = false) String confirm,
+            Model model) {
+        if ("PF3".equals(aid)) {
+            return "redirect:/menu";
+        }
+        ReportForm form = new ReportForm(monthly, yearly, custom,
+                sdtmm, sdtdd, sdtyyyy, edtmm, edtdd, edtyyyy, confirm);
+        ReportScreen screen = "ENTER".equals(aid)
+                ? reportService.enter(form)
+                : ReportScreen.preserved(form, CobolMessages.INVALID_KEY_PRESSED,
+                        "monthly");
+        return reportView(screen, model);
+    }
+
+    private String reportView(ReportScreen screen, Model model) {
+        model.addAttribute("screen", screen);
+        model.addAttribute("message", screen.message());
+        model.addAttribute("messageStyle", screen.messageStyle());
+        return "reports";
     }
 
 

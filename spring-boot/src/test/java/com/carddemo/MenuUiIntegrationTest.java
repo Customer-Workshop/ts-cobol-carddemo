@@ -112,14 +112,12 @@ class MenuUiIntegrationTest {
                         .param("aid", "ENTER").param("option", "2"))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/accounts/update"));
-        // Implemented target without a browsable route yet: the menu
-        // redisplays the not-installed idiom instead of a dead link.
+        // S-10 flipped the catalogue flag: option 9 now resolves its UI
+        // route instead of the not-installed idiom.
         mockMvc.perform(post("/menu/select").session(session)
                         .param("aid", "ENTER").param("option", "9"))
-                .andExpect(status().isOk())
-                .andExpect(view().name("menu"))
-                .andExpect(model().attribute("message",
-                        "This option Transaction Reports is not installed..."));
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/reports"));
     }
 
     @Test

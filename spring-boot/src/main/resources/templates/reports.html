@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout :: layout('AWS Mainframe Modernization', 'CR00', 'CORPT00C', ~{::content})}">
+<head>
+    <title>Transaction Reports</title>
+</head>
+<body>
+<!-- CORPT0A (app/bms/CORPT00.bms): the three X(1) type flags (first
+     non-blank wins — not an exclusive radio group, CORPT00C.cbl:212-256),
+     the MM/DD/YYYY custom-range fields, the Y/N confirm and the AID
+     legend. maxlength enforces the 3270 field widths; the flags take any
+     non-blank character. -->
+<div th:fragment="content" class="reports">
+    <p class="screen-title">Transaction Reports</p>
+    <form id="reports-form" method="post" th:action="@{/reports}">
+        <div class="form-row">
+            <input id="monthly" name="monthly" type="text" maxlength="1" size="1"
+                   autocomplete="off" th:value="${screen.monthly}"
+                   th:attr="autofocus=${screen.cursorField == 'monthly' ? 'autofocus' : null}">
+            <label class="type-label" for="monthly">Monthly (Current Month)</label>
+        </div>
+        <div class="form-row">
+            <input id="yearly" name="yearly" type="text" maxlength="1" size="1"
+                   autocomplete="off" th:value="${screen.yearly}"
+                   th:attr="autofocus=${screen.cursorField == 'yearly' ? 'autofocus' : null}">
+            <label class="type-label" for="yearly">Yearly (Current Year)</label>
+        </div>
+        <div class="form-row">
+            <input id="custom" name="custom" type="text" maxlength="1" size="1"
+                   autocomplete="off" th:value="${screen.custom}"
+                   th:attr="autofocus=${screen.cursorField == 'custom' ? 'autofocus' : null}">
+            <label class="type-label" for="custom">Custom (Date Range)</label>
+        </div>
+        <div class="form-row date-row">
+            <span class="field-label">Start Date :</span>
+            <input id="sdtmm" name="sdtmm" type="text" maxlength="2" size="2"
+                   autocomplete="off" inputmode="numeric" th:value="${screen.sdtmm}"
+                   th:attr="autofocus=${screen.cursorField == 'sdtmm' ? 'autofocus' : null}">
+            <span class="date-sep">/</span>
+            <input id="sdtdd" name="sdtdd" type="text" maxlength="2" size="2"
+                   autocomplete="off" inputmode="numeric" th:value="${screen.sdtdd}"
+                   th:attr="autofocus=${screen.cursorField == 'sdtdd' ? 'autofocus' : null}">
+            <span class="date-sep">/</span>
+            <input id="sdtyyyy" name="sdtyyyy" type="text" maxlength="4" size="4"
+                   autocomplete="off" inputmode="numeric" th:value="${screen.sdtyyyy}"
+                   th:attr="autofocus=${screen.cursorField == 'sdtyyyy' ? 'autofocus' : null}">
+            <span class="field-hint">(MM/DD/YYYY)</span>
+        </div>
+        <div class="form-row date-row">
+            <span class="field-label">  End Date :</span>
+            <input id="edtmm" name="edtmm" type="text" maxlength="2" size="2"
+                   autocomplete="off" inputmode="numeric" th:value="${screen.edtmm}"
+                   th:attr="autofocus=${screen.cursorField == 'edtmm' ? 'autofocus' : null}">
+            <span class="date-sep">/</span>
+            <input id="edtdd" name="edtdd" type="text" maxlength="2" size="2"
+                   autocomplete="off" inputmode="numeric" th:value="${screen.edtdd}"
+                   th:attr="autofocus=${screen.cursorField == 'edtdd' ? 'autofocus' : null}">
+            <span class="date-sep">/</span>
+            <input id="edtyyyy" name="edtyyyy" type="text" maxlength="4" size="4"
+                   autocomplete="off" inputmode="numeric" th:value="${screen.edtyyyy}"
+                   th:attr="autofocus=${screen.cursorField == 'edtyyyy' ? 'autofocus' : null}">
+            <span class="field-hint">(MM/DD/YYYY)</span>
+        </div>
+        <div class="form-row confirm-row">
+            <label class="field-label" for="confirm">The Report will be submitted for printing. Please confirm:</label>
+            <input id="confirm" name="confirm" type="text" maxlength="1" size="1"
+                   autocomplete="off" th:value="${screen.confirm}"
+                   th:attr="autofocus=${screen.cursorField == 'confirm' ? 'autofocus' : null}">
+            <span class="field-hint">(Y/N)</span>
+        </div>
+        <p class="key-hints">ENTER=Continue  F3=Back</p>
+        <div class="form-actions">
+            <button type="submit" name="aid" value="ENTER">ENTER=Continue</button>
+            <button type="submit" name="aid" value="PF3" formnovalidate>F3=Back</button>
+        </div>
+    </form>
+    <script>
+        // 3270 AID parity: F3 backs out; every other function key is
+        // submitted raw and redisplays with the invalid-key message
+        // (CORPT00C.cbl:184-194).
+        document.addEventListener('keydown', function (event) {
+            if (/^F([1-9]|1[0-2])$/.test(event.key)) {
+                event.preventDefault();
+                var form = document.getElementById('reports-form');
+                var aid = document.createElement('input');
+                aid.type = 'hidden';
+                aid.name = 'aid';
+                aid.value = event.key === 'F3' ? 'PF3' : event.key;
+                form.appendChild(aid);
+                form.submit();
+            }
+        });
+    </script>
+</div>
+</body>
+</html>

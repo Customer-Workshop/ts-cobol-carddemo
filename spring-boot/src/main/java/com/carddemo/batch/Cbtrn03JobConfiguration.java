@@ -14,7 +14,6 @@ import org.springframework.batch.core.step.builder.StepBuilder;
 import org.springframework.batch.item.ItemProcessor;
 import org.springframework.batch.item.file.FlatFileItemWriter;
 import org.springframework.batch.item.file.builder.FlatFileItemWriterBuilder;
-import org.springframework.batch.item.file.transform.PassThroughLineAggregator;
 import org.springframework.batch.item.data.RepositoryItemReader;
 import org.springframework.batch.item.data.builder.RepositoryItemReaderBuilder;
 import org.springframework.beans.factory.annotation.Value;
@@ -81,14 +80,17 @@ public class Cbtrn03JobConfiguration {
     @Bean
     @StepScope
     public FlatFileItemWriter<BatchJobService.ReportLine> cbtrn03Writer(
-            BatchJobService service) {
-        ReportLineAggregator aggregator = new ReportLineAggregator();
+            BatchJobService service,
+            @Value("#{jobParameters['startDate']}") String start,
+            @Value("#{jobParameters['endDate']}") String end) {
+        // The REPORT-NAME-HEADER carries the DATEPARM range, so the
+        // aggregator owns the whole header block — emitted with the first
+        // in-range row, like CBTRN03C's WS-FIRST-TIME branch.
+        ReportLineAggregator aggregator = new ReportLineAggregator(start, end);
         return new FlatFileItemWriterBuilder<BatchJobService.ReportLine>()
                 .name("cbtrn03Writer")
                 .resource(new FileSystemResource(service.output("cbtrn03-report.txt")))
                 .lineAggregator(aggregator)
-                .headerCallback(writer -> writer.write(
-                        "DALYREPT                             Daily Transaction Report"))
                 .footerCallback(writer -> writer.write(aggregator.footer()))
                 .shouldDeleteIfExists(true)
                 .build();

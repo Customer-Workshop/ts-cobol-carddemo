@@ -960,3 +960,62 @@ body {
     margin-right: 1em;
     cursor: pointer;
 }
+
+
+/* CORPT0A (transaction reports) — three X(1) type flags, date triplets
+   and the Y/N confirm, 3270-style. */
+.reports .screen-title {
+    color: #ff0;
+    text-align: center;
+}
+
+.reports .form-row {
+    margin: 0.8em 0 0 4ch;
+}
+
+.reports .type-label {
+    color: #ff0;
+    margin-left: 0.5em;
+}
+
+.reports .field-label {
+    white-space: pre;
+    color: #40e0d0;
+    margin-right: 0.5em;
+}
+
+.reports .field-hint {
+    color: #40e0d0;
+    margin: 0 2em 0 0.5em;
+}
+
+.reports .date-sep {
+    color: #00f;
+    margin: 0 0.4em;
+}
+
+.reports input {
+    background: #000;
+    color: #0f0;
+    border: none;
+    border-bottom: 1px solid #0f0;
+    font: inherit;
+}
+
+.reports .key-hints {
+    color: #ff0;
+    margin-left: 4ch;
+}
+
+.reports .form-actions {
+    margin-left: 4ch;
+}
+
+.reports .form-actions button {
+    background: #000;
+    color: #0f0;
+    border: 1px solid #0f0;
+    font: inherit;
+    margin-right: 1em;
+    cursor: pointer;
+}

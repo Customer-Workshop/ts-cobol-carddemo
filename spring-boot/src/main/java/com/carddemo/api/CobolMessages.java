@@ -463,4 +463,46 @@ public final class CobolMessages {
     public static String billPaymentSuccess(String tranId) {
         return "Payment successful.  Your Transaction ID is " + tranId + ".";
     }
+
+    // CORPT00C verbatim messages (S-10; CORPT00C.cbl:259-303 blank edits,
+    // :329-378 numeric/range edits, :531 TDQ failure).
+    public static final String REPORT_START_MONTH_EMPTY =
+        "Start Date - Month can NOT be empty...";
+    public static final String REPORT_START_DAY_EMPTY =
+        "Start Date - Day can NOT be empty...";
+    public static final String REPORT_START_YEAR_EMPTY =
+        "Start Date - Year can NOT be empty...";
+    public static final String REPORT_END_MONTH_EMPTY =
+        "End Date - Month can NOT be empty...";
+    public static final String REPORT_END_DAY_EMPTY =
+        "End Date - Day can NOT be empty...";
+    public static final String REPORT_END_YEAR_EMPTY =
+        "End Date - Year can NOT be empty...";
+    public static final String REPORT_START_MONTH_INVALID =
+        "Start Date - Not a valid Month...";
+    public static final String REPORT_START_DAY_INVALID =
+        "Start Date - Not a valid Day...";
+    public static final String REPORT_START_YEAR_INVALID =
+        "Start Date - Not a valid Year...";
+    public static final String REPORT_END_MONTH_INVALID =
+        "End Date - Not a valid Month...";
+    public static final String REPORT_END_DAY_INVALID =
+        "End Date - Not a valid Day...";
+    public static final String REPORT_END_YEAR_INVALID =
+        "End Date - Not a valid Year...";
+    public static final String REPORT_TDQ_WRITE_FAILED =
+        "Unable to Write TDQ (JOBS)...";
+
+    // '"' + CONFIRMI DELIMITED BY SPACE + '" is not a valid value to
+    // confirm...' (CORPT00C.cbl:485-490) — the flag is X(1), so the
+    // delimited value is the whole typed character.
+    public static String reportConfirmInvalid(String value) {
+        return '"' + delimitedBySpace(value) + "\" is not a valid value to confirm...";
+    }
+
+    // WS-REPORT-NAME DELIMITED BY SPACE + ' report submitted for
+    // printing ...' (CORPT00C.cbl:449-452).
+    public static String reportSubmitted(String name) {
+        return delimitedBySpace(name) + " report submitted for printing ...";
+    }
 }

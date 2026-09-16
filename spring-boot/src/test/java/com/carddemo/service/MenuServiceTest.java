@@ -110,8 +110,7 @@ class MenuServiceTest {
                 service.selectMain(new MenuSelectRequest("10"), authentication)));
         assertEquals("/ui/pending-auth", service.uiRoute(
                 service.selectMain(new MenuSelectRequest("11"), authentication)));
-        // Implemented but unported: no browsable route today.
-        assertNull(service.uiRoute(
+        assertEquals("/reports", service.uiRoute(
                 service.selectMain(new MenuSelectRequest("9"), authentication)));
         assertEquals("/admin/users", service.uiRoute(
                 service.selectAdmin(new MenuSelectRequest("1"))));

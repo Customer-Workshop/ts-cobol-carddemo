@@ -119,7 +119,9 @@ class BatchJobIntegrationTest {
                 .getTranProcessTimestamp() != null);
         String report = Files.readString(output.resolve("cbtrn03-report.txt"));
         assertTrue(report.contains("0000000000000001"));
-        assertTrue(report.contains("Account Total"));
+        // CVTRA07Y fidelity (S-10): a single-card report writes no account
+        // total — account totals print only on a card-number break.
+        assertTrue(report.contains("Page Total"));
         assertTrue(report.contains("Grand Total"));
         assertTrue(report.lines().anyMatch(line -> line.length() >= 100 && !line.contains("|")));
         assertTrue(accounts.findById(1L).orElseThrow().getAcctCurrBal().compareTo(
