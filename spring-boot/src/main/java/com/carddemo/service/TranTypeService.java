@@ -107,8 +107,17 @@ public class TranTypeService {
         String lastCode = state.lastCode();
         boolean nextPageExists = state.nextPageExists();
 
-        // :698-879 — the dispatch EVALUATE, in order.
-        if (turn.inputError) {
+        // :698-879 — the dispatch EVALUATE, in order. Navigation AIDs are
+        // checked before the edit-error echo like the sibling lists
+        // (COTRN00C dispatches EIBAID first): a filter whose edit keeps
+        // failing must not trap the user on the screen — F3 still exits.
+        if ("PF3".equals(aid)) {
+            return new TranTypeListResponse("exit", null, null,
+                    new TranTypeNavigation("COADM01C", "COTRTLIC"));
+        } else if ("PF2".equals(aid)) {
+            return new TranTypeListResponse("navigate", null, null,
+                    new TranTypeNavigation("COTRTUPC", "COTRTLIC"));
+        } else if (turn.inputError) {
             if (!turn.typeNotOk && !turn.descNotOk) {
                 BrowseResult page = forward(turn, firstCode, screenNumber,
                         "PF8".equals(aid));
@@ -126,12 +135,6 @@ public class TranTypeService {
             } else {
                 rows = echoRows(state);
             }
-        } else if ("PF3".equals(aid)) {
-            return new TranTypeListResponse("exit", null, null,
-                    new TranTypeNavigation("COADM01C", "COTRTLIC"));
-        } else if ("PF2".equals(aid)) {
-            return new TranTypeListResponse("navigate", null, null,
-                    new TranTypeNavigation("COTRTUPC", "COTRTLIC"));
         } else if ("PF8".equals(aid) && nextPageExists) {
             BrowseResult page = forward(turn, lastCode, screenNumber + 1, true);
             rows = page.rows;

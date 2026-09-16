@@ -218,6 +218,24 @@ class TranTypeListIntegrationTest {
     }
 
     @Test
+    void pf3ExitsWhileAFilterEditIsFailing_ui08Followup() throws Exception {
+        MockHttpSession session = signon("ADMIN001");
+        JsonNode first = fresh(session);
+
+        // A failing filter re-posted with F3 must still exit — the AID
+        // dispatch runs before the edit-error echo, like the sibling
+        // lists (COTRN00C evaluates EIBAID first).
+        ObjectNode exit = objectMapper.createObjectNode();
+        exit.put("aid", "PF3");
+        exit.put("trDesc", "ZZZZ NO MATCH");
+        exit.set("pageState", first.get("pageState"));
+        JsonNode response = press(session, exit);
+        assertThat(response.at("/outcome").asText()).isEqualTo("exit");
+        assertThat(response.at("/navigation/program").asText())
+                .isEqualTo("COADM01C");
+    }
+
+    @Test
     void pageEdgesShowVerbatimMessages_frS2104() throws Exception {
         MockHttpSession session = signon("ADMIN001");
         JsonNode first = fresh(session);
