@@ -47,9 +47,11 @@ non-blocking for the account block) → display (`:648-685`, `:687-870`, `:452-5
 redisplay the same screen; no abends on the business path.
 
 ## 6. Data access and boundaries
-- Three read-only keyed reads (B-009, REUSE shared repositories: `ICardXrefRepository.GetFirstByAccountIdAsync`,
-  `IAccountRepository.GetByIdAsync`, `ICustomerRepository.GetByIdAsync`). No writes, no commit scope.
-- Return routing on PF3 (B-012) → `/menu`. Session (S01-B6) → JWT; `authGuard` only.
+- Three read-only keyed reads (B-009, DECIDED: REUSE shared Spring Data JPA repositories —
+  `CardXrefRepository.findByXrefAcctId` (first result = AIX order), `AccountRepository.findById`,
+  `CustomerRepository.findById`). No writes, no commit scope.
+- Return routing on PF3 (B-012, DECIDED: `returnUrl` else `/menu`). Session (S01-B6, DECIDED: server
+  session + Spring Security context; unsigned UI navigation bounces to `/signon`).
 - S02-B1: AID fall-through to ENTER (`:311-314`) — source wins over the S-01 invalid-key convention.
 - S02-B2 (deviation, technical path): RESP/RESP2 in the file-error message rendered as fixed IOERR
   codes `000000017 `/`000000120 ` because the target has no CICS RESP.
@@ -71,4 +73,4 @@ plumbing (`:537-590`); ABEND handler (`:920-936`); RECEIVE MAP RESP unchecked (`
 
 ## 10. Traceability
 COACTVWC-01..15 ↔ FR-S02-01..15 (`S02_functional_requirement.md` §1) ↔ parity tests
-(`backend/CardDemo.Tests/Accounts/*`, `frontend/src/app/account-view/account-view.component.spec.ts`).
+(`spring-boot/src/test/java/com/carddemo/**` — `AccountViewUiIntegrationTest` + service unit tests).

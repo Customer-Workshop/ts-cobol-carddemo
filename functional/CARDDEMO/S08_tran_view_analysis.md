@@ -1,12 +1,16 @@
 # S-08 Transaction View — Stream Analysis (`!mf_stream_analysis`)
 
 Status: complete (2026-09-02). Stream S-08 from the catalog (`CardDemo_inventory.md` §5, row S-08); process type **ONLINE**.
-Target profiles applied (read-only): CORE + ONLINE + DATA/BOUNDARY from `functional/CARDDEMO/CardDemo_target_state.md` (C#/.NET 8 + ASP.NET Core, Angular 18, PostgreSQL 16, single repo). S-01 conventions reused as-is: JWT `SessionContext`, `authGuard`, menu route registry, invalid-key parity helper, Controller/Service/Repository layering.
+Target profiles applied (read-only): CORE + ONLINE + DATA/BOUNDARY from `functional/CARDDEMO/CardDemo_target_state.md` (Java 21 / Spring Boot 3.4.5, Thymeleaf server-rendered UI, PostgreSQL 16 + Spring Data JPA, single `spring-boot/` module). S-01 conventions reused as-is: server session + `SecurityContext`, unsigned bounce to `/signon`, `MenuService` catalogue + `UI_ROUTES`, `aid` form-field idiom, Controller/Service/Repository layering.
+
+> Java-engagement note (2026-09-16): source-side analysis unchanged; target references below
+> were re-expressed for Java 21/Spring Boot (EF Core → Spring Data JPA, Angular → server-rendered
+> web UI, /api/v1 → /api, JWT → server session) at this engagement's STOP C.
 
 ## 1. Pinned stream
 
-- **Entry point (proof)**: `CT01 -> COTRN01C` (`app/csd/CARDDEMO.CSD:429-430`); program defined `:264`. Reached from main-menu option 07 "Transaction View" (`app/cpy/COMEN02Y.cpy`, registry row `ProgramKey=COTRN01C` in `backend/CardDemo.Api/appsettings.json`) and from the transaction list COTRN00C when a row is selected with `S` (`app/cbl/COTRN00C.cbl:186-195`).
-- **Hard stop**: every `XCTL` out of COTRN01C is OUT of scope — COSGN00C/COMEN01C (S-01, already migrated: sign-on/menu routes), COTRN00C (S-07, not migrated: stays behind the disabled route registry), and the generic `CDEMO-FROM-PROGRAM` return.
+- **Entry point (proof)**: `CT01 -> COTRN01C` (`app/csd/CARDDEMO.CSD:429-430`); program defined `:264`. Reached from main-menu option 07 "Transaction View" (`app/cpy/COMEN02Y.cpy`, `MenuService` catalogue row COTRN01C) and from the transaction list COTRN00C when a row is selected with `S` (`app/cbl/COTRN00C.cbl:186-195`).
+- **Hard stop**: every `XCTL` out of COTRN01C is OUT of scope — COSGN00C/COMEN01C (S-01, already migrated: `/signon` and `/menu` routes), COTRN00C (S-07, not migrated: stays behind a non-browsable `UI_ROUTES` entry until it lands), and the generic `CDEMO-FROM-PROGRAM` return.
 - **Exclusions**: COTRN00C (list/browse, S-07), COTRN02C (add, S-09). No batch surface.
 - Pseudo-conversational shape: `EXEC CICS RETURN TRANSID('CT01') COMMAREA(...)` (`app/cbl/COTRN01C.cbl:136-139`); re-entry detected via `CDEMO-PGM-REENTER` (`:99-100`, `app/cpy/COCOM01Y.cpy:29-31`).
 
@@ -53,38 +57,38 @@ Fetch sequence (`PROCESS-ENTER-KEY`, `:144-192`): (1) empty check → message; (
 
 ## 4. Data + field dictionary
 
-**Dataset**: TRANSACT VSAM KSDS, `KEYS(16 0)` = TRAN-ID, AIX on TRAN-PROC-TS (see `backend/CardDemo.Domain/Transactions/Transaction.cs` header). Read-only in this stream; writers are S-09 (COTRN02C) and the batch posting chain (S-14). Shared data layer already landed (`transactions` table, `ITransactionRepository.GetByIdAsync`, seed import from `app/data/ASCII/dailytran.txt`) — S-08 adds **no** schema change.
+**Dataset**: TRANSACT VSAM KSDS, `KEYS(16 0)` = TRAN-ID, AIX on TRAN-PROC-TS (see `com.carddemo.model.Transaction`). Read-only in this stream; writers are S-09 (COTRN02C) and the batch posting chain (S-14). Shared data layer already landed (`transactions` table via Flyway V2, `TransactionRepository.findById`, seed import from `app/data/ASCII/dailytran.txt` via `DataSeeder`) — S-08 adds **no** schema change.
 
-Field dictionary (FACT, `app/cpy/CVTRA05Y.cpy:4-17`; target mapping from `TransactionConfiguration.cs`):
-| COBOL field | PIC | C# (Domain.Transaction) | PostgreSQL column |
+Field dictionary (FACT, `app/cpy/CVTRA05Y.cpy:4-17`; target mapping from the Flyway V2 `transactions` table + `Transaction` entity):
+| COBOL field | PIC | Java (`Transaction`) | PostgreSQL column |
 |---|---|---|---|
-| TRAN-ID | X(16) | `TransactionId` string | transactions.tran_id varchar(16) PK, collation C |
-| TRAN-TYPE-CD | X(02) | `TypeCode` | tran_type_cd varchar(2) |
-| TRAN-CAT-CD | 9(04) | `CategoryCode` string (zero-padded digits) | tran_cat_cd varchar(4) |
-| TRAN-SOURCE | X(10) | `Source` | tran_source varchar(10) |
-| TRAN-DESC | X(100) | `Description` | tran_desc varchar(100) |
-| TRAN-AMT | S9(09)V99 | `Amount` decimal | tran_amt numeric(11,2) |
-| TRAN-MERCHANT-ID | 9(09) | `MerchantId` string | tran_merchant_id varchar(9) |
-| TRAN-MERCHANT-NAME | X(50) | `MerchantName` | tran_merchant_name varchar(50) |
-| TRAN-MERCHANT-CITY | X(50) | `MerchantCity` | tran_merchant_city varchar(50) |
-| TRAN-MERCHANT-ZIP | X(10) | `MerchantZip` | tran_merchant_zip varchar(10) |
-| TRAN-CARD-NUM | X(16) | `CardNumber` | tran_card_num varchar(16) |
-| TRAN-ORIG-TS | X(26) | `OriginalTimestamp` DateTime? | tran_orig_ts timestamp |
-| TRAN-PROC-TS | X(26) | `ProcessedTimestamp` DateTime? | tran_proc_ts timestamp |
+| TRAN-ID | X(16) | `tranId` String | transactions.tran_id varchar(16) PK |
+| TRAN-TYPE-CD | X(02) | `tranTypeCode` | tran_type_code varchar(2) |
+| TRAN-CAT-CD | 9(04) | `tranCategoryCode` Integer (zero-padded to 4 on display) | tran_category_code integer |
+| TRAN-SOURCE | X(10) | `tranSource` | tran_source varchar(10) |
+| TRAN-DESC | X(100) | `tranDescription` | tran_description varchar(100) |
+| TRAN-AMT | S9(09)V99 | `tranAmount` BigDecimal | tran_amount numeric(19,2) |
+| TRAN-MERCHANT-ID | 9(09) | `tranMerchantId` Long (zero-padded to 9 on display) | tran_merchant_id bigint |
+| TRAN-MERCHANT-NAME | X(50) | `tranMerchantName` | tran_merchant_name varchar(50) |
+| TRAN-MERCHANT-CITY | X(50) | `tranMerchantCity` | tran_merchant_city varchar(50) |
+| TRAN-MERCHANT-ZIP | X(10) | `tranMerchantZip` | tran_merchant_zip varchar(10) |
+| TRAN-CARD-NUM | X(16) | `tranCardNumber` | tran_card_number varchar(16) |
+| TRAN-ORIG-TS | X(26) | `tranOriginTimestamp` LocalDateTime | tran_origin_timestamp timestamp(6) |
+| TRAN-PROC-TS | X(26) | `tranProcessTimestamp` LocalDateTime | tran_process_timestamp timestamp(6) |
 | FILLER | X(20) | — | not mapped |
 
-Key semantics: the screen field is X(16) space-padded; VSAM compares the 16 bytes verbatim. Stored keys are `TrimEnd()`ed on import (`FixedWidthRecord.Text`), so the target compares the entered id with trailing spaces removed — identical outcome for every 16-byte key (leading spaces / case are **not** normalized, matching the source).
+Key semantics: the screen field is X(16) space-padded; VSAM compares the 16 bytes verbatim. Stored keys are trailing-space-stripped on import (`CobolFieldReader`), so the target compares the entered id with trailing spaces removed — identical outcome for every 16-byte key (leading spaces / case are **not** normalized, matching the source).
 
-Session/COMMAREA: general info via S-01 `SessionContext`/JWT (S01-B6, no change). `CDEMO-CT01-TRN-SELECTED` (inbound pre-selection) becomes the route query parameter `tranId`; `CDEMO-FROM-PROGRAM` (PF3 return target) becomes the optional `returnUrl` query parameter defaulting to `/menu` (S01-B3 idiom). The list-paging members of `CDEMO-CT01-INFO` (TRNID-FIRST/LAST, PAGE-NUM, NEXT-PAGE-FLG) are declared but never referenced by COTRN01C — they belong to COTRN00C and are not carried.
+Session/COMMAREA: general info via S-01 server session + `SecurityContext` (S01-B6, no change). `CDEMO-CT01-TRN-SELECTED` (inbound pre-selection) becomes the route query parameter `tranId`; `CDEMO-FROM-PROGRAM` (PF3 return target) becomes the optional `returnUrl` query parameter defaulting to `/menu` (S01-B3 idiom). The list-paging members of `CDEMO-CT01-INFO` (TRNID-FIRST/LAST, PAGE-NUM, NEXT-PAGE-FLG) are declared but never referenced by COTRN01C — they belong to COTRN00C and are not carried.
 
 ## 5. Boundary table (headline) — S08-B1..S08-B4 (register append is owned by the integration stage; not edited here)
 
 | ID | Class | Contract | Direction | Cite | Decision taken in this stream |
 |---|---|---|---|---|---|
-| S08-B1 | B4 data-access leaf | CICS READ TRANSACT keyed by TRAN-ID (UPDATE, never rewritten); RESP 0/13/other | outbound | COTRN01C.cbl:269-296 | Shared `ITransactionRepository.GetByIdAsync` (EF Core, read-only, no lock); repository exception → "other RESP" result |
-| S08-B2 | B5 inbound pre-selection | COTRN00C XCTLs with `CDEMO-CT01-TRN-SELECTED` populated → auto-fetch | inbound | COTRN01C.cbl:103-108; COTRN00C.cbl:186-195 | Route contract `/transactions/view?tranId=<id>`: pre-fills and fetches on init; S-07 consumes when it migrates |
-| S08-B3 | B5 outbound return | PF3 → `CDEMO-FROM-PROGRAM` (default COMEN01C) | outbound | COTRN01C.cbl:115-122 | `returnUrl` query param (internal path only), default `/menu` (S01-B3) |
-| S08-B4 | B5 cross-program switch | PF5 → XCTL COTRN00C (S-07, not migrated) | outbound | COTRN01C.cbl:125-127 | Resolved through the S-01 route registry: main-menu option `06` (Transaction List = COTRN00C, `COMEN02Y.cpy`); registry disabled → coming-soon message on this screen, no navigation (integration stage flips the flag) |
+| S08-B1 | B4 data-access leaf | CICS READ TRANSACT keyed by TRAN-ID (UPDATE, never rewritten); RESP 0/13/other | outbound | COTRN01C.cbl:269-296 | Shared `TransactionRepository.findById` (Spring Data JPA, read-only, no lock) — **verbatim key**, not the baseline's numeric+zero-pad edit; repository exception → "other RESP" result |
+| S08-B2 | B5 inbound pre-selection | COTRN00C XCTLs with `CDEMO-CT01-TRN-SELECTED` populated → auto-fetch | inbound | COTRN01C.cbl:103-108; COTRN00C.cbl:186-195 | Route contract `/transactions/view?tranId=<id>`: pre-fills and fetches on render; S-07 consumes it when it migrates |
+| S08-B3 | B5 outbound return | PF3 → `CDEMO-FROM-PROGRAM` (default COMEN01C) | outbound | COTRN01C.cbl:115-122 | `returnUrl` query param (internal path only), default `redirect:/menu` (S01-B3) |
+| S08-B4 | B5 cross-program switch | PF5 → XCTL COTRN00C (S-07, not migrated) | outbound | COTRN01C.cbl:125-127 | Resolved through the `MenuService` catalogue / `UI_ROUTES`: main-menu option `06` (Transaction List = COTRN00C, `COMEN02Y.cpy`); not browsable → coming-soon message on this screen, no navigation (S-07's wave flips the entry to `/transactions/list`) |
 
 No stored procedures, no external systems, no lead-time requests. All contracts resolved from source; **no unresolved-contract blockers**.
 
@@ -92,14 +96,14 @@ No stored procedures, no external systems, no lead-time requests. All contracts 
 
 | Wave | Content | Repos touched |
 |---|---|---|
-| 1 (only) | `TransactionViewService` + `GET /api/v1/transactions/view/{tranId}` + Angular `TransactionViewComponent` at `/transactions/view` (authGuard), specs/tests per FR | backend/, frontend/ |
+| 1 (only) | `transaction-view.html` + `UiController` `/transactions/view` GET/POST (unsigned bounce to `/signon`), verbatim-key lookup + verbatim messages, unit + MockMvc + Testcontainers tests per FR | spring-boot/ |
 
-Shared-port note: no new module-level seams; consumes S-01 session, guard, invalid-key and registry seams unchanged.
+`UI_ROUTES` entry for option 07 (COTRN01C) flips to `/transactions/view` when the wave merges. Shared-port note: no new module-level seams; consumes S-01 session, entry-point, `aid` and registry seams unchanged.
 
 ## 7. Risks
 
 1. Amount edit picture `+99999999.99` drops the 9th integer digit of S9(09)V99 amounts (`:49`, `:177`) — reproduced exactly; visible only for |amount| ≥ 100,000,000.00 (none in seed data). LOW.
-2. PF5 target (COTRN00C) not migrated: behavior is the registry's coming-soon message until S-07 lands. LOW (by design, hard-scope rule).
+2. PF5 target (COTRN00C) not migrated: behavior is the coming-soon idiom until S-07 lands and `UI_ROUTES` gets its `/transactions/list` entry. LOW (by design, hard-scope rule).
 3. Display truncation of description/merchant name/city (60/30/25) is a screen-real-estate artifact of the 3270 map; reproduced for parity, flagged for the UX pass at STOP D. LOW.
 
 ## 8. Validation

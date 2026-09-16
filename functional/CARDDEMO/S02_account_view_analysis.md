@@ -5,6 +5,10 @@ Stream: **S-02 Account View** (ONLINE). Catalog row: `functional/CARDDEMO/CardDe
 Method: same as S-01 (`S01_SignonMenu_analysis.md`) — source-derived, every behavior cited to a
 COBOL/BMS/CSD line; nothing invented. Target stack per `CardDemo_target_state.md` (CONFIRMED).
 
+> Java-engagement note (2026-09-16): source-side analysis unchanged; target references below
+> were re-expressed for Java 21/Spring Boot (EF Core → Spring Data JPA, Angular → server-rendered
+> web UI, /api/v1 → /api, JWT → server session) at this engagement's STOP C.
+
 ## 1. Scope and surfaces
 
 | Item | Value | Cite |
@@ -126,7 +130,7 @@ RESP2=80 (CICS File Control constants), so the visible texts are deterministic:
 
 `CXACAIX` is the alternate index on the card-xref file keyed by account id: the keyed READ returns
 the **first** xref record for that account (lowest card number in base-key order). The shared
-`ICardXrefRepository.GetFirstByAccountIdAsync` (orders by card number) is the exact target seam.
+`CardXrefRepository.findByXrefAcctId` (Spring Data JPA, orders by card number) is the exact target seam.
 
 ## 6. Output shaping (`1200-SETUP-SCREEN-VARS`, `:452-533`)
 
@@ -144,30 +148,31 @@ the **first** xref record for that account (lowest card number in base-key order
 
 ## 7. Data dictionary (fields read by S-02)
 
-| Copybook / column (shared schema, commit 468e17d) | PIC | Target type | Used for |
+| Copybook / column (shared schema, Flyway V2 baseline) | PIC | Target type | Used for |
 |---|---|---|---|
-| `CVACT01Y` ACCT-ID → `accounts.acct_id` | 9(11) | string(11) key | lookup, echo |
-| ACCT-ACTIVE-STATUS → `acct_active_status` | X(01) | string | ACSTTUS |
-| ACCT-CURR-BAL / CREDIT-LIMIT / CASH-CREDIT-LIMIT / CURR-CYC-CREDIT / CURR-CYC-DEBIT | S9(10)V99 | decimal | 5 amount fields |
-| ACCT-OPEN-DATE / EXPIRAION-DATE / REISSUE-DATE | X(10) | DateOnly? | 3 date fields |
-| ACCT-GROUP-ID | X(10) | string | AADDGRP |
-| `CVACT03Y` XREF-ACCT-ID / XREF-CUST-ID / XREF-CARD-NUM → `card_xref` | 9(11)/9(09)/X(16) | strings | AIX lookup → customer key |
-| `CVCUS01Y` CUST-ID → `customers.cust_id` | 9(09) | string(9) key | lookup, ACSTNUM |
-| CUST-*-NAME, ADDR-LINE-1..3, STATE-CD, COUNTRY-CD, ZIP, PHONE-NUM-1/2, GOVT-ISSUED-ID, EFT-ACCOUNT-ID, PRI-CARD-HOLDER-IND | X(n) | string | customer block |
-| CUST-SSN | 9(09) | string(9) | ACSTSSN |
-| CUST-DOB-YYYY-MM-DD | X(10) | DateOnly? | ACSTDOB |
-| CUST-FICO-CREDIT-SCORE | 9(03) | short | ACSTFCO |
+| `CVACT01Y` ACCT-ID → `accounts.acct_id` | 9(11) | `acctId` Long (bigint; echo zero-padded to 11) | lookup, echo |
+| ACCT-ACTIVE-STATUS → `acct_active_status` | X(01) | String | ACSTTUS |
+| ACCT-CURR-BAL / CREDIT-LIMIT / CASH-CREDIT-LIMIT / CURR-CYC-CREDIT / CURR-CYC-DEBIT | S9(10)V99 | BigDecimal | 5 amount fields |
+| ACCT-OPEN-DATE / EXPIRAION-DATE / REISSUE-DATE | X(10) | LocalDate | 3 date fields |
+| ACCT-GROUP-ID | X(10) | String | AADDGRP |
+| `CVACT03Y` XREF-ACCT-ID / XREF-CUST-ID / XREF-CARD-NUM → `card_xrefs` | 9(11)/9(09)/X(16) | `xrefAcctId`/`xrefCustId` Long, `xrefCardNumber` String | AIX lookup → customer key |
+| `CVCUS01Y` CUST-ID → `customers.cust_id` | 9(09) | `custId` Long (bigint; display zero-padded to 9) | lookup, ACSTNUM |
+| CUST-*-NAME, ADDR-LINE-1..3, STATE-CD, COUNTRY-CD, ZIP, PHONE-NUM-1/2, GOVT-ISSUED-ID, EFT-ACCOUNT-ID, PRI-CARD-HOLDER-IND | X(n) | String | customer block |
+| CUST-SSN | 9(09) | `custSsn` Long (bigint; display zero-padded to 9) | ACSTSSN |
+| CUST-DOB-YYYY-MM-DD | X(10) | LocalDate | ACSTDOB |
+| CUST-FICO-CREDIT-SCORE | 9(03) | Integer | ACSTFCO |
 
-No field or index missing from the shared data layer: **no EF migration for S-02**.
+No field or index missing from the shared data layer: **no Flyway migration for S-02**
+(the reserved V100x range stays unused).
 
 ## 8. Boundaries
 
 | Id | Class | Description | Decision for S-02 |
 |---|---|---|---|
-| B-009 | Persistence | VSAM KSDS/AIX → PostgreSQL | REUSE shared `IAccountRepository`, `ICustomerRepository`, `ICardXrefRepository`; NOTFND ↔ `null`; other RESP ↔ store exception |
-| B-012 | Dynamic routing | `XCTL PROGRAM(CDEMO-TO-PROGRAM)` on PF3 (`:350`) | Exit navigates to the caller route; the only registry caller is the main menu (`/menu`). COMMAREA `CDEMO-USRTYP-USER` reset on exit (`:344`) is demoted: unreachable for admins (no admin-menu option), no observable effect. |
-| S01-B6 | Session | COMMAREA → JWT `SessionContext` | REUSE; route behind `authGuard` (program has no user-type check, so no `adminGuard`) |
-| S02-B1 (new, stream-local) | AID parity | COACTVWC treats every AID other than ENTER/PF3 **as ENTER** (`:311-314`) — differs from the S-01 shared "invalid key" convention | Source wins: F3 = Exit, any other F-key submits. `classifyAidKey` reused for key detection; the `invalid` branch maps to submit for this screen. |
+| B-009 | Persistence | VSAM KSDS/AIX → PostgreSQL | REUSE shared `AccountRepository`, `CustomerRepository`, `CardXrefRepository` (Spring Data JPA); NOTFND ↔ empty `Optional`; other RESP ↔ `RuntimeException` (store failure) |
+| B-012 | Dynamic routing | `XCTL PROGRAM(CDEMO-TO-PROGRAM)` on PF3 (`:350`) | Exit navigates to the caller route (`returnUrl`); the only registry caller is the main menu (`/menu`). COMMAREA `CDEMO-USRTYP-USER` reset on exit (`:344`) is demoted: unreachable for admins (no admin-menu option), no observable effect. |
+| S01-B6 | Session | COMMAREA → server session + Spring Security `SecurityContext` | REUSE; route protected by `SecurityConfig`'s `authenticated()` matcher (unsigned UI navigation bounces to `/signon`; program has no user-type check, so no role gate) |
+| S02-B1 (new, stream-local) | AID parity | COACTVWC treats every AID other than ENTER/PF3 **as ENTER** (`:311-314`) — differs from the S-01 shared "invalid key" convention | Source wins: F3 = Exit, any other F-key submits. The `aid` form-field idiom reused for key detection; non-ENTER/non-PF3 values map to submit for this screen. |
 | S02-B2 (new, stream-local) | Message | Msg F embeds CICS RESP/RESP2 that have no target equivalent | Same template; RESP/RESP2 rendered as `000000017 ` / `000000120 ` (DFHRESP IOERR / VSAM I/O error) for any store failure. Documented deviation, technical path only. |
 
 ## 9. Risks

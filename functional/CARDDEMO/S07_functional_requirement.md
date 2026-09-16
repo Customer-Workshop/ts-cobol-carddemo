@@ -30,27 +30,27 @@ All data fields are FSET: a redisplay that does not repopulate rows keeps the ro
 
 | ID | Flow | Business trigger | Observable result | Program | Cite | Boundary | Covering test |
 |---|---|---|---|---|---|---|---|
-| FR-S07-01 | Entry guard | Program entered without COMMAREA | Control returns to sign-on (COSGN00C) | COTRN00C | :107-109, :510-521 | S07-B4 | authGuard spec (S-01) |
-| FR-S07-02 | First display | First entry from the menu (PGM-CONTEXT enter) | Page 1 from the start of the file displayed, search field blank, re-enter flag set | COTRN00C | :112-116, :206-207, :224-225 | S07-B3 | TransactionListServiceTests.FirstEntry_*; component spec ngOnInit |
-| FR-S07-03 | Search | ENTER with blank search id | List restarts from the lowest transaction id; page number becomes 1 | COTRN00C | :206-207, :224-225, :305-307 | S07-B3 | Service + integration Enter_Blank* |
-| FR-S07-04 | Search | ENTER with a 16-digit search id | First row is the first transaction with id ≥ key (GTEQ browse); page number 1; search field cleared | COTRN00C | :209-210, :593-600, :228, :325 | S07-B3 | Enter_NumericKey* |
-| FR-S07-05 | Search validation | ENTER with a search id that is not numeric over all 16 positions | `Tran ID must be Numeric ...`; rows, page number and search input unchanged | COTRN00C | :211-218, :283, :227-229 | — | Enter_NonNumeric* |
-| FR-S07-06 | Row rendering | A page is populated | ≤10 rows: id X(16), date `mm/dd/yy`, description 26 chars, amount `+99999999.99`; unfilled rows blank | COTRN00C | :289-303, :383-445, :450-505 | — | RowMapping*; component row spec |
-| FR-S07-07 | Forward paging | Full page and another record follows | Page number +1, next-page flag Y, no message | COTRN00C | :305-310 | S07-B3 | Enter_FullPage*; PF8_* |
-| FR-S07-08 | End of file | Fewer than 10 records remain, or exactly 10 with none after | `You have reached the bottom of the page...`; next-page flag N; page number +1 only if ≥1 row shown | COTRN00C | :297-320, :639-645 | S07-B3 | *Bottom* |
-| FR-S07-09 | Key beyond file | Start key greater than every transaction id (STARTBR NOTFND) | `You are at the top of the page...`; rows unchanged; page number 0 (ENTER) or unchanged (PF8); next-page N | COTRN00C | :605-611, :283-320 | S07-B3 | *NotFound* |
-| FR-S07-10 | PF8 | Next-page flag Y | Next 10 records after the last displayed id (record at that id skipped); search field cleared | COTRN00C | :257-268, :285-287, :325 | S07-B3 | PF8_* |
-| FR-S07-11 | PF8 | Next-page flag N | `You are already at the bottom of the page...`; screen preserved (no erase), rows/page unchanged | COTRN00C | :269-273 | — | PF8_AtBottom* |
-| FR-S07-12 | PF7 | Page number > 1 | Previous 10 records before the first displayed id, filled bottom-up; page −1 when more records precede, else page = 1; next-page flag Y | COTRN00C | :234-246, :333-369 | S07-B3 | PF7_* |
-| FR-S07-13 | PF7 | Page number ≤ 1 | `You are already at the top of the page...`; screen preserved; next-page flag set Y (source side effect) | COTRN00C | :242, :245-251 | — | PF7_AtTop* |
-| FR-S07-14 | Start of file | Backward paging reaches the first record (peek or mid-fill ENDFILE) | `You have reached the top of the page...`; page number 1 when 10 rows filled, unchanged when fewer | COTRN00C | :351-369, :673-679 | S07-B3 | PF7_*Top* |
-| FR-S07-15 | Row selection | `S`/`s` typed on a row with an id (first non-blank selection wins) | Transfer to Transaction View (COTRN01C) with the selected id in context | COTRN00C | :148-195 | **S07-B1** (disabled route → coming-soon idiom) | Select_* |
-| FR-S07-16 | Row selection | Other character on a row with an id | `Invalid selection. Valid value is S`; search/paging still processed; message stays unless a paging message overwrites it | COTRN00C | :196-203, :206-229 | — | Select_Invalid* |
-| FR-S07-17 | Row selection | Selection typed on a row without an id | Ignored (no message); normal ENTER processing | COTRN00C | :183-184 | — | Select_BlankRow* |
-| FR-S07-18 | PF3 | PF3 on the list | Return to main menu (COMEN01C) | COTRN00C | :122-124, :510-521 | S07-B2 | component spec F3/Exit |
-| FR-S07-19 | Invalid key | Any AID other than ENTER/PF3/PF7/PF8 | `Invalid key pressed. Please see below...`; screen redisplayed unchanged | COTRN00C | :129-133; CSMSG01Y.cpy:20-21 | — | component spec invalid key |
-| FR-S07-20 | File error | Browse/read RESP other than NORMAL/NOTFND/ENDFILE | `Unable to lookup transaction...`; no paging; rows/state unchanged | COTRN00C | :612-618, :646-652, :680-686 | S07-B3 | *StoreError* |
-| FR-S07-21 | Ordering | Any page | Rows in TRAN-ID key order (VSAM KSDS byte order) | COTRN00C | :593-600, :626-634, :660-668 | S07-B3 | integration Ordering* |
+| FR-S07-01 | Entry guard | Program entered without COMMAREA | Control returns to sign-on (COSGN00C) | COTRN00C | :107-109, :510-521 | S07-B4 | unsigned bounce to `/signon` (S-01 entry point) |
+| FR-S07-02 | First display | First entry from the menu (PGM-CONTEXT enter) | Page 1 from the start of the file displayed, search field blank, re-enter flag set | COTRN00C | :112-116, :206-207, :224-225 | S07-B3 | `TransactionListServiceTest.firstEntry_*`; `TransactionListUiIntegrationTest` first display |
+| FR-S07-03 | Search | ENTER with blank search id | List restarts from the lowest transaction id; page number becomes 1 | COTRN00C | :206-207, :224-225, :305-307 | S07-B3 | service + integration `enterBlank*` |
+| FR-S07-04 | Search | ENTER with a 16-digit search id | First row is the first transaction with id ≥ key (GTEQ browse); page number 1; search field cleared | COTRN00C | :209-210, :593-600, :228, :325 | S07-B3 | `enterNumericKey*` |
+| FR-S07-05 | Search validation | ENTER with a search id that is not numeric over all 16 positions | `Tran ID must be Numeric ...`; rows, page number and search input unchanged | COTRN00C | :211-218, :283, :227-229 | — | `enterNonNumeric*` |
+| FR-S07-06 | Row rendering | A page is populated | ≤10 rows: id X(16), date `mm/dd/yy`, description 26 chars, amount `+99999999.99`; unfilled rows blank | COTRN00C | :289-303, :383-445, :450-505 | — | `rowMapping*`; UI row render |
+| FR-S07-07 | Forward paging | Full page and another record follows | Page number +1, next-page flag Y, no message | COTRN00C | :305-310 | S07-B3 | `enterFullPage*`; `pf8_*` |
+| FR-S07-08 | End of file | Fewer than 10 records remain, or exactly 10 with none after | `You have reached the bottom of the page...`; next-page flag N; page number +1 only if ≥1 row shown | COTRN00C | :297-320, :639-645 | S07-B3 | `*Bottom*` |
+| FR-S07-09 | Key beyond file | Start key greater than every transaction id (STARTBR NOTFND) | `You are at the top of the page...`; rows unchanged; page number 0 (ENTER) or unchanged (PF8); next-page N | COTRN00C | :605-611, :283-320 | S07-B3 | `*NotFound*` |
+| FR-S07-10 | PF8 | Next-page flag Y | Next 10 records after the last displayed id (record at that id skipped); search field cleared | COTRN00C | :257-268, :285-287, :325 | S07-B3 | `pf8_*` |
+| FR-S07-11 | PF8 | Next-page flag N | `You are already at the bottom of the page...`; screen preserved (no erase), rows/page unchanged | COTRN00C | :269-273 | — | `pf8AtBottom*` |
+| FR-S07-12 | PF7 | Page number > 1 | Previous 10 records before the first displayed id, filled bottom-up; page −1 when more records precede, else page = 1; next-page flag Y | COTRN00C | :234-246, :333-369 | S07-B3 | `pf7_*` |
+| FR-S07-13 | PF7 | Page number ≤ 1 | `You are already at the top of the page...`; screen preserved; next-page flag set Y (source side effect) | COTRN00C | :242, :245-251 | — | `pf7AtTop*` |
+| FR-S07-14 | Start of file | Backward paging reaches the first record (peek or mid-fill ENDFILE) | `You have reached the top of the page...`; page number 1 when 10 rows filled, unchanged when fewer | COTRN00C | :351-369, :673-679 | S07-B3 | `pf7*Top*` |
+| FR-S07-15 | Row selection | `S`/`s` typed on a row with an id (first non-blank selection wins) | Transfer to Transaction View (COTRN01C) with the selected id in context | COTRN00C | :148-195 | **S07-B1** (route not browsable → coming-soon idiom) | `select_*` |
+| FR-S07-16 | Row selection | Other character on a row with an id | `Invalid selection. Valid value is S`; search/paging still processed; message stays unless a paging message overwrites it | COTRN00C | :196-203, :206-229 | — | `selectInvalid*` |
+| FR-S07-17 | Row selection | Selection typed on a row without an id | Ignored (no message); normal ENTER processing | COTRN00C | :183-184 | — | `selectBlankRow*` |
+| FR-S07-18 | PF3 | PF3 on the list | Return to main menu (COMEN01C) | COTRN00C | :122-124, :510-521 | S07-B2 | UI test F3/Exit |
+| FR-S07-19 | Invalid key | Any AID other than ENTER/PF3/PF7/PF8 | `Invalid key pressed. Please see below...`; screen redisplayed unchanged | COTRN00C | :129-133; CSMSG01Y.cpy:20-21 | — | UI test invalid key |
+| FR-S07-20 | File error | Browse/read RESP other than NORMAL/NOTFND/ENDFILE | `Unable to lookup transaction...`; no paging; rows/state unchanged | COTRN00C | :612-618, :646-652, :680-686 | S07-B3 | `*StoreError*` |
+| FR-S07-21 | Ordering | Any page | Rows in TRAN-ID key order (VSAM KSDS byte order) | COTRN00C | :593-600, :626-634, :660-668 | S07-B3 | integration `ordering*` |
 
 ## 5. Validation and error catalogue
 | Code/message | Trigger | Cite | Blocking? | Resulting state |
@@ -102,12 +102,12 @@ Preserved quirks (source-derived, kept for parity): NOTFND wording `You are at t
 - FR-S07-21: Given ids `0000000000000009`, `0000000000000010`, `0000000000000100`, When listed, Then order is 0009, 0010, 0100 (byte order).
 
 ## 9. Traceability matrix
-FR-S07-02..17, 20, 21 → COTRN00C → `TransactionListService` (backend/CardDemo.Application/Transactions) → `TransactionListServiceTests` (unit, fake repository) + `TransactionListIntegrationTests` (Testcontainers Postgres, real repository + API).
-FR-S07-01, 18, 19 + screen shape of 02, 05, 06, 11, 13, 15 → `TransactionListComponent` → `transaction-list.component.spec.ts`.
+FR-S07-02..17, 20, 21 → COTRN00C → `TransactionService.list` / list screen-state path (`spring-boot/src/main/java/com/carddemo/service/TransactionService.java`) → `TransactionListServiceTest` (unit) + `TransactionListUiIntegrationTest` (MockMvc + Testcontainers Postgres, real repository + UI).
+FR-S07-01, 18, 19 + screen shape of 02, 05, 06, 11, 13, 15 → `templates/transaction-list.html` + `UiController` `/transactions/list` → `TransactionListUiIntegrationTest`.
 
-**FR-S07-19 target disposition:** F3 = Exit, F7 = backward, F8 = forward; any other F1–F12 shows `Invalid key pressed. Please see below...` via `frontend/src/app/shared/invalid-key.ts` (S-01 helper, unchanged). Non-function keys are ordinary web input.
+**FR-S07-19 target disposition:** F3 = Exit, F7 = backward, F8 = forward; any other F1–F12 arrives as `aid=<key>` and shows `Invalid key pressed. Please see below...` (S-01 `aid` idiom, unchanged). Non-function keys are ordinary web input.
 
-**FR-S07-15 target disposition (S07-B1):** the XCTL target is resolved against the menu route registry entry with `ProgramKey = COTRN01C`. While that entry is disabled the response is the S-01 coming-soon idiom (`This option Transaction View is coming soon ...`, info); once S-08 lands the same call yields `navigate` with the registry route and the selected id.
+**FR-S07-15 target disposition (S07-B1):** the XCTL target is resolved against the `MenuService` option catalogue / `UI_ROUTES` entry for COTRN01C (option 07). While that route is not browsable the response is the S-01 coming-soon idiom (`This option ` + name + `is coming soon ...`, green info); once S-08 lands the same call navigates to `/transactions/view?tranId=<selected>`. Baseline check (wave item): the source STRING emits the option name `DELIMITED BY SPACE` (`COMEN01C.cbl:172-176`), i.e. for the shipped name `Transaction View` the emitted text is `This option Transactionis coming soon ...`; `CobolMessages.optionComingSoon` currently appends the full name — parity pinned in the tests.
 
 ## 10. Program index
 | Program | Role | Requirements | Program FR doc |

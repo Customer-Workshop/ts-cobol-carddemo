@@ -1,7 +1,11 @@
 # S-07 Transaction List — Stream Analysis (`!mf_stream_analysis`)
 
 Status: complete (2026-09-02). Stream from catalogue row S-07 (`CardDemo_inventory.md` §5); process type **ONLINE**.
-Target profiles applied (read-only): CORE + ONLINE + DATA/BOUNDARY from `functional/CARDDEMO/CardDemo_target_state.md` (C# 12 / .NET 8 + ASP.NET Core 8, Angular 18 + Material, PostgreSQL 16 + EF Core 8, single repo). S-01 shell conventions reused (JWT `SessionContext`, `authGuard`, menu route registry, AID parity helper).
+Target profiles applied (read-only): CORE + ONLINE + DATA/BOUNDARY from `functional/CARDDEMO/CardDemo_target_state.md` (Java 21 / Spring Boot 3.4.5, Thymeleaf server-rendered UI, PostgreSQL 16 + Spring Data JPA, single `spring-boot/` module). S-01 shell conventions reused (server session + `SecurityContext`, unsigned bounce to `/signon`, `MenuService` catalogue + `UI_ROUTES`, `aid` form-field idiom).
+
+> Java-engagement note (2026-09-16): source-side analysis unchanged; target references below
+> were re-expressed for Java 21/Spring Boot (EF Core → Spring Data JPA, Angular → server-rendered
+> web UI, /api/v1 → /api, JWT → server session) at this engagement's STOP C.
 
 ## 1. Pinned stream
 
@@ -68,26 +72,28 @@ Because every data field is `FSET`, the RECEIVE returns the previously displayed
 
 TRANSACT KSDS (`WS-TRANSACT-FILE 'TRANSACT'` `:39`), key TRAN-ID X(16) at offset 0, browse-only (no WRITE/REWRITE/DELETE). Record `TRAN-RECORD` (`app/cpy/CVTRA05Y.cpy`, RECLN 350) — fields used by this program:
 
-| Field | PIC | Target type | Postgres column (shared layer 468e17d) | Screen edit |
+| Field | PIC | Target type | Postgres column (Flyway V2 baseline) | Screen edit |
 |---|---|---|---|---|
-| TRAN-ID | X(16) | string | transactions.tran_id (PK, collation "C") | shown as-is; also search key / paging cursors |
-| TRAN-DESC | X(100) | string | transactions.tran_desc | first 26 chars |
-| TRAN-AMT | S9(09)V99 | decimal | transactions.tran_amt | `+99999999.99` (sign always shown; high-order digit dropped for |amt| ≥ 10^8 — COBOL MOVE truncation) |
-| TRAN-ORIG-TS | X(26) `yyyy-MM-dd HH:mm:ss.ffffff` | DateTime? | transactions.tran_orig_ts | `mm/dd/yy` (`WS-TIMESTAMP` → `WS-CURDATE-MM-DD-YY`, `CSDAT01Y.cpy`) |
+| TRAN-ID | X(16) | String | transactions.tran_id (PK) | shown as-is; also search key / paging cursors |
+| TRAN-DESC | X(100) | String | transactions.tran_description | first 26 chars |
+| TRAN-AMT | S9(09)V99 | BigDecimal | transactions.tran_amount | `+99999999.99` (sign always shown; high-order digit dropped for |amt| ≥ 10^8 — COBOL MOVE truncation) |
+| TRAN-ORIG-TS | X(26) `yyyy-MM-dd HH:mm:ss.ffffff` | LocalDateTime | transactions.tran_origin_timestamp | `mm/dd/yy` (`WS-TIMESTAMP` → `WS-CURDATE-MM-DD-YY`, `CSDAT01Y.cpy`) |
 
-Key ordering: VSAM KSDS byte order = Postgres collation "C" on `tran_id` (`LegacyColumnConventions.KeyCollation`), so `ORDER BY tran_id` reproduces STARTBR/READNEXT/READPREV sequence.
+Key ordering: VSAM KSDS byte order = plain `ORDER BY tran_id` on `transactions.tran_id`
+(`String` keys are 16-character digit strings, so digit-only ordering is identical under
+byte order and the database default collation), reproducing STARTBR/READNEXT/READPREV.
 
-Session/paging state (`CDEMO-CT00-INFO` `:62-70`): TRNID-FIRST X(16), TRNID-LAST X(16), PAGE-NUM 9(08), NEXT-PAGE-FLG X(1) 'Y'/'N', TRN-SEL-FLG X(1), TRN-SELECTED X(16). Target: client-held `TransactionListState` round-tripped in each request/response (pseudo-conversational state, no server session).
+Session/paging state (`CDEMO-CT00-INFO` `:62-70`): TRNID-FIRST X(16), TRNID-LAST X(16), PAGE-NUM 9(08), NEXT-PAGE-FLG X(1) 'Y'/'N', TRN-SEL-FLG X(1), TRN-SELECTED X(16). Target: client-held paging-state record round-tripped as form fields in each request (pseudo-conversational state, no server session).
 
 ## 5. Boundary table (headline) — S07-B1..S07-B5
 
 | ID | Class | Contract | Direction | Cite | Decision |
 |---|---|---|---|---|---|
-| S07-B1 | B5 cross-program switch | XCTL COTRN01C with COMMAREA (selected TRAN-ID) | outbound → S-08 | COTRN00C.cbl:186-195 | Resolve via menu route registry entry `ProgramKey=COTRN01C` (Id 07, disabled): "coming soon" idiom (FR-S01-13/14) until S-08 lands; selected id carried in the result for the future route |
-| S07-B2 | B5 inbound return routing | XCTL COMEN01C on PF3 | outbound → S-01 shell | :122-124, :510-521 | Angular `router.navigateByUrl('/menu')` (S01-B3 route contract) |
-| S07-B3 | B4 data-access leaf | STARTBR/READNEXT/READPREV/ENDBR TRANSACT, RESP protocol NORMAL/NOTFND/ENDFILE/other | outbound | :593-696 | Shared `ITransactionRepository.BrowseAsync/BrowseBackwardAsync` (landed 468e17d); no schema extension needed |
-| S07-B4 | B5 entry guard | EIBCALEN = 0 → XCTL COSGN00C | outbound → S-01 | :107-109 | `authGuard` redirect to `/signin` (existing) |
-| S07-B5 | B10 shared data contract | CDEMO-CT00-INFO paging state appended to CARDDEMO-COMMAREA | both | :62-70 | Stream-local `TransactionListState` DTO (first/last id, page number, next-page flag) |
+| S07-B1 | B5 cross-program switch | XCTL COTRN01C with COMMAREA (selected TRAN-ID) | outbound → S-08 | COTRN00C.cbl:186-195 | Resolve via `MenuService` catalogue / `UI_ROUTES` (option 07, COTRN01C): "coming soon" idiom (FR-S01-15) while the route is not browsable; once S-08 lands, navigate to `/transactions/view?tranId=` (S08-B2 contract) |
+| S07-B2 | B5 inbound return routing | XCTL COMEN01C on PF3 | outbound → S-01 shell | :122-124, :510-521 | `UiController` PF3 branch → `redirect:/menu` (S01-B3 route contract) |
+| S07-B3 | B4 data-access leaf | STARTBR/READNEXT/READPREV/ENDBR TRANSACT, RESP protocol NORMAL/NOTFND/ENDFILE/other | outbound | :593-696 | Shared `TransactionRepository` browse (`findByTranIdGreaterThanEqual` / `findByTranIdLessThanEqual` + `PageRequest`/`Sort`, Spring Data JPA); no schema extension needed |
+| S07-B4 | B5 entry guard | EIBCALEN = 0 → XCTL COSGN00C | outbound → S-01 | :107-109 | Spring Security entry point — unsigned UI navigation bounces to `/signon` (existing `SecurityConfig`) |
+| S07-B5 | B10 shared data contract | CDEMO-CT00-INFO paging state appended to CARDDEMO-COMMAREA | both | :62-70 | Stream-local paging-state record (first/last id, page number, next-page flag) round-tripped as form fields |
 
 All contracts resolved from source; no unresolved-contract blockers; no external lead time.
 
@@ -95,9 +101,9 @@ All contracts resolved from source; no unresolved-contract blockers; no external
 
 | Wave | Content | Repos touched |
 |---|---|---|
-| 1 | COTRN00C: `TransactionListService` + `POST /api/v1/transactions/list`, Angular `TransactionListComponent` at `/transactions/list` (authGuard), unit + Testcontainers tests, specs | backend/, frontend/ |
+| 1 | COTRN00C: `transaction-list.html` + `UiController` `/transactions/list` (unsigned bounce to `/signon`), paging-state service path, verbatim messages, unit + Testcontainers + MockMvc tests | spring-boot/ |
 
-Menu registry flag for `06 / COTRN00C` stays disabled (integration stage flips it).
+`UI_ROUTES` entry for option 06 (COTRN00C) flips when the wave merges.
 
 ## 7. Risks
 

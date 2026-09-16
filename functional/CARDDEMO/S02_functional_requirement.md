@@ -22,7 +22,7 @@ Requirements are source-derived; the target must reproduce messages byte-for-byt
 | FR-S02-12 | Any AID other than ENTER and PF3 is treated as ENTER (re-submits the screen); no "invalid key" message exists in this program. | `cbl:306-314` | UI |
 | FR-S02-13 | A store read failure (non-NOTFND RESP) on CXACAIX / ACCTDAT / CUSTDAT → error `File Error: READ     on <file>   returned RESP <resp>,RESP2 <resp2>` (75 chars; `<file>` padded to 9); xref/account failures leave no data; a customer failure still displays the account block. | `cbl:759-769`, `:809-819`, `:858-868`, `:121-127` | API + UI |
 | FR-S02-14 | Field lengths follow the map: account input max 11 chars; output widths as in analysis §2. | `bms:84-354` | UI |
-| FR-S02-15 | The screen is reachable only with an authenticated session; any user type may use it (the program has no user-type check). | target convention S01-B6; `cbl` has no `CDEMO-USRTYP` test | UI (`authGuard`) + API (`[Authorize]`) |
+| FR-S02-15 | The screen is reachable only with an authenticated session; any user type may use it (the program has no user-type check). | target convention S01-B6; `cbl` has no `CDEMO-USRTYP` test | UI (unsigned bounce to `/signon`) + API (`authenticated()` matcher) |
 
 ## 2. Validation / message catalogue (exact)
 
@@ -46,33 +46,33 @@ Dead text (never SET, not requirements): `Account number must be a non zero 11 d
 
 ## 3. Field / data derivations
 
-See analysis §2 (screen fields) and §7 (data dictionary). All amounts `decimal`; dates `DateOnly?`
+See analysis §2 (screen fields) and §7 (data dictionary). All amounts `BigDecimal`; dates `LocalDate`
 rendered `yyyy-MM-dd` (blank when null); alphanumerics truncated to map width.
 
 ## 4. Acceptance criteria (test matrix)
 
-| FR | Backend test | Frontend spec |
+| FR | Service/API test | UI (Thymeleaf) test |
 |---|---|---|
 | 01 | service: initial state builder returns prompt | renders empty field + prompt, no error, no data |
 | 02 | `""`, `"   "`, `"*"` → `No input received`, echo `*`, filter Blank | blank submit shows `*` red + message |
 | 03 | `"123"`, `"1234567890a"`, `"00000000000"`, `"0000000001 "` → filter message | submit echoes text, red, message |
-| 04 | xref null → MSG-XREF-NOTFND, no repositories beyond xref called | message rendered, no blocks |
-| 05 | xref found, account null → MSG-ACCT-NOTFND | message rendered, no blocks |
-| 06 | customer null → MSG-CUST-NOTFND, account block present, filter Valid | account block visible, customer blank, field not red |
-| 07 | integration: seeded ASCII data `00000000001` → all fields | full render from mocked DTO |
+| 04 | xref empty → MSG-XREF-NOTFND, no repositories beyond xref called | message rendered, no blocks |
+| 05 | xref found, account empty → MSG-ACCT-NOTFND | message rendered, no blocks |
+| 06 | customer empty → MSG-CUST-NOTFND, account block present, filter Valid | account block visible, customer blank, field not red |
+| 07 | integration: seeded ASCII data `00000000001` → all fields | full render via MockMvc |
 | 08 | formatter table (0, 1940.00, -12.5, 9,999,999,999.99 truncation) | — |
 | 09 | mapper: SSN/FICO/zip/phone/date | — |
 | 10 | integration: two xrefs, lowest card number's customer chosen | — |
 | 11 | — | Exit button and F3 navigate to `/menu` |
 | 12 | — | F7 submits (same as ENTER), no invalid-key text |
-| 13 | throwing repositories → MSG-FILE-ERROR per file; customer failure keeps account | 500 body message rendered |
+| 13 | throwing repositories → MSG-FILE-ERROR per file; customer failure keeps account | verbatim message rendered |
 | 14 | — | `maxlength="11"` |
-| 15 | controller `[Authorize]`; 401 without token (integration) | route has `authGuard` |
+| 15 | `authenticated()` matcher; 401 unsigned (integration) | unsigned navigation bounces to `/signon` |
 
 ## 5. Traceability
 
 FR-S02-01..15 ↔ `programs/COACTVWC_functional_requirement.md` §4 (COACTVWC-01..15) ↔
-`backend/CardDemo.Tests/Accounts/*` and `frontend/src/app/account-view/*.spec.ts`.
+`spring-boot/src/test/java/com/carddemo/**` (service unit tests + `AccountViewUiIntegrationTest`).
 
 ## 6. Program index
 

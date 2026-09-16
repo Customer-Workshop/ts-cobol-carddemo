@@ -39,8 +39,8 @@ Outputs: TRNIDO X(16), CARDNUMO X(16), TTYPCDO X(2), TCATCDO X(4), TRNSRCO X(10)
 Single edit: id mandatory (`:147`). No case folding, no numeric check, no length check beyond the X(16) map field. Order: blank check → clear details → READ → populate (`:146-192`). Error flag `WS-ERR-FLG` short-circuits populate (`:176`).
 
 ## 6. Data access and boundaries
-- S08-B1: `EXEC CICS READ DATASET('TRANSACT') INTO(TRAN-RECORD) RIDFLD(TRAN-ID) KEYLENGTH(16) UPDATE RESP RESP2` (`:269-278`) → `ITransactionRepository.GetByIdAsync(id.TrimEnd())` (EF Core, `AsNoTracking`, no lock). RESP protocol: NORMAL → found; NOTFND → not found; other → store error.
-- S08-B2 (inbound `CDEMO-CT01-TRN-SELECTED`) → `tranId` query parameter; S08-B3 (PF3 return) → `returnUrl`; S08-B4 (PF5 → COTRN00C) → registry option 06 via S-01 `MenuService.select`.
+- S08-B1: `EXEC CICS READ DATASET('TRANSACT') INTO(TRAN-RECORD) RIDFLD(TRAN-ID) KEYLENGTH(16) UPDATE RESP RESP2` (`:269-278`) → `TransactionRepository.findById(id.stripTrailing())` (Spring Data JPA, read-only, no lock) — verbatim key, not the baseline `requireTransactionId` numeric+`%016d` pad. RESP protocol: NORMAL → found; NOTFND → not found; other → store error.
+- S08-B2 (inbound `CDEMO-CT01-TRN-SELECTED`) → `tranId` query parameter; S08-B3 (PF3 return) → `returnUrl` (default `redirect:/menu`); S08-B4 (PF5 → COTRN00C) → `MenuService` option 06 / `UI_ROUTES` (not browsable → coming-soon idiom).
 
 ## 7. Error and edge behavior
 - Blank id error leaves previously displayed details on screen (clear happens only when `NOT ERR-FLG-ON`, `:158`).
@@ -50,11 +50,11 @@ Single edit: id mandatory (`:147`). No case folding, no numeric check, no length
 - `READ UPDATE` lock is released at task end; no REWRITE exists — read-only in target.
 
 ## 8. Hard-stop boundary
-Transfers to COSGN00C (`:94-96`), `CDEMO-FROM-PROGRAM`/COMEN01C (`:115-122`, `:197-208`) and COTRN00C (`:125-127`) are consumed as S-01 routes / registry entries; COTRN00C remains disabled in the registry until S-07 lands.
+Transfers to COSGN00C (`:94-96`), `CDEMO-FROM-PROGRAM`/COMEN01C (`:115-122`, `:197-208`) and COTRN00C (`:125-127`) are consumed as S-01 routes / `UI_ROUTES` entries; COTRN00C remains non-browsable there until S-07 lands.
 
 ## 9. Demoted mechanics
 SEND/RECEIVE MAP (`:213-238`), RETURN TRANSID (`:136-139`), `INITIALIZE-ALL-FIELDS` map plumbing (`:310-326`), header date/time formatting (`:243-262`), `DISPLAY` diagnostics (`:290`), WS-RESP-CD/WS-REAS-CD (`:36-37`).
 
 ## 10. Traceability
-Backend: `backend/CardDemo.Application/Transactions/TransactionViewService.cs`, `TransactionViewMapper.cs`, `TransactionViewModels.cs`; `backend/CardDemo.Api/Controllers/TransactionViewController.cs`; tests `backend/CardDemo.Tests/Transactions/*`.
-Frontend: `frontend/src/app/transactions/transaction-view.component.ts|html|scss|spec.ts`, `transaction-view.service.ts`; route `/transactions/view` in `frontend/src/app/app.routes.ts`.
+Backend: `spring-boot/src/main/java/com/carddemo/service/TransactionService.java` (view screen-state path), `spring-boot/src/main/java/com/carddemo/ui/UiController.java` (`/transactions/view`); `templates/transaction-view.html`; tests `spring-boot/src/test/java/com/carddemo/**` (`TransactionViewServiceTest`, `TransactionViewUiIntegrationTest`).
+UI route: `/transactions/view` via `UiController` GET/POST; menu option 07 resolves through `MenuService` catalogue / `UI_ROUTES`.

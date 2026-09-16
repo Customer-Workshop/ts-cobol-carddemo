@@ -36,23 +36,23 @@ Title: `View Transaction` (bms:79). Footer: `ENTER=Fetch  F3=Back  F4=Clear  F5=
 
 | ID | Flow | Business trigger | Observable result | Program(s) | Cite | Boundary | Covering test |
 |---|---|---|---|---|---|---|---|
-| FR-S08-01 | Entry | Program entered without a session context (`EIBCALEN = 0`) | Sign-on screen shown; no transaction data exposed | COTRN01C | COTRN01C.cbl:94-96 | S01-B6 | `TransactionViewApiIntegrationTests.WithoutToken_IsUnauthorized`; `app.routes.spec` guard on `/transactions/view` |
-| FR-S08-02 | Entry | First entry with session, no pre-selected transaction | Blank View Transaction screen, empty message, cursor on `Enter Tran ID:`; no lookup performed | COTRN01C | :98-109 | — | `transaction-view.component.spec` "FR-S08-02" |
-| FR-S08-03 | Entry | First entry with `CDEMO-CT01-TRN-SELECTED` populated (arrival from transaction list) | Tran ID pre-filled with the selected id and fetched immediately as if ENTER were pressed | COTRN01C | :103-108; COTRN00C.cbl:186-195 | S08-B2 | `transaction-view.component.spec` "FR-S08-03" |
-| FR-S08-04 | Fetch validation | ENTER with Tran ID blank (spaces/low-values) | Message `Tran ID can NOT be empty...`, cursor on Tran ID, previously displayed detail fields unchanged, no lookup | COTRN01C | :147-152, :158 | — | `TransactionViewServiceTests.BlankId_*`; API `BlankTranId_IsBadRequestWithLegacyMessage`; spec "FR-S08-04" |
-| FR-S08-05 | Fetch | ENTER with non-blank Tran ID | All 13 detail fields cleared before the lookup, so a failed lookup shows an empty detail area | COTRN01C | :158-173 | — | spec "FR-S08-05" |
-| FR-S08-06 | Fetch | Lookup finds no record (RESP NOTFND) | Message `Transaction ID NOT found...`, cursor on Tran ID, detail area empty, entered id retained | COTRN01C | :283-288 | S08-B1 | `TransactionViewServiceTests.UnknownId_*`; `TransactionViewIntegrationTests.UnknownId_*`; API `UnknownTranId_IsNotFoundWithLegacyMessage`; spec "FR-S08-06" |
-| FR-S08-07 | Fetch | Lookup fails for any other reason (RESP other) | Message `Unable to lookup Transaction...`, cursor on Tran ID, detail area empty; RESP/RESP2 logged | COTRN01C | :289-295 | S08-B1 | `TransactionViewServiceTests.StoreFailure_*`; spec "FR-S08-07" |
-| FR-S08-08 | Fetch | Lookup succeeds (RESP NORMAL) | All 13 detail fields populated from the record, message area blank, cursor on Tran ID | COTRN01C | :176-191 | S08-B1 | `TransactionViewIntegrationTests.SeededDebit_*`; API `SeededTranId_ReturnsScreenFields`; spec "FR-S08-08" |
-| FR-S08-09 | Display derivation | Amount displayed | `+99999999.99` edit: fixed leading `+`/`-`, 8 zero-padded integer digits, point, 2 decimals; a 9th integer digit is dropped | COTRN01C | :49, :177, :183 | — | `TransactionViewMapperTests.Amount_*`; `TransactionViewIntegrationTests.SeededCredit_*` |
-| FR-S08-10 | Display derivation | Orig/Proc timestamps displayed | First 10 characters of the X(26) timestamp (`yyyy-MM-dd`); blank when the timestamp is absent | COTRN01C | :185-186; bms:187-203 | — | `TransactionViewMapperTests.Timestamps_*`; integration `SeededCredit_*` |
-| FR-S08-11 | Display derivation | Description / merchant name / city displayed | Truncated to the map lengths 60 / 30 / 25; type, category, source, merchant id/zip, card number shown in full | COTRN01C | :184, :188-189; bms:163-251 | — | `TransactionViewMapperTests.LongText_*` |
-| FR-S08-12 | Key handling | Tran ID typed | Up to 16 characters; used verbatim as the key (no upper-casing, no numeric edit); trailing blanks are key padding | COTRN01C | :172; bms:85-90 | S08-B1 | `TransactionViewServiceTests.Id_*`; `TransactionViewIntegrationTests.CaseAndLeadingSpace_*`; spec "FR-S08-12" |
-| FR-S08-13 | Navigation | PF3 / Back | Return to the calling program (`CDEMO-FROM-PROGRAM`); main menu when no caller recorded | COTRN01C | :115-122 | S08-B3 | spec "FR-S08-13" |
-| FR-S08-14 | Navigation | PF4 / Clear | Tran ID, all 13 detail fields and the message cleared; cursor on Tran ID; no lookup | COTRN01C | :123-124, :301-326 | — | spec "FR-S08-14" |
-| FR-S08-15 | Navigation | PF5 / Browse Tran. | Transfer to the transaction list program (COTRN00C); while that stream is not migrated the registry's coming-soon message is shown and the screen is retained | COTRN01C | :125-127 | S08-B4 | spec "FR-S08-15" |
-| FR-S08-16 | AID handling | Any other function key | Message `Invalid key pressed. Please see below...`, screen contents retained | COTRN01C | :128-131; CSMSG01Y.cpy:20-21 | — | spec "FR-S08-16" |
-| FR-S08-17 | Header/footer | Screen displayed | Title `View Transaction`, `Tran: CT01`, `Prog: COTRN01C`, footer `ENTER=Fetch  F3=Back  F4=Clear  F5=Browse Tran.` | COTRN01C | bms:75-79, 263-268; :243-262 | — | spec "FR-S08-17" |
+| FR-S08-01 | Entry | Program entered without a session context (`EIBCALEN = 0`) | Sign-on screen shown; no transaction data exposed | COTRN01C | COTRN01C.cbl:94-96 | S01-B6 | `TransactionViewUiIntegrationTest` unsigned → `/signon`; API → 401 |
+| FR-S08-02 | Entry | First entry with session, no pre-selected transaction | Blank View Transaction screen, empty message, cursor on `Enter Tran ID:`; no lookup performed | COTRN01C | :98-109 | — | `TransactionViewUiIntegrationTest.firstEntryBlank` |
+| FR-S08-03 | Entry | First entry with `CDEMO-CT01-TRN-SELECTED` populated (arrival from transaction list) | Tran ID pre-filled with the selected id and fetched immediately as if ENTER were pressed | COTRN01C | :103-108; COTRN00C.cbl:186-195 | S08-B2 | `TransactionViewUiIntegrationTest.preselectedFetches` |
+| FR-S08-04 | Fetch validation | ENTER with Tran ID blank (spaces/low-values) | Message `Tran ID can NOT be empty...`, cursor on Tran ID, previously displayed detail fields unchanged, no lookup | COTRN01C | :147-152, :158 | — | `TransactionViewServiceTest.blankId_*`; `TransactionViewUiIntegrationTest` blank-id message |
+| FR-S08-05 | Fetch | ENTER with non-blank Tran ID | All 13 detail fields cleared before the lookup, so a failed lookup shows an empty detail area | COTRN01C | :158-173 | — | UI test failed-lookup-clears |
+| FR-S08-06 | Fetch | Lookup finds no record (RESP NOTFND) | Message `Transaction ID NOT found...`, cursor on Tran ID, detail area empty, entered id retained | COTRN01C | :283-288 | S08-B1 | `TransactionViewServiceTest.unknownId_*`; `TransactionViewUiIntegrationTest` not-found |
+| FR-S08-07 | Fetch | Lookup fails for any other reason (RESP other) | Message `Unable to lookup Transaction...`, cursor on Tran ID, detail area empty; RESP/RESP2 logged | COTRN01C | :289-295 | S08-B1 | `TransactionViewServiceTest.storeFailure_*` |
+| FR-S08-08 | Fetch | Lookup succeeds (RESP NORMAL) | All 13 detail fields populated from the record, message area blank, cursor on Tran ID | COTRN01C | :176-191 | S08-B1 | `TransactionViewUiIntegrationTest.seededDebit_*` |
+| FR-S08-09 | Display derivation | Amount displayed | `+99999999.99` edit: fixed leading `+`/`-`, 8 zero-padded integer digits, point, 2 decimals; a 9th integer digit is dropped | COTRN01C | :49, :177, :183 | — | `TransactionViewServiceTest.amount_*`; `TransactionViewUiIntegrationTest.seededCredit_*` |
+| FR-S08-10 | Display derivation | Orig/Proc timestamps displayed | First 10 characters of the X(26) timestamp (`yyyy-MM-dd`); blank when the timestamp is absent | COTRN01C | :185-186; bms:187-203 | — | `TransactionViewServiceTest.timestamps_*`; integration `seededCredit_*` |
+| FR-S08-11 | Display derivation | Description / merchant name / city displayed | Truncated to the map lengths 60 / 30 / 25; type, category, source, merchant id/zip, card number shown in full | COTRN01C | :184, :188-189; bms:163-251 | — | `TransactionViewServiceTest.longText_*` |
+| FR-S08-12 | Key handling | Tran ID typed | Up to 16 characters; used verbatim as the key (no upper-casing, no numeric edit); trailing blanks are key padding | COTRN01C | :172; bms:85-90 | S08-B1 | `TransactionViewServiceTest.id_*`; `TransactionViewUiIntegrationTest.caseAndLeadingSpace_*` |
+| FR-S08-13 | Navigation | PF3 / Back | Return to the calling program (`CDEMO-FROM-PROGRAM`); main menu when no caller recorded | COTRN01C | :115-122 | S08-B3 | UI test F3/Back |
+| FR-S08-14 | Navigation | PF4 / Clear | Tran ID, all 13 detail fields and the message cleared; cursor on Tran ID; no lookup | COTRN01C | :123-124, :301-326 | — | UI test F4/Clear |
+| FR-S08-15 | Navigation | PF5 / Browse Tran. | Transfer to the transaction list program (COTRN00C); while that stream is not migrated the coming-soon idiom is shown and the screen is retained | COTRN01C | :125-127 | S08-B4 | UI test F5/Browse Tran. |
+| FR-S08-16 | AID handling | Any other function key | Message `Invalid key pressed. Please see below...`, screen contents retained | COTRN01C | :128-131; CSMSG01Y.cpy:20-21 | — | UI test invalid key |
+| FR-S08-17 | Header/footer | Screen displayed | Title `View Transaction`, `Tran: CT01`, `Prog: COTRN01C`, footer `ENTER=Fetch  F3=Back  F4=Clear  F5=Browse Tran.` | COTRN01C | bms:75-79, 263-268; :243-262 | — | UI test header/footer |
 
 ## 5. Validation and error catalogue
 Order on ENTER (`:146-192`): (1) blank Tran ID → `Tran ID can NOT be empty...` (stop, details untouched); (2) details cleared; (3) keyed read: NOTFND → `Transaction ID NOT found...`; other → `Unable to lookup Transaction...`; NORMAL → populate. Every branch positions the cursor on Tran ID (`:151`, `:154`, `:287`, `:294`).
@@ -63,19 +63,19 @@ Order on ENTER (`:146-192`): (1) blank Tran ID → `Tran ID can NOT be empty...`
 | `Transaction ID NOT found...` | RESP = NOTFND (13) | :285 | error |
 | `Unable to lookup Transaction...` | RESP other than NORMAL/NOTFND | :292 | error |
 | `Invalid key pressed. Please see below...` | AID not ENTER/PF3/PF4/PF5 | :129; CSMSG01Y.cpy:20-21 | error |
-| `This option Transaction List is coming soon ...` | PF5 while COTRN00C route disabled (registry idiom, S-01 FR-S01-14) | S08-B4 | info |
+| `This option ` + name + `is coming soon ...` — for the shipped name `Transaction List` the emitted text is `This option Transactionis coming soon ...` (name emitted `DELIMITED BY SPACE`, `COMEN01C.cbl:172-176`) | PF5 while COTRN00C route not browsable (coming-soon idiom, S-01 FR-S01-15) | S08-B4 | info |
 
 ## 6. Field and data derivations
 - Amount: `WS-TRAN-AMT PIC +99999999.99` (`:49`) ← `TRAN-AMT S9(09)V99`; sign always shown; 9th integer digit truncated (MOVE numeric-edited).
 - Dates: `TRAN-ORIG-TS`/`TRAN-PROC-TS` X(26) → X(10) map field keeps `yyyy-MM-dd`; absent timestamp → blank.
 - Truncations: TDESC 100→60, MNAME 50→30, MCITY 50→25.
-- Key: 16-byte space-padded compare; target stores keys trailing-space-trimmed and compares after `TrimEnd()`; leading spaces and letter case are preserved.
+- Key: 16-byte space-padded compare; target stores keys trailing-space-stripped on import (`CobolFieldReader`) and compares after trimming the entered id's trailing blanks; leading spaces and letter case are preserved — the baseline's `requireTransactionId` numeric+`%016d` pad does **not** implement this (wave item, S08-B1).
 
 ## 7. Mechanics (demoted, cited)
 CICS SEND/RECEIVE MAP with ERASE + CURSOR (`:219-225`, `:232-238`); pseudo-conversational RETURN TRANSID CT01 (`:136-139`); COMMAREA copy (`:97`); `READ ... UPDATE` with no subsequent REWRITE (`:269-278`) → plain read in target; `DISPLAY 'RESP:'` diagnostics (`:290`) → structured log; header date/time formatting (`:243-262`).
 
 ## 8. Acceptance criteria (Given/When/Then) — one per FR
-- FR-S08-01: Given no valid session, When `/transactions/view` or the API is requested, Then sign-on is required (route → `/signin`, API → 401) and no transaction data is returned.
+- FR-S08-01: Given no valid session, When `/transactions/view` or the API is requested, Then sign-on is required (UI → `/signon` bounce, API → 401) and no transaction data is returned.
 - FR-S08-02: Given a signed-on user opening the screen with no `tranId`, When it renders, Then the input and all detail fields are blank, the message is empty, focus is on Tran ID and no API call is made.
 - FR-S08-03: Given `tranId=0000000000683580` on the route, When the screen initializes, Then the input shows that id and the lookup is issued immediately.
 - FR-S08-04: Given details on screen from a previous fetch, When ENTER is pressed with a blank id, Then `Tran ID can NOT be empty...` shows, no API call is made and the details remain.
@@ -89,17 +89,17 @@ CICS SEND/RECEIVE MAP with ERASE + CURSOR (`:219-225`, `:232-238`); pseudo-conve
 - FR-S08-12: Given a 16-char id containing lower-case letters or a leading space, When fetched, Then the id is sent unchanged and a not-found results when only a differently-cased key exists; the input accepts at most 16 characters.
 - FR-S08-13: Given `returnUrl=/somewhere` (internal), When F3/Back is pressed, Then navigation goes there; without it, to `/menu`.
 - FR-S08-14: Given an id, details and a message on screen, When F4/Clear is pressed, Then all are blank and focus returns to Tran ID.
-- FR-S08-15: Given the Transaction List registry flag disabled, When F5/Browse Tran. is pressed, Then `This option Transaction List is coming soon ...` shows as info and no navigation occurs; when enabled, the route from the registry is navigated.
+- FR-S08-15: Given the Transaction List route is not browsable in `UI_ROUTES`, When F5/Browse Tran. is pressed, Then the coming-soon message (verbatim per §5) shows as info and no navigation occurs; once browsable (`/transactions/list`), that route is navigated.
 - FR-S08-16: Given the screen, When F7 (or any F-key other than F3/F4/F5) is pressed, Then `Invalid key pressed. Please see below...` shows and details are retained.
 - FR-S08-17: Given the screen, Then the title `View Transaction`, `Tran: CT01`, `Prog: COTRN01C` and the footer legend are rendered verbatim.
 
 ## 9. Traceability matrix
 | FR | Owner layer | Target artifact | Test |
 |---|---|---|---|
-| 01 | API + UI | `[Authorize]` on `TransactionViewController`; `authGuard` on route | API integration; routes spec |
-| 02, 03, 05, 13–17 | UI | `TransactionViewComponent` | component spec |
-| 04, 06, 07, 12 | API + UI | `TransactionViewService`; component message area | service unit + Postgres integration + API integration; component spec |
-| 08–11 | API | `TransactionViewMapper` (Domain.Transaction → screen fields) | mapper unit + Postgres integration |
+| 01 | API + UI | `SecurityConfig` `authenticated()` matcher on `/transactions/view`; API `authenticated()` | MockMvc integration |
+| 02, 03, 05, 13–17 | UI | `templates/transaction-view.html` + `UiController` `/transactions/view` | `TransactionViewUiIntegrationTest` |
+| 04, 06, 07, 12 | API + UI | `TransactionService.detail` / view screen-state path (`spring-boot/.../service/TransactionService.java`) | `TransactionViewServiceTest` (unit) + `TransactionViewUiIntegrationTest` (MockMvc + Testcontainers) |
+| 08–11 | Service/UI | screen-field formatting (13-field record → display strings, `+99999999.99`, truncations) | service unit + UI integration |
 
 ## 10. Program index
 | Program | Role | Program FR doc |

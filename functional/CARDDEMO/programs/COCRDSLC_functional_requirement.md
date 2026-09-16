@@ -38,10 +38,11 @@ Outputs: CRDNAMEO X(50), EXPMONO X(2), EXPYEARO X(4), CRDSTCDO X(1), INFOMSGO X(
 Sequence (`2200-EDIT-MAP-INPUTS`, `:608-641`): normalise `*`/spaces → blank → account edit (blank/zero → BLANK; not numeric → NOT-OK) → card edit (same) → both blank → `No input received`. Message slot is first-writer-wins except the both-blank override. Any failure blocks the read (`:360-363`). Read (`:736-773`): NORMAL / NOTFND / OTHER protocol. All blocking; no warnings.
 
 ## 6. Data access and boundaries
-- CARDDAT read-only keyed read (S05-B1, **DECIDED**: shared Postgres `cards` + `ICardRepository.GetByCardNumberAsync`; exception → COCRDSLC-11 message). No writes, no commit scope.
-- Inbound card-list hand-off (S05-B2, DECIDED: `/cards/view?accountId=&cardNumber=&returnUrl=`, `fromCardList=true` API flag).
-- PF3 return (S05-B3, DECIDED: `returnUrl` else `/menu`).
-- File-error diagnostic codes (S05-B4, DECIDED: frame verbatim, RESP = unsigned HResult, RESP2 = 0).
+- CARDDAT read-only keyed read (S05-B1, **DECIDED**: shared Postgres `cards` + `CardRepository.findById` (Spring Data JPA); exception → COCRDSLC-11 message). No writes, no commit scope.
+- Inbound card-list hand-off (S05-B2, DECIDED: `/cards/view?accountId=&cardNumber=&returnUrl=` — both keys present = card-list context, edits skipped, inputs read-only).
+- PF3 return (S05-B3, DECIDED: `returnUrl` else `/menu`, internal paths only).
+- File-error diagnostic codes (S05-B4, DECIDED: frame verbatim, RESP `000000017 ` / RESP2 `000000120 ` fixed IOERR pair — same convention as S02-B2).
+- Session (S01-B6, DECIDED: server session + Spring Security context; unsigned UI navigation bounces to `/signon`).
 - Dead code: `9150-GETCARD-BYACCT` via CARDAIX (`:779-810`) — not ported.
 
 ## 7. Error and edge behavior
@@ -51,7 +52,7 @@ Sequence (`2200-EDIT-MAP-INPUTS`, `:608-641`): normalise `*`/spaces → blank �
 Delegates everything past PF3: card list (COCRDLIC/S-04) and main menu (COMEN01C/S-01). Not responsible for the account-path search (dead code) or card update.
 
 ## 9. Demoted mechanics
-HANDLE ABEND / ABEND-ROUTINE (`:250-252`, `:857-880`); `YYYY-STORE-PFKEY` (`:284-285`); RETURN TRANSID (`:402-406`); header date/time (`:429-447`); ERASE/CURSOR/FREEKB send (`:569-576`); `SEND-PLAIN-TEXT`/`SEND-LONG-TEXT` (`:820-849`); `UNEXPECTED DATA SCENARIO` (`:373-380`); PF3 COMMAREA bookkeeping incl. `SET CDEMO-USRTYP-USER` (`:323-330`, deviation: JWT identity not downgraded).
+HANDLE ABEND / ABEND-ROUTINE (`:250-252`, `:857-880`); `YYYY-STORE-PFKEY` (`:284-285`); RETURN TRANSID (`:402-406`); header date/time (`:429-447`); ERASE/CURSOR/FREEKB send (`:569-576`); `SEND-PLAIN-TEXT`/`SEND-LONG-TEXT` (`:820-849`); `UNEXPECTED DATA SCENARIO` (`:373-380`); PF3 COMMAREA bookkeeping incl. `SET CDEMO-USRTYP-USER` (`:323-330`, deviation: server-session identity not downgraded).
 
 ## 10. Traceability
-COCRDSLC-01..16 ↔ FR-S05-01..16 (table §4) ↔ `CardViewServiceTests`, `CardViewIntegrationTests`, `CardViewApiIntegrationTests`, `card-view.component.spec.ts`.
+COCRDSLC-01..16 ↔ FR-S05-01..16 (table §4) ↔ `CardViewServiceTest`, `CardViewUiIntegrationTest`, `ApiIntegrationTest` (`spring-boot/src/test/java/com/carddemo/**`).

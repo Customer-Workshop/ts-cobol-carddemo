@@ -1,7 +1,11 @@
 # S-05 Card View — Stream Analysis (`!mf_stream_analysis`)
 
 Status: complete (2026-09-02). Stream assigned from the inventory catalog (`CardDemo_inventory.md` §5, row S-05); process type **ONLINE**.
-Target profiles applied (read-only): CORE + ONLINE + DATA/BOUNDARY from `functional/CARDDEMO/CardDemo_target_state.md`. Shared seams consumed as-is from S-01 (JWT `SessionContext`, menu route registry, invalid-key helper) and from the Batch A shared data layer (`cards` table, `ICardRepository`).
+Target profiles applied (read-only): CORE + ONLINE + DATA/BOUNDARY from `functional/CARDDEMO/CardDemo_target_state.md`. Shared seams consumed as-is from S-01 (server session + Spring Security `SecurityContext`, `MenuService` option catalogue + `UI_ROUTES` registry, `aid` form-field idiom) and from the baseline data layer (`cards` table, `CardRepository` — Spring Data JPA).
+
+> Java-engagement note (2026-09-16): source-side analysis unchanged; target references below
+> were re-expressed for Java 21/Spring Boot (EF Core → Spring Data JPA, Angular → server-rendered
+> web UI, /api/v1 → /api, JWT → server session) at this engagement's STOP C.
 
 ## 1. Pinned stream
 
@@ -57,18 +61,18 @@ DAG: `COCRDSLC -> CARDDAT` (leaf). Single-wave stream.
 
 **Dataset**: CARDDAT VSAM KSDS `AWS.M2.CARDDEMO.CARDDATA.VSAM.KSDS` (`app/csd/CARDDEMO.CSD:25-26`), key `CARD-NUM` X(16); alternate index CARDAIX (`:13-14`) on `CARD-ACCT-ID` — defined but only referenced from dead code in this program. Read-only in this stream.
 
-Field dictionary (FACT, `app/cpy/CVACT02Y.cpy:16-23` → shared data layer at commit 468e17d):
-| COBOL field | PIC | C# (`CardDemo.Domain.Cards.Card`) | PostgreSQL (`cards`) | Used by S-05 |
+Field dictionary (FACT, `app/cpy/CVACT02Y.cpy:16-23` → shared data layer, Flyway V2 baseline):
+| COBOL field | PIC | Java (`com.carddemo.model.Card`) | PostgreSQL (`cards`) | Used by S-05 |
 |---|---|---|---|---|
-| CARD-NUM | X(16) | `CardNumber` string | `card_num` varchar(16) PK | key |
-| CARD-ACCT-ID | 9(11) | `AccountId` string | `card_acct_id` varchar(11), `ix_cards_card_acct_id` | not compared (echo only) |
-| CARD-CVV-CD | 9(03) | `CvvCode` | `card_cvv_cd` | not displayed |
-| CARD-EMBOSSED-NAME | X(50) | `EmbossedName` | `card_embossed_name` varchar(50) | CRDNAME |
-| CARD-EXPIRAION-DATE | X(10) `YYYY-MM-DD` | `ExpirationDate` DateOnly? | `card_expiration_date` date | EXPMON/EXPYEAR |
-| CARD-ACTIVE-STATUS | X(01) | `ActiveStatus` | `card_active_status` | CRDSTCD |
+| CARD-NUM | X(16) | `cardNumber` String | `card_number` varchar(16) PK | key |
+| CARD-ACCT-ID | 9(11) | `cardAcctId` Long | `card_acct_id` bigint | not compared (echo only) |
+| CARD-CVV-CD | 9(03) | `cardCvvCode` Integer | `card_cvv_code` integer | not displayed |
+| CARD-EMBOSSED-NAME | X(50) | `cardEmbossedName` | `card_embossed_name` varchar(50) | CRDNAME |
+| CARD-EXPIRAION-DATE | X(10) `YYYY-MM-DD` | `cardExpirationDate` LocalDate | `card_expiration_date` date | EXPMON/EXPYEAR |
+| CARD-ACTIVE-STATUS | X(01) | `cardActiveStatus` | `card_active_status` | CRDSTCD |
 | FILLER | X(59) | — | — | — |
 
-No schema extension is needed: every field COCRDSLC reads exists in the shared layer, and `ICardRepository.GetByCardNumberAsync` is the exact equivalent of the keyed READ.
+No schema extension is needed: every field COCRDSLC reads exists in the shared layer, and `CardRepository.findById` is the exact equivalent of the keyed READ.
 
 Screen work fields (`app/cpy/CVCRD01Y.cpy`): `CC-ACCT-ID` X(11) / `CC-ACCT-ID-N` 9(11), `CC-CARD-NUM` X(16) / `CC-CARD-NUM-N` 9(16). COMMAREA (`app/cpy/COCOM01Y.cpy:19-44`): `CDEMO-ACCT-ID` 9(11), `CDEMO-CARD-NUM` 9(16), FROM/TO program, PGM-CONTEXT.
 
@@ -76,10 +80,10 @@ Screen work fields (`app/cpy/CVCRD01Y.cpy`): `CC-ACCT-ID` X(11) / `CC-ACCT-ID-N`
 
 | ID | Class | Contract | Direction | Cite | Decision taken in this stream |
 |---|---|---|---|---|---|
-| S05-B1 | B4 data-access leaf | CICS READ CARDDAT keyed by card number; RESP NORMAL/NOTFND/other | outbound | COCRDSLC.cbl:742-772 | **Reuse** shared `ICardRepository.GetByCardNumberAsync` (Postgres `cards`); found / null / exception → the three RESP outcomes |
+| S05-B1 | B4 data-access leaf | CICS READ CARDDAT keyed by card number; RESP NORMAL/NOTFND/other | outbound | COCRDSLC.cbl:742-772 | **Reuse** shared `CardRepository.findById` (Spring Data JPA, Postgres `cards`); found / empty `Optional` / exception → the three RESP outcomes |
 | S05-B2 | B5 inbound switch | XCTL from COCRDLIC with COMMAREA account+card and FROM-PROGRAM/LAST-MAPSET context | inbound | COCRDLIC.cbl:519-540; COCRDSLC.cbl:339-348, :505-508 | Route contract `/cards/view?accountId=&cardNumber=&returnUrl=` (S01-B3 idiom): when the caller supplies both keys, the screen auto-reads with edits skipped and the two input fields are read-only; S-04 consumes this contract when it lands |
 | S05-B3 | B5 outbound return | PF3 XCTL to CDEMO-FROM-PROGRAM (fallback COMEN01C) | outbound | COCRDSLC.cbl:305-334 | Exit navigates to `returnUrl` when supplied, else `/menu` |
-| S05-B4 | Runtime diagnostic | File-error message embeds CICS RESP/RESP2 codes | — | COCRDSLC.cbl:102-121, :767-771 | Frame preserved verbatim (`File Error: READ     on CARDDAT   returned RESP …,RESP2 …`, 75 chars); RESP carries the target exception's unsigned HResult, RESP2 is zero (no secondary code exists in the target) |
+| S05-B4 | Runtime diagnostic | File-error message embeds CICS RESP/RESP2 codes | — | COCRDSLC.cbl:102-121, :767-771 | Frame preserved verbatim (`File Error: READ     on CARDDAT   returned RESP …,RESP2 …`, 75 chars); RESP/RESP2 rendered as the fixed IOERR pair `000000017 `/`000000120 ` (same documented technical-path convention as S02-B2 — the Java runtime has no CICS RESP) |
 
 All contracts resolved from source; **no unresolved-contract blockers**.
 
@@ -87,14 +91,14 @@ All contracts resolved from source; **no unresolved-contract blockers**.
 
 | Wave | Content | Repos touched |
 |---|---|---|
-| 1 | COCRDSLC: `CardViewService` + `GET /api/v1/cards/view`, Angular `CardViewComponent` at `/cards/view` (authGuard; registry flag for option 04 stays disabled), unit + Testcontainers + component specs | backend/, frontend/ |
+| 1 | COCRDSLC: card-view screen state + Thymeleaf `card-view.html` + `UiController` `/cards/view` (unsigned navigation bounces to `/signon`; `UI_ROUTES` entry for option 04 flips on merge), unit + Testcontainers + MockMvc specs | spring-boot/ |
 
 ## 7. Risks
 
-1. **AID semantics differ from S-01**: unmapped keys behave as ENTER (`:297-299`) instead of showing the invalid-key message. Ported as-is (source parity) using the shared `classifyAidKey`, mapped `'invalid' → submit`. LOW, documented.
+1. **AID semantics differ from S-01**: unmapped keys behave as ENTER (`:297-299`) instead of showing the invalid-key message. Ported as-is (source parity) using the `aid` form-field idiom, mapped `non-ENTER/non-PF3 → submit`. LOW, documented.
 2. **Account not cross-checked** against the card's account (`:740-747`): a valid card with a foreign account still displays. Ported as-is; flagged as a source defect for the customer. MEDIUM (business), LOW (implementation).
 3. Undefined COBOL behavior: `CC-ACCT-ID-N EQUAL ZEROS` on non-numeric data (`:653`, `:693`). Target rule: a value made only of `0` digits (any length) is "not provided" (IBM PACK semantics treat trailing blanks as zero digits); anything else that is not exactly 11/16 digits is "not numeric". LOW.
-4. PF3 side effect `SET CDEMO-USRTYP-USER TO TRUE` (`:326`) is a COMMAREA mutation with no screen effect; the target session identity is the immutable JWT (S01-B6) so it is not ported. LOW, recorded as deviation.
+4. PF3 side effect `SET CDEMO-USRTYP-USER TO TRUE` (`:326`) is a COMMAREA mutation with no screen effect; the target session identity is the Spring Security context (S01-B6) so it is not ported. LOW, recorded as deviation.
 5. Dead code / unused messages: `9150-GETCARD-BYACCT`, `Did not find this account in cards database`, `Error reading Card Data File`, `Account number must be a non zero 11 digit number`, `Card number if supplied must be a 16 digit number`, `Looks Good.... so far`, `PF03 pressed.Exiting` — none reachable; not ported. LOW.
 
 ## 8. Validation

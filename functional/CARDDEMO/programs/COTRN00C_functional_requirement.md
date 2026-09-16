@@ -43,9 +43,9 @@ Outputs: TRNID01..10 X(16), TDATE01..10 X(8) `mm/dd/yy`, TDESC01..10 X(26), TAMT
 ENTER sequence (`:146-229`): selection scan (first non-blank SEL wins) → S/s hand-off (terminal) or invalid-selection message (non-blocking) → search id blank/NUMERIC test (blocking on failure) → page number reset to 0 → forward page from key. PF7 (`:234-252`): NEXT-PAGE-YES forced; page > 1 gate. PF8 (`:257-274`): NEXT-PAGE flag gate. Paging arithmetic and cursor updates per §4 rows 07-14.
 
 ## 6. Data access and boundaries
-- TRANSACT read-only browse (S07-B3, DECIDED: shared `ITransactionRepository.BrowseAsync` = STARTBR GTEQ + READNEXT×n + peek; `BrowseBackwardAsync` = READPREV×n; exceptions → COTRN00C-20). No writes, no commit scope.
-- Hand-off to COTRN01C (S07-B1, DECIDED: route registry `ProgramKey=COTRN01C`, disabled → coming-soon idiom). Return to menu (S07-B2: `/menu`). Entry guard (S07-B4: `authGuard`). Paging state (S07-B5: `TransactionListState`).
-- No deviations from source behaviour. Storage: Postgres `transactions` (shared layer), byte-order collation on the key.
+- TRANSACT read-only browse (S07-B3, DECIDED: shared `TransactionRepository` (Spring Data JPA) — `findByTranIdGreaterThanEqual` = STARTBR GTEQ + READNEXT×n + peek; `findByTranIdLessThanEqual` + DESC sort = READPREV×n; exceptions → COTRN00C-20). No writes, no commit scope.
+- Hand-off to COTRN01C (S07-B1, DECIDED: `MenuService` catalogue / `UI_ROUTES` option 07 — not browsable → coming-soon idiom; browsable → `/transactions/view?tranId=`). Return to menu (S07-B2: `redirect:/menu`). Entry guard (S07-B4: unsigned navigation bounces to `/signon` — Spring Security entry point). Paging state (S07-B5: client-held paging-state record round-tripped as hidden form fields).
+- No deviations from source behaviour. Storage: Postgres `transactions` (shared Flyway V2 baseline), key ordering by plain `ORDER BY tran_id` (digit-only keys sort identically under byte order and default collation).
 
 ## 7. Error and edge behavior
 Empty/low-value inputs treated as blank (`:149`, `:206`); a shorter-than-16 search entry is space padded by BMS and fails NUMERIC; NOTFND wording is the "top of the page" text even for keys beyond the end; PF7-at-top forces NEXT-PAGE-YES; selection characters persist across redisplays (FSET); amount high-order digit truncated for |amt| ≥ 10^8 (`PIC +99999999.99`); RECEIVE RESP captured but unchecked (`:556-562`, technical); intermediate SENDs in RESP handlers are followed by the paragraph's final SEND with the same message (one observable screen).
@@ -57,4 +57,4 @@ Delegates transaction detail (COTRN01C, S-08) and all menu/sign-on behaviour (S-
 RETURN TRANSID (`:138-141`); re-enter flag (`:112-113`); SEND ERASE/no-ERASE (`:533-549`); header population (`:567-586`); ENDBR (`:692-696`, incl. INVREQ exposure after failed STARTBR — not reproduced); `DISPLAY 'RESP:'` diagnostics (`:613`, `:647`, `:681`) → structured logging.
 
 ## 10. Traceability
-COTRN00C-01..21 ↔ FR-S07-01..21 (table §4) ↔ `TransactionListServiceTests` / `TransactionListIntegrationTests` / `transaction-list.component.spec.ts`.
+COTRN00C-01..21 ↔ FR-S07-01..21 (table §4) ↔ `TransactionListServiceTest` / `TransactionListUiIntegrationTest` (`spring-boot/src/test/java/com/carddemo/**`).
