@@ -11,6 +11,7 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -57,7 +58,13 @@ public class PendingAuthDetailService {
         if (acctId == null || key == null) {
             return PendingAuthDetailScreen.empty(acctId, authKey, null);
         }
-        PendingAuthDetail record = read(acctId, key);
+        PendingAuthDetail record;
+        try {
+            record = read(acctId, key);
+        } catch (DataAccessException exception) {
+            return PendingAuthDetailScreen.empty(acctId, authKey,
+                    CobolMessages.pendingAuthReadingDetailsError("EX"));
+        }
         if (record == null) {
             return PendingAuthDetailScreen.empty(acctId, authKey, null);
         }
@@ -77,15 +84,15 @@ public class PendingAuthDetailService {
                     acctId, key.date9c(), key.time9c(), PageRequest.ofSize(1));
             next = following.isEmpty() ? null : following.get(0);
         } catch (DataAccessException exception) {
-            PendingAuthDetail current = read(acctId, key);
+            PendingAuthDetail current = readOrNull(acctId, key);
             if (current == null) {
                 return PendingAuthDetailScreen.empty(acctId, authKey,
-                        CobolMessages.pendingAuthDetailsError("EX"));
+                        CobolMessages.pendingAuthNextAuthError("EX"));
             }
-            return screen(current, CobolMessages.pendingAuthDetailsError("EX"));
+            return screen(current, CobolMessages.pendingAuthNextAuthError("EX"));
         }
         if (next == null) {
-            PendingAuthDetail current = read(acctId, key);
+            PendingAuthDetail current = readOrNull(acctId, key);
             if (current == null) {
                 return PendingAuthDetailScreen.empty(acctId, authKey,
                         CobolMessages.PENDING_AUTH_LAST_AUTH);
@@ -104,14 +111,25 @@ public class PendingAuthDetailService {
         if (acctId == null || key == null) {
             return PendingAuthDetailScreen.empty(acctId, authKey, null);
         }
-        PendingAuthDetail record = read(acctId, key);
+        PendingAuthDetail record;
+        try {
+            record = read(acctId, key);
+        } catch (DataAccessException exception) {
+            return PendingAuthDetailScreen.empty(acctId, authKey,
+                    CobolMessages.pendingAuthReadingDetailsError("EX"));
+        }
         if (record == null) {
             return PendingAuthDetailScreen.empty(acctId, authKey, null);
         }
         String action = FRAUD_REPORT.equals(record.getAuthFraud())
                 ? FRAUD_REMOVE : FRAUD_REPORT;
 
-        PendingAuthSummary summary = summaryRepository.findById(acctId).orElse(null);
+        PendingAuthSummary summary;
+        try {
+            summary = summaryRepository.findById(acctId).orElse(null);
+        } catch (DataAccessException exception) {
+            return screen(record, CobolMessages.pendingAuthReadingSummaryError("EX"));
+        }
         Long custId = summary == null ? null : summary.getCustId();
 
         AuthFraudService.FraudResult result = fraudService.journal(acctId, custId, record,
@@ -120,10 +138,17 @@ public class PendingAuthDetailService {
             return screen(record, result.message());
         }
         // REPL (UPDATE-AUTH-DETAILS :518-560): COPAUS2C stamps the segment's
-        // PA-FRAUD-RPT-DATE with the MMDDYY current date (:95-101).
+        // PA-FRAUD-RPT-DATE with the MMDDYY current date (:95-101). A failed
+        // REPL rolls the unit of work back and reports the FRAUD-tagging
+        // text (:540-556).
         record.setAuthFraud(action);
         record.setFraudRptDate(LocalDate.now().format(DateTimeFormatter.ofPattern("MM/dd/yy")));
-        detailRepository.save(record);
+        try {
+            detailRepository.save(record);
+        } catch (DataAccessException exception) {
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+            return screen(record, CobolMessages.pendingAuthFraudTagError("EX"));
+        }
         String message = FRAUD_REMOVE.equals(action)
                 ? CobolMessages.PENDING_AUTH_FRAUD_REMOVED
                 : CobolMessages.PENDING_AUTH_FRAUD_MARKED;
@@ -144,10 +169,16 @@ public class PendingAuthDetailService {
         }
     }
 
+    // Qualified GNP at the selected key: a store failure is a caller-visible
+    // 'reading Auth Details' error, not a missing segment.
     private PendingAuthDetail read(Long acctId, PendingAuthKey key) {
+        return detailRepository.findById(
+                new PendingAuthDetail.Id(acctId, key.date9c(), key.time9c())).orElse(null);
+    }
+
+    private PendingAuthDetail readOrNull(Long acctId, PendingAuthKey key) {
         try {
-            return detailRepository.findById(
-                    new PendingAuthDetail.Id(acctId, key.date9c(), key.time9c())).orElse(null);
+            return read(acctId, key);
         } catch (DataAccessException exception) {
             return null;
         }

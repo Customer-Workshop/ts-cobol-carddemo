@@ -106,6 +106,15 @@ public class UiController {
         return "signon";
     }
 
+    // Direct-URL admin denial lands here (forwarded by the security layer or
+    // the exception handler): the 403 stays, the response renders the shell
+    // with the program's own gate message instead of Whitelabel/JSON.
+    @GetMapping("/ui/denied")
+    public String denied(Model model) {
+        model.addAttribute("message", CobolMessages.ADMIN_ONLY);
+        return "denied";
+    }
+
     @PostMapping("/signon")
     public String submitSignon(
             @RequestParam(name = "aid", defaultValue = "ENTER") String aid,
@@ -424,7 +433,10 @@ public class UiController {
     // external returnUrl cannot redirect off-site; the fallback is the main
     // menu (the only registry caller today).
     private String internalRoute(String returnUrl) {
-        if (returnUrl != null && returnUrl.startsWith("/") && !returnUrl.startsWith("//")) {
+        // S-05: a leading backslash (`/\evil.example`) is protocol-relative
+        // to a browser even though it starts with '/', so reject it too.
+        if (returnUrl != null && returnUrl.startsWith("/")
+                && !returnUrl.startsWith("//") && !returnUrl.contains("\\")) {
             return returnUrl;
         }
         return "/menu";

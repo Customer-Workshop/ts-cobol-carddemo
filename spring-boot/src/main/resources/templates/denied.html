@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout :: layout('CardDemo', '----', 'CARDDEMO', ~{::content})}">
+<head>
+    <title>CardDemo</title>
+</head>
+<body>
+<!-- Direct-URL admin denial keeps the 3270 chrome instead of falling out to
+     the Whitelabel page or a JSON blob. The verbatim gate message arrives on
+     the layout's message line, like every other program's refusal. -->
+<div th:fragment="content" class="denied">
+    <p class="view-title">Access denied</p>
+    <p><a href="/menu" class="field-value">F3=Back to menu</a></p>
+</div>
+</body>
+</html>

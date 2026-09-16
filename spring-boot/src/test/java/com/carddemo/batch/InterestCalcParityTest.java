@@ -186,7 +186,7 @@ class InterestCalcParityTest {
                         List.of(balance(1L, "01", 1, "1000.00")),
                         new InterestTransactionIds("2022071800", ids)::next));
 
-        assertTrue(exception.getMessage().contains("ACCOUNT NOT FOUND: 1"));
+        assertTrue(exception.getMessage().contains("ACCOUNT NOT FOUND: 00000000001"));
     }
 
     // FR-S15-07 — DIS-INT-RATE = 0 skips the compute+write branch (:214-216):
@@ -274,6 +274,6 @@ class InterestCalcParityTest {
         reader.open(new ExecutionContext());
         InterestAbendException exception =
                 assertThrows(InterestAbendException.class, reader::read);
-        assertTrue(exception.getMessage().contains("ACCOUNT NOT FOUND: 7"));
+        assertTrue(exception.getMessage().contains("ACCOUNT NOT FOUND: 00000000007"));
     }
 }

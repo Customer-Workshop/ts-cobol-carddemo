@@ -340,10 +340,23 @@ class AccountUpdateEditRulesTest {
 
     @Test
     void phoneEditsWalkAreaThenPrefixThenLine_frS0321() {
-        // cbl:2230-2240 quirk — all-blank test re-reads NUMA, so area+prefix
-        // blank passes regardless of the line part.
+        // cbl:2236-2239 — clause three is NUMA=SPACES or NUMC=LOW-VALUES, so
+        // blanked area+prefix with a typed line part is NOT all-blank and
+        // fails the area-code edit.
         Draft d = new Draft();
         d.phone1a = "";
+        d.phone1b = "";
+        d.phone1c = "9999";
+        assertThat(rules.validate(d.form()).firstMessage())
+                .isEqualTo("Phone Number 1: Area code must be supplied.");
+        // All three blanked (low-values) does pass untouched.
+        d.phone1c = "";
+        assertThat(rules.validate(d.form()).flags())
+                .doesNotContainKeys("acsph1a", "acsph1b", "acsph1c");
+        // Literal spaces in the area part still trips the quirk's first
+        // half and accepts.
+        d = new Draft();
+        d.phone1a = "   ";
         d.phone1b = "";
         d.phone1c = "9999";
         assertThat(rules.validate(d.form()).flags())

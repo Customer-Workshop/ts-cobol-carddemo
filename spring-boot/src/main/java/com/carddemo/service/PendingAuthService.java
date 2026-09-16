@@ -231,7 +231,8 @@ public class PendingAuthService {
         }
     }
 
-    // Inclusive reposition at a page-start key (PF7's qualified GNP).
+    // Inclusive reposition at a page-start key (PF7's qualified GNP —
+    // REPOSITION-AUTHORIZATIONS, which reports the 'repos.' variant).
     private PageFill fillFrom(Long acctId, PendingAuthKey startKey) {
         try {
             List<PendingAuthDetail> fetched = detailRepository.findByAcctIdFromKey(
@@ -239,7 +240,7 @@ public class PendingAuthService {
                     PageRequest.ofSize(PAGE_SIZE + 1));
             return PageFill.of(fetched);
         } catch (DataAccessException exception) {
-            return PageFill.error(CobolMessages.pendingAuthDetailsError("EX"));
+            return PageFill.error(CobolMessages.pendingAuthReposDetailsError("EX"));
         }
     }
 
@@ -342,12 +343,13 @@ public class PendingAuthService {
         return new PendingAuthScreenView(acctInput,
                 custName(customer), padded(customer.getCustId(), 9),
                 addr1(customer), addr2(customer),
-                "",
+                nullToEmpty(account.getAcctActiveStatus()),
                 nullToEmpty(customer.getCustPhoneNum1()),
                 count(summary == null ? null : summary.getApprovedAuthCnt()),
                 count(summary == null ? null : summary.getDeclinedAuthCnt()),
-                summaryAmount(summary == null ? null : summary.getCreditLimit()),
-                summaryAmount(summary == null ? null : summary.getCashLimit()),
+                // CREDLIM/CASHLIM come from ACCTDAT (:780-783), not PAUTSUM0.
+                summaryAmount(account.getAcctCreditLimit()),
+                summaryAmount(account.getAcctCashCreditLimit()),
                 summaryAmount(summary == null ? null : summary.getApprovedAuthAmt()),
                 summaryAmount(summary == null ? null : summary.getCreditBalance()),
                 summaryAmount(summary == null ? null : summary.getCashBalance()),

@@ -281,17 +281,19 @@ class CardListUiIntegrationTest {
         // COCRDUPC target — the coming-soon idiom, not a dead link. The
         // message emits the option name DELIMITED BY SPACE
         // (COMEN01C.cbl:172-176), so only the first word reaches the screen.
+        // UI-01 — the seam re-pads the Long key to the 11-digit PIC the
+        // receiving screens' account edits expect.
         press(session, "ENTER", state, null, null, "S", "", "", "", "", "", "")
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl(
-                        "/cards/view?accountId=1&cardNumber=0000000000000001"));
+                        "/cards/view?accountId=00000000001&cardNumber=0000000000000001"));
 
         // COCRDUPC is migrated (S-06): the U-select resolves through the
         // registry into a redirect carrying the row's keys (S06-B2).
         press(session, "ENTER", state, null, null, "", "", "U", "", "", "", "")
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl(
-                        "/cards/update?accountId=1&cardNumber=" + key(3)));
+                        "/cards/update?accountId=00000000001&cardNumber=" + key(3)));
     }
 
     @Test

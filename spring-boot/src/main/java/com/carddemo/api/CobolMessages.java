@@ -427,6 +427,25 @@ public final class CobolMessages {
         return " System error while reading AUTH Details: Code:" + code;
     }
 
+    // COPAUS0C.cbl:510 — the PF7 qualified reposition variant.
+    public static String pendingAuthReposDetailsError(String code) {
+        return " System error while repos. AUTH Details: Code:" + code;
+    }
+
+    // COPAUS1C.cbl:456,:482,:511 — the detail program prints 'Auth' in
+    // mixed case, unlike COPAUS0C's all-caps AUTH.
+    public static String pendingAuthReadingSummaryError(String code) {
+        return " System error while reading Auth Summary: Code:" + code;
+    }
+
+    public static String pendingAuthReadingDetailsError(String code) {
+        return " System error while reading Auth Details: Code:" + code;
+    }
+
+    public static String pendingAuthNextAuthError(String code) {
+        return " System error while reading next Auth: Code:" + code;
+    }
+
     public static String pendingAuthFraudTagError(String code) {
         return " System error while FRAUD Tagging, ROLLBACK||" + code;
     }

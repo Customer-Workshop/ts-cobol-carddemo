@@ -460,9 +460,12 @@ public class AccountUpdateEditRules {
         String a = take(rawA, 3);
         String b = take(rawB, 3);
         String c = take(rawC, 4);
-        // cbl:2230-2240 — the third clause reads NUMA, not NUMC, so a number
-        // with blank area+prefix always passes the "all blank" test.
-        if (blank(a) && blank(b) && (blank(a) || blank(c))) {
+        // cbl:2236-2239 — the third clause reads NUMA (literal spaces) or
+        // NUMC (low-values): blanked area+prefix with a typed line part does
+        // not pass the all-blank test and runs the per-part edits below.
+        // Tested on the raw receives — norm() collapses literal spaces to ""
+        // before the space/low-value distinction could be seen.
+        if (blank(rawA) && blank(rawB) && (literalSpaces(rawA) || lowValues(rawC))) {
             return;
         }
         if (blank(a)) {
@@ -498,6 +501,17 @@ public class AccountUpdateEditRules {
             ctx.flag(fc, Flag.NOT_OK);
             ctx.message(name + ": Line number code cannot be zero");
         }
+    }
+
+    /** PIC X `= SPACES`: literal space fill, distinct from blanked input. */
+    private static boolean literalSpaces(String value) {
+        return value != null && !value.isEmpty() && value.isBlank();
+    }
+
+    /** Blanked input arriving as LOW-VALUES: empty, or the '*' sentinel. */
+    private static boolean lowValues(String value) {
+        return value == null || value.isEmpty()
+                || value.stripTrailing().equals("*");
     }
 
     private void editStateZip(Ctx ctx, String state, String zip) {

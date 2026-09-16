@@ -118,6 +118,11 @@ public class TranTypeService {
                 screenNumber = page.screenNumber;
                 nextPageExists = page.nextPageExists;
                 turn.returnMsg(page.message);
+            } else if (CobolMessages.TRTYPE_NO_RECORDS_FILTERS
+                    .equals(turn.returnMsg)) {
+                // UI-08 — a filter that matches nothing clears the rows:
+                // echoing the last browse would claim the old rows match.
+                rows = new ArrayList<>();
             } else {
                 rows = echoRows(state);
             }
@@ -479,13 +484,11 @@ public class TranTypeService {
             typeFilter = typeSupplied ? postedType : null;
             descFilter = descSupplied ? postedDesc : null;
 
-            // :991-995 — a changed filter initializes the select flags and
-            // skips the array edit entirely.
-            if (typeChanged || descChanged) {
-                selects = new String[PAGE_SIZE];
-            } else {
-                editArray(request, state);
-            }
+            // :991-994's filter-change skip is dead code in shipped COBOL —
+            // the CHANGED flags are only SET inside 1220/1230-EXIT, which
+            // run after 1210-EDIT-ARRAY (:965-972) — so the array edit runs
+            // on every turn and posted row flags are still counted/edited.
+            editArray(request, state);
 
             // 1220-EDIT-TYPECD.
             if (typeSupplied && !postedType.matches("\\d{1,2}")) {
@@ -675,8 +678,11 @@ public class TranTypeService {
         }
 
         if (!reenter && TranTypeMaintState.NOT_FETCHED.equals(action)) {
-            // :465-478 — PGM-ENTER: fresh map prompting for the search key.
-            action = TranTypeMaintState.NOT_FETCHED;
+            // :465-478 — PGM-ENTER: fresh map. FR-S21-07 — entry via the
+            // list's F2 XCTL opens in create state; the admin-menu entry
+            // keeps the search prompt.
+            action = "COTRTLIC".equals(fromProgram)
+                    ? TranTypeMaintState.CREATE : TranTypeMaintState.NOT_FETCHED;
             MaintTurn view = new MaintTurn();
             view.action = action;
             return TranTypeMaintResponse.page(maintScreen(view),
@@ -758,6 +764,9 @@ public class TranTypeService {
                     || TranTypeMaintState.CONFIRM_DELETE.equals(action);
             case "PF5" -> TranTypeMaintState.OK_NOT_CONFIRMED.equals(action)
                     || TranTypeMaintState.NOT_FOUND.equals(action)
+                    // :588-593 — the gate admits the whole delete-in-progress
+                    // range '9'..'6'; '9' then falls to the OTHER leg.
+                    || TranTypeMaintState.CONFIRM_DELETE.equals(action)
                     || TranTypeMaintState.START_DELETE.equals(action)
                     || TranTypeMaintState.DELETE_DONE.equals(action)
                     || TranTypeMaintState.DELETE_FAILED.equals(action);
@@ -889,8 +898,25 @@ public class TranTypeService {
             turn.action = TranTypeMaintState.NOT_FETCHED;
             turn.filterValid = true;
             proceed = false;
-        } else if (TranTypeMaintState.CREATE.equals(action)
-                || TranTypeMaintState.OK_NOT_CONFIRMED.equals(action)) {
+        } else if (TranTypeMaintState.CREATE.equals(action)) {
+            // FR-S21-07 — the F2-entry's type field is user-typed (no
+            // search ran first), so it takes the 1210 edit; an existing
+            // key shows the record like the shipped search hit would.
+            editSearchKey(turn);
+            if (turn.codeBlank || turn.codeNotOk) {
+                proceed = false;
+            } else {
+                var found = types.findById(turn.newType);
+                if (found.isPresent()) {
+                    turn.action = TranTypeMaintState.SHOW;
+                    turn.oldType = found.get().getTranType();
+                    turn.oldDesc = found.get().getDescription();
+                    // Blocks the decide-action SHOW leg below from
+                    // promoting the fresh hit to a save confirmation.
+                    turn.noChanges = true;
+                }
+            }
+        } else if (TranTypeMaintState.OK_NOT_CONFIRMED.equals(action)) {
             turn.filterValid = true;
         } else {
             editSearchKey(turn);
@@ -1063,7 +1089,12 @@ public class TranTypeService {
                 || TranTypeMaintState.DELETE_FAILED.equals(action)
                 || TranTypeMaintState.BACKED_OUT.equals(action)
                 || TranTypeMaintState.START_DELETE.equals(action);
-        boolean codeEditable = codeEditableFor(action, turn.oldType);
+        boolean codeEditable = codeEditableFor(action, turn.oldType)
+                // FR-S21-07 — an F2-entry create hasn't picked a key yet (or
+                // the posted one failed), so the type field stays editable.
+                || (TranTypeMaintState.CREATE.equals(action)
+                && (turn.newType == null || turn.newType.isBlank()
+                || turn.codeNotOk || turn.codeBlank));
         boolean descEditable = TranTypeMaintState.SHOW.equals(action)
                 || TranTypeMaintState.CHANGES_NOT_OK.equals(action)
                 || TranTypeMaintState.CREATE.equals(action)
@@ -1076,6 +1107,7 @@ public class TranTypeService {
                 || turn.noChanges ? "trtydsc" : "trtypcd";
         if (turn.codeNotOk || turn.codeBlank
                 || TranTypeMaintState.DONE.equals(action)
+                || (TranTypeMaintState.CREATE.equals(action) && codeEditable)
                 || (TranTypeMaintState.BACKED_OUT.equals(action)
                 && (turn.oldType == null || turn.oldType.isBlank()))) {
             cursor = "trtypcd";

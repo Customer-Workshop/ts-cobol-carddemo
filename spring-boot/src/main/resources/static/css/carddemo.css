@@ -267,10 +267,19 @@ body {
     overflow: hidden;
 }
 
-.account-view .name-labels,
-.account-view .name-values {
+/* Name row matches the BMS map: three 25-col slots at cols 1/28/55
+   (COACTVW.bms POS=(14/15,...)), not the 50% split of other rows. */
+.account-view .view-cell.name-labels,
+.account-view .view-cell.name-values {
+    flex: 0 0 100%;
     display: flex;
     gap: 2ch;
+}
+
+.account-view .name-labels > *,
+.account-view .name-values > * {
+    flex: 0 0 25ch;
+    overflow: hidden;
 }
 
 .account-view .field-label {
@@ -558,10 +567,18 @@ body {
     overflow: hidden;
 }
 
-.account-update .name-labels,
-.account-update .name-values {
+/* Same BMS name-row columns as the account view (COACTUP.bms). */
+.account-update .view-cell.name-labels,
+.account-update .view-cell.name-values {
+    flex: 0 0 100%;
     display: flex;
     gap: 2ch;
+}
+
+.account-update .name-labels > *,
+.account-update .name-values > * {
+    flex: 0 0 25ch;
+    overflow: hidden;
 }
 
 .account-update .field-label {
@@ -925,9 +942,14 @@ body {
 
 .tran-view .view-cell {
     flex: 1;
-    white-space: pre;
     min-width: 0;
     overflow: hidden;
+}
+
+/* Label on the first line, value flush-left below — preserving template
+   whitespace inside the cell used to indent the value ~20ch and clip it. */
+.tran-view .view-cell .field-value {
+    display: block;
 }
 
 .tran-view .field-label {

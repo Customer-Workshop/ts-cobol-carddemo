@@ -72,7 +72,10 @@ public class SecurityConfig {
             if (isApiSurface(request)) {
                 writeError(mapper, response, HttpServletResponse.SC_FORBIDDEN, "Access denied");
             } else {
-                response.sendError(HttpServletResponse.SC_FORBIDDEN);
+                // Keep the 403 but render the in-app denied page — a 3270
+                // refusal stays on the program's own screen, not Whitelabel.
+                response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+                request.getRequestDispatcher("/ui/denied").forward(request, response);
             }
         };
     }

@@ -202,7 +202,8 @@ class TranTypeListIntegrationTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.screen.errorMessage").value(
                         "No Records found for these filter conditions"))
-                .andExpect(jsonPath("$.screen.rows[0].code").value("01"));
+                // UI-08 — a no-match filter clears the last browse's rows.
+                .andExpect(jsonPath("$.screen.rows[0]").value(nullValue()));
 
         ObjectNode filter = objectMapper.createObjectNode();
         filter.put("aid", "ENTER");

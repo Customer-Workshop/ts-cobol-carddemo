@@ -158,7 +158,8 @@ class AccountInterestReader implements ItemStreamReader<BatchJobService.Interest
         // each account break. INVALID KEY (status 23) displays 'ACCOUNT NOT
         // FOUND' and abends — a missing account fails the step (S15-B7).
         Account account = accounts.findById(accountId).orElseThrow(() ->
-                new InterestAbendException("ACCOUNT NOT FOUND: " + accountId
+                new InterestAbendException("ACCOUNT NOT FOUND: "
+                        + "%011d".formatted(accountId)
                         + " - ACCTFILE read status 23"));
         List<TransactionCategoryBalance> balances = new ArrayList<>(group);
         group.clear();

@@ -144,8 +144,10 @@ public class DataSeeder implements CommandLineRunner {
         transactionRepository.saveAll(transactions);
         disclosureGroupRepository.saveAll(disclosureGroups);
         transactionCategoryBalanceRepository.saveAll(balances);
-        transactionCategoryRepository.saveAll(categories);
+        // fk_trcat_type (V2801): parents must flush before the FK'd children.
         transactionTypeRepository.saveAll(types);
+        transactionTypeRepository.flush();
+        transactionCategoryRepository.saveAll(categories);
         securityUserRepository.saveAll(users);
 
         log.info("Seeded CardDemo data: accounts={}, customers={}, cards={}, cardXrefs={}, transactions={}, "

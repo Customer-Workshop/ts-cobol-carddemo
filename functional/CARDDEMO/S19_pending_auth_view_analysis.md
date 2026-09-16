@@ -38,7 +38,8 @@ Title 'View Authorizations' (:78). Header TRNNAME/CURDATE/PGMNAME/CURTIME per sh
 | SEL0001..SEL0005 | INPUT | X(1) UNPROT (:277,:321,...) | `S`/`s` selects row → CDEMO-CPVS-PAU-SELECTED = AUTH-KEYS(n) (:287-305); any other non-blank selection value is evaluated then ignored (only S routes, :313-321) |
 | CNAME, CUSTID, ACCSTAT, PHONE1 | DISPLAY | X(25)/9(9)/X(1)/X(13) | customer/account context from VSAM reads (:754-755) |
 | APPRCNT, DECLCNT | DISPLAY | len 3 | PA-APPROVED-AUTH-CNT / PA-DECLINED-AUTH-CNT from PAUTSUM0 |
-| CREDLIM, CASHLIM, APPRAMT, DECLAMT | DISPLAY | X(12) | PA-CREDIT-LIMIT / PA-CASH-LIMIT / PA-APPROVED-AUTH-AMT / PA-DECLINED-AUTH-AMT |
+| CREDLIM, CASHLIM | DISPLAY | X(12) | ACCT-CREDIT-LIMIT / ACCT-CASH-CREDIT-LIMIT from ACCTDAT (`COPAUS0C.cbl:780-783`) — unconditional moves, not from PAUTSUM0 |
+| APPRAMT, DECLAMT | DISPLAY | X(12) | PA-APPROVED-AUTH-AMT / PA-DECLINED-AUTH-AMT |
 | rows 1-5: PTRNID?, PDATE0n, PTIME0n, PTYPE0n, A/D, PSTS, PAMT00n | DISPLAY | per column headers (:201-236) | populated by POPULATE-AUTH-LIST (:545-593); date YYMMDD→MM/DD/YY and time HHMMSS→HH:MM:SS re-formats, resp '00'→'A' else 'D' |
 | ERRMSG | DISPLAY | X(78) | message line |
 

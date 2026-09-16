@@ -86,7 +86,11 @@ public class CardListUiController {
             CardListNavigation navigation = result.navigation();
             String route = menuService.uiRouteForProgram(navigation.program());
             if (route != null) {
-                return "redirect:" + route + "?accountId=" + navigation.accountId()
+                // The receiving screen's search edit expects the 11-digit
+                // account id (ACCOUNT FILTER,IF SUPPLIED MUST BE A 11 DIGIT
+                // NUMBER), so pad the Long key back out at the seam.
+                return "redirect:" + route + "?accountId="
+                        + "%011d".formatted(navigation.accountId())
                         + "&cardNumber=" + navigation.cardNumber();
             }
             // Disabled target: same coming-soon idiom the menu renders green

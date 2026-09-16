@@ -32,7 +32,11 @@ public class CbimportJobConfiguration {
     @Bean
     public Job cbimportJob(JobRepository repository, Step cbimportStep) {
         return new JobBuilder("cbimportJob", repository)
-                .incrementer(new RunIdIncrementer()).start(cbimportStep).build();
+                .incrementer(new RunIdIncrementer())
+                // S18-B4 — a failed run reports the 999 abend code like the
+                // sibling jobs (9999-ABEND-PROGRAM -> CEE3ABD).
+                .listener(new Abend999JobListener())
+                .start(cbimportStep).build();
     }
 
     @Bean

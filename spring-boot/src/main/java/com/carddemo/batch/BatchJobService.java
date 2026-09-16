@@ -208,7 +208,8 @@ public class BatchJobService {
         String cardNumber = xrefs.findByXrefAcctId(account.getAcctId()).stream().findFirst()
                 .map(CardXref::getXrefCardNumber)
                 .orElseThrow(() -> new InterestAbendException(
-                        "ACCOUNT NOT FOUND: " + account.getAcctId()
+                        "ACCOUNT NOT FOUND: "
+                                + "%011d".formatted(account.getAcctId())
                                 + " - XREFFIL1 read status 23"));
         BigDecimal total = BigDecimal.ZERO;
         List<Transaction> interestTransactions = new ArrayList<>();
@@ -240,7 +241,10 @@ public class BatchJobService {
             transaction.setTranTypeCode("01");
             transaction.setTranCategoryCode(5);
             transaction.setTranSource("System");
-            transaction.setTranDescription("Int. for a/c " + account.getAcctId());
+            // ACCT-ID is PIC 9(11) — the DISPLAY/STRING uses the
+            // zero-padded id (:485-488).
+            transaction.setTranDescription(
+                    "Int. for a/c " + "%011d".formatted(account.getAcctId()));
             transaction.setTranAmount(interest);
             transaction.setTranMerchantId(0L);
             transaction.setTranMerchantName("");
@@ -507,12 +511,12 @@ public class BatchJobService {
                 }
                 case "A" -> {
                     Account value = new Account(); int p = 0; value.setAcctId(Long.parseLong(part(data, p, 11))); p += 11;
-                    value.setAcctActiveStatus(part(data, p, 1)); p++; value.setAcctCurrBal(decimalText(part(data, p, 12))); p += 12;
-                    value.setAcctCreditLimit(decimalText(part(data, p, 12))); p += 12; value.setAcctCashCreditLimit(decimalText(part(data, p, 12))); p += 12;
+                    value.setAcctActiveStatus(part(data, p, 1)); p++; value.setAcctCurrBal(decimalText(part(data, p, 13))); p += 13;
+                    value.setAcctCreditLimit(decimalText(part(data, p, 13))); p += 13; value.setAcctCashCreditLimit(decimalText(part(data, p, 13))); p += 13;
                     value.setAcctOpenDate(parseDate(part(data, p, 10))); p += 10;
                     value.setAcctExpirationDate(parseDate(part(data, p, 10))); p += 10;
                     value.setAcctReissueDate(parseDate(part(data, p, 10))); p += 10;
-                    value.setAcctCurrCycCredit(decimalText(part(data, p, 12))); p += 12; value.setAcctCurrCycDebit(decimalText(part(data, p, 12))); p += 12;
+                    value.setAcctCurrCycCredit(decimalText(part(data, p, 13))); p += 13; value.setAcctCurrCycDebit(decimalText(part(data, p, 13))); p += 13;
                     value.setAcctAddrZip(part(data, p, 10)); p += 10; value.setAcctGroupId(part(data, p, 10)); accounts.save(value);
                 }
                 case "X" -> {
@@ -524,7 +528,7 @@ public class BatchJobService {
                     Transaction value = new Transaction(); int p = 0; value.setTranId(part(data, p, 16)); p += 16;
                     value.setTranTypeCode(part(data, p, 2)); p += 2; value.setTranCategoryCode(Integer.parseInt(part(data, p, 4))); p += 4;
                     value.setTranSource(part(data, p, 10)); p += 10; value.setTranDescription(part(data, p, 100)); p += 100;
-                    value.setTranAmount(decimalText(part(data, p, 11))); p += 11; value.setTranMerchantId(Long.parseLong(part(data, p, 9))); p += 9;
+                    value.setTranAmount(decimalText(part(data, p, 12))); p += 12; value.setTranMerchantId(Long.parseLong(part(data, p, 9))); p += 9;
                     value.setTranMerchantName(part(data, p, 50)); p += 50; value.setTranMerchantCity(part(data, p, 50)); p += 50;
                     value.setTranMerchantZip(part(data, p, 10)); p += 10; value.setTranCardNumber(part(data, p, 16)); p += 16;
                     value.setTranOriginTimestamp(parseTimestamp(part(data, p, 26))); p += 26;
@@ -702,16 +706,34 @@ public class BatchJobService {
     private static String export(String type, Object... fields) {
         long sequence = ((Number) fields[fields.length - 1]).longValue();
         Object[] values = java.util.Arrays.copyOf(fields, fields.length - 1);
+        // Signed-amount text widths hold the widest rendered form
+        // (S9(10)V99 -> '9999999999.99' = 13, S9(09)V99 -> 12): narrower
+        // fields silently drop a cent digit on round-trip.
         int[] widths = switch (type) {
             case "C" -> new int[]{9,25,25,25,50,50,50,2,3,10,15,15,9,20,10,10,1,3};
-            case "A" -> new int[]{11,1,12,12,12,10,10,10,12,12,10,10};
+            case "A" -> new int[]{11,1,13,13,13,10,10,10,13,13,10,10};
             case "X" -> new int[]{16,9,11};
-            case "T" -> new int[]{16,2,4,10,100,11,9,50,50,10,16,26,26};
+            case "T" -> new int[]{16,2,4,10,100,12,9,50,50,10,16,26,26};
             case "D" -> new int[]{16,11,3,50,10,1};
             default -> throw new IllegalArgumentException("Unsupported export type " + type);
         };
+        // USAGE-DISPLAY numerics (SSN, ACCT-ID, XREF-CUST-ID, TRAN-CAT-CD)
+        // zero-fill; COMP/COMP-3 fields and signed amounts keep the text form.
+        int[] displayNumeric = switch (type) {
+            case "C" -> new int[]{12};
+            case "A" -> new int[]{0};
+            case "X" -> new int[]{1};
+            case "T" -> new int[]{2};
+            default -> new int[]{};
+        };
         StringBuilder data = new StringBuilder();
-        for (int i = 0; i < widths.length; i++) data.append(fixed(values[i], widths[i]));
+        for (int i = 0; i < widths.length; i++) {
+            final int index = i;
+            boolean zeroFill = java.util.Arrays.stream(displayNumeric)
+                    .anyMatch(j -> j == index);
+            data.append(zeroFill ? zpad(values[i], widths[i])
+                    : fixed(values[i], widths[i]));
+        }
         return fixed(type, 1) + fixed(formatExportTimestamp(LocalDateTime.now()), 26)
                 + "%09d".formatted(sequence) + fixed("0001", 4) + fixed("NORTH", 5)
                 + BatchFileSupport.pad(data.toString(), 455);
@@ -722,6 +744,11 @@ public class BatchJobService {
                 : value == null ? "" : value.toString();
         if (text.length() > width) return text.substring(0, width);
         return text + " ".repeat(width - text.length());
+    }
+    private static String zpad(Object value, int width) {
+        if (!(value instanceof Number number)) return fixed(value, width);
+        String text = ("%0" + width + "d").formatted(number.longValue());
+        return text.length() > width ? text.substring(0, width) : text;
     }
     private static String part(String value, int start, int width) {
         return value.substring(start, start + width).trim();

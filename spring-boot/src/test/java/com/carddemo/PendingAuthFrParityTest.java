@@ -92,7 +92,11 @@ class PendingAuthFrParityTest {
                 .andExpect(jsonPath("$.screen.custName").value(containsString("Ada")))
                 .andExpect(jsonPath("$.screen.apprCnt").value("005"))
                 .andExpect(jsonPath("$.screen.declCnt").value("002"))
-                .andExpect(jsonPath("$.screen.creditLimit").value("11000.00"))
+                // CREDLIM/CASHLIM are ACCTDAT fields (COPAUS0C.cbl:780-783),
+                // not PAUTSUM0: acct 1 is 2020.00/1020.00, summary is 11000.00/2500.00.
+                .andExpect(jsonPath("$.screen.creditLimit").value("2020.00"))
+                .andExpect(jsonPath("$.screen.cashLimit").value("1020.00"))
+                .andExpect(jsonPath("$.screen.acctStatus").value("Y"))
                 .andExpect(jsonPath("$.screen.rows[0].transactionId")
                         .value("T00000000000401"))
                 .andExpect(jsonPath("$.screen.rows[4].transactionId").exists())
