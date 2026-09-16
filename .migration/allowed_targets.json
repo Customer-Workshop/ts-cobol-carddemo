@@ -2,7 +2,7 @@
   "guard_mode": "block",
   "catalogs": ["carddemo"],
   "legacy_sources": [],
-  "target_hosts": [],
+  "target_hosts": ["localhost", "127.0.0.1"],
   "bundle_targets": [],
   "lakebase_projects": [],
   "lakebase_branches": []
