@@ -9,7 +9,7 @@ parity pass, and sign-off under this engagement. Prior .NET-engagement statuses 
 
 | Stream | Type | Entry point | Status | Last update | Notes |
 |---|---|---|---|---|---|
-| S-01 Sign-on + menu shell | ONLINE | CC00/CM00/CA00 | waves merged — UI test + sign-off pending | 2026-09-16 | W1-W3 merged (PRs #100-102): shell+Postgres/Flyway+CI, sign-on, menus; 60 tests green; FR-S01-01..20 mapped; UI testing → audit → STOP E next |
+| S-01 Sign-on + menu shell | ONLINE | CC00/CM00/CA00 | sign-off pending (audit running) | 2026-09-16 | W1-W3 + UI evidence merged (PRs #100-103); UI test 10/10 pass; independent audit running; STOP E next |
 | S-02 Account View | ONLINE | CAVW | baseline ported — pre-STOP C | 2026-09-15 | AccountController/AccountViewService in baseline |
 | S-03 Account Update | ONLINE | CAUP | baseline ported — pre-STOP C | 2026-09-15 | AccountUpdateController/Service in baseline |
 | S-04 Card List | ONLINE | CCLI | baseline ported — pre-STOP C | 2026-09-15 | CardController (list) in baseline |
