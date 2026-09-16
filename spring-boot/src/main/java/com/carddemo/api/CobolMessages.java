@@ -157,6 +157,71 @@ public final class CobolMessages {
     public static final String CARD_FILE_ERROR_READ =
         "File Error: READ     on CARDDAT   returned RESP 000000020 ,RESP2 000000090 ";
 
+    // COTRTLIC verbatim messages (S-21; COTRTLIC.cbl:236-262, :1115-1117,
+    // :1253-1265, :1534-1548, :1867-1938).
+    public static final String TRTYPE_FILTER_INVALID =
+        "TYPE CODE FILTER,IF SUPPLIED MUST BE A 2 DIGIT NUMBER";
+    public static final String TRTYPE_SELECT_ONLY_ONE = "Please select only 1 action";
+    public static final String TRTYPE_ACTION_INVALID = "Action code selected is invalid";
+    public static final String TRTYPE_NO_RECORDS_FILTERS =
+        "No Records found for these filter conditions";
+    public static final String TRTYPE_NO_PREVIOUS_PAGES = "No previous pages to display";
+    public static final String TRTYPE_NO_MORE_PAGES = "No more pages to display";
+    public static final String TRTYPE_NO_MORE_RECORDS =
+        "No more pages for these search conditions";
+    public static final String TRTYPE_NO_RECORDS_FOUND =
+        "No records found for this search condition.";
+    public static final String TRTYPE_RECORD_GONE =
+        "Record not found. Deleted by others ? ";
+    public static final String TRTYPE_DEADLOCK = "Deadlock. Someone else updating ?";
+    public static final String TRTYPE_CHILD_RECORDS =
+        "Please delete associated child records first:";
+    public static final String TRTYPE_INFO_ACTIONS =
+        "Type U to update, D to delete any record";
+    public static final String TRTYPE_CONFIRM_DELETE =
+        "Delete HIGHLIGHTED row ? Press F10 to confirm";
+    public static final String TRTYPE_CONFIRM_UPDATE =
+        "Update HIGHLIGHTED row. Press F10 to save";
+    public static final String TRTYPE_DELETE_DONE =
+        "HIGHLIGHTED row deleted.Hit Enter to continue";
+    public static final String TRTYPE_UPDATE_DONE = "HIGHLIGHTED row was updated";
+    public static final String TRTYPE_NO_CHANGES =
+        "No change detected with respect to database values.";
+
+    // COTRTUPC verbatim messages (S-21; COTRTUPC.cbl:140-195, :1640-1661).
+    public static final String TTUP_SEARCH_KEYS =
+        "Enter transaction type to be maintained";
+    public static final String TTUP_CREATE_PROMPT = "Press F05 to add. F12 to cancel";
+    public static final String TTUP_CHANGES_PROMPT =
+        "Update transaction type details shown.";
+    public static final String TTUP_DELETE_CONFIRM =
+        "Delete this record ? Press F4 to confirm";
+    public static final String TTUP_DELETE_DONE = "Delete successful.";
+    public static final String TTUP_NEW_DATA = "Enter new transaction type details.";
+    public static final String TTUP_CONFIRM_SAVE = "Changes validated.Press F5 to save";
+    public static final String TTUP_COMMIT_DONE = "Changes committed to database";
+    public static final String TTUP_FAILURE = "Changes unsuccessful";
+    public static final String TTUP_RECORD_NOT_FOUND =
+        "No record found for this key in database";
+    public static final String TTUP_NO_INPUT = "No input received";
+    public static final String TTUP_INVALID_KEY = "Invalid key pressed";
+    public static final String TTUP_EXIT = "PF03 pressed.Exiting";
+    public static final String TTUP_LOCK_FAILED = "Could not lock record for update";
+    public static final String TTUP_UPDATE_CANCELLED = "Update was cancelled";
+    public static final String TTUP_DELETE_CANCELLED = "Delete was cancelled";
+    public static final String TTUP_CODE_REQUIRED = "Tran Type code must be supplied.";
+    public static final String TTUP_CODE_NUMERIC = "Tran Type code must be numeric.";
+    public static final String TTUP_CODE_NOT_ZERO = "Tran Type code must not be zero.";
+    public static final String TTUP_DESC_REQUIRED = "Transaction Desc must be supplied.";
+    public static final String TTUP_DESC_ALPHANUM =
+        "Transaction Desc can have numbers or alphabets only.";
+    public static final String TTUP_UPDATE_FAILED_PREFIX =
+        "Error updating: TRANSACTION_TYPE Table. SQLCODE:";
+    public static final String TTUP_INSERT_FAILED_PREFIX =
+        "Error inserting record into: TRANSACTION_TYPE Table. SQLCODE:";
+    public static final String TTUP_DELETE_FAILED_PREFIX =
+        "Delete failed with message:SQLCODE :";
+
     // COCRDUPC verbatim messages (S-06; COCRDUPC.cbl:146-212). The
     // WS-FILE-ERROR-MESSAGE layout (:133-152) renders READ on CARDDAT with
     // the fixed IOERR codes — RESP/RESP2 have no target equivalent

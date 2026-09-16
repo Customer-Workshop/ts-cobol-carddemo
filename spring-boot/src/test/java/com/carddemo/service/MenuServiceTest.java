@@ -61,9 +61,9 @@ class MenuServiceTest {
                 new MenuOption(4, "User Delete (Security)", "COUSR03C",
                         "/api/admin/users/{userId}", "A", true, true),
                 new MenuOption(5, "Transaction Type List/Update (Db2)", "COTRTLIC",
-                        "/api/programs/COTRTLIC", "A", false, true),
+                        "/api/programs/COTRTLIC", "A", true, true),
                 new MenuOption(6, "Transaction Type Maintenance (Db2)", "COTRTUPC",
-                        "/api/programs/COTRTUPC", "A", false, true));
+                        "/api/programs/COTRTUPC", "A", true, true));
     }
 
     @Test
@@ -113,8 +113,10 @@ class MenuServiceTest {
                 service.selectMain(new MenuSelectRequest("11"), authentication)));
         assertEquals("/admin/users", service.uiRoute(
                 service.selectAdmin(new MenuSelectRequest("1"))));
-        assertNull(service.uiRoute(
+        assertEquals("/ui/tran-types", service.uiRoute(
                 service.selectAdmin(new MenuSelectRequest("5"))));
+        assertEquals("/ui/tran-types/maint", service.uiRoute(
+                service.selectAdmin(new MenuSelectRequest("6"))));
     }
 
     @Test

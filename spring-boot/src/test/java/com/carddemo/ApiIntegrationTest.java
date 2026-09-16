@@ -391,7 +391,7 @@ class ApiIntegrationTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.options[0].endpoint").value("/api/admin/users"))
                 .andExpect(jsonPath("$.options[0].implemented").value(true))
-                .andExpect(jsonPath("$.options[5].implemented").value(false));
+                .andExpect(jsonPath("$.options[5].implemented").value(true));
     }
 
     @Test

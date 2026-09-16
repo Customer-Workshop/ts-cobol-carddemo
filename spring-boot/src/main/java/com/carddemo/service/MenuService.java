@@ -52,8 +52,8 @@ public class MenuService {
             option(2, "User Add (Security)", "COUSR01C", "/api/admin/users", "A", true),
             option(3, "User Update (Security)", "COUSR02C", "/api/admin/users/{userId}", "A", true),
             option(4, "User Delete (Security)", "COUSR03C", "/api/admin/users/{userId}", "A", true),
-            option(5, "Transaction Type List/Update (Db2)", "COTRTLIC", "/api/programs/COTRTLIC", "A", false),
-            option(6, "Transaction Type Maintenance (Db2)", "COTRTUPC", "/api/programs/COTRTUPC", "A", false));
+            option(5, "Transaction Type List/Update (Db2)", "COTRTLIC", "/api/programs/COTRTLIC", "A", true),
+            option(6, "Transaction Type Maintenance (Db2)", "COTRTUPC", "/api/programs/COTRTUPC", "A", true));
 
     public MenuResponse mainMenu(Authentication authentication) {
         return new MenuResponse("COMEN01C", authorize(mainOptions, authentication));
@@ -119,7 +119,9 @@ public class MenuService {
             Map.entry("COCRDUPC", "/cards/update"),
             Map.entry("COBIL00C", "/bill-payment"),
             Map.entry("COPAUS0C", "/ui/pending-auth"),
-            Map.entry("COACTVWC", "/accounts/view"));
+            Map.entry("COACTVWC", "/accounts/view"),
+            Map.entry("COTRTLIC", "/ui/tran-types"),
+            Map.entry("COTRTUPC", "/ui/tran-types/maint"));
 
     public String uiRoute(MenuSelectionResponse selection) {
         if (!selection.implemented() || !selection.available()) {

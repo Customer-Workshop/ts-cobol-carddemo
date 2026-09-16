@@ -8,12 +8,17 @@ import com.carddemo.model.DisclosureGroup;
 import com.carddemo.model.Transaction;
 import com.carddemo.model.TransactionCategory;
 import com.carddemo.model.TransactionCategoryBalance;
+import com.carddemo.model.TransactionType;
 import com.carddemo.repository.*;
+import com.carddemo.service.Db2ErrorFormatter;
 import com.carddemo.service.TransactionIdGenerator;
+import org.springframework.dao.DataAccessException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -404,6 +409,72 @@ public class BatchJobService {
         log.info("CBIMPORT: Cards Imported: {}", "%09d".formatted(stats.of("D")));
         log.info("CBIMPORT: Errors Written: {}", "%09d".formatted(stats.errors()));
         log.info("CBIMPORT: Unknown Record Types: {}", "%09d".formatted(stats.unknownTypes()));
+    }
+
+    /**
+     * S-21 COBTUPDT record apply (:90-129, :149-217): one 53-byte INPFILE
+     * record — col 1 action (A/U/D/*), cols 2-3 type code, cols 4-53
+     * description. Returns the WS-RETURN-MSG error text on failure, null on
+     * success; the caller fails the job when any record reports (S21-B5 —
+     * RC4 to FAILED).
+     */
+    // REQUIRES_NEW: COBOL commits each INPFILE write as it goes, so a later
+    // bad record (RC=4) must not roll back the rows already applied.
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    public String applyTranTypeRecord(String line) {
+        String record = BatchFileSupport.pad(line == null ? "" : line, 53);
+        char action = record.charAt(0);
+        String code = record.substring(1, 3).trim();
+        String desc = record.substring(3, 53).trim();
+        try {
+            switch (action) {
+                case 'A' -> {
+                    TransactionType value = new TransactionType();
+                    value.setTranType(code);
+                    value.setDescription(desc);
+                    types.save(value);
+                }
+                case 'U' -> {
+                    var found = types.findById(code);
+                    if (found.isEmpty()) {
+                        return "No records found.";
+                    }
+                    found.get().setDescription(desc);
+                    types.save(found.get());
+                }
+                case 'D' -> {
+                    if (!types.existsById(code)) {
+                        return "No records found.";
+                    }
+                    types.deleteById(code);
+                }
+                case '*' -> {
+                    return null;
+                }
+                default -> {
+                    return "ERROR: TYPE NOT VALID";
+                }
+            }
+            return null;
+        } catch (DataAccessException exception) {
+            return "Error accessing: TRANSACTION_TYPE table. SQLCODE:"
+                    + Db2ErrorFormatter.sqlcodeDisplay(
+                    Db2ErrorFormatter.sqlcodeFor(exception));
+        }
+    }
+
+    // TRANEXTR (S21-B6) — 60-char DSNTIAUL unload layouts.
+    public String tranTypeExtractLine(TransactionType type) {
+        return BatchFileSupport.pad(type.getTranType(), 2)
+                + BatchFileSupport.pad(type.getDescription(), 50)
+                + "0".repeat(8);
+    }
+
+    public String tranCategoryExtractLine(TransactionCategory category) {
+        return BatchFileSupport.pad(category.getId().getTranTypeCode(), 2)
+                + "%04d".formatted(category.getId().getTranCategoryCode())
+                + BatchFileSupport.pad(category.getDescription(), 50)
+                + "0".repeat(4);
     }
 
     public Path output(String name) {

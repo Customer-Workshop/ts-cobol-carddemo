@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout :: layout('CardDemo', 'CTLI', 'COTRTLIC', ~{::content})}">
+<head>
+    <title>CardDemo</title>
+</head>
+<body>
+<div th:fragment="content" class="card-list">
+    <div class="list-title-row">
+        <span class="list-title">Maintain Transaction Type</span>
+        <span class="page-number">Page <span th:text="${screen.screenNumber}">1</span></span>
+    </div>
+    <form id="tran-type-list-form" method="post" th:action="@{/ui/tran-types}">
+        <!-- WS-THIS-PROGCOMMAREA (COTRTLIC.cbl:377-418) round-trips as hidden
+             inputs so the server stays stateless between AID presses. -->
+        <input type="hidden" name="firstCode" th:value="${pageState.firstCode}">
+        <input type="hidden" name="lastCode" th:value="${pageState.lastCode}">
+        <input type="hidden" name="screenNumber" th:value="${pageState.screenNumber}">
+        <input type="hidden" name="lastPageShown" th:value="${pageState.lastPageShown}">
+        <input type="hidden" name="nextPageExists" th:value="${pageState.nextPageExists}">
+        <input type="hidden" name="rowSelected" th:value="${pageState.rowSelected}">
+        <input type="hidden" name="deletePending" th:value="${pageState.deletePending}">
+        <input type="hidden" name="updatePending" th:value="${pageState.updatePending}">
+        <input type="hidden" name="caTypeFilter" th:value="${pageState.typeFilter}">
+        <input type="hidden" name="caDescFilter" th:value="${pageState.descFilter}">
+
+        <div class="form-row">
+            <label class="field-label" for="trtype">Type Filter:</label>
+            <input id="trtype" name="trtype" type="text" maxlength="2" size="2"
+                   autocomplete="off" inputmode="numeric" th:value="${screen.typeFilter}"
+                   th:readonly="${screen.filtersProtected}"
+                   th:classappend="${screen.typeFilterInvalid} ? 'field-error'"
+                   th:attr="autofocus=${screen.cursorField == 'trtype' ? 'autofocus' : null}">
+        </div>
+        <div class="form-row">
+            <label class="field-label" for="trdesc">Description Filter:</label>
+            <input id="trdesc" name="trdesc" type="text" maxlength="50" size="50"
+                   autocomplete="off" th:value="${screen.descFilter}"
+                   th:readonly="${screen.filtersProtected}"
+                   th:classappend="${screen.descFilterInvalid} ? 'field-error'"
+                   th:attr="autofocus=${screen.cursorField == 'trdesc' ? 'autofocus' : null}">
+        </div>
+
+        <table class="card-rows">
+            <thead>
+                <tr>
+                    <th>Select</th>
+                    <th>Type</th>
+                    <th>Description</th>
+                </tr>
+                <tr class="row-underline">
+                    <td>------</td>
+                    <td>----</td>
+                    <td>--------------------------------------------------</td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="row, stat : ${screen.rows}">
+                    <td>
+                        <input type="text" name="trtsel" maxlength="1" size="1"
+                               th:value="${row == null ? '' : row.select}" autocomplete="off"
+                               th:readonly="${row == null or row.selectProtected or screen.filtersProtected}"
+                               th:classappend="${row != null and row.selectError} ? 'field-error'"
+                               th:attr="autofocus=${row != null and screen.cursorField == 'trtsel' + (stat.index + 1) ? 'autofocus' : null}">
+                        <input type="hidden" name="rowCode" th:value="${row == null ? '' : row.code}">
+                        <input type="hidden" name="rowOrig" th:value="${row == null ? '' : row.origDesc}">
+                    </td>
+                    <td class="status" th:text="${row == null ? '' : row.code}"></td>
+                    <td>
+                        <!-- TRTYPD unlocks (DFHBMFSE) only while a 'U' flag is
+                             pending F10 (COTRTLIC.cbl:1405-1422). -->
+                        <input type="text" name="rowDesc" maxlength="50" size="50"
+                               th:value="${row == null ? '' : row.desc}" autocomplete="off"
+                               th:readonly="${row == null or row.select != 'U'}"
+                               th:classappend="${row != null and row.descError} ? 'field-error'"
+                               th:attr="autofocus=${row != null and screen.cursorField == 'trtypd' + (stat.index + 1) ? 'autofocus' : null}">
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <p class="info-line" th:text="${screen.infoMessage}"></p>
+        <p class="error-line" th:text="${screen.errorMessage}"></p>
+        <p class="key-hints">F2=Add F3=Exit F7=Page Up F8=Page Dn F10=Save</p>
+        <div class="form-actions">
+            <button type="submit" name="aid" value="ENTER">ENTER</button>
+            <button type="submit" name="aid" value="PF2" formnovalidate>F2=Add</button>
+            <button type="submit" name="aid" value="PF3" formnovalidate>F3=Exit</button>
+            <button type="submit" name="aid" value="PF7" formnovalidate>F7=Page Up</button>
+            <button type="submit" name="aid" value="PF8" formnovalidate>F8=Page Dn</button>
+            <button type="submit" name="aid" value="PF10" formnovalidate>F10=Save</button>
+        </div>
+    </form>
+    <script>
+        // 3270 AID parity (COTRTLIC.cbl:538-558): F2 adds, F3 exits, F7/F8
+        // page, F10 confirms a pending flag — anything else remaps to ENTER
+        // in the service.
+        document.addEventListener('keydown', function (event) {
+            if (/^F([1-9]|1[0-2])$/.test(event.key)) {
+                event.preventDefault();
+                var form = document.getElementById('tran-type-list-form');
+                var aid = document.createElement('input');
+                aid.type = 'hidden';
+                aid.name = 'aid';
+                aid.value = 'PF' + event.key.substring(1);
+                form.appendChild(aid);
+                form.submit();
+            }
+        });
+    </script>
+</div>
+</body>
+</html>

@@ -160,8 +160,7 @@ class MenuUiIntegrationTest {
                 .andExpect(content().string(containsString("05. Transaction Type List/Update (Db2)")))
                 .andExpect(content().string(containsString("06. Transaction Type Maintenance (Db2)")))
                 .andExpect(content().string(containsString("Please select an option :")))
-                .andExpect(content().string(containsString("ENTER=Continue  F3=Exit")))
-                .andExpect(content().string(containsString("not installed")));
+                .andExpect(content().string(containsString("ENTER=Continue  F3=Exit")));
     }
 
     @Test
@@ -186,10 +185,12 @@ class MenuUiIntegrationTest {
                 .andExpect(redirectedUrl("/admin/users"));
         mockMvc.perform(post("/admin/menu/select").session(session)
                         .param("aid", "ENTER").param("option", "5"))
-                .andExpect(status().isOk())
-                .andExpect(view().name("admin-menu"))
-                .andExpect(model().attribute("message",
-                        "This option Transaction Type List/Update (Db2) is not installed..."));
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/ui/tran-types"));
+        mockMvc.perform(post("/admin/menu/select").session(session)
+                        .param("aid", "ENTER").param("option", "6"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/ui/tran-types/maint"));
     }
 
     @Test
