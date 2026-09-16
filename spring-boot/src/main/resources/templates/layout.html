@@ -17,7 +17,7 @@
     <main class="screen-body" th:insert="${body}">
         <p>Screen body</p>
     </main>
-    <div class="message-line" th:text="${message == null ? '' : message}"></div>
+    <div class="message-line" th:classappend="${messageStyle}" th:text="${message == null ? '' : message}"></div>
 </div>
 </body>
 </html>

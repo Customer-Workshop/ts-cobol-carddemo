@@ -75,3 +75,68 @@ body {
     margin-right: 1em;
     cursor: pointer;
 }
+
+.menu .menu-title {
+    color: #40e0d0;
+    text-align: center;
+    font-weight: bold;
+    margin-top: 0;
+}
+
+.menu .menu-options {
+    margin-left: 20ch;
+}
+
+.menu .menu-option {
+    color: #00f;
+}
+
+.menu .option-not-installed {
+    color: #f00;
+    margin-left: 1em;
+}
+
+.menu .option-coming-soon {
+    color: #0f0;
+    margin-left: 1em;
+}
+
+.menu .form-row {
+    margin: 1.5em 0 0.5em 15ch;
+}
+
+.menu .field-label {
+    white-space: pre;
+    color: #40e0d0;
+}
+
+.menu input {
+    background: #000;
+    color: #0f0;
+    border: none;
+    border-bottom: 1px solid #0f0;
+    font: inherit;
+    text-align: right;
+}
+
+.menu .key-hints {
+    color: #ff0;
+    margin-left: 15ch;
+}
+
+.menu .form-actions {
+    margin-left: 15ch;
+}
+
+.menu .form-actions button {
+    background: #000;
+    color: #0f0;
+    border: 1px solid #0f0;
+    font: inherit;
+    margin-right: 1em;
+    cursor: pointer;
+}
+
+.message-line.info {
+    color: #0f0;
+}

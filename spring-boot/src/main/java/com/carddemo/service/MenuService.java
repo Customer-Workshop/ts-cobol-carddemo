@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class MenuService {
@@ -89,11 +90,34 @@ public class MenuService {
     }
 
     private MenuSelectionResponse selection(MenuOption option) {
-        String message = option.implemented()
-                ? null
-                : CobolMessages.optionNotInstalled(option.name());
+        String message;
+        if (!option.implemented()) {
+            message = CobolMessages.optionNotInstalled(option.name());
+        } else if (!option.available()) {
+            message = CobolMessages.optionComingSoon(option.name());
+        } else {
+            message = null;
+        }
         return new MenuSelectionResponse(option.number(), option.name(), option.program(),
-                option.endpoint(), option.implemented(), message);
+                option.endpoint(), option.implemented(), option.available(), message);
+    }
+
+    // S01-B1 route registry for the web surface: a UI route exists only where
+    // the option's target answers GET on a concrete (non-templated) path
+    // today. Everything else falls back to the not-installed idiom instead of
+    // a dead link.
+    private static final Map<String, String> UI_ROUTES = Map.of(
+            "COCRDLIC", "/api/cards",
+            "COTRN00C", "/api/transactions",
+            "COTRN02C", "/api/transactions",
+            "COUSR00C", "/api/admin/users",
+            "COUSR01C", "/api/admin/users");
+
+    public String uiRoute(MenuSelectionResponse selection) {
+        if (!selection.implemented() || !selection.available()) {
+            return null;
+        }
+        return UI_ROUTES.get(selection.program());
     }
 
     private List<MenuOption> authorize(List<MenuOption> options, Authentication authentication) {
