@@ -1,5 +1,10 @@
 # S-01 Sign-on + Menu Shell — Independent Audit
 
+> Provenance (Java engagement, 2026-09-15): this audit was produced by the prior .NET
+> engagement and describes that implementation (PR #88, .NET/Angular). It is kept as
+> evidence that the source-side FRs were independently validated once. The Java engagement
+> produces its own independent audit at S-01 sign-off (STOP E).
+
 Audited branch: `devin/1787242078-carddemo-premigration` (PR #88), HEAD `468c046`.
 Auditor: independent (did not perform the migration). Date: 2026-08-21.
 Scope: FR traceability, COBOL source parity, scope discipline (S-01 hard stop), test evidence, boundary decisions S01-B1..B6.

@@ -9,7 +9,7 @@ parity pass, and sign-off under this engagement. Prior .NET-engagement statuses 
 
 | Stream | Type | Entry point | Status | Last update | Notes |
 |---|---|---|---|---|---|
-| S-01 Sign-on + menu shell | ONLINE | CC00/CM00/CA00 | baseline ported — pre-STOP C | 2026-09-15 | AuthController/MenuController/SecurityConfig in baseline; prior analysis/FR/plan docs carried over for adaptation |
+| S-01 Sign-on + menu shell | ONLINE | CC00/CM00/CA00 | planned — STOP C pending | 2026-09-15 | Java plan written (3 waves: Phase 0/1 scaffold+seams, sign-on UI+flow, menus+routes); program FRs carried over; gaps to close: Thymeleaf UI, Postgres/Flyway, CI |
 | S-02 Account View | ONLINE | CAVW | baseline ported — pre-STOP C | 2026-09-15 | AccountController/AccountViewService in baseline |
 | S-03 Account Update | ONLINE | CAUP | baseline ported — pre-STOP C | 2026-09-15 | AccountUpdateController/Service in baseline |
 | S-04 Card List | ONLINE | CCLI | baseline ported — pre-STOP C | 2026-09-15 | CardController (list) in baseline |

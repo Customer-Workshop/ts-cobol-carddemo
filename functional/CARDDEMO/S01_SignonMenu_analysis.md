@@ -1,7 +1,11 @@
 # S-01 Sign-on + Menu Shell — Stream Analysis (`!mf_stream_analysis`)
 
 Status: complete (2026-08-20). Stream chosen by user at STOP B; process type **ONLINE** confirmed.
-Target profiles applied (read-only): CORE + ONLINE + DATA/BOUNDARY from `functional/CARDDEMO/CardDemo_target_state.md` (C#/.NET 8 + ASP.NET Core, Angular 17+, PostgreSQL, single repo).
+Target profiles applied (read-only): CORE + ONLINE + DATA/BOUNDARY from `functional/CARDDEMO/CardDemo_target_state.md`.
+
+> Java-engagement note (2026-09-15): source-side analysis unchanged; target references below
+> were re-expressed for Java 21/Spring Boot (EF Core → Spring Data JPA, Angular → server-rendered
+> web UI, /api/v1 → /api, JWT → server session) at this engagement's STOP C.
 
 ## 1. Pinned stream
 
@@ -54,25 +58,25 @@ Same shape: OPTION numeric 1..6 (`:131-138`), `DUMMY*` guard (`:141`), PGMIDERR 
 **Dataset**: USRSEC VSAM KSDS `AWS.M2.CARDDEMO.USRSEC.VSAM.KSDS` (defined `app/jcl/DUSRSECJ.jcl:62-64`), key = user id, read-only in this stream (CRUD writes belong to S-12 User Admin — B10 shared contract).
 
 Field dictionary (all FACT, from `app/cpy/CSUSR01Y.cpy:17-23` — no DCLGEN; VSAM record):
-| COBOL field | PIC | C# type | PostgreSQL column |
+| COBOL field | PIC | Java type | PostgreSQL column |
 |---|---|---|---|
 | SEC-USR-ID | X(08) | string(8) | users.user_id PK varchar(8) |
 | SEC-USR-FNAME | X(20) | string | users.first_name varchar(20) |
 | SEC-USR-LNAME | X(20) | string | users.last_name varchar(20) |
-| SEC-USR-PWD | X(08) | string (hash in target — deviation to record) | users.password varchar(8) / hashed |
+| SEC-USR-PWD | X(08) | string (fixture-plaintext in target — deviation to record) | users.password varchar(8) |
 | SEC-USR-TYPE | X(01) | enum UserType {'A','U'} | users.user_type char(1) |
 | SEC-USR-FILLER | X(23) | — | not mapped |
 
-Session state (COMMAREA `app/cpy/COCOM01Y.cpy:19-44`, FACT): CDEMO-FROM/TO-TRANID X(4), CDEMO-FROM/TO-PROGRAM X(8), CDEMO-USER-ID X(8), CDEMO-USER-TYPE X(1) ('A'/'U' 88-levels :27-28), CDEMO-PGM-CONTEXT 9(1) (enter/re-enter :29-31), plus customer/account/card context fields (9(09) cust id, 9(11) acct id, 9(16) card num → C# `long`/`decimal` per CORE mapping; strings for names). Target: server-side session/JWT claims per ONLINE profile.
+Session state (COMMAREA `app/cpy/COCOM01Y.cpy:19-44`, FACT): CDEMO-FROM/TO-TRANID X(4), CDEMO-FROM/TO-PROGRAM X(8), CDEMO-USER-ID X(8), CDEMO-USER-TYPE X(1) ('A'/'U' 88-levels :27-28), CDEMO-PGM-CONTEXT 9(1) (enter/re-enter :29-31), plus customer/account/card context fields (9(09) cust id, 9(11) acct id, 9(16) card num → `long` per CORE mapping; strings for names). Target: server-side session via Spring Security SecurityContext per ONLINE profile.
 
 ## 5. Boundary table (headline) — appended to `.migration/04_boundary_register.md` as S01-B1..S01-B6, status UNDECIDED
 
 | ID | Class | Contract | Direction | Cite | Required action / lead time |
 |---|---|---|---|---|---|
-| S01-B1 | B5 cross-program switch | XCTL to 10 core route programs with CARDDEMO-COMMAREA; targets = other streams' entries | outbound | COMEN01C.cbl:185; COADM01C.cbl:146 | target routing = Angular navigation + per-stream API; until routes migrate, menu shows "not installed" (existing idiom :160-168) |
+| S01-B1 | B5 cross-program switch | XCTL to 10 core route programs with CARDDEMO-COMMAREA; targets = other streams' entries | outbound | COMEN01C.cbl:185; COADM01C.cbl:146 | target routing = web-UI navigation + per-stream API; until routes migrate, menu shows "not installed" (existing idiom :160-168) |
 | S01-B2 | B5 + availability probe | XCTL COPAUS0C guarded by INQUIRE PROGRAM | outbound | COMEN01C.cbl:148-159 | map to feature-flag/route-availability check |
 | S01-B3 | B5 inbound return routing | route programs XCTL back via CDEMO-TO-PROGRAM | inbound | COMEN01C.cbl:202; COACTVWC.cbl:350 | menu shell must expose stable return route (nav state) |
-| S01-B4 | B4 data-access leaf | CICS READ USRSEC keyed by user id; RESP protocol 0/13/other | outbound | COSGN00C.cbl:211-219 | physical layer = VSAM; target owns data → plain EF Core repository, no SP. Postgres `users` table in Phase 1 |
+| S01-B4 | B4 data-access leaf | CICS READ USRSEC keyed by user id; RESP protocol 0/13/other | outbound | COSGN00C.cbl:211-219 | physical layer = VSAM; target owns data → Spring Data JPA repository, no SP. Postgres `users` table in Phase 1 |
 | S01-B5 | B10 shared data contract | USRSEC written by S-12 (COUSR01C/02C/03C) and batch DUSRSECJ; read here | both | DUSRSECJ.jcl:62-64 | single-writer decision needed when S-12 migrates; until then seed/import parity |
 | S01-B6 | B10 shared data contract | CARDDEMO-COMMAREA copybook consumed by all online programs | both | COCOM01Y.cpy:19 | session-state DTO ported once here; later streams consume it (module property) |
 
@@ -84,9 +88,9 @@ All contracts resolved from source; **no unresolved-contract blockers**.
 
 | Wave | Content | Repos touched |
 |---|---|---|
-| 1 | Data seam: `users` table + EF Core repository (S01-B4), session-state DTO/claims seam (S01-B6), route-table config | backend/ |
-| 2 | COSGN00C: sign-on API (`POST /api/v1/auth/signin`) + Angular sign-on screen; return-code protocol 0/13/other mapped to 401/404-style results per FR | backend/, frontend/ |
-| 3 | COMEN01C + COADM01C: menu APIs + Angular menu shells, option validation, admin-only gate, "not installed"/"coming soon" route availability (S01-B1..B3) | backend/, frontend/ |
+| 1 | Phase 0/1: Postgres profile + Flyway users migration + CI + session seam (S01-B4, B5, B6) | spring-boot/ |
+| 2 | COSGN00C: sign-on API (`POST /api/auth/signon`) + Thymeleaf sign-on screen; return-code protocol 0/13/other mapped per FR | spring-boot/ |
+| 3 | COMEN01C + COADM01C: menu APIs + Thymeleaf menu shells, option validation, admin-only gate, "not installed"/"coming soon" route availability (S01-B1..B3) | spring-boot/ |
 
 Shared-port note: S-01 ports the session/COMMAREA seam and app shell **on behalf of the whole module**; every later online stream consumes them.
 

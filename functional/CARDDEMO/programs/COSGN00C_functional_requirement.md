@@ -31,10 +31,10 @@ Outputs: ERRMSGO X(80); header fields TRNNAME/PGMNAME/CURDATE/CURTIME/APPLID/SYS
 Sequence (blocking, first failure wins): user id mandatory → password mandatory → uppercase both → keyed read → RESP protocol (0 compare / 13 not-found / other error) → password compare → role route (`:112-257`). All blocking; no warnings.
 
 ## 6. Data access and boundaries
-- USRSEC read-only keyed read (S01-B4, **DECIDED**: Postgres `users` + `IUserSecurityRepository`, no SP; store error → COSGN00C-07 result). No writes, no commit scope.
-- Session contract (S01-B6, DECIDED: `SessionContext`/JWT claims).
+- USRSEC read-only keyed read (S01-B4, **DECIDED**: Postgres `users` + `SecurityUserRepository` (Spring Data JPA), no SP; store error → COSGN00C-07 result). No writes, no commit scope.
+- Session contract (S01-B6, DECIDED: server session + Spring Security context carrying user id/type).
 - Outbound routing to menus is intra-stream (wave-3 targets), not a register boundary.
-- **Deviation (approved at STOP C)**: target stores hashed passwords; comparison via `PasswordHasher`, outcomes identical to `:223`.
+- **Password storage (pending STOP C re-confirmation, Java engagement)**: baseline keeps a plaintext-compatible encoder matching the USRSEC fixture exactly (source parity, demo fixture only — `UsrsecPlaintextPasswordEncoder`). Prior engagement hashed (approved deviation). Recommendation: keep plaintext-compatible for fixture parity; flagged at STOP C.
 
 ## 7. Error and edge behavior
 Empty/low-value screen fields treated as blank (`:118,123`); map RECEIVE RESP captured but unchecked (`:167-175`, technical); wrong password clears the password field and redisplays (`:243-245`).
