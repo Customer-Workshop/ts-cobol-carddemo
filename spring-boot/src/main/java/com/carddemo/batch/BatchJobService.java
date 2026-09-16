@@ -10,6 +10,8 @@ import com.carddemo.model.TransactionCategory;
 import com.carddemo.model.TransactionCategoryBalance;
 import com.carddemo.repository.*;
 import com.carddemo.service.TransactionIdGenerator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -17,6 +19,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.nio.file.Path;
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
@@ -24,8 +27,11 @@ import java.util.Optional;
 
 @Service
 public class BatchJobService {
+    private static final Logger log = LoggerFactory.getLogger(BatchJobService.class);
     private static final DateTimeFormatter EXPORT_TIMESTAMP_FORMAT =
             DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSSSSS");
+    private static final DateTimeFormatter CURRENT_DATE_FORMAT =
+            DateTimeFormatter.ofPattern("yyyyMMddHHmmssSS");
     private final AccountRepository accounts;
     private final CardRepository cards;
     private final CardXrefRepository xrefs;
@@ -271,7 +277,9 @@ public class BatchJobService {
 
     public ImportResult importRecord(String line, long recordNumber) {
         try {
-            if (line.length() < 500) return new ImportResult(recordNumber, "RECORD IS SHORTER THAN 500 CHARACTERS");
+            if (line.length() < 500) {
+                return new ImportResult(recordNumber, null, "RECORD IS SHORTER THAN 500 CHARACTERS", false);
+            }
             String type = line.substring(0, 1);
             String data = line.substring(45, 500);
             switch (type) {
@@ -284,7 +292,7 @@ public class BatchJobService {
                     value.setCustAddrStateCode(part(data, p, 2)); p += 2; value.setCustAddrCountryCode(part(data, p, 3)); p += 3;
                     value.setCustAddrZip(part(data, p, 10)); p += 10; value.setCustPhoneNum1(part(data, p, 15)); p += 15;
                     value.setCustPhoneNum2(part(data, p, 15)); p += 15; value.setCustSsn(Long.parseLong(part(data, p, 9))); p += 9;
-                    value.setCustGovernmentIssuedId(part(data, p, 20)); p += 20; value.setCustDob(java.time.LocalDate.parse(part(data, p, 10))); p += 10;
+                    value.setCustGovernmentIssuedId(part(data, p, 20)); p += 20; value.setCustDob(parseDate(part(data, p, 10))); p += 10;
                     value.setCustEftAccountId(part(data, p, 10)); p += 10; value.setCustPrimaryCardHolderIndicator(part(data, p, 1)); p++;
                     value.setCustFicoCreditScore(Integer.parseInt(part(data, p, 3))); customers.save(value);
                 }
@@ -292,9 +300,9 @@ public class BatchJobService {
                     Account value = new Account(); int p = 0; value.setAcctId(Long.parseLong(part(data, p, 11))); p += 11;
                     value.setAcctActiveStatus(part(data, p, 1)); p++; value.setAcctCurrBal(decimalText(part(data, p, 12))); p += 12;
                     value.setAcctCreditLimit(decimalText(part(data, p, 12))); p += 12; value.setAcctCashCreditLimit(decimalText(part(data, p, 12))); p += 12;
-                    value.setAcctOpenDate(java.time.LocalDate.parse(part(data, p, 10))); p += 10;
-                    value.setAcctExpirationDate(java.time.LocalDate.parse(part(data, p, 10))); p += 10;
-                    value.setAcctReissueDate(java.time.LocalDate.parse(part(data, p, 10))); p += 10;
+                    value.setAcctOpenDate(parseDate(part(data, p, 10))); p += 10;
+                    value.setAcctExpirationDate(parseDate(part(data, p, 10))); p += 10;
+                    value.setAcctReissueDate(parseDate(part(data, p, 10))); p += 10;
                     value.setAcctCurrCycCredit(decimalText(part(data, p, 12))); p += 12; value.setAcctCurrCycDebit(decimalText(part(data, p, 12))); p += 12;
                     value.setAcctAddrZip(part(data, p, 10)); p += 10; value.setAcctGroupId(part(data, p, 10)); accounts.save(value);
                 }
@@ -317,14 +325,54 @@ public class BatchJobService {
                 case "D" -> {
                     Card value = new Card(); value.setCardNumber(part(data, 0, 16)); value.setCardAcctId(Long.parseLong(part(data, 16, 11)));
                     value.setCardCvvCode(Integer.parseInt(part(data, 27, 3))); value.setCardEmbossedName(part(data, 30, 50));
-                    value.setCardExpirationDate(java.time.LocalDate.parse(part(data, 80, 10))); value.setCardActiveStatus(part(data, 90, 1)); cards.save(value);
+                    value.setCardExpirationDate(parseDate(part(data, 80, 10))); value.setCardActiveStatus(part(data, 90, 1)); cards.save(value);
                 }
-                default -> { return new ImportResult(recordNumber, "UNKNOWN RECORD TYPE " + type); }
+                default -> { return new ImportResult(recordNumber, type, "Unknown record type encountered", true); }
             }
-            return new ImportResult(recordNumber, null);
+            return new ImportResult(recordNumber, type, null, false);
         } catch (RuntimeException exception) {
-            return new ImportResult(recordNumber, "INVALID " + exception.getMessage());
+            String type = line == null || line.isEmpty() ? null : line.substring(0, 1);
+            return new ImportResult(recordNumber, type, "INVALID " + exception.getMessage(), false);
         }
+    }
+
+    // CBIMPORT.cbl:152-160 ERROUT record: ERR-TIMESTAMP(26) | ERR-RECORD-TYPE(1) |
+    // ERR-SEQUENCE(7) | ERR-MESSAGE(50) | padding to the FD's 132 characters.
+    public String importErrorRecord(String line, long recordNumber, String message) {
+        String type = line == null || line.isEmpty() ? " " : line.substring(0, 1);
+        String head = BatchFileSupport.pad(currentDateStamp(), 26) + "|" + BatchFileSupport.pad(type, 1)
+                + "|" + "%07d".formatted(headerSequence(line, recordNumber) % 10_000_000)
+                + "|" + BatchFileSupport.pad(message, 50);
+        return BatchFileSupport.pad(head, 132);
+    }
+
+    public void logExportStats(ImportExportStats stats) {
+        log.info("CBEXPORT: Export completed");
+        log.info("CBEXPORT: Customers Exported: {}", "%09d".formatted(stats.of("C")));
+        log.info("CBEXPORT: Accounts Exported: {}", "%09d".formatted(stats.of("A")));
+        log.info("CBEXPORT: XRefs Exported: {}", "%09d".formatted(stats.of("X")));
+        log.info("CBEXPORT: Transactions Exported: {}", "%09d".formatted(stats.of("T")));
+        log.info("CBEXPORT: Cards Exported: {}", "%09d".formatted(stats.of("D")));
+        log.info("CBEXPORT: Total Records Exported: {}", "%09d".formatted(stats.total()));
+    }
+
+    // CBIMPORT.cbl:449-452 3000-VALIDATE-IMPORT — the validation paragraph is a stub
+    // that only displays fixed lines; there is no validation logic in the source.
+    public void logImportValidation() {
+        log.info("CBIMPORT: Import validation completed");
+        log.info("CBIMPORT: No validation errors detected");
+    }
+
+    public void logImportStats(ImportExportStats stats) {
+        log.info("CBIMPORT: Import completed");
+        log.info("CBIMPORT: Total Records Read: {}", "%09d".formatted(stats.total()));
+        log.info("CBIMPORT: Customers Imported: {}", "%09d".formatted(stats.of("C")));
+        log.info("CBIMPORT: Accounts Imported: {}", "%09d".formatted(stats.of("A")));
+        log.info("CBIMPORT: XRefs Imported: {}", "%09d".formatted(stats.of("X")));
+        log.info("CBIMPORT: Transactions Imported: {}", "%09d".formatted(stats.of("T")));
+        log.info("CBIMPORT: Cards Imported: {}", "%09d".formatted(stats.of("D")));
+        log.info("CBIMPORT: Errors Written: {}", "%09d".formatted(stats.errors()));
+        log.info("CBIMPORT: Unknown Record Types: {}", "%09d".formatted(stats.unknownTypes()));
     }
 
     public Path output(String name) {
@@ -402,6 +450,27 @@ public class BatchJobService {
         return value.substring(start, start + width).trim();
     }
     private static BigDecimal decimalText(String value) { return value.isBlank() ? null : new BigDecimal(value); }
+    private static java.time.LocalDate parseDate(String value) {
+        return value.isBlank() ? null : java.time.LocalDate.parse(value.trim());
+    }
+    private static long headerSequence(String line, long recordNumber) {
+        if (line != null && line.length() >= 36) {
+            try {
+                return Long.parseLong(line.substring(27, 36).trim());
+            } catch (NumberFormatException exception) {
+                return recordNumber;
+            }
+        }
+        return recordNumber;
+    }
+    private static String currentDateStamp() {
+        // FUNCTION CURRENT-DATE — 21 chars (YYYYMMDDHHMMSShh+offset) into a 26-char field.
+        OffsetDateTime now = OffsetDateTime.now();
+        int minutes = now.getOffset().getTotalSeconds() / 60;
+        String zone = (minutes < 0 ? "-" : "+")
+                + "%02d%02d".formatted(Math.abs(minutes) / 60, Math.abs(minutes) % 60);
+        return now.format(CURRENT_DATE_FORMAT) + zone;
+    }
     private static LocalDateTime parseTimestamp(String value) {
         return value.isBlank() ? null
                 : LocalDateTime.parse(value.trim(), EXPORT_TIMESTAMP_FORMAT);
@@ -428,6 +497,6 @@ public class BatchJobService {
     public record ReportLine(Transaction transaction, Long accountId, String type, String category) {}
     public record InterestWork(Account account, BigDecimal totalInterest, List<Transaction> transactions) {}
     public record CardStatement(Card card, Account account, Customer customer, List<Transaction> transactions) {}
-    public record ImportResult(long recordNumber, String error) {}
+    public record ImportResult(long recordNumber, String type, String error, boolean unknownType) {}
     private record Validation(int reason, String description) {}
 }

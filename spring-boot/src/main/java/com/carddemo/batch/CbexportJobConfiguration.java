@@ -5,8 +5,12 @@ import com.carddemo.repository.CardRepository;
 import com.carddemo.repository.CardXrefRepository;
 import com.carddemo.repository.CustomerRepository;
 import com.carddemo.repository.TransactionRepository;
+import org.springframework.batch.core.BatchStatus;
+import org.springframework.batch.core.ExitStatus;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
+import org.springframework.batch.core.StepExecution;
+import org.springframework.batch.core.StepExecutionListener;
 import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.batch.core.job.builder.JobBuilder;
 import org.springframework.batch.core.launch.support.RunIdIncrementer;
@@ -82,13 +86,42 @@ public class CbexportJobConfiguration {
 
     @Bean
     @StepScope
-    public ItemProcessor<Object, String> cbexportProcessor(BatchJobService service) {
+    public ImportExportStats cbexportStats() {
+        return new ImportExportStats();
+    }
+
+    @Bean
+    @StepScope
+    public ItemProcessor<Object, String> cbexportProcessor(BatchJobService service,
+            @Qualifier("cbexportStats") ImportExportStats stats) {
         return new ItemProcessor<>() {
             private long sequence;
 
             @Override
             public String process(Object item) {
-                return service.exportRecord(item, ++sequence);
+                String record = service.exportRecord(item, ++sequence);
+                stats.countType(record.substring(0, 1));
+                stats.countRecord();
+                return record;
+            }
+        };
+    }
+
+    @Bean
+    @StepScope
+    public StepExecutionListener cbexportStatsListener(BatchJobService service,
+            @Qualifier("cbexportStats") ImportExportStats stats) {
+        return new StepExecutionListener() {
+            @Override
+            public void beforeStep(StepExecution stepExecution) {
+            }
+
+            @Override
+            public ExitStatus afterStep(StepExecution stepExecution) {
+                if (stepExecution.getStatus() == BatchStatus.COMPLETED) {
+                    service.logExportStats(stats);
+                }
+                return stepExecution.getExitStatus();
             }
         };
     }
@@ -108,10 +141,12 @@ public class CbexportJobConfiguration {
     public Step cbexportStep(JobRepository repository, PlatformTransactionManager transactionManager,
                              ItemStreamReader<Object> cbexportReader,
                              ItemProcessor<Object, String> cbexportProcessor,
-                             FlatFileItemWriter<String> cbexportWriter) {
+                             FlatFileItemWriter<String> cbexportWriter,
+                             @Qualifier("cbexportStatsListener") StepExecutionListener cbexportStatsListener) {
         return new StepBuilder("cbexportStep", repository)
                 .<Object, String>chunk(50, transactionManager)
-                .reader(cbexportReader).processor(cbexportProcessor).writer(cbexportWriter).build();
+                .reader(cbexportReader).processor(cbexportProcessor).writer(cbexportWriter)
+                .listener(cbexportStatsListener).build();
     }
 
     private static RepositoryItemReader<Object> repositoryReader(
