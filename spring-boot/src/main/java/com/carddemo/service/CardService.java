@@ -409,25 +409,188 @@ public class CardService {
         }
     }
 
-    public CardResponse detail(String rawAccountId, String rawCardNumber) {
-        Long accountId = validateAccount(rawAccountId, false);
-        String cardNumber = validateCard(rawCardNumber, false);
-        if (accountId == null && cardNumber == null) {
-            throw new CobolApiException(HttpStatus.BAD_REQUEST, CobolMessages.NO_CHANGES_DETECTED);
+    /**
+     * COCRDSLC (transaction CCDL, map CCRDSLA) — the view-only card detail
+     * screen as a value object. The keyed read uses the card number only
+     * (S05-B1): the account edit must pass before the read runs, but the
+     * account is never compared with the card's owner (FR-S05-12,
+     * COCRDSLC.cbl:739-750 — a documented source defect kept verbatim).
+     */
+    public CardViewScreen initialScreen() {
+        // PGM-ENTER first display (:349-356): empty fields, fixed prompt.
+        return new CardViewScreen("", "", false, false, false, "acctsid",
+                CobolMessages.CARD_VIEW_PROMPT, null, null);
+    }
+
+    // PGM-ENTER from COCRDLIC (:339-348): the edits are skipped — the
+    // COMMAREA keys echo zero-padded (:342-343), the read runs at once and
+    // both inputs are protected (:505-508).
+    public CardViewScreen cardListScreen(String rawAccountId, String rawCardNumber) {
+        ViewEdits keys = new ViewEdits(Filter.VALID, Filter.VALID,
+                commareaEcho(rawAccountId, 11), commareaEcho(rawCardNumber, 16), null);
+        return cardView(keys, true);
+    }
+
+    // PGM-REENTER (:357-371): receive + 2200-EDIT-MAP-INPUTS; the keyed
+    // read runs only when INPUT-OK. cardListContext preserves the
+    // protected-input attribute across re-entries — the COMMAREA context
+    // (:505-508) round-trips as a hidden form field.
+    public CardViewScreen viewScreen(String rawAccountId, String rawCardNumber,
+                                     boolean cardListContext) {
+        return cardView(editCardViewInputs(rawAccountId, rawCardNumber), cardListContext);
+    }
+
+    // 1200-SETUP-SCREEN-VARS + 1300-SETUP-SCREEN-ATTRS (:457-557).
+    private CardViewScreen cardView(ViewEdits edits, boolean cardListContext) {
+        boolean acctRed = edits.acctFlag() != Filter.VALID;
+        boolean cardRed = edits.cardFlag() != Filter.VALID;
+        String error = edits.message();
+        Card found = null;
+        if (!edits.inputError()) {
+            // 9100-GETCARD-BYACCTCARD (:736-773): keyed by card number only.
+            try {
+                found = cardRepository.findById(edits.cardNumber()).orElse(null);
+            } catch (RuntimeException exception) {
+                // :762-771 — RESP OTHER: file-error frame; only the account
+                // flag is forced because WS-RETURN-MSG was still off.
+                error = CobolMessages.fileError("CARDDAT");
+                acctRed = true;
+            }
+            if (found == null && error == null) {
+                // :755-761 — NOTFND flags both, entered values retained.
+                error = CobolMessages.CARD_COMBINATION_NOT_FOUND;
+                acctRed = true;
+                cardRed = true;
+            }
         }
-        Card card;
-        if (cardNumber != null) {
-            card = cardRepository.findById(cardNumber).orElseThrow(
-                    () -> new CobolApiException(HttpStatus.NOT_FOUND,
-                            CobolMessages.CARD_COMBINATION_NOT_FOUND));
-            if (accountId != null && !accountId.equals(card.getCardAcctId())) {
-                throw new CobolApiException(HttpStatus.NOT_FOUND,
-                        CobolMessages.CARD_COMBINATION_NOT_FOUND);
+        String info = found != null ? CobolMessages.CARD_VIEW_FOUND
+                : CobolMessages.CARD_VIEW_PROMPT;
+        // :515-524 — the -1 length lands on account, else card, else account.
+        String cursor = acctRed ? "acctsid" : cardRed ? "cardsid" : "acctsid";
+        return new CardViewScreen(
+                echo(edits.acctFlag(), edits.accountId()),
+                echo(edits.cardFlag(), edits.cardNumber()),
+                acctRed, cardRed, cardListContext, cursor, info, error,
+                toCardBlock(found));
+    }
+
+    // :462-471, :533-551 — BLANK redisplays `*` red on re-entry; NOT-OK
+    // redisplays cleared because the COMMAREA key was zeroed; a valid or
+    // read-failed field keeps its entered value.
+    private static String echo(Filter flag, String entered) {
+        return switch (flag) {
+            case BLANK -> "*";
+            case NOT_OK -> "";
+            case VALID -> entered;
+        };
+    }
+
+    private enum Filter { VALID, BLANK, NOT_OK }
+
+    private record ViewEdits(Filter acctFlag, Filter cardFlag,
+                             String accountId, String cardNumber, String message) {
+        boolean inputError() {
+            return acctFlag != Filter.VALID || cardFlag != Filter.VALID;
+        }
+    }
+
+    // 2200-EDIT-MAP-INPUTS (:608-641): account edit then card edit. The
+    // message slot is first-writer-wins (IF WS-RETURN-MSG-OFF, :657/:696)
+    // and the both-blank case replaces it with NO-INPUT-RECEIVED (:637-640).
+    private ViewEdits editCardViewInputs(String rawAccountId, String rawCardNumber) {
+        String acct = mapField(rawAccountId, 11);
+        String card = mapField(rawCardNumber, 16);
+        String message = null;
+
+        // 2210-EDIT-ACCOUNT (:647-679)
+        Filter acctFlag;
+        if (unsupplied(acct)) {
+            acctFlag = Filter.BLANK;                                   // :651-660
+            message = CobolMessages.CARD_ACCOUNT_REQUIRED;
+        } else if (!acct.matches("\\d{11}")) {
+            acctFlag = Filter.NOT_OK;                                  // :665-674
+            message = CobolMessages.CARD_ACCOUNT_FILTER_INVALID;
+        } else {
+            acctFlag = Filter.VALID;
+        }
+
+        // 2220-EDIT-CARD (:685-719)
+        Filter cardFlag;
+        if (unsupplied(card)) {
+            cardFlag = Filter.BLANK;                                   // :691-701
+            if (message == null) {
+                message = CobolMessages.CARD_NUMBER_REQUIRED;
+            }
+        } else if (!card.matches("\\d{16}")) {
+            cardFlag = Filter.NOT_OK;                                  // :706-715
+            if (message == null) {
+                message = CobolMessages.CARD_FILTER_INVALID;
             }
         } else {
-            card = cardRepository.findByCardAcctId(accountId).stream().findFirst()
-                    .orElseThrow(() -> new CobolApiException(HttpStatus.NOT_FOUND,
-                            CobolMessages.CARD_ACCOUNT_NOT_FOUND));
+            cardFlag = Filter.VALID;
+        }
+
+        if (acctFlag == Filter.BLANK && cardFlag == Filter.BLANK) {
+            message = CobolMessages.NO_INPUT_RECEIVED;                 // :637-640
+        }
+        return new ViewEdits(acctFlag, cardFlag, acct, card, message);
+    }
+
+    // Map input arrives inside an X(11)/X(16) field: longer input
+    // truncates before the edits (the S-02 X(11) convention).
+    private static String mapField(String raw, int width) {
+        return raw == null ? "" : raw.substring(0, Math.min(raw.length(), width));
+    }
+
+    // "Not supplied" (:613-620, :651-653, :691-693): `*` followed only by
+    // blanks clears to LOW-VALUES, and an all-zero field packs to zero
+    // digits — any length of only '0' characters counts as blank. A `*`
+    // in leading position followed by other input is NOT-OK, not blank.
+    private static boolean unsupplied(String field) {
+        if (field.isBlank() || (field.startsWith("*") && field.substring(1).isBlank())) {
+            return true;
+        }
+        return field.chars().allMatch(c -> c == '0');
+    }
+
+    // CDEMO-ACCT-ID/CDEMO-CARD-NUM are 9(11)/9(16) numerics: a card-list
+    // hand-off echoes them zero-padded (:342-343). Non-numeric input keeps
+    // its text — the keyed read then uses the card number as passed.
+    private static String commareaEcho(String raw, int width) {
+        if (raw == null || raw.isBlank() || !raw.matches("\\d+")) {
+            return raw == null ? "" : raw;
+        }
+        String digits = raw.length() > width ? raw.substring(0, width) : raw;
+        return "0".repeat(width - digits.length()) + digits;
+    }
+
+    private static CardViewScreen.CardBlock toCardBlock(Card card) {
+        if (card == null) {
+            return null;
+        }
+        LocalDate expiry = card.getCardExpirationDate();
+        return new CardViewScreen.CardBlock(
+                card.getCardEmbossedName(),
+                expiry == null ? "" : "%02d".formatted(expiry.getMonthValue()),
+                expiry == null ? "" : "%04d".formatted(expiry.getYear()),
+                card.getCardActiveStatus());
+    }
+
+    /**
+     * REST surface of the same view-path resolution (FR-S05-02..13):
+     * failures surface as HTTP-mapped exceptions instead of screen state.
+     * The read is keyed by card number only — no account cross-check
+     * (FR-S05-12).
+     */
+    public CardResponse detail(String rawAccountId, String rawCardNumber) {
+        ViewEdits edits = editCardViewInputs(rawAccountId, rawCardNumber);
+        if (edits.inputError()) {
+            throw new CobolApiException(HttpStatus.BAD_REQUEST, edits.message());
+        }
+        Card card = cardRepository.findById(edits.cardNumber()).orElse(null);
+        if (card == null) {
+            throw new CobolApiException(HttpStatus.NOT_FOUND,
+                    CobolMessages.CARD_COMBINATION_NOT_FOUND);
         }
         return response(card);
     }

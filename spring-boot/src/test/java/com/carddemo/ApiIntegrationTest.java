@@ -122,11 +122,23 @@ class ApiIntegrationTest {
                 .andExpect(jsonPath("$.screen.rows[0].cardNumber")
                         .value("1111222233334444"))
                 .andExpect(jsonPath("$.pageState.screenNumber").value(1));
-        mockMvc.perform(get("/api/cards/1111222233334444").session(session))
+        mockMvc.perform(get("/api/cards/1111222233334444")
+                        .param("accountId", "00000000001").session(session))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.accountId").value(1))
                 .andExpect(jsonPath("$.cvvCode").value("123"))
                 .andExpect(jsonPath("$.embossedName").value(containsString("Byron")));
+        // S-05 / COCRDSLC edits (:651-660): a missing account is the
+        // field's blank edit, not a lookup — the read is gated on both.
+        mockMvc.perform(get("/api/cards/1111222233334444").session(session))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message").value("Account number not provided"));
+        // FR-S05-12: the keyed read uses the card number alone — the
+        // account is never cross-checked against the card's owner.
+        mockMvc.perform(get("/api/cards/1111222233334444")
+                        .param("accountId", "00000000002").session(session))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.accountId").value(1));
         // A filter complaint redisplays on the screen, like the 3270 map.
         mockMvc.perform(get("/api/cards").param("cardNumber", "123")
                         .session(session))
@@ -139,7 +151,8 @@ class ApiIntegrationTest {
     void cardUpdateValidatesAndRejectsConcurrentChange() throws Exception {
         MockHttpSession session = signon("ADMIN001", "PASSWORD", "/api/admin/menu");
         JsonNode detail = objectMapper.readTree(mockMvc.perform(
-                        get("/api/cards/1111222233334444").session(session))
+                        get("/api/cards/1111222233334444")
+                                .param("accountId", "00000000001").session(session))
                 .andExpect(status().isOk()).andReturn().getResponse().getContentAsString());
         ObjectNode stale = cardUpdate(detail);
         ((ObjectNode) stale.get("original")).put("embossedName", "Someone Else");

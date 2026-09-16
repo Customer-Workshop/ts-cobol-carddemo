@@ -316,6 +316,75 @@ body {
     cursor: pointer;
 }
 
+/* CCRDSLA (card view) — single-column 3270-style label grid. */
+.card-view .view-title {
+    color: #ff0;
+    text-align: center;
+}
+
+.card-view .view-grid {
+    display: flex;
+    flex-direction: column;
+}
+
+.card-view .view-row {
+    display: flex;
+    min-height: 1.2em;
+}
+
+.card-view .view-cell {
+    white-space: pre;
+    min-width: 0;
+    overflow: hidden;
+}
+
+.card-view .field-label {
+    white-space: pre;
+    color: #40e0d0;
+}
+
+.card-view .field-value {
+    white-space: pre;
+    color: #0f0;
+    text-decoration: underline;
+    text-decoration-color: #0f0;
+}
+
+.card-view input {
+    background: #000;
+    color: #0f0;
+    border: none;
+    border-bottom: 1px solid #0f0;
+    font: inherit;
+}
+
+.card-view input[readonly] {
+    border-bottom-style: dotted;
+}
+
+.card-view input.field-red {
+    color: #f00;
+    border-bottom-color: #f00;
+}
+
+.card-view .info-line {
+    color: #40e0d0;
+    margin-top: 1.5em;
+}
+
+.card-view .key-hints {
+    color: #ff0;
+}
+
+.card-view .form-actions button {
+    background: #000;
+    color: #0f0;
+    border: 1px solid #0f0;
+    font: inherit;
+    margin-right: 1em;
+    cursor: pointer;
+}
+
 .tran-add .screen-title {
     color: #ff0;
     text-align: center;

@@ -113,6 +113,7 @@ public class MenuService {
             "COTRN02C", "/transactions/add",
             "COUSR00C", "/api/admin/users",
             "COUSR01C", "/api/admin/users",
+            "COCRDSLC", "/cards/view",
             "COBIL00C", "/bill-payment",
             "COACTVWC", "/accounts/view");
 

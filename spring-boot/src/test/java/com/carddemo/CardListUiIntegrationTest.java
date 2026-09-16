@@ -276,15 +276,15 @@ class CardListUiIntegrationTest {
         MockHttpSession session = signon();
         CardListPageState state = stateOf(page(session));
 
-        // COCRDSLC has no UI route yet — the coming-soon idiom, not a dead
-        // link. The message emits the option name DELIMITED BY SPACE
+        // S-05 registered the COCRDSLC route: 'S' now navigates to the
+        // card view with the row's keys. 'U' still hits the disabled
+        // COCRDUPC target — the coming-soon idiom, not a dead link. The
+        // message emits the option name DELIMITED BY SPACE
         // (COMEN01C.cbl:172-176), so only the first word reaches the screen.
         press(session, "ENTER", state, null, null, "S", "", "", "", "", "", "")
-                .andExpect(status().isOk())
-                .andExpect(view().name("card-list"))
-                .andExpect(model().attribute("messageStyle", "info"))
-                .andExpect(model().attribute("message",
-                        "This option Creditis coming soon ..."));
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl(
+                        "/cards/view?accountId=1&cardNumber=0000000000000001"));
 
         press(session, "ENTER", state, null, null, "", "", "U", "", "", "", "")
                 .andExpect(status().isOk())

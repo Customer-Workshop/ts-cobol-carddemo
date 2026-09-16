@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout :: layout('CardDemo', 'CCDL', 'COCRDSLC', ~{::content})}">
+<head>
+    <title>CardDemo</title>
+</head>
+<body>
+<!-- CCRDSLA map (COCRDSL.bms): element ids are the BMS field names
+     lowercased. A null card block renders as LOW-VALUES output — the
+     labels stay, the value cells stay blank. The card-list context flag
+     mirrors the COMMAREA FROM-PROGRAM context across re-entries so the
+     inputs stay protected (COCRDSLC.cbl:505-508). -->
+<div th:fragment="content" class="card-view">
+    <p class="view-title">View Credit Card Detail</p>
+    <form id="card-view-form" method="post" th:action="@{/cards/view}">
+        <input type="hidden" name="returnUrl" th:value="${returnUrl}">
+        <input type="hidden" name="cardListContext" th:value="${screen.inputsProtected}">
+        <div class="view-grid">
+            <div class="view-row">
+                <span class="view-cell">
+                    <label class="field-label" for="acctsid">Account Number    :</label>
+                    <input id="acctsid" name="accountId" type="text" maxlength="11" size="11"
+                           autocomplete="off" inputmode="numeric"
+                           th:value="${screen.accountEcho}"
+                           th:classappend="${screen.accountFieldRed} ? 'field-red'"
+                           th:readonly="${screen.inputsProtected}"
+                           th:attr="autofocus=${screen.cursorField == 'acctsid' ? 'autofocus' : null}">
+                </span>
+            </div>
+            <div class="view-row">
+                <span class="view-cell">
+                    <label class="field-label" for="cardsid">Card Number       :</label>
+                    <input id="cardsid" name="cardNumber" type="text" maxlength="16" size="16"
+                           autocomplete="off" inputmode="numeric"
+                           th:value="${screen.cardEcho}"
+                           th:classappend="${screen.cardFieldRed} ? 'field-red'"
+                           th:readonly="${screen.inputsProtected}"
+                           th:attr="autofocus=${screen.cursorField == 'cardsid' ? 'autofocus' : null}">
+                </span>
+            </div>
+            <div class="view-row">
+                <span class="view-cell">
+                    <span class="field-label">Name on card      :</span>
+                    <span class="field-value" id="crdname" th:text="${screen.card?.embossedName}"></span>
+                </span>
+            </div>
+            <div class="view-row">
+                <span class="view-cell">
+                    <span class="field-label">Card Active Y/N   : </span>
+                    <span class="field-value" id="crdstcd" th:text="${screen.card?.activeStatus}"></span>
+                </span>
+            </div>
+            <div class="view-row">
+                <span class="view-cell">
+                    <span class="field-label">Expiry Date       : </span>
+                    <span class="field-value" id="expmon" th:text="${screen.card?.expiryMonth}"></span>
+                    <span class="field-value">/</span>
+                    <span class="field-value" id="expyear" th:text="${screen.card?.expiryYear}"></span>
+                </span>
+            </div>
+        </div>
+
+        <p class="info-line" id="infomsg" th:text="${screen.infoMessage}"></p>
+        <p class="key-hints">ENTER=Search Cards  F3=Exit</p>
+        <div class="form-actions">
+            <button type="submit" name="aid" value="ENTER">ENTER=Search Cards</button>
+            <button type="submit" name="aid" value="PF3" formnovalidate>F3=Exit</button>
+        </div>
+    </form>
+    <script>
+        // 3270 AID parity (S-05, COCRDSLC.cbl:291-299): F3 exits; every
+        // other key submits as its own aid and the program remaps it to
+        // ENTER — this screen has no invalid-key message.
+        document.addEventListener('keydown', function (event) {
+            if (/^F([1-9]|1[0-2])$/.test(event.key)) {
+                event.preventDefault();
+                var form = document.getElementById('card-view-form');
+                var aid = document.createElement('input');
+                aid.type = 'hidden';
+                aid.name = 'aid';
+                aid.value = event.key === 'F3' ? 'PF3' : event.key;
+                form.appendChild(aid);
+                form.submit();
+            }
+        });
+    </script>
+</div>
+</body>
+</html>

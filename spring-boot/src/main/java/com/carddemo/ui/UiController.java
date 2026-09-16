@@ -14,6 +14,8 @@ import com.carddemo.service.AccountViewScreen;
 import com.carddemo.service.AccountViewService;
 import com.carddemo.service.AuthService;
 import com.carddemo.service.BillingService;
+import com.carddemo.service.CardService;
+import com.carddemo.service.CardViewScreen;
 import com.carddemo.service.MenuService;
 import com.carddemo.service.TransactionListService;
 import com.carddemo.service.TransactionService;
@@ -51,18 +53,21 @@ public class UiController {
     private final TransactionListService transactionListService;
     private final TransactionService transactionService;
     private final BillingService billingService;
+    private final CardService cardService;
 
     public UiController(AuthService authService, MenuService menuService,
                         AccountViewService accountViewService,
                         TransactionListService transactionListService,
                         TransactionService transactionService,
-                        BillingService billingService) {
+                        BillingService billingService,
+                        CardService cardService) {
         this.authService = authService;
         this.menuService = menuService;
         this.accountViewService = accountViewService;
         this.transactionListService = transactionListService;
         this.transactionService = transactionService;
         this.billingService = billingService;
+        this.cardService = cardService;
     }
 
     @ModelAttribute
@@ -284,6 +289,53 @@ public class UiController {
     }
 
     private void renderAccountView(Model model, AccountViewScreen screen, String returnUrl) {
+        model.addAttribute("screen", screen);
+        model.addAttribute("message", screen.errorMessage());
+        model.addAttribute("returnUrl", internalRoute(returnUrl));
+    }
+
+    // COCRDSLC web surface (tran CCDL, map CCRDSLA). S05-B2: a menu entry
+    // is the first display; accountId + cardNumber together are the
+    // card-list XCTL contract (COCRDSLC.cbl:339-348) — the edits are
+    // skipped, the read runs at once and the inputs render protected.
+    @GetMapping("/cards/view")
+    public String cardView(@RequestParam(name = "accountId", required = false) String accountId,
+                           @RequestParam(name = "cardNumber", required = false) String cardNumber,
+                           @RequestParam(name = "returnUrl", required = false) String returnUrl,
+                           Model model) {
+        boolean cardListContext = accountId != null && !accountId.isBlank()
+                && cardNumber != null && !cardNumber.isBlank();
+        CardViewScreen screen = cardListContext
+                ? cardService.cardListScreen(accountId, cardNumber)
+                : cardService.initialScreen();
+        // S05-B3: the PF3 caller is COCRDLIC when the card list handed us
+        // its keys (CDEMO-FROM-PROGRAM); a supplied returnUrl wins.
+        String caller = returnUrl == null && cardListContext
+                ? menuService.uiRouteForProgram("COCRDLIC") : returnUrl;
+        renderCardView(model, screen, caller);
+        return "card-view";
+    }
+
+    // AID handling (COCRDSLC.cbl:284-299): PF3 exits to the caller route.
+    // Every other AID is forced to ENTER — this program has no
+    // invalid-key message, unlike the S-01 screens.
+    @PostMapping("/cards/view")
+    public String submitCardView(
+            @RequestParam(name = "aid", defaultValue = "ENTER") String aid,
+            @RequestParam(name = "accountId", required = false) String accountId,
+            @RequestParam(name = "cardNumber", required = false) String cardNumber,
+            @RequestParam(name = "cardListContext", defaultValue = "false") boolean cardListContext,
+            @RequestParam(name = "returnUrl", required = false) String returnUrl,
+            Model model) {
+        if ("PF3".equals(aid)) {
+            return "redirect:" + internalRoute(returnUrl);
+        }
+        renderCardView(model,
+                cardService.viewScreen(accountId, cardNumber, cardListContext), returnUrl);
+        return "card-view";
+    }
+
+    private void renderCardView(Model model, CardViewScreen screen, String returnUrl) {
         model.addAttribute("screen", screen);
         model.addAttribute("message", screen.errorMessage());
         model.addAttribute("returnUrl", internalRoute(returnUrl));
