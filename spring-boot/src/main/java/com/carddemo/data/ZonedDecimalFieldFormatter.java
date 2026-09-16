@@ -7,7 +7,10 @@ import java.time.LocalDate;
 
 /**
  * Write-side companion to {@link CobolFieldReader}: formats Java values back
- * into the COBOL field images used by the CardDemo datasets.
+ * into the COBOL field images used by the CardDemo datasets. Complements
+ * {@link CobolFieldFormatter} (zoned DISPLAY + PIC X) with the pieces the
+ * read/verify jobs need: unsigned PIC 9, COMP-3 packed bytes, X(10) dates,
+ * and a nullable zoned variant that emits spaces for absent fields.
  *
  * Numeric output uses the same `-fsign=EBCDIC` overpunch convention the
  * reader consumes: positive last digit -> '{' (0) or 'A'-'I' (1-9),
@@ -22,11 +25,7 @@ public final class ZonedDecimalFieldFormatter {
 
     /** PIC X(length): space-padded/truncated text; null -> all spaces. */
     public static String text(String value, int length) {
-        String text = value == null ? "" : value;
-        if (text.length() >= length) {
-            return text.substring(0, length);
-        }
-        return text + " ".repeat(length - text.length());
+        return CobolFieldFormatter.pad(value, length);
     }
 
     /** PIC 9(digits) DISPLAY: zero-padded digits; null -> all spaces. */
@@ -47,7 +46,8 @@ public final class ZonedDecimalFieldFormatter {
     /**
      * PIC S9(integerDigits)V(scale) DISPLAY (zoned decimal): digits+scale
      * chars with the sign overpunched on the last digit. null -> all spaces
-     * (the field content a blank record area would hold).
+     * (the field content a blank record area would hold — unlike
+     * {@link CobolFieldFormatter#signedDecimal}, which maps null to zero).
      */
     public static String zoned(BigDecimal value, int integerDigits, int scale) {
         int width = integerDigits + scale;
