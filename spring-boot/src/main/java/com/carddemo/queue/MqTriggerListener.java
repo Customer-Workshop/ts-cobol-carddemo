@@ -1,6 +1,7 @@
 package com.carddemo.queue;
 
 import com.carddemo.service.AcctInquiryConsumer;
+import com.carddemo.service.AuthProcessingService;
 import com.carddemo.service.DateTimeConsumer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,17 +24,22 @@ public class MqTriggerListener implements ApplicationRunner {
 
     private final AcctInquiryConsumer acctInquiryConsumer;
     private final DateTimeConsumer dateTimeConsumer;
+    private final AuthProcessingService authProcessingService;
 
     public MqTriggerListener(AcctInquiryConsumer acctInquiryConsumer,
-                             DateTimeConsumer dateTimeConsumer) {
+                             DateTimeConsumer dateTimeConsumer,
+                             AuthProcessingService authProcessingService) {
         this.acctInquiryConsumer = acctInquiryConsumer;
         this.dateTimeConsumer = dateTimeConsumer;
+        this.authProcessingService = authProcessingService;
     }
 
     @Override
     public void run(ApplicationArguments args) {
         acctInquiryConsumer.register();
         dateTimeConsumer.register();
-        log.info("MQ consumers registered on {} and {}", MqQueues.REQUEST_ACCT, MqQueues.REQUEST_DATE);
+        authProcessingService.register();
+        log.info("MQ consumers registered on {}, {} and {}",
+                MqQueues.REQUEST_ACCT, MqQueues.REQUEST_DATE, MqQueues.REQUEST_PAUTH);
     }
 }

@@ -22,6 +22,12 @@ public final class MqQueues {
     /** Hardcoded error queue of both programs ('CARD.DEMO.ERROR', COACCT01.cbl:294). */
     public static final String ERROR = "carddemo.error";
 
+    /** Input queue drained by AuthProcessingService (CP00/COPAUA0C; 'AWS.M2.CARDDEMO.PAUTH.REQUEST'). */
+    public static final String REQUEST_PAUTH = "carddemo.pauth.request";
+
+    /** Default PAUTH reply queue a requester names in MQMD-REPLYTOQ ('AWS.M2.CARDDEMO.PAUTH.REPLY'). */
+    public static final String REPLY_PAUTH = "carddemo.pauth.reply";
+
     private MqQueues() {
     }
 }
