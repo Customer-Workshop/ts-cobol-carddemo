@@ -19,6 +19,8 @@ public class BatchAdminController {
     public JobLaunchResponse launch(@PathVariable String jobName,
                                     @RequestParam Map<String, String> parameters) {
         JobExecution execution = launcher.launch(jobName, parameters);
-        return new JobLaunchResponse(jobName, execution.getId(), execution.getStatus().name());
+        return new JobLaunchResponse(jobName, execution.getId(), execution.getStatus().name(),
+                execution.getExitStatus().getExitCode(),
+                execution.getExitStatus().getExitDescription());
     }
 }

@@ -22,6 +22,11 @@ import org.springframework.transaction.PlatformTransactionManager;
 
 import java.nio.file.Path;
 
+/**
+ * Orphan validation utility (S14-B8): CBTRN01C has no JCL caller upstream — it
+ * is a validate-only DALYTRAN sweep kept launchable on demand, deliberately not
+ * part of the daily posting chain (see BatchJobService.DAILY_POSTING_CHAIN).
+ */
 @Configuration
 public class Cbtrn01JobConfiguration {
     @Bean

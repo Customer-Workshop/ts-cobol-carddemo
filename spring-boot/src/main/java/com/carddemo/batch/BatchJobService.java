@@ -47,6 +47,15 @@ public class BatchJobService {
 
     private static final DateTimeFormatter CURRENT_DATE_FORMAT =
             DateTimeFormatter.ofPattern("yyyyMMddHHmmssSS");
+
+    /**
+     * Documented daily posting order (S14-B1), replacing the CA-7 SCHID 030 chain
+     * CLOSEFIL→CBPAUP0J→POSTTRAN→WAITSTEP→OPENFIL: posting runs, then the wait
+     * step. CLOSEFIL/OPENFIL are no-ops (the target store is always on) and the
+     * Control-M TRANBKP variant is a managed database backup outside this stream.
+     * cbtrn01Job is an orphan validation utility — deliberately not in the chain.
+     */
+    public static final List<String> DAILY_POSTING_CHAIN = List.of("cbtrn02Job", "waitStepJob");
     private final AccountRepository accounts;
     private final CardRepository cards;
     private final CardXrefRepository xrefs;
@@ -114,13 +123,20 @@ public class BatchJobService {
         });
         balance.setBalance(zero(balance.getBalance()).add(record.amount()));
         balances.save(balance);
-        account.setAcctCurrBal(zero(account.getAcctCurrBal()).add(record.amount()));
-        if (record.amount().signum() >= 0) {
-            account.setAcctCurrCycCredit(zero(account.getAcctCurrCycCredit()).add(record.amount()));
-        } else {
-            account.setAcctCurrCycDebit(zero(account.getAcctCurrCycDebit()).add(record.amount()));
+        // 2800-UPDATE-ACCOUNT-REC (CBTRN02C.cbl:545-559): a REWRITE INVALID KEY only
+        // sets reason 109, which never reaches the reject file — the validate/post
+        // branch (:211-215) already chose posting, so the record is counted but not
+        // rejected and the TRANFILE write still runs. A vanished account row maps
+        // to the same dead end here: no reject, and posting continues.
+        if (accounts.existsById(account.getAcctId())) {
+            account.setAcctCurrBal(zero(account.getAcctCurrBal()).add(record.amount()));
+            if (record.amount().signum() >= 0) {
+                account.setAcctCurrCycCredit(zero(account.getAcctCurrCycCredit()).add(record.amount()));
+            } else {
+                account.setAcctCurrCycDebit(zero(account.getAcctCurrCycDebit()).add(record.amount()));
+            }
+            accounts.save(account);
         }
-        accounts.save(account);
         transactions.save(toTransaction(record));
         return new PostResult(null, record);
     }
@@ -419,8 +435,10 @@ public class BatchJobService {
             reason = 102;
             description = "OVERLIMIT TRANSACTION";
         }
-        if (account.getAcctExpirationDate() != null && record.originTimestamp() != null
-                && account.getAcctExpirationDate().isBefore(record.originTimestamp().toLocalDate())) {
+        // The COBOL compares the X(10) expiry field as a string (:414-419): a
+        // blank expiration sorts before any date, so a missing expiry rejects.
+        if (record.originTimestamp() != null && (account.getAcctExpirationDate() == null
+                || account.getAcctExpirationDate().isBefore(record.originTimestamp().toLocalDate()))) {
             reason = 103;
             description = "TRANSACTION RECEIVED AFTER ACCT EXPIRATION";
         }
