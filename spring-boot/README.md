@@ -87,6 +87,14 @@ transactions and export/import; repository readers supply VSAM-equivalent data.
 | `cbstm03Job` / `cbstm03Step` | `CBSTM03A`/`CBSTM03B`, `CREASTMT.JCL` | `STATEMNT.PS`, `STATEMNT.HTML` |
 | `cbexportJob` / `cbexportStep` | `CBEXPORT`, export JCL | `EXPORT.DATA` |
 | `cbimportJob` / `cbimportStep` | `CBIMPORT`, import JCL | normalized rows, `CBIMPORT.errors` |
+| `readacctJob` / `readacctStep` | `CBACT01C`, `READACCT.jcl` | `ACCTDATA.PSCOMP`, `ACCTDATA.ARRYPS`, `ACCTDATA.VBPS`, job log |
+| `readcardJob` / `readcardStep` | `CBACT02C`, `READCARD.jcl` | job log |
+| `readcustJob` / `readcustStep` | `CBCUS01C`, `READCUST.jcl` | job log |
+| `readxrefJob` / `readxrefStep` | `CBACT03C`, `READXREF.jcl` | job log |
+
+The four read/verify jobs keep the CA-7 SCHID=030 chain order
+(`readacctJob` -> `readcardJob` -> `readcustJob` -> `readxrefJob`): launch
+each only after the previous completes (see `BatchJobService.JOB_ORDER`).
 
 `CORPT00C` validates the request, launches `cbtrn03Job` with `startDate` and
 `endDate`, and returns the Spring Batch execution identity. Example:
