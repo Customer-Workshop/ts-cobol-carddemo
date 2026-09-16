@@ -9,7 +9,7 @@ parity pass, and sign-off under this engagement. Prior .NET-engagement statuses 
 
 | Stream | Type | Entry point | Status | Last update | Notes |
 |---|---|---|---|---|---|
-| S-01 Sign-on + menu shell | ONLINE | CC00/CM00/CA00 | signed off — STOP E awaiting merge auth | 2026-09-16 | Audit PASS w/ 4 LOW + 4 INFO findings (none blocking); 69 tests green; Postgres smoke live-verified; evidence in functional/CARDDEMO/evidence/s01/; sign-off+audit docs committed |
+| S-01 Sign-on + menu shell | ONLINE | CC00/CM00/CA00 | SIGNED OFF — merge to main pending human merge of PR #105 | 2026-09-16 | Audit PASS w/ 4 LOW + 4 INFO findings (none blocking); 69 tests green; Postgres smoke live-verified; evidence in functional/CARDDEMO/evidence/s01/; owner authorized ("go ahead") but main merges need a human click |
 | S-02 Account View | ONLINE | CAVW | baseline ported — pre-STOP C | 2026-09-15 | AccountController/AccountViewService in baseline |
 | S-03 Account Update | ONLINE | CAUP | baseline ported — pre-STOP C | 2026-09-15 | AccountUpdateController/Service in baseline |
 | S-04 Card List | ONLINE | CCLI | baseline ported — pre-STOP C | 2026-09-15 | CardController (list) in baseline |
@@ -32,9 +32,11 @@ parity pass, and sign-off under this engagement. Prior .NET-engagement statuses 
 | S-21 Tran-type maintenance (ext) | ONLINE+BATCH | CTLI/CTTU + MNTTRDB2 | not started | 2026-09-15 | DB2 extension -> Postgres tables + JPA (B-006) |
 | S-22 VSAM-MQ demo (ext) | SUBTRANSACTION | CDRA/CDRD (MQ) | not started | 2026-09-15 | MQ request/reply demo -> in-process queue seam (B-007) |
 
+Operating mode (2026-09-16, owner): sequential plan order is the spine; independent streams run in parallel — one child per stream, reconciled on the engagement branch; Flyway ranges pre-allocated per stream (S-02→V100x … S-22→V290x) to prevent migration collisions; STOP C/E batched across streams. Doc-authoring children running: S-02/05/07/08, S-09/03/06, S-04/11/12, S-10/14/15/16, S-17/18, S-19..22.
+
 Cross-cutting gaps vs target state (tracked for Phase 0/1):
-- Persistence is H2; target is PostgreSQL — add Postgres profile + docker-compose + Flyway migrations.
-- No web UI at all (REST only) — "simple web UI" (Thymeleaf) owed per online stream.
-- No CI workflow — owed in Phase 0.
-- CSUTLDTC Lillian/mask date validation inlined as LocalDate.parse — port the utility (S09-B4).
-- COBSWAIT wait-step seam and COBDATFT date-edit utility not ported (B-002, B-003).
+- ~~Persistence is H2~~ — DONE (S-01 W1): Postgres profile + docker-compose + Flyway V1-V3.
+- ~~No web UI~~ — in progress per stream (S-01 done: sign-on + both menus; each online stream adds its screens).
+- ~~No CI workflow~~ — DONE (S-01 W1): `.github/workflows/ci.yml` gate green.
+- CSUTLDTC Lillian/mask date validation inlined as LocalDate.parse — port the utility (S09-B4, S-09 owns).
+- COBSWAIT wait-step seam and COBDATFT date-edit utility not ported (B-002 S-14 owns, B-003 S-17 owns).
