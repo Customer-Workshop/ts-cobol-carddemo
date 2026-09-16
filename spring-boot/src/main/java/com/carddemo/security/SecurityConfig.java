@@ -2,6 +2,7 @@ package com.carddemo.security;
 
 import com.carddemo.api.ErrorResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -40,27 +41,46 @@ public class SecurityConfig {
                 .securityContext(context -> context.securityContextRepository(repository))
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/", "/css/**").permitAll()
+                        .requestMatchers("/", "/css/**", "/signon").permitAll()
                         .requestMatchers("/api/auth/signon").permitAll()
                         .requestMatchers("/h2-console/**").hasRole("ADMIN")
-                        .requestMatchers("/api/admin/**").hasRole("ADMIN")
+                        .requestMatchers("/admin/**", "/api/admin/**").hasRole("ADMIN")
                         .anyRequest().authenticated())
                 .exceptionHandling(errors -> errors
-                        .authenticationEntryPoint(jsonEntryPoint(objectMapper))
-                        .accessDeniedHandler(jsonDeniedHandler(objectMapper)))
+                        .authenticationEntryPoint(entryPoint(objectMapper))
+                        .accessDeniedHandler(deniedHandler(objectMapper)))
                 .formLogin(AbstractHttpConfigurer::disable)
                 .httpBasic(AbstractHttpConfigurer::disable);
         return http.build();
     }
 
-    private AuthenticationEntryPoint jsonEntryPoint(ObjectMapper mapper) {
-        return (request, response, exception) ->
+    // The UI and JSON surfaces share the session: unsigned UI navigation is
+    // sent to the sign-on screen (the 3270 re-sign-on flow), while API and
+    // console paths keep their JSON error contract.
+    private AuthenticationEntryPoint entryPoint(ObjectMapper mapper) {
+        return (request, response, exception) -> {
+            if (isApiSurface(request)) {
                 writeError(mapper, response, HttpServletResponse.SC_UNAUTHORIZED, "Authentication required");
+            } else {
+                response.sendRedirect(request.getContextPath() + "/signon");
+            }
+        };
     }
 
-    private AccessDeniedHandler jsonDeniedHandler(ObjectMapper mapper) {
-        return (request, response, exception) ->
+    private AccessDeniedHandler deniedHandler(ObjectMapper mapper) {
+        return (request, response, exception) -> {
+            if (isApiSurface(request)) {
                 writeError(mapper, response, HttpServletResponse.SC_FORBIDDEN, "Access denied");
+            } else {
+                response.sendError(HttpServletResponse.SC_FORBIDDEN);
+            }
+        };
+    }
+
+    private boolean isApiSurface(HttpServletRequest request) {
+        String path = request.getRequestURI();
+        return path.startsWith(request.getContextPath() + "/api/")
+                || path.startsWith(request.getContextPath() + "/h2-console/");
     }
 
     private void writeError(ObjectMapper mapper, HttpServletResponse response, int status, String message)

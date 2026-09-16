@@ -6,6 +6,8 @@ public final class CobolMessages {
     public static final String WRONG_PASSWORD = "Wrong Password. Try again ...";
     public static final String USER_NOT_FOUND = "User not found. Try again ...";
     public static final String USER_VERIFY_FAILED = "Unable to verify the User ...";
+    public static final String THANK_YOU = "Thank you for using CardDemo application...";
+    public static final String INVALID_KEY_PRESSED = "Invalid key pressed. Please see below...";
     public static final String USER_EXISTS = "User ID already exist...";
     public static final String USER_TYPE_INVALID = "User Type must be A or U...";
     public static final String FIRST_NAME_REQUIRED = "First Name can NOT be empty...";
