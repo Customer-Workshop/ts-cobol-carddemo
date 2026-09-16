@@ -1,0 +1,12 @@
+flowchart BT
+  subgraph W1["Wave 1 — seam + consumers"]
+    MQS["queue/InProcessMqService (CANONICAL MQ SEAM)<br/>named BlockingQueues + Message envelope<br/>msgId/correlId/replyTo (S22-B1)"]
+    ACC["COACCT01 (CDRA)<br/>INQA acct inquiry → carddemo.reply.acct<br/>COACCT01.cbl:191-498"]
+    DAT["CODATE01 (CDRD)<br/>system date/time → carddemo.reply.date<br/>CODATE01.cbl:140-390"]
+    ACCT["AccountRepository<br/>ACCTDAT read COACCT01.cbl:396-404"]
+  end
+  ACC --> MQS
+  DAT --> MQS
+  ACC --> ACCT
+  S20["S-20 COPAUA0C consumer<br/>carddemo.pauth.request"] -. "consumes seam (shared-programs rule)" .-> MQS
+  ERRQ["carddemo.error queue"] -. "MQ-ERR-DISPLAY writes" .-> MQS

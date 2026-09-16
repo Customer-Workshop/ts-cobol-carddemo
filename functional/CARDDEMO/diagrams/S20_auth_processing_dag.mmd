@@ -1,0 +1,23 @@
+flowchart BT
+  subgraph W0["Seam (S-22 owns)"]
+    MQ["queue/InProcessMqService<br/>named queues + envelope (B-007)"]
+  end
+  subgraph W1["Wave 1 — online consumer"]
+    CPU["COPAUA0C (CP00)<br/>parse→resolve→decide→reply→persist<br/>COPAUA0C.cbl:233-915"]
+    ENT["pending_auth_* JPA<br/>shared w/ S-19 (B-005)"]
+    VSAM2["Shared VSAM repos<br/>CCXREF/ACCTDAT/CUSTDAT<br/>COPAUA0C.cbl:477-608"]
+    LOG["CSSL error log → SLF4J<br/>CCPAUERY COPAUA0C.cbl:975+"]
+  end
+  subgraph W2["Wave 2 — batch"]
+    PRG["CBPAUP0C (CBPAUP0J, CA-7 SCHID=030)<br/>expiry purge GN/GNP/DLET/CHKP"]
+    IMP["PAUDBLOD (LOADPADB)<br/>import root+child files"]
+    EXP["PAUDBUNL / DBUNLDGS<br/>(UNLDPADB / UNLDGSAM)<br/>export QSAM/GSAM writers"]
+  end
+  CPU --> MQ
+  CPU --> ENT
+  CPU --> VSAM2
+  CPU --> LOG
+  PRG --> ENT
+  IMP --> ENT
+  EXP --> ENT
+  SCH["CA-7 / Control-M schedulers<br/>carddemo.ca7:43-51"] -. "trigger (S20-B7)" .-> PRG

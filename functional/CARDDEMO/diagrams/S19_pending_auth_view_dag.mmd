@@ -1,0 +1,19 @@
+flowchart BT
+  subgraph W1["Wave 1 — data + seam"]
+    IMS["pending_auth_summary/detail JPA<br/>PAUTSUM0/PAUTDTL1 (B-005)<br/>COPAUS0C.cbl:461-496,973-977"]
+    FRD["auth_frauds JPA + AuthFraudService<br/>DB2 AUTHFRDS upsert (B-006)<br/>COPAUS2C.cbl:141-243"]
+    VSAM["Shared VSAM repos<br/>CXACAIX/ACCTDAT/CUSTDAT<br/>COPAUS0C.cbl:818-920"]
+  end
+  subgraph W2["Wave 2 — online screens"]
+    LST["COPAUS0C (CPVS)<br/>list COPAU0A, 5-row paging"]
+    DTL["COPAUS1C (CPVD)<br/>detail COPAU1A + fraud toggle"]
+    SEAM["COPAUS2C (LINK)<br/>fraud journal writer"]
+  end
+  LST --> IMS
+  LST --> VSAM
+  DTL --> IMS
+  DTL -- "LINK (S19-B4)<br/>COPAUS1C.cbl:248" --> SEAM
+  SEAM --> FRD
+  LST -. "XCTL detail (S19-B2)<br/>COPAUS0C.cbl:313-321" .-> DTL
+  MEN["COMEN01C opt 11 (S-01)<br/>INQUIRE guard COMEN01C.cbl:147-162"] -. "XCTL + flag flip (S19-B1)" .-> LST
+  LST -. "PF3 XCTL CDEMO-TO-PROGRAM<br/>COPAUS0C.cbl:675" .-> MEN

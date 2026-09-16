@@ -1,0 +1,21 @@
+flowchart BT
+  subgraph W1["Wave 1 — online (tables exist, V2801 FK)"]
+    ENT2["transaction_types / transaction_categories<br/>existing JPA + FK RESTRICT<br/>(V2 + V2801)"]
+    ERR["Db2ErrorFormatter<br/>CSDB2RPY/DSNTIAC equivalent"]
+    LST2["COTRTLIC (CTLI)<br/>list CTRLIA, filters, flag D/U + F10"]
+    MNT["COTRTUPC (CTTU)<br/>maint CTRTUPA, 15-state byte"]
+  end
+  subgraph W2["Wave 2 — batch"]
+    MNTJ["COBTUPDT (MNTTRDB2)<br/>A/U/D file apply, RC4"]
+    EXT["TRANEXTR (DSNTIAUL)<br/>60-char TRANTYPE.PS/TRANCATG.PS"]
+  end
+  LST2 --> ENT2
+  LST2 --> ERR
+  MNT --> ENT2
+  MNT --> ERR
+  MNTJ --> ENT2
+  EXT --> ENT2
+  LST2 -. "F2 XCTL add (S21-B2)<br/>COTRTLIC.cbl:630-651" .-> MNT
+  ADM["COADM01C opts 5/6 (S-01)<br/>COADM02Y.cpy:46-49"] -. "XCTL + flag flip (S21-B1)" .-> LST2
+  ADM -. "XCTL + flag flip" .-> MNT
+  LST2 -. "PF3 XCTL COADM01C<br/>COTRTLIC.cbl:591-623" .-> ADM
