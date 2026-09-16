@@ -1,0 +1,35 @@
+flowchart BT
+  subgraph W1["Wave 1 - seams and utility (leaves)"]
+    VSAM["VSAM KSDS read seams\nACCTFILE / CARDFILE / XREFFILE / CUSTFILE\n-> Postgres repositories (B-009)"]
+    PSOUT["PS output seam\nPSCOMP 107 FB / ARRYPS 110 FB / VBPS 84 VB\n-> flat files under output dir (B-010)"]
+    SYSOUT["SYSOUT report seam\nDISPLAY record dumps -> job log"]
+    DE["COBDATFT assembler date-edit\napp/asm/COBDATFT.asm -> util/DateEditService (B-003)"]
+    ABEND["CEE3ABD abend seam\nABCODE 999 -> step failure exit code (B-004)"]
+  end
+  subgraph W2["Wave 2 - multi-output verify job"]
+    A1["CBACT01C (READACCT STEP05)\nREADACCT.jcl:32\nreads ACCTFILE, writes 3 PS outputs"]
+  end
+  subgraph W3["Wave 3 - single-file verify jobs"]
+    A2["CBACT02C (READCARD STEP05)\nREADCARD.jcl:22\ndump CARDFILE to SYSOUT"]
+    A3["CBACT03C (READXREF STEP05)\nREADXREF.jcl:22\ndump XREFFILE to SYSOUT"]
+    C1["CBCUS01C (READCUST STEP05)\nREADCUST.jcl:21\ndump CUSTFILE to SYSOUT"]
+  end
+  A1 --> VSAM
+  A1 --> PSOUT
+  A1 --> SYSOUT
+  A1 -- "CALL 'COBDATFT'\nCBACT01C.cbl:231" --> DE
+  A1 --> ABEND
+  A2 --> VSAM
+  A2 --> SYSOUT
+  A2 --> ABEND
+  A3 --> VSAM
+  A3 --> SYSOUT
+  A3 --> ABEND
+  C1 --> VSAM
+  C1 --> SYSOUT
+  C1 --> ABEND
+  PRE["CLOSEFIL (other stream)\nca7:340"] -. "CA-7 SCHID=030 triggers" .-> A1
+  A1 -. "triggers READCARD ca7:367" .-> A2
+  A2 -. "triggers READCUST ca7:394" .-> C1
+  C1 -. "triggers READXREF ca7:421" .-> A3
+  A3 -. "triggers WAITSTEP ca7:448 -> OPENFIL ca7:453" .-> POST["WAITSTEP / OPENFIL (other streams)"]

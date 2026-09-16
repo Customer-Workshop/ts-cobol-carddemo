@@ -1,0 +1,23 @@
+flowchart BT
+  subgraph W1["Wave 1 - seams and record contract (leaves)"]
+    VSAM5["VSAM KSDS read seams\nCUSTFILE / ACCTFILE / XREFFILE / TRANSACT / CARDFILE\n-> Postgres repositories (B-009)"]
+    EXPFMT["EXPORT record contract\nCVEXPORT.cpy 500-byte multi-type layout\n-> target text fixed-width format"]
+    EXPFILE["EXPFILE KSDS hand-off\nKEYS(4 28) RECORDSIZE(500 500)\n-> flat file EXPORT.DATA (B-010)"]
+    PSNORM["Import output seam\nCUSTOUT/ACCTOUT/XREFOUT/TRNXOUT/CARDOUT + ERROUT\n-> flat files / DB writes (B-010)"]
+    ABEND["CEE3ABD abend seam\n-> step failure exit code (B-004)"]
+  end
+  subgraph W2["Wave 2 - export job"]
+    EXP["CBEXPORT (CBEXPORT.jcl STEP02)\nCBEXPORT.jcl:43\nreads 5 KSDS, writes C/A/X/T/D export records"]
+  end
+  subgraph W3["Wave 3 - import job"]
+    IMP["CBIMPORT (CBIMPORT.jcl STEP01)\nCBIMPORT.jcl:22\ndispatches EXPFILE records to output files"]
+  end
+  EXP --> VSAM5
+  EXP --> EXPFMT
+  EXP --> EXPFILE
+  EXP --> ABEND
+  IMP --> EXPFILE
+  IMP --> EXPFMT
+  IMP --> PSNORM
+  IMP --> ABEND
+  EXP -. "export dataset is the hand-off contract" .-> IMP
