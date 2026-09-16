@@ -140,6 +140,20 @@ public final class CobolMessages {
     public static final String TRANSACTION_SELECTION_INVALID =
         "Invalid selection. Valid value is S";
 
+    // COCRDLIC verbatim messages (S-04; COCRDLIC.cbl:112-126, :153-171).
+    // CARD_FILE_ERROR_READ is the 75-byte WS-FILE-ERROR-MESSAGE for
+    // READPREV ENDFILE — RESP 20, RESP2 90 per CICS docs (S04-B4).
+    public static final String CARD_SELECT_ONE =
+        "PLEASE SELECT ONLY ONE RECORD TO VIEW OR UPDATE";
+    public static final String CARD_INVALID_ACTION = "INVALID ACTION CODE";
+    public static final String CARD_NO_RECORDS_FOUND =
+        "NO RECORDS FOUND FOR THIS SEARCH CONDITION.";
+    public static final String CARD_NO_MORE_PAGES = "NO MORE PAGES TO DISPLAY";
+    public static final String CARD_INFO_ACTIONS =
+        "TYPE S FOR DETAIL, U TO UPDATE ANY RECORD";
+    public static final String CARD_FILE_ERROR_READ =
+        "File Error: READ     on CARDDAT   returned RESP 000000020 ,RESP2 000000090 ";
+
     private CobolMessages() {
     }
 

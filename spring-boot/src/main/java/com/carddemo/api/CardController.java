@@ -3,6 +3,7 @@ package com.carddemo.api;
 import com.carddemo.service.CardService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,12 +19,18 @@ public class CardController {
         this.service = service;
     }
 
+    // COCRDLIC REST surface (S-04): the keyed browse is one call per AID
+    // press; GET is the fresh entry and POST carries the echoed COMMAREA
+    // pageState for every later key.
     @GetMapping
     public CardListResponse list(@RequestParam(required = false) String accountId,
-                                 @RequestParam(required = false) String cardNumber,
-                                 @RequestParam(defaultValue = "0") int page,
-                                 @RequestParam(defaultValue = "forward") String direction) {
-        return service.list(accountId, cardNumber, page, direction);
+                                 @RequestParam(required = false) String cardNumber) {
+        return service.browse(new CardListRequest("ENTER", accountId, cardNumber, null, null));
+    }
+
+    @PostMapping("/list")
+    public CardListResponse listAid(@RequestBody CardListRequest request) {
+        return service.browse(request);
     }
 
     @GetMapping("/{cardNumber}")

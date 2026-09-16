@@ -107,7 +107,7 @@ public class MenuService {
     // today. Everything else falls back to the not-installed idiom instead of
     // a dead link.
     private static final Map<String, String> UI_ROUTES = Map.of(
-            "COCRDLIC", "/api/cards",
+            "COCRDLIC", "/cards/list",
             "COTRN00C", "/transactions/list",
             "COTRN02C", "/transactions/add",
             "COUSR00C", "/api/admin/users",
@@ -121,11 +121,20 @@ public class MenuService {
         return UI_ROUTES.get(selection.program());
     }
 
-    // S07-B1: cross-program hand-offs resolve a target's UI route and
-    // catalogue name through this registry (COTRN00C row selection ->
-    // COTRN01C). A missing route means the target is not browsable yet.
+    // S04-B1/S07-B1 — cross-program hand-offs (XCTL, row selection) resolve
+    // a target's UI route and catalogue name through this registry; a
+    // missing route is the disabled target, handled by the caller with the
+    // coming-soon idiom instead of a dead link.
     public String uiRouteForProgram(String program) {
         return UI_ROUTES.get(program);
+    }
+
+    public String optionNameForProgram(String program) {
+        return mainOptions.stream()
+                .filter(option -> option.program().equals(program))
+                .findFirst()
+                .map(MenuOption::name)
+                .orElse(program);
     }
 
     public String programName(String program) {

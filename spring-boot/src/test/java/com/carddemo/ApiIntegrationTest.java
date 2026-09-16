@@ -113,24 +113,26 @@ class ApiIntegrationTest {
     @Test
     void cardListAndDetailExposeCobolSelectionSemantics() throws Exception {
         MockHttpSession session = signon("ADMIN001", "PASSWORD", "/api/admin/menu");
+        // S-04: GET /api/cards is the fresh entry of the COCRDLIC keyed
+        // browse — one COMMAREA echo in pageState, seven rows per screen.
         mockMvc.perform(get("/api/cards").session(session))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.pageSize").value(7))
-                .andExpect(jsonPath("$.cards[0].selectionViewCode").value("S"))
-                .andExpect(jsonPath("$.cards[0].selectionUpdateCode").value("U"))
-                .andExpect(jsonPath("$.cards[0].cardNumber").value("1111222233334444"));
+                .andExpect(jsonPath("$.outcome").value("page"))
+                .andExpect(jsonPath("$.screen.rows.length()").value(7))
+                .andExpect(jsonPath("$.screen.rows[0].cardNumber")
+                        .value("1111222233334444"))
+                .andExpect(jsonPath("$.pageState.screenNumber").value(1));
         mockMvc.perform(get("/api/cards/1111222233334444").session(session))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.accountId").value(1))
                 .andExpect(jsonPath("$.cvvCode").value("123"))
                 .andExpect(jsonPath("$.embossedName").value(containsString("Byron")));
+        // A filter complaint redisplays on the screen, like the 3270 map.
         mockMvc.perform(get("/api/cards").param("cardNumber", "123")
                         .session(session))
-                .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.message").value(
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.screen.errorMessage").value(
                         "CARD ID FILTER,IF SUPPLIED MUST BE A 16 DIGIT NUMBER"));
-        mockMvc.perform(get("/api/cards").param("page", "1").session(session))
-                .andExpect(status().isNotFound());
     }
 
     @Test

@@ -141,6 +141,103 @@ body {
     color: #0f0;
 }
 
+/* CCRDLIA card list (S-04) — 3270 colours: turquoise labels/headers, white
+   row data, green info line, red error line (app/bms/COCRDLI.bms). */
+.card-list .list-title-row {
+    display: flex;
+    justify-content: space-between;
+    margin: 0 4ch;
+}
+
+.card-list .list-title {
+    color: #40e0d0;
+    font-weight: bold;
+}
+
+.card-list .page-number {
+    color: #40e0d0;
+}
+
+.card-list .form-row {
+    margin: 1em 0 0 4ch;
+}
+
+.card-list .field-label {
+    white-space: pre;
+    color: #40e0d0;
+}
+
+.card-list input {
+    background: #000;
+    color: #0f0;
+    border: none;
+    border-bottom: 1px solid #0f0;
+    font: inherit;
+}
+
+.card-list input[readonly] {
+    border-bottom: none;
+    color: #666;
+}
+
+.card-list input.field-error {
+    color: #f00;
+    border-bottom: 1px solid #f00;
+}
+
+.card-list .card-rows {
+    margin: 1em 0 0 4ch;
+    border-collapse: collapse;
+    font: inherit;
+}
+
+.card-list .card-rows th {
+    color: #40e0d0;
+    font-weight: normal;
+    text-align: left;
+    padding-right: 2ch;
+}
+
+.card-list .card-rows .row-underline td {
+    color: #40e0d0;
+}
+
+.card-list .card-rows td {
+    color: #fff;
+    padding-right: 2ch;
+}
+
+.card-list .info-line {
+    color: #0f0;
+    margin-left: 4ch;
+    min-height: 1.2em;
+}
+
+.card-list .error-line {
+    color: #f00;
+    margin-left: 4ch;
+    min-height: 1.2em;
+}
+
+.card-list .key-hints {
+    color: #ff0;
+    margin-left: 4ch;
+    white-space: pre;
+}
+
+.card-list .form-actions {
+    margin-left: 4ch;
+}
+
+.card-list .form-actions button {
+    background: #000;
+    color: #0f0;
+    border: 1px solid #0f0;
+    font: inherit;
+    margin-right: 1em;
+    cursor: pointer;
+}
+
 /* CACTVWA (account view) — two-column 3270-style grid. */
 .account-view .view-title {
     color: #ff0;

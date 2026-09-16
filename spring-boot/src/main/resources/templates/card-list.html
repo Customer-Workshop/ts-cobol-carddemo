@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout :: layout('CardDemo', 'CCLI', 'COCRDLIC', ~{::content})}">
+<head>
+    <title>CardDemo</title>
+</head>
+<body>
+<div th:fragment="content" class="card-list">
+    <div class="list-title-row">
+        <span class="list-title">List Credit Cards</span>
+        <span class="page-number">Page <span th:text="${screen.screenNumber}">1</span></span>
+    </div>
+    <form id="card-list-form" method="post" th:action="@{/cards/list}">
+        <!-- WS-THIS-PROGCOMMAREA (COCRDLIC.cbl:229-260) round-trips as hidden
+             inputs so the server stays stateless between AID presses. -->
+        <input type="hidden" name="firstCardNumber" th:value="${pageState.firstCardNumber}">
+        <input type="hidden" name="lastCardNumber" th:value="${pageState.lastCardNumber}">
+        <input type="hidden" name="screenNumber" th:value="${pageState.screenNumber}">
+        <input type="hidden" name="lastPageShown" th:value="${pageState.lastPageShown}">
+        <input type="hidden" name="nextPageExists" th:value="${pageState.nextPageExists}">
+
+        <div class="form-row">
+            <label class="field-label" for="acctsid">Account Number    :</label>
+            <input id="acctsid" name="acctsid" type="text" maxlength="11" size="11"
+                   autocomplete="off" inputmode="numeric" th:value="${screen.accountFilter}"
+                   th:classappend="${screen.accountFilterInvalid} ? 'field-error'"
+                   th:attr="autofocus=${screen.cursorField == 'acctsid' ? 'autofocus' : null}">
+        </div>
+        <div class="form-row">
+            <label class="field-label" for="cardsid">Credit Card Number:</label>
+            <input id="cardsid" name="cardsid" type="text" maxlength="16" size="16"
+                   autocomplete="off" inputmode="numeric" th:value="${screen.cardFilter}"
+                   th:classappend="${screen.cardFilterInvalid} ? 'field-error'"
+                   th:attr="autofocus=${screen.cursorField == 'cardsid' ? 'autofocus' : null}">
+        </div>
+
+        <table class="card-rows">
+            <thead>
+                <tr>
+                    <th>Select</th>
+                    <th>Account Number</th>
+                    <th> Card Number </th>
+                    <th>Active </th>
+                </tr>
+                <tr class="row-underline">
+                    <td>------</td>
+                    <td>---------------</td>
+                    <td>----------------</td>
+                    <td>--------</td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="row, stat : ${screen.rows}">
+                    <td>
+                        <input type="text" name="crdsel" maxlength="1" size="1"
+                               th:value="${row.select}" autocomplete="off"
+                               th:readonly="${row.selectProtected}"
+                               th:classappend="${row.selectError} ? 'field-error'"
+                               th:attr="autofocus=${screen.cursorField == 'crdsel' + (stat.index + 1) ? 'autofocus' : null}">
+                        <input type="hidden" name="rowAcct" th:value="${row.accountId}">
+                        <input type="hidden" name="rowCard" th:value="${row.cardNumber}">
+                        <input type="hidden" name="rowStatus" th:value="${row.activeStatus}">
+                    </td>
+                    <td class="acct"
+                        th:text="${row.accountId == null ? '' : #numbers.formatInteger(row.accountId, 11)}"></td>
+                    <td class="card-num" th:text="${row.cardNumber}"></td>
+                    <td class="status" th:text="${row.activeStatus}"></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <p class="info-line" th:text="${screen.infoMessage}"></p>
+        <p class="error-line" th:text="${screen.errorMessage}"></p>
+        <p class="key-hints">  F3=Exit F7=Backward  F8=Forward</p>
+        <div class="form-actions">
+            <button type="submit" name="aid" value="ENTER">ENTER</button>
+            <button type="submit" name="aid" value="PF3" formnovalidate>F3=Exit</button>
+            <button type="submit" name="aid" value="PF7" formnovalidate>F7=Backward</button>
+            <button type="submit" name="aid" value="PF8" formnovalidate>F8=Forward</button>
+        </div>
+    </form>
+    <script>
+        // 3270 AID parity (S04-B3, COCRDLIC.cbl:370-380): F3 exits, F7/F8
+        // page, and any other AID is remapped to ENTER by the service.
+        document.addEventListener('keydown', function (event) {
+            if (/^F([1-9]|1[0-2])$/.test(event.key)) {
+                event.preventDefault();
+                var form = document.getElementById('card-list-form');
+                var aid = document.createElement('input');
+                aid.type = 'hidden';
+                aid.name = 'aid';
+                aid.value = event.key === 'F3' ? 'PF3'
+                        : event.key === 'F7' ? 'PF7'
+                        : event.key === 'F8' ? 'PF8' : event.key;
+                form.appendChild(aid);
+                form.submit();
+            }
+        });
+    </script>
+</div>
+</body>
+</html>
