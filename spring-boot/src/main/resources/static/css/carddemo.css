@@ -140,3 +140,90 @@ body {
 .message-line.info {
     color: #0f0;
 }
+
+.tran-list {
+    font-family: inherit;
+}
+
+.tran-list .tran-list-header {
+    display: flex;
+    justify-content: space-between;
+    max-width: 72ch;
+}
+
+.tran-list .tran-list-title {
+    margin: 0;
+}
+
+.tran-list .tran-list-page {
+    margin: 0;
+    color: #40e0d0;
+}
+
+.tran-list .form-row {
+    margin: 1em 0;
+}
+
+.tran-list .field-label {
+    color: #40e0d0;
+}
+
+.tran-list input {
+    background: #000;
+    color: #0f0;
+    border: none;
+    border-bottom: 1px solid #0f0;
+    font: inherit;
+    text-transform: uppercase;
+}
+
+.tran-list .tran-table {
+    border-collapse: collapse;
+    color: #fff;
+}
+
+.tran-list .tran-heading th,
+.tran-list .tran-heading-dash td {
+    color: #40e0d0;
+    font-weight: normal;
+    text-align: left;
+    padding-right: 1ch;
+}
+
+.tran-list .tran-row td {
+    padding-right: 1ch;
+}
+
+.tran-list .tran-id,
+.tran-list .tran-date,
+.tran-list .tran-desc,
+.tran-list .tran-amt {
+    white-space: pre;
+}
+
+.tran-list .sel-input {
+    width: 2ch;
+    text-transform: uppercase;
+}
+
+.tran-list .tran-echo {
+    display: none;
+}
+
+.tran-list .tran-instruction {
+    color: #ff0;
+    margin: 1em 0;
+}
+
+.tran-list .key-hints {
+    color: #ff0;
+}
+
+.tran-list .form-actions button {
+    background: #000;
+    color: #0f0;
+    border: 1px solid #0f0;
+    font: inherit;
+    margin-right: 1em;
+    cursor: pointer;
+}

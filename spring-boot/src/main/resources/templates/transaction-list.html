@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout :: layout('CardDemo', 'CT00', 'COTRN00C', ~{::content})}">
+<head>
+    <title>CardDemo</title>
+</head>
+<body>
+<div th:fragment="content" class="tran-list">
+    <div class="tran-list-header">
+        <p class="tran-list-title">List Transactions</p>
+        <p class="tran-list-page">Page: <span th:text="${page.pageDisplay}">00000001</span></p>
+    </div>
+    <form id="tran-list-form" method="post" th:action="@{/transactions/list}">
+        <div class="form-row">
+            <label class="field-label" for="trnIdIn">Search Tran ID:</label>
+            <input id="trnIdIn" name="trnIdIn" type="text" maxlength="16" size="16"
+                   autocomplete="off" inputmode="numeric" th:value="${page.searchId}">
+        </div>
+        <table class="tran-table">
+            <thead>
+            <tr class="tran-heading">
+                <th>Sel</th>
+                <th> Transaction ID </th>
+                <th>  Date  </th>
+                <th>     Description          </th>
+                <th>   Amount   </th>
+            </tr>
+            <tr class="tran-heading-dash">
+                <td>---</td>
+                <td>----------------</td>
+                <td>--------</td>
+                <td>--------------------------</td>
+                <td>-----------</td>
+            </tr>
+            </thead>
+            <tbody>
+            <tr class="tran-row" th:each="row, stat : ${page.rows}">
+                <td class="tran-sel">
+                    <input class="sel-input" name="sel" type="text" maxlength="1" size="1"
+                           autocomplete="off" th:value="${page.selections[stat.index]}">
+                </td>
+                <td class="tran-id" th:text="${row.tranId}">0000000000000000</td>
+                <td class="tran-date" th:text="${row.date}">01/01/26</td>
+                <td class="tran-desc" th:text="${row.description}">&nbsp;</td>
+                <td class="tran-amt" th:text="${row.amount}">&nbsp;</td>
+                <td class="tran-echo">
+                    <input type="hidden" name="trnId" th:value="${row.tranId}">
+                    <input type="hidden" name="tdate" th:value="${row.date}">
+                    <input type="hidden" name="tdesc" th:value="${row.description}">
+                    <input type="hidden" name="tamt" th:value="${row.amount}">
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        <p class="tran-instruction">Type 'S' to View Transaction details from the list</p>
+        <!-- CDEMO-CT00-INFO paging state plus the displayed page number,
+             round-tripped by the client (S07-B5). -->
+        <input type="hidden" name="pageDisplay" th:value="${page.pageDisplay}">
+        <input type="hidden" name="firstId" th:value="${page.firstId}">
+        <input type="hidden" name="lastId" th:value="${page.lastId}">
+        <input type="hidden" name="pageNum" th:value="${page.pageNum}">
+        <input type="hidden" name="nextPage" th:value="${page.nextPage ? 'Y' : ''}">
+        <p class="key-hints">ENTER=Continue  F3=Back  F7=Backward  F8=Forward</p>
+        <div class="form-actions">
+            <button type="submit" name="aid" value="ENTER">ENTER=Continue</button>
+            <button type="submit" name="aid" value="PF3" formnovalidate>F3=Back</button>
+            <button type="submit" name="aid" value="PF7" formnovalidate>F7=Backward</button>
+            <button type="submit" name="aid" value="PF8" formnovalidate>F8=Forward</button>
+        </div>
+    </form>
+    <script>
+        // 3270 AID parity: F3 backs out, F7/F8 page, every other function key
+        // is an invalid AID and gets the invalid-key redisplay.
+        document.addEventListener('keydown', function (event) {
+            if (/^F([1-9]|1[0-2])$/.test(event.key)) {
+                event.preventDefault();
+                var form = document.getElementById('tran-list-form');
+                var aid = document.createElement('input');
+                aid.type = 'hidden';
+                aid.name = 'aid';
+                aid.value = event.key === 'F3' ? 'PF3'
+                        : event.key === 'F7' ? 'PF7'
+                        : event.key === 'F8' ? 'PF8'
+                        : event.key;
+                form.appendChild(aid);
+                form.submit();
+            }
+        });
+    </script>
+</div>
+</body>
+</html>

@@ -9,6 +9,7 @@ import com.carddemo.api.MenuSelectRequest;
 import com.carddemo.api.MenuSelectionResponse;
 import com.carddemo.service.AuthService;
 import com.carddemo.service.MenuService;
+import com.carddemo.service.TransactionListService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.core.Authentication;
@@ -38,10 +39,13 @@ public class UiController {
 
     private final AuthService authService;
     private final MenuService menuService;
+    private final TransactionListService transactionListService;
 
-    public UiController(AuthService authService, MenuService menuService) {
+    public UiController(AuthService authService, MenuService menuService,
+                        TransactionListService transactionListService) {
         this.authService = authService;
         this.menuService = menuService;
+        this.transactionListService = transactionListService;
     }
 
     @ModelAttribute
@@ -115,6 +119,75 @@ public class UiController {
         return selectOption(aid, option, model, request, "menu",
                 () -> menuService.selectMain(new MenuSelectRequest(option), authentication),
                 () -> menuService.mainMenu(authentication));
+    }
+
+    // COTRN00C web surface (tran CT00): the first display is an ENTER on an
+    // empty map — page 1 browsed from the start of the file (COTRN00C.cbl:
+    // 112-116). Unsigned navigation is bounced to sign-on by the security
+    // entry point (EIBCALEN=0, :107-109).
+    @GetMapping("/transactions/list")
+    public String transactionList(Model model) {
+        model.addAttribute("page", transactionListService.firstDisplay());
+        return "transaction-list";
+    }
+
+    // Pseudo-conversational turn: the form carries the screen back (every map
+    // field is FSET) plus the CDEMO-CT00-INFO paging state as hidden fields
+    // (:62-70, S07-B5). ENTER runs the selection scan and forward browse,
+    // PF7/PF8 page backward/forward, PF3 transfers to the menu (:122-124).
+    @PostMapping("/transactions/list")
+    public String submitTransactionList(
+            @RequestParam(name = "aid", defaultValue = "ENTER") String aid,
+            @RequestParam(name = "trnIdIn", required = false) String trnIdIn,
+            @RequestParam(name = "sel", required = false) java.util.List<String> sels,
+            @RequestParam(name = "trnId", required = false) java.util.List<String> trnIds,
+            @RequestParam(name = "tdate", required = false) java.util.List<String> tdates,
+            @RequestParam(name = "tdesc", required = false) java.util.List<String> tdescs,
+            @RequestParam(name = "tamt", required = false) java.util.List<String> tamts,
+            @RequestParam(name = "pageDisplay", required = false) String pageDisplay,
+            @RequestParam(name = "firstId", required = false) String firstId,
+            @RequestParam(name = "lastId", required = false) String lastId,
+            @RequestParam(name = "pageNum", required = false) String pageNum,
+            @RequestParam(name = "nextPage", required = false) String nextPage,
+            Model model) {
+        if ("PF3".equals(aid)) {
+            return "redirect:/menu";
+        }
+        TransactionListService.Form form = new TransactionListService.Form(
+                trnIdIn == null ? "" : trnIdIn,
+                TransactionListService.Form.selections(sels),
+                TransactionListService.Form.rows(trnIds, tdates, tdescs, tamts),
+                pageDisplay == null ? "" : pageDisplay,
+                firstId, lastId, pageNum, nextPage);
+        TransactionListService.Page page;
+        switch (aid) {
+            case "ENTER" -> {
+                TransactionListService.EnterOutcome outcome =
+                        transactionListService.enter(form);
+                if (outcome.selectedId() != null) {
+                    // XCTL COTRN01C (:186-195) resolved through the route
+                    // registry (S07-B1): browsable -> /transactions/view with
+                    // the id, otherwise the coming-soon idiom.
+                    String route = menuService.uiRouteForProgram("COTRN01C");
+                    if (route != null) {
+                        return "redirect:" + route + "?tranId=" + outcome.selectedId();
+                    }
+                    page = TransactionListService.Page.unchanged(form, form.state(),
+                            CobolMessages.optionComingSoon(
+                                    menuService.programName("COTRN01C")),
+                            true);
+                } else {
+                    page = outcome.page();
+                }
+            }
+            case "PF7" -> page = transactionListService.pf7(form);
+            case "PF8" -> page = transactionListService.pf8(form);
+            default -> page = transactionListService.invalidAid(form);
+        }
+        model.addAttribute("page", page);
+        model.addAttribute("message", page.message());
+        model.addAttribute("messageStyle", page.info() ? "info" : null);
+        return "transaction-list";
     }
 
     @PostMapping("/admin/menu/select")

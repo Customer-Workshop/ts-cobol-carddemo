@@ -9,6 +9,7 @@ public interface TransactionRepository extends JpaRepository<Transaction, String
     List<Transaction> findByTranCardNumberOrderByTranIdAsc(String tranCardNumber);
     Page<Transaction> findByTranIdGreaterThanEqual(String tranId, Pageable pageable);
     Page<Transaction> findByTranIdLessThanEqual(String tranId, Pageable pageable);
+    List<Transaction> findByTranIdLessThanOrderByTranIdDesc(String tranId, Pageable pageable);
     Transaction findTopByOrderByTranIdDesc();
     Page<Transaction> findByTranProcessTimestampBetween(
             LocalDateTime start, LocalDateTime end, Pageable pageable);

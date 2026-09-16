@@ -104,6 +104,16 @@ public final class CobolMessages {
     public static final String FIELD_ALPHA_SUFFIX = " can have alphabets only.";
     public static final String FIELD_ALPHANUM_SUFFIX =
         " can have numbers or alphabets only.";
+    public static final String TRANSACTION_ID_NOT_NUMERIC = "Tran ID must be Numeric ...";
+    public static final String TRANSACTION_AT_TOP = "You are at the top of the page...";
+    public static final String TRANSACTION_ALREADY_TOP =
+        "You are already at the top of the page...";
+    public static final String TRANSACTION_ALREADY_BOTTOM =
+        "You are already at the bottom of the page...";
+    public static final String TRANSACTION_LOOKUP_FAILED =
+        "Unable to lookup transaction...";
+    public static final String TRANSACTION_SELECTION_INVALID =
+        "Invalid selection. Valid value is S";
 
     private CobolMessages() {
     }
@@ -113,7 +123,11 @@ public final class CobolMessages {
     }
 
     public static String optionComingSoon(String optionName) {
-        return "This option " + optionName + "is coming soon ...";
+        // COMEN01C.cbl:172-176 emits the option name DELIMITED BY SPACE, so
+        // only its first word reaches the message ("Transaction View" ->
+        // "Transactionis coming soon ...").
+        String firstWord = optionName == null ? "" : optionName.split(" ", 2)[0];
+        return "This option " + firstWord + "is coming soon ...";
     }
 
     public static String xrefNotFound(String accountId) {

@@ -108,7 +108,7 @@ public class MenuService {
     // a dead link.
     private static final Map<String, String> UI_ROUTES = Map.of(
             "COCRDLIC", "/api/cards",
-            "COTRN00C", "/api/transactions",
+            "COTRN00C", "/transactions/list",
             "COTRN02C", "/api/transactions",
             "COUSR00C", "/api/admin/users",
             "COUSR01C", "/api/admin/users");
@@ -118,6 +118,21 @@ public class MenuService {
             return null;
         }
         return UI_ROUTES.get(selection.program());
+    }
+
+    // S07-B1: cross-program hand-offs resolve a target's UI route and
+    // catalogue name through this registry (COTRN00C row selection ->
+    // COTRN01C). A missing route means the target is not browsable yet.
+    public String uiRouteForProgram(String program) {
+        return UI_ROUTES.get(program);
+    }
+
+    public String programName(String program) {
+        return java.util.stream.Stream.concat(mainOptions.stream(), adminOptions.stream())
+                .filter(option -> program.equals(option.program()))
+                .map(MenuOption::name)
+                .findFirst()
+                .orElse(program);
     }
 
     private List<MenuOption> authorize(List<MenuOption> options, Authentication authentication) {

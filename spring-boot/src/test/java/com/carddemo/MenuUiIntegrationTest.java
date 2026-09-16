@@ -104,7 +104,7 @@ class MenuUiIntegrationTest {
         mockMvc.perform(post("/menu/select").session(session)
                         .param("aid", "ENTER").param("option", "6"))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/api/transactions"));
+                .andExpect(redirectedUrl("/transactions/list"));
         // Implemented target without a browsable route yet: the menu
         // redisplays the not-installed idiom instead of a dead link.
         mockMvc.perform(post("/menu/select").session(session)
