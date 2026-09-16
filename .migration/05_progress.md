@@ -9,7 +9,7 @@ parity pass, and sign-off under this engagement. Prior .NET-engagement statuses 
 
 | Stream | Type | Entry point | Status | Last update | Notes |
 |---|---|---|---|---|---|
-| S-01 Sign-on + menu shell | ONLINE | CC00/CM00/CA00 | in wave 2 of 3 | 2026-09-16 | W1 merged (PR #100): Thymeleaf shell, Postgres profile+Flyway V1-V3, CI green, 38 tests; W2 sign-on UI launched; plan §6 |
+| S-01 Sign-on + menu shell | ONLINE | CC00/CM00/CA00 | in wave 3 of 3 | 2026-09-16 | W1+W2 merged (PRs #100/#101: UI shell+Postgres/Flyway+CI, sign-on screen+session, 51 tests); W3 menus launched; then parity/UI-test/sign-off |
 | S-02 Account View | ONLINE | CAVW | baseline ported — pre-STOP C | 2026-09-15 | AccountController/AccountViewService in baseline |
 | S-03 Account Update | ONLINE | CAUP | baseline ported — pre-STOP C | 2026-09-15 | AccountUpdateController/Service in baseline |
 | S-04 Card List | ONLINE | CCLI | baseline ported — pre-STOP C | 2026-09-15 | CardController (list) in baseline |
